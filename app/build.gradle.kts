@@ -9,12 +9,12 @@ plugins {
 }
 
 dependencies {
-    compileOnly(project(":hideapi"))
+    compileOnly(projects.hideapi)
 
-    implementation(project(":core"))
-    implementation(project(":service"))
-    implementation(project(":design"))
-    implementation(project(":common"))
+    implementation(projects.core)
+    implementation(projects.service)
+    implementation(projects.design)
+    implementation(projects.common)
 
     implementation(libs.kotlin.coroutine)
     implementation(libs.androidx.core)

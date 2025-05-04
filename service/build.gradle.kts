@@ -6,8 +6,8 @@ plugins {
 }
 
 dependencies {
-    implementation(project(":core"))
-    implementation(project(":common"))
+    implementation(projects.core)
+    implementation(projects.common)
 
     ksp(libs.kaidl.compiler)
     ksp(libs.androidx.room.compiler)

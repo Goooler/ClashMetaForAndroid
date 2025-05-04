@@ -5,9 +5,9 @@ plugins {
 }
 
 dependencies {
-    implementation(project(":common"))
-    implementation(project(":core"))
-    implementation(project(":service"))
+    implementation(projects.common)
+    implementation(projects.core)
+    implementation(projects.service)
 
     implementation(libs.kotlin.coroutine)
     implementation(libs.androidx.core)

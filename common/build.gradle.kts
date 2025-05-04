@@ -4,7 +4,7 @@ plugins {
 }
 
 dependencies {
-    compileOnly(project(":hideapi"))
+    compileOnly(projects.hideapi)
 
     implementation(libs.kotlin.coroutine)
     implementation(libs.androidx.core)
