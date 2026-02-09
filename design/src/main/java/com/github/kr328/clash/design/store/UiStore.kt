@@ -32,7 +32,7 @@ class UiStore(context: Context) {
 
     var hideFromRecents: Boolean by store.boolean(
         key = "hide_from_recents",
-        defaultValue = false
+        defaultValue = false,
     )
 
     var proxyExcludeNotSelectable by store.boolean(
