@@ -1,5 +1,7 @@
 package com.github.kr328.clash
 
+import android.app.ActivityManager
+import android.content.Context
 import android.content.res.Configuration
 import android.os.Build
 import android.os.Bundle
@@ -87,6 +89,14 @@ abstract class BaseActivity<D : Design<*>> : AppCompatActivity(),
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         applyDayNight()
+
+        // Apply excludeFromRecents setting
+        if (uiStore.hideFromRecents) {
+            val am = getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
+            if (am.appTasks.isNotEmpty()) {
+                am.appTasks[0].setExcludeFromRecents(true)
+            }
+        }
 
         launch {
             main()
