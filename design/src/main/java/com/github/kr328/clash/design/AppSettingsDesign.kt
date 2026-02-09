@@ -79,7 +79,7 @@ class AppSettingsDesign(
 
             switch(
                 value = uiStore::hideFromRecents,
-                icon = R.drawable.ic_baseline_view_list,
+                icon = R.drawable.ic_baseline_hide,
                 title = R.string.hide_from_recents_title,
                 summary = R.string.hide_from_recents_desc,
             ) {
