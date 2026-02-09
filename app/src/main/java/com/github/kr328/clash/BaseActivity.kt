@@ -1,7 +1,6 @@
 package com.github.kr328.clash
 
 import android.app.ActivityManager
-import android.content.Context
 import android.content.res.Configuration
 import android.os.Build
 import android.os.Bundle
