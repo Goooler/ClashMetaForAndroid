@@ -90,12 +90,10 @@ abstract class BaseActivity<D : Design<*>> : AppCompatActivity(),
         super.onCreate(savedInstanceState)
         applyDayNight()
 
-        // Apply excludeFromRecents setting
-        if (uiStore.hideFromRecents) {
-            val am = getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
-            if (am.appTasks.isNotEmpty()) {
-                am.appTasks[0].setExcludeFromRecents(true)
-            }
+        // Apply excludeFromRecents setting to all app tasks
+        val am = getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
+        am.appTasks.forEach { task ->
+            task.setExcludeFromRecents(uiStore.hideFromRecents)
         }
 
         launch {
