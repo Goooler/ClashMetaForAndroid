@@ -16,7 +16,7 @@ jobs:
       - uses: actions/checkout@v6
       - name: Checkout submodules # This is required, don't use submodules flag for actions/checkout instead.
         run: git submodule update --init --recursive --force
-      - uses: actions/setup-java@v4
+      - uses: actions/setup-java@v5
         with:
           distribution: "temurin"
           java-version: 21
