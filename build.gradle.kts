@@ -42,6 +42,8 @@ subprojects {
         return localProperties.getProperty(key)
     }
 
+    val appVersionName = "2.11.23"
+
     extensions.configure<BaseExtension> {
         buildFeatures.buildConfig = true
         defaultConfig {
@@ -59,7 +61,7 @@ subprojects {
             compileSdkVersion(36)
             targetSdk = 35
 
-            versionName = "2.11.23"
+            versionName = appVersionName
             versionCode = 211023
 
             resValue("string", "release_name", "v$versionName")
@@ -77,8 +79,6 @@ subprojects {
 
             if (!isApp) {
                 consumerProguardFiles("consumer-rules.pro")
-            } else {
-                setProperty("archivesBaseName", "cmfa-$versionName")
             }
         }
 
@@ -196,6 +196,10 @@ subprojects {
             sourceCompatibility = JavaVersion.VERSION_21
             targetCompatibility = JavaVersion.VERSION_21
         }
+    }
+
+    if (isApp) {
+        base.archivesName.set("cmfa-$appVersionName")
     }
 }
 
