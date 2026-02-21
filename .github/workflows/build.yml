@@ -46,10 +46,8 @@ jobs:
         run: |
           ./gradlew app:assembleAlphaRelease
           ./gradlew app:assembleMetaRelease
-      - name: Delete release if exist then create release
-        if: github.repository == 'MetaCubeX/ClashMetaForAndroid'
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          gh release view Prerelease-alpha && gh release delete Prerelease-alpha -y --cleanup-tag
-          gh release create Prerelease-alpha "./app/build/outputs/apk/alpha/release/"*.apk --prerelease --generate-notes
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v6
+        with:
+          name: ClashMetaForAndroid-APKs
+          path: "./app/build/outputs/apk/alpha/release/*.apk"
