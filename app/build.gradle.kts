@@ -1,3 +1,4 @@
+import org.gradle.kotlin.dsl.androidComponents
 import java.net.URL
 import java.nio.file.Files
 import java.nio.file.StandardCopyOption
@@ -6,6 +7,18 @@ plugins {
     kotlin("android")
     kotlin("kapt")
     id("com.android.application")
+}
+
+androidComponents {
+    onVariants(selector().withBuildType("release")) { variant ->
+        variant.outputs.forEach { output ->
+            // TODO: https://github.com/android/gradle-recipes/blob/cbe7c7dea2a3f5b1764756f24bf453d1235c80e2/listenToArtifacts/README.md
+            with(output as com.android.build.api.variant.impl.VariantOutputImpl) {
+                val newApkName = "cmfa-${versionName.get()}-${variant.buildType}.apk"
+                outputFileName = newApkName
+            }
+        }
+    }
 }
 
 dependencies {
