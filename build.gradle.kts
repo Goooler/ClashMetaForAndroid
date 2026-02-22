@@ -98,7 +98,6 @@ subprojects {
             val removeSuffix = (queryConfigProperty("remove.suffix") as? String)?.toBoolean() == true
 
             create("alpha") {
-                isDefault = true
                 dimension = flavorDimensionList[0]
                 if (!removeSuffix) {
                     versionNameSuffix = ".Alpha"
@@ -116,7 +115,7 @@ subprojects {
             }
 
             create("meta") {
-
+                isDefault = true
                 dimension = flavorDimensionList[0]
                 if (!removeSuffix) {
                     versionNameSuffix = ".Meta"
