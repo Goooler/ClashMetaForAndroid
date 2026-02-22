@@ -55,7 +55,7 @@ subprojects {
                 else "com.github.kr328.clash.$name"
             }
 
-            minSdk = 23
+            minSdk = 26
             compileSdkVersion(36)
             targetSdk = 35
 

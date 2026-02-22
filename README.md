@@ -12,8 +12,7 @@ Feature of [Clash.Meta](https://github.com/MetaCubeX/Clash.Meta)
 
 ### Requirement
 
-- Android 5.0+ (minimum)
-- Android 7.0+ (recommend)
+- Android 8.0+ (minimum)
 - `armeabi-v7a` , `arm64-v8a`, `x86` or `x86_64` Architecture
 
 ### Build
