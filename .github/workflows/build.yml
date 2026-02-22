@@ -44,7 +44,6 @@ jobs:
           echo key.password="$SIGNING_KEY_PASSWORD" >> signing.properties
       - name: Build
         run: |
-          ./gradlew app:assembleAlphaRelease
           ./gradlew app:assembleMetaRelease
       - name: Delete release if exist then create release
         if: github.repository == 'Goooler/ClashMetaForAndroid' && github.event_name == 'push'
