@@ -21,10 +21,6 @@ jobs:
           distribution: "temurin"
           java-version: 21
       - uses: gradle/actions/setup-gradle@v5
-      - uses: actions/setup-go@v6
-        with:
-          go-version: "1.26"
-          check-latest: true # Always check for the latest patch release
       - name: Update CA
         if: github.repository == 'MetaCubeX/ClashMetaForAndroid'
         run: |
