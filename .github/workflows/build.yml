@@ -52,4 +52,4 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           gh release view nightly && gh release delete nightly -y --cleanup-tag
-          gh release create nightly "./app/build/outputs/apk/alpha/release/"*.apk --prerelease --generate-notes
+          gh release create nightly "./app/build/outputs/apk/meta/release/"*.apk --prerelease --generate-notes
