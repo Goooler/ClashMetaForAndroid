@@ -18,14 +18,13 @@ dependencies {
 
     implementation(libs.kotlin.coroutine)
     implementation(libs.androidx.core)
-    implementation(libs.androidx.activity)
+    implementation(libs.androidx.activity.ktx)
     implementation(libs.androidx.fragment)
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.coordinator)
     implementation(libs.androidx.recyclerview)
     implementation(libs.google.material)
     implementation(libs.quickie.bundled)
-    implementation(libs.androidx.activity.ktx)
 }
 
 tasks.getByName("clean", type = Delete::class) {
