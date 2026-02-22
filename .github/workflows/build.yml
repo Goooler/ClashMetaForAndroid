@@ -44,7 +44,6 @@ jobs:
           echo key.password="$SIGNING_KEY_PASSWORD" >> signing.properties
       - name: Build
         run: |
-          ./gradlew app:assembleAlphaRelease
           ./gradlew app:assembleMetaRelease
       - name: Delete release if exist then create release
         if: github.repository == 'Goooler/ClashMetaForAndroid' && github.event_name == 'push'
@@ -52,4 +51,4 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           gh release view nightly && gh release delete nightly -y --cleanup-tag
-          gh release create nightly "./app/build/outputs/apk/alpha/release/"*.apk --prerelease --generate-notes
+          gh release create nightly "./app/build/outputs/apk/meta/release/"*.apk --prerelease --generate-notes
