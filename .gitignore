@@ -18,14 +18,7 @@ gradle-app.setting
 
 # Ignore IDEA config
 *.iml
-/.idea/*
-!/.idea/codeStyles
-/core/src/main/golang/.idea/*
-!/core/src/main/golang/.idea/codeStyles
-/core/src/foss/golang/.idea/*
-!/core/src/foss/golang/.idea/codeStyles
-/core/src/premium/golang/.idea/*
-!/core/src/premium/golang/.idea/codeStyles
+.idea
 
 # Ignore builtin geofiles
 app/src/main/assets
