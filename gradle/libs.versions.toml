@@ -6,7 +6,7 @@ room = "2.8.4"
 okhttp = "5.3.2"
 
 [libraries]
-build-android = { module = "com.android.tools.build:gradle", version = "8.13.2" }
+build-android = { module = "com.android.tools.build:gradle", version = "9.0.1" }
 build-kotlin-common = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
 build-kotlin-serialization = { module = "org.jetbrains.kotlin:kotlin-serialization", version.ref = "kotlin" }
 build-ksp = { module = "com.google.devtools.ksp:symbol-processing-gradle-plugin", version = "2.3.6" }
