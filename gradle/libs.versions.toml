@@ -35,3 +35,4 @@ okhttp-interceptor = { module = "com.squareup.okhttp3:logging-interceptor", vers
 
 [plugins]
 golang = "io.github.goooler.golang:0.1.0"
+download = "de.undercouch.download:5.7.0"

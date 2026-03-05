@@ -1,13 +1,11 @@
 import com.android.build.api.variant.FilterConfiguration
-import org.gradle.kotlin.dsl.androidComponents
-import java.net.URL
-import java.nio.file.Files
-import java.nio.file.StandardCopyOption
+import de.undercouch.gradle.tasks.download.Download
 
 plugins {
     kotlin("android")
     kotlin("kapt")
     id("com.android.application")
+    alias(libs.plugins.download)
 }
 
 androidComponents {
@@ -44,44 +42,27 @@ dependencies {
     implementation(libs.quickie.bundled)
 }
 
-tasks.getByName("clean", type = Delete::class) {
-    delete(file("release"))
-}
-
-val geoFilesDownloadDir = "src/main/assets"
-
-task("downloadGeoFiles") {
-
-    val geoFilesUrls = mapOf(
-        "https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/geoip.metadb" to "geoip.metadb",
-        "https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/geosite.dat" to "geosite.dat",
-        // "https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/country.mmdb" to "country.mmdb",
-        "https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/GeoLite2-ASN.mmdb" to "ASN.mmdb",
+val downloadGeoFiles by tasks.registering(Download::class) {
+    src(
+        listOf(
+            "https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/geoip.metadb",
+            "https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/geosite.dat",
+            "https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/GeoLite2-ASN.mmdb",
+        ),
     )
-
-    doLast {
-        geoFilesUrls.forEach { (downloadUrl, outputFileName) ->
-            val url = URL(downloadUrl)
-            val outputPath = file("$geoFilesDownloadDir/$outputFileName")
-            outputPath.parentFile.mkdirs()
-            url.openStream().use { input ->
-                Files.copy(input, outputPath.toPath(), StandardCopyOption.REPLACE_EXISTING)
-                println("$outputFileName downloaded to $outputPath")
-            }
+    dest("src/main/assets")
+    onlyIfModified(true)
+    eachFile {
+        if (name == "GeoLite2-ASN.mmdb") {
+            name = "ASN.mmdb"
         }
     }
 }
 
-afterEvaluate {
-    val downloadGeoFilesTask = tasks["downloadGeoFiles"]
-
-    tasks.forEach {
-        if (it.name.startsWith("assemble")) {
-            it.dependsOn(downloadGeoFilesTask)
-        }
-    }
+tasks.preBuild {
+    dependsOn(downloadGeoFiles)
 }
 
-tasks.getByName("clean", type = Delete::class) {
-    delete(file(geoFilesDownloadDir))
+tasks.clean {
+    delete(downloadGeoFiles)
 }
