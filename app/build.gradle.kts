@@ -1,11 +1,102 @@
 import com.android.build.api.variant.FilterConfiguration
 import de.undercouch.gradle.tasks.download.Download
+import java.util.Properties
 
 plugins {
-    kotlin("android")
-    kotlin("kapt")
-    id("com.android.application")
+    alias(libs.plugins.android.application)
+    alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.kotlin.kapt)
     alias(libs.plugins.download)
+}
+
+android {
+    namespace = "com.github.kr328.clash"
+    defaultConfig {
+        applicationId = namespace
+        targetSdk = 35
+        versionCode = 211023
+        versionName = "2.11.23"
+        resValue("string", "release_name", "v2.11.23")
+        resValue("integer", "release_code", "211023")
+        ndk.abiFilters += listOf("arm64-v8a", "armeabi-v7a", "x86", "x86_64")
+    }
+
+    val localProperties = Properties()
+    val localPropertiesFile = rootProject.file("local.properties")
+    if (localPropertiesFile.exists()) {
+        localPropertiesFile.inputStream().use(localProperties::load)
+    }
+    val removeSuffix = localProperties.getProperty("remove.suffix")?.toBoolean() == true
+
+    productFlavors {
+        named("alpha") {
+            resValue("string", "launch_name", "@string/launch_name_alpha")
+            resValue("string", "application_name", "@string/application_name_alpha")
+            if (!removeSuffix) {
+                applicationIdSuffix = ".alpha"
+                versionNameSuffix = ".Alpha"
+            }
+        }
+        named("meta") {
+            isDefault = true
+            resValue("string", "launch_name", "@string/launch_name_meta")
+            resValue("string", "application_name", "@string/application_name_meta")
+            if (!removeSuffix) {
+                applicationIdSuffix = ".meta"
+                versionNameSuffix = ".Meta"
+            }
+        }
+    }
+
+    signingConfigs {
+        create("release") {
+            val keystore = rootProject.file("signing.properties")
+            if (keystore.exists()) {
+                val prop = Properties()
+                keystore.inputStream().use(prop::load)
+
+                storeFile = rootProject.file("release.keystore")
+                storePassword = prop.getProperty("keystore.password")
+                keyAlias = prop.getProperty("key.alias")
+                keyPassword = prop.getProperty("key.password")
+            } else {
+                initWith(signingConfigs["debug"])
+            }
+        }
+    }
+
+    buildTypes {
+        all {
+            signingConfig = signingConfigs["release"]
+        }
+        release {
+            isMinifyEnabled = true
+            isShrinkResources = true
+        }
+        named("debug") {
+            versionNameSuffix = ".debug"
+        }
+    }
+
+    buildFeatures {
+        dataBinding = true
+        resValues = true
+    }
+
+    packaging {
+        resources {
+            excludes.add("DebugProbesKt.bin")
+        }
+    }
+
+    splits {
+        abi {
+            isEnable = true
+            isUniversalApk = true
+            reset()
+            include("arm64-v8a", "armeabi-v7a", "x86", "x86_64")
+        }
+    }
 }
 
 androidComponents {
@@ -16,7 +107,7 @@ androidComponents {
                 val abiName = output.filters
                     .find { it.filterType == FilterConfiguration.FilterType.ABI }
                     ?.identifier ?: "universal"
-                val newApkName = "cmfa-${versionName.get()}-meta-${abiName}-${variant.buildType}.apk"
+                val newApkName = "cmfa-${versionName.get()}-meta-$abiName-${variant.buildType}.apk"
                 outputFileName = newApkName
             }
         }
@@ -24,12 +115,12 @@ androidComponents {
 }
 
 dependencies {
-    compileOnly(project(":hideapi"))
+    compileOnly(projects.hideapi)
 
-    implementation(project(":core"))
-    implementation(project(":service"))
-    implementation(project(":design"))
-    implementation(project(":common"))
+    implementation(projects.core)
+    implementation(projects.service)
+    implementation(projects.design)
+    implementation(projects.common)
 
     implementation(libs.kotlin.coroutine)
     implementation(libs.androidx.core)

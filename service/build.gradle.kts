@@ -1,13 +1,13 @@
 plugins {
-    kotlin("android")
-    id("kotlinx-serialization")
-    id("com.android.library")
-    id("com.google.devtools.ksp")
+    alias(libs.plugins.android.library)
+    alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.ksp)
 }
 
 dependencies {
-    implementation(project(":core"))
-    implementation(project(":common"))
+    implementation(projects.core)
+    implementation(projects.common)
 
     ksp(libs.kaidl.compiler)
     ksp(libs.androidx.room.compiler)
