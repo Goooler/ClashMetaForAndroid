@@ -48,19 +48,18 @@ android {
         }
     }
 
-    val releaseSigning = signingConfigs.create("release") {
-        val keystore = rootProject.file("signing.properties")
-        if (keystore.exists()) {
+    val keystore = rootProject.file("signing.properties")
+    val releaseSigning = if (keystore.exists()) {
+        signingConfigs.create("release") {
             val prop = Properties()
             keystore.inputStream().use(prop::load)
-
             storeFile = rootProject.file("release.keystore")
             storePassword = prop.getProperty("keystore.password")
             keyAlias = prop.getProperty("key.alias")
             keyPassword = prop.getProperty("key.password")
-        } else {
-            initWith(signingConfigs["debug"])
         }
+    } else {
+        signingConfigs["debug"]
     }
 
     buildTypes {
