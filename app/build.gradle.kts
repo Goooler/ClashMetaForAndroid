@@ -12,7 +12,7 @@ plugins {
 android {
     namespace = "com.github.kr328.clash"
     defaultConfig {
-        applicationId = namespace
+        applicationId = "com.github.metacubex.clash"
         targetSdk = 35
         versionCode = 211023
         versionName = "2.11.23"
