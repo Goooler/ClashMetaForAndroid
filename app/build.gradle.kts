@@ -118,8 +118,6 @@ androidComponents {
 }
 
 dependencies {
-    compileOnly(projects.hideapi)
-
     implementation(projects.core)
     implementation(projects.service)
     implementation(projects.design)
