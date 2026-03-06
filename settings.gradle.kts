@@ -8,11 +8,24 @@ pluginManagement {
 }
 
 dependencyResolutionManagement {
-    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositoriesMode = RepositoriesMode.FAIL_ON_PROJECT_REPOS
     repositories {
         google()
         mavenCentral()
         maven("https://raw.githubusercontent.com/MetaCubeX/maven-backup/main/releases")
+    }
+}
+
+plugins {
+    id("com.gradle.develocity") version "4.3.2"
+}
+
+develocity {
+    buildScan {
+        termsOfUseUrl = "https://gradle.com/help/legal-terms-of-use"
+        termsOfUseAgree = "yes"
+        val isCI = providers.environmentVariable("CI").isPresent
+        publishing.onlyIf { isCI }
     }
 }
 
@@ -29,16 +42,3 @@ include(
     ":common",
     ":hideapi",
 )
-
-plugins {
-    id("com.gradle.develocity") version "4.3.2"
-}
-
-develocity {
-    buildScan {
-        termsOfUseUrl = "https://gradle.com/help/legal-terms-of-use"
-        termsOfUseAgree = "yes"
-        val isCI = providers.environmentVariable("CI").isPresent
-        publishing.onlyIf { isCI }
-    }
-}

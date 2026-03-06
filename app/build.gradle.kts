@@ -48,26 +48,24 @@ android {
         }
     }
 
-    signingConfigs {
-        create("release") {
-            val keystore = rootProject.file("signing.properties")
-            if (keystore.exists()) {
-                val prop = Properties()
-                keystore.inputStream().use(prop::load)
+    val releaseSigning = signingConfigs.create("release") {
+        val keystore = rootProject.file("signing.properties")
+        if (keystore.exists()) {
+            val prop = Properties()
+            keystore.inputStream().use(prop::load)
 
-                storeFile = rootProject.file("release.keystore")
-                storePassword = prop.getProperty("keystore.password")
-                keyAlias = prop.getProperty("key.alias")
-                keyPassword = prop.getProperty("key.password")
-            } else {
-                initWith(signingConfigs["debug"])
-            }
+            storeFile = rootProject.file("release.keystore")
+            storePassword = prop.getProperty("keystore.password")
+            keyAlias = prop.getProperty("key.alias")
+            keyPassword = prop.getProperty("key.password")
+        } else {
+            initWith(signingConfigs["debug"])
         }
     }
 
     buildTypes {
         all {
-            signingConfig = signingConfigs["release"]
+            signingConfig = releaseSigning
         }
         release {
             isMinifyEnabled = true
