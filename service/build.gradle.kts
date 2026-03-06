@@ -9,9 +9,6 @@ dependencies {
     implementation(projects.core)
     implementation(projects.common)
 
-    ksp(libs.kaidl.compiler)
-    ksp(libs.androidx.room.compiler)
-
     implementation(libs.kotlin.coroutine)
     implementation(libs.kotlin.serialization.json)
     implementation(libs.androidx.core)
@@ -21,13 +18,7 @@ dependencies {
     implementation(libs.rikkax.multiprocess)
     implementation(libs.okhttp.client)
     implementation(libs.okhttp.interceptor)
-}
 
-afterEvaluate {
-    android {
-        libraryVariants.forEach {
-            sourceSets[it.name].kotlin.srcDir(buildDir.resolve("generated/ksp/${it.name}/kotlin"))
-            sourceSets[it.name].java.srcDir(buildDir.resolve("generated/ksp/${it.name}/java"))
-        }
-    }
+    ksp(libs.kaidl.compiler)
+    ksp(libs.androidx.room.compiler)
 }
