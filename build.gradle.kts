@@ -39,16 +39,16 @@ allprojects {
                     java.srcDirs("src/foss/java")
                 }
             }
-            compileOptions {
-                sourceCompatibility = JavaVersion.VERSION_17
-                targetCompatibility = JavaVersion.VERSION_17
+            compileOptions.apply {
+                sourceCompatibility(libs.versions.jvmTarget.get())
+                targetCompatibility(libs.versions.jvmTarget.get())
             }
         }
     }
 
     tasks.withType<KotlinCompile>().configureEach {
         compilerOptions {
-            jvmTarget = JvmTarget.JVM_17
+            jvmTarget = JvmTarget.fromTarget(libs.versions.jvmTarget.get())
         }
     }
 }
