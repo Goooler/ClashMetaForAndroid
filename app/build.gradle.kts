@@ -16,8 +16,8 @@ android {
         targetSdk = 35
         versionCode = 211023
         versionName = "2.11.23"
+        resValue("integer", "release_code", versionCode.toString())
         resValue("string", "release_name", "v$versionName")
-        resValue("integer", "release_code", "211023")
         ndk.abiFilters += listOf("arm64-v8a", "armeabi-v7a", "x86", "x86_64")
     }
 
