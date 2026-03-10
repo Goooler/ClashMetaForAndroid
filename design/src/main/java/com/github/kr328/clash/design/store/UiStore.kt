@@ -1,6 +1,8 @@
 package com.github.kr328.clash.design.store
 
+import android.content.ComponentName
 import android.content.Context
+import android.content.pm.PackageManager
 import com.github.kr328.clash.common.store.Store
 import com.github.kr328.clash.common.store.asStoreProvider
 import com.github.kr328.clash.core.model.ProxySort
@@ -27,7 +29,9 @@ class UiStore(context: Context) {
 
     var hideAppIcon: Boolean by store.boolean(
         key = "hide_app_icon",
-        defaultValue = false
+        defaultValue = context.packageManager.getComponentEnabledSetting(
+            ComponentName(context, "${context.packageName}.$MAIN_ACTIVITY_ALIAS")
+        ) == PackageManager.COMPONENT_ENABLED_STATE_DISABLED,
     )
 
     var hideFromRecents: Boolean by store.boolean(
@@ -74,5 +78,6 @@ class UiStore(context: Context) {
 
     companion object {
         private const val PREFERENCE_NAME = "ui"
+        private const val MAIN_ACTIVITY_ALIAS = "MainActivityAlias"
     }
 }
