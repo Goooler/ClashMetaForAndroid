@@ -1,36 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <shortcuts xmlns:android="http://schemas.android.com/apk/res/android">
     <shortcut
-        android:shortcutId="toggle_clash"
         android:enabled="true"
         android:icon="@mipmap/ic_launcher"
-        android:shortcutShortLabel="@string/shortcut_toggle_short"
-        android:shortcutLongLabel="@string/shortcut_toggle_long">
+        android:shortcutId="toggle_clash"
+        android:shortcutLongLabel="@string/shortcut_toggle_long"
+        android:shortcutShortLabel="@string/shortcut_toggle_short">
         <intent
             android:action="com.github.metacubex.clash.meta.action.TOGGLE_CLASH"
-            android:targetPackage="${applicationId}"
-            android:targetClass="com.github.kr328.clash.ExternalControlActivity" />
+            android:targetClass="com.github.kr328.clash.ExternalControlActivity"
+            android:targetPackage="${applicationId}" />
     </shortcut>
     <shortcut
-        android:shortcutId="start_clash"
         android:enabled="true"
         android:icon="@mipmap/ic_launcher"
-        android:shortcutShortLabel="@string/shortcut_start_short"
-        android:shortcutLongLabel="@string/shortcut_start_long">
+        android:shortcutId="start_clash"
+        android:shortcutLongLabel="@string/shortcut_start_long"
+        android:shortcutShortLabel="@string/shortcut_start_short">
         <intent
             android:action="com.github.metacubex.clash.meta.action.START_CLASH"
-            android:targetPackage="${applicationId}"
-            android:targetClass="com.github.kr328.clash.ExternalControlActivity" />
+            android:targetClass="com.github.kr328.clash.ExternalControlActivity"
+            android:targetPackage="${applicationId}" />
     </shortcut>
     <shortcut
-        android:shortcutId="stop_clash"
         android:enabled="true"
         android:icon="@mipmap/ic_launcher"
-        android:shortcutShortLabel="@string/shortcut_stop_short"
-        android:shortcutLongLabel="@string/shortcut_stop_long">
+        android:shortcutId="stop_clash"
+        android:shortcutLongLabel="@string/shortcut_stop_long"
+        android:shortcutShortLabel="@string/shortcut_stop_short">
         <intent
             android:action="com.github.metacubex.clash.meta.action.STOP_CLASH"
-            android:targetPackage="${applicationId}"
-            android:targetClass="com.github.kr328.clash.ExternalControlActivity" />
+            android:targetClass="com.github.kr328.clash.ExternalControlActivity"
+            android:targetPackage="${applicationId}" />
     </shortcut>
 </shortcuts>
