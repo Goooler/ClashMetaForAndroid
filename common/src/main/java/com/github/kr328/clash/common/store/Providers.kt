@@ -53,6 +53,10 @@ class SharedPreferenceProvider(private val preferences: SharedPreferences) : Sto
             putBoolean(key, value)
         }
     }
+
+    override fun contains(key: String): Boolean {
+        return preferences.contains(key)
+    }
 }
 
 fun SharedPreferences.asStoreProvider(): StoreProvider {

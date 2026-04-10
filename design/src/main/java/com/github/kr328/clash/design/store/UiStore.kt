@@ -29,11 +29,13 @@ class UiStore(context: Context) {
 
     var hideAppIcon: Boolean by store.boolean(
         key = "hide_app_icon",
-        defaultValue = context.packageManager.getComponentEnabledSetting(
-            ComponentName(context, context.mainActivityAlias)
-        ).let { state ->
-            state != PackageManager.COMPONENT_ENABLED_STATE_ENABLED &&
-                state != PackageManager.COMPONENT_ENABLED_STATE_DEFAULT
+        defaultValueProvider = {
+            context.packageManager.getComponentEnabledSetting(
+                ComponentName(context, context.mainActivityAlias)
+            ).let { state ->
+                state != PackageManager.COMPONENT_ENABLED_STATE_ENABLED &&
+                    state != PackageManager.COMPONENT_ENABLED_STATE_DEFAULT
+            }
         },
     )
 
