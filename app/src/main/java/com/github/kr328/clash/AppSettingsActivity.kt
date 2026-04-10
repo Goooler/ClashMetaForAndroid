@@ -71,7 +71,7 @@ class AppSettingsActivity : BaseActivity<AppSettingsDesign>(), Behavior {
             PackageManager.COMPONENT_ENABLED_STATE_ENABLED
         }
         packageManager.setComponentEnabledSetting(
-            ComponentName(this, mainActivityAlias),
+            mainActivityAlias,
             newState,
             PackageManager.DONT_KILL_APP
         )

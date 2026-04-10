@@ -29,12 +29,11 @@ class UiStore(context: Context) {
 
     var hideAppIcon: Boolean by store.boolean(
         key = "hide_app_icon",
-        defaultValue = context.packageManager.getComponentEnabledSetting(
-            ComponentName(context, context.mainActivityAlias)
-        ).let { state ->
-            state != PackageManager.COMPONENT_ENABLED_STATE_ENABLED &&
-                state != PackageManager.COMPONENT_ENABLED_STATE_DEFAULT
-        },
+        defaultValue = context.packageManager.getComponentEnabledSetting(context.mainActivityAlias)
+            .let { state ->
+                state != PackageManager.COMPONENT_ENABLED_STATE_ENABLED &&
+                        state != PackageManager.COMPONENT_ENABLED_STATE_DEFAULT
+            },
     )
 
     var hideFromRecents: Boolean by store.boolean(
@@ -81,6 +80,11 @@ class UiStore(context: Context) {
 
     companion object {
         private const val PREFERENCE_NAME = "ui"
-        val Context.mainActivityAlias: String get() = "$packageName.MainActivityAlias.class"
+
+        val Context.mainActivityAlias: ComponentName
+            get() = ComponentName(
+                this,
+                "$packageName.MainActivityAlias.class"
+            )
     }
 }
