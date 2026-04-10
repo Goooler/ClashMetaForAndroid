@@ -30,7 +30,7 @@ class UiStore(context: Context) {
     var hideAppIcon: Boolean by store.boolean(
         key = "hide_app_icon",
         defaultValue = context.packageManager.getComponentEnabledSetting(
-            ComponentName(context, "${context.packageName}.$MAIN_ACTIVITY_ALIAS")
+            ComponentName(context, context.mainActivityAlias)
         ) == PackageManager.COMPONENT_ENABLED_STATE_DISABLED,
     )
 
@@ -78,6 +78,6 @@ class UiStore(context: Context) {
 
     companion object {
         private const val PREFERENCE_NAME = "ui"
-        private const val MAIN_ACTIVITY_ALIAS = "MainActivityAlias"
+        val Context.mainActivityAlias: String get() = "$packageName.MainActivityAlias"
     }
 }
