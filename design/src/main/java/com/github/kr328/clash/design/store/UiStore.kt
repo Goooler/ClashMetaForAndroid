@@ -82,9 +82,6 @@ class UiStore(context: Context) {
         private const val PREFERENCE_NAME = "ui"
 
         val Context.mainActivityAlias: ComponentName
-            get() = ComponentName(
-                this,
-                "$packageName.MainActivityAlias.class"
-            )
+            get() = ComponentName(this, "com.github.kr328.clash.MainActivityAlias")
     }
 }
