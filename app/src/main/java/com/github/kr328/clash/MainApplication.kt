@@ -21,6 +21,8 @@ import com.github.kr328.clash.design.R as DesignR
 
 @Suppress("unused")
 class MainApplication : Application() {
+    private val uiStore by lazy(LazyThreadSafetyMode.NONE) { UiStore(this) }
+
     override fun attachBaseContext(base: Context?) {
         super.attachBaseContext(base)
 
@@ -44,8 +46,7 @@ class MainApplication : Application() {
     }
 
     private fun setupShortcuts() {
-        val hideAppIcon = UiStore(this).hideAppIcon
-        if (hideAppIcon) {
+        if (uiStore.hideAppIcon) {
             // Prevent launcher activity not found.
             ShortcutManagerCompat.removeAllDynamicShortcuts(this)
             return
