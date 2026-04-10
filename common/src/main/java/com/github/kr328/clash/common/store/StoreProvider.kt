@@ -15,6 +15,4 @@ interface StoreProvider {
 
     fun getBoolean(key: String, defaultValue: Boolean): Boolean
     fun setBoolean(key: String, value: Boolean)
-
-    fun contains(key: String): Boolean
 }

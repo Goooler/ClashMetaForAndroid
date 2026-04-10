@@ -68,22 +68,6 @@ class Store(val provider: StoreProvider) {
         }
     }
 
-    fun boolean(key: String, defaultValueProvider: () -> Boolean): Delegate<Boolean> {
-        return object : Delegate<Boolean> {
-            override fun getValue(thisRef: Any?, property: KProperty<*>): Boolean {
-                return if (provider.contains(key)) {
-                    provider.getBoolean(key, false)
-                } else {
-                    defaultValueProvider()
-                }
-            }
-
-            override fun setValue(thisRef: Any?, property: KProperty<*>, value: Boolean) {
-                provider.setBoolean(key, value)
-            }
-        }
-    }
-
     fun <T : Enum<T>> enum(key: String, defaultValue: T, values: Array<T>): Delegate<T> {
         return object : Delegate<T> {
             override fun getValue(thisRef: Any?, property: KProperty<*>): T {
