@@ -81,6 +81,6 @@ class UiStore(context: Context) {
 
     companion object {
         private const val PREFERENCE_NAME = "ui"
-        val Context.mainActivityAlias: String get() = "$packageName.MainActivityAlias"
+        val Context.mainActivityAlias: String get() = "$packageName.MainActivityAlias.class"
     }
 }
