@@ -75,6 +75,7 @@ class AppSettingsActivity : BaseActivity<AppSettingsDesign>(), Behavior {
             PackageManager.DONT_KILL_APP
         )
         if (hide) {
+            // Prevent launcher activity not found.
             ShortcutManagerCompat.removeAllDynamicShortcuts(this)
         }
     }

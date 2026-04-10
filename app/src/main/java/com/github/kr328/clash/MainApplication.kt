@@ -49,6 +49,7 @@ class MainApplication : Application() {
             ComponentName(this, mainActivityAlias)
         )
         if (aliasState == PackageManager.COMPONENT_ENABLED_STATE_DISABLED) {
+            // Prevent launcher activity not found.
             ShortcutManagerCompat.removeAllDynamicShortcuts(this)
             return
         }
