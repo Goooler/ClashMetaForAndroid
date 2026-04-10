@@ -48,8 +48,9 @@ class MainApplication : Application() {
         val aliasState = packageManager.getComponentEnabledSetting(
             ComponentName(this, mainActivityAlias)
         )
-        if (aliasState == PackageManager.COMPONENT_ENABLED_STATE_DISABLED) {
-            // Prevent launcher activity not found.
+        if (aliasState != PackageManager.COMPONENT_ENABLED_STATE_ENABLED &&
+            aliasState != PackageManager.COMPONENT_ENABLED_STATE_DEFAULT
+        ) {
             ShortcutManagerCompat.removeAllDynamicShortcuts(this)
             return
         }
