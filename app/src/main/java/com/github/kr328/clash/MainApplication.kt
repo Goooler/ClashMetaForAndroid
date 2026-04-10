@@ -12,6 +12,7 @@ import com.github.kr328.clash.common.Global
 import com.github.kr328.clash.common.compat.currentProcessName
 import com.github.kr328.clash.common.constants.Intents
 import com.github.kr328.clash.common.log.Log
+import com.github.kr328.clash.design.store.UiStore
 import com.github.kr328.clash.remote.Remote
 import com.github.kr328.clash.service.util.sendServiceRecreated
 import com.github.kr328.clash.util.clashDir
@@ -45,12 +46,9 @@ class MainApplication : Application() {
     }
 
     private fun setupShortcuts() {
-        val aliasState = packageManager.getComponentEnabledSetting(
-            ComponentName(this, mainActivityAlias)
-        )
-        if (aliasState != PackageManager.COMPONENT_ENABLED_STATE_ENABLED &&
-            aliasState != PackageManager.COMPONENT_ENABLED_STATE_DEFAULT
-        ) {
+        val hideAppIcon = UiStore(this).hideAppIcon
+        if (hideAppIcon) {
+            // Prevent launcher activity not found.
             ShortcutManagerCompat.removeAllDynamicShortcuts(this)
             return
         }
