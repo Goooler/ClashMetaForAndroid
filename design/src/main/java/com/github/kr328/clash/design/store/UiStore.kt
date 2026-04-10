@@ -30,7 +30,7 @@ class UiStore(context: Context) {
     var hideAppIcon: Boolean by store.boolean(
         key = "hide_app_icon",
         defaultValue = context.packageManager.getComponentEnabledSetting(
-            ComponentName(context, MAIN_ACTIVITY_ALIAS)
+            ComponentName(context, context.mainActivityAlias)
         ).let { state ->
             state != PackageManager.COMPONENT_ENABLED_STATE_ENABLED &&
                 state != PackageManager.COMPONENT_ENABLED_STATE_DEFAULT
@@ -81,6 +81,6 @@ class UiStore(context: Context) {
 
     companion object {
         private const val PREFERENCE_NAME = "ui"
-        const val MAIN_ACTIVITY_ALIAS: String = "com.github.metacubex.clash.MainActivityAlias"
+        val Context.mainActivityAlias: String get() = "$packageName.MainActivityAlias"
     }
 }
