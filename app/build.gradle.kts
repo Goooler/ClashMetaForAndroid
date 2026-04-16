@@ -13,7 +13,7 @@ android {
     defaultConfig {
         applicationId = "com.github.metacubex.clash"
         targetSdk = 35
-        versionCode = 212100
+        versionCode = 212101
         versionName = "2.12.1"
         resValue("integer", "release_code", versionCode.toString())
         resValue("string", "release_name", "v$versionName")
