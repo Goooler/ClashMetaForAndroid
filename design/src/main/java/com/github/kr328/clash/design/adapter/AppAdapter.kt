@@ -8,10 +8,8 @@ import com.github.kr328.clash.design.model.AppInfo
 import com.github.kr328.clash.design.util.layoutInflater
 import com.github.kr328.clash.design.util.root
 
-class AppAdapter(
-    private val context: Context,
-    private val selected: MutableSet<String>,
-) : RecyclerView.Adapter<AppAdapter.Holder>() {
+class AppAdapter(private val context: Context, private val selected: MutableSet<String>) :
+    RecyclerView.Adapter<AppAdapter.Holder>() {
     class Holder(val binding: AdapterAppBinding) : RecyclerView.ViewHolder(binding.root)
 
     var apps: List<AppInfo> = emptyList()
@@ -21,10 +19,7 @@ class AppAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Holder {
-        return Holder(
-            AdapterAppBinding
-                .inflate(context.layoutInflater, context.root, false)
-        )
+        return Holder(AdapterAppBinding.inflate(context.layoutInflater, context.root, false))
     }
 
     override fun onBindViewHolder(holder: Holder, position: Int) {

@@ -2,16 +2,14 @@ package com.github.kr328.clash.common.util
 
 import android.content.Intent
 import android.net.Uri
-import java.util.*
+import java.util.UUID
 
 fun Intent.grantPermissions(read: Boolean = true, write: Boolean = true): Intent {
     var flags = 0
 
-    if (read)
-        flags = flags or Intent.FLAG_GRANT_READ_URI_PERMISSION
+    if (read) flags = flags or Intent.FLAG_GRANT_READ_URI_PERMISSION
 
-    if (write)
-        flags = flags or Intent.FLAG_GRANT_WRITE_URI_PERMISSION
+    if (write) flags = flags or Intent.FLAG_GRANT_WRITE_URI_PERMISSION
 
     addFlags(flags)
 

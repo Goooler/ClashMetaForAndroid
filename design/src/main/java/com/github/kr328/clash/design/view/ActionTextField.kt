@@ -10,14 +10,16 @@ import com.github.kr328.clash.design.R
 import com.github.kr328.clash.design.databinding.ComponentActionTextFieldBinding
 import com.github.kr328.clash.design.util.layoutInflater
 
-class ActionTextField @JvmOverloads constructor(
+class ActionTextField
+@JvmOverloads
+constructor(
     context: Context,
     attributeSet: AttributeSet? = null,
     @AttrRes defStyleAttr: Int = 0,
-    @StyleRes defStyleRes: Int = 0
+    @StyleRes defStyleRes: Int = 0,
 ) : FrameLayout(context, attributeSet, defStyleAttr, defStyleRes) {
-    private val binding = ComponentActionTextFieldBinding
-        .inflate(context.layoutInflater, this, true)
+    private val binding =
+        ComponentActionTextFieldBinding.inflate(context.layoutInflater, this, true)
 
     var icon: Drawable?
         get() = binding.iconView.background
@@ -34,10 +36,8 @@ class ActionTextField @JvmOverloads constructor(
     var text: CharSequence?
         get() = binding.textView.text
         set(value) {
-            if (isEnabled)
-                binding.textView.text = value
-            else
-                binding.textView.text = context.getText(R.string.unavailable)
+            if (isEnabled) binding.textView.text = value
+            else binding.textView.text = context.getText(R.string.unavailable)
         }
 
     var placeholder: CharSequence?
@@ -67,21 +67,23 @@ class ActionTextField @JvmOverloads constructor(
     }
 
     init {
-        context.theme.obtainStyledAttributes(
-            attributeSet,
-            R.styleable.ActionTextField,
-            defStyleAttr,
-            defStyleRes
-        ).apply {
-            try {
-                isEnabled = getBoolean(R.styleable.ActionTextField_enabled, true)
-                icon = getDrawable(R.styleable.ActionTextField_icon)
-                title = getString(R.styleable.ActionTextField_title)
-                text = getString(R.styleable.ActionTextField_text)
-                placeholder = getString(R.styleable.ActionTextField_placeholder)
-            } finally {
-                recycle()
+        context.theme
+            .obtainStyledAttributes(
+                attributeSet,
+                R.styleable.ActionTextField,
+                defStyleAttr,
+                defStyleRes,
+            )
+            .apply {
+                try {
+                    isEnabled = getBoolean(R.styleable.ActionTextField_enabled, true)
+                    icon = getDrawable(R.styleable.ActionTextField_icon)
+                    title = getString(R.styleable.ActionTextField_title)
+                    text = getString(R.styleable.ActionTextField_text)
+                    placeholder = getString(R.styleable.ActionTextField_placeholder)
+                } finally {
+                    recycle()
+                }
             }
-        }
     }
 }

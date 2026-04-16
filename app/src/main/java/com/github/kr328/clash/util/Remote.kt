@@ -5,13 +5,13 @@ import com.github.kr328.clash.common.log.Log
 import com.github.kr328.clash.remote.Remote
 import com.github.kr328.clash.service.remote.IClashManager
 import com.github.kr328.clash.service.remote.IProfileManager
+import kotlin.coroutines.CoroutineContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import kotlin.coroutines.CoroutineContext
 
 suspend fun <T> withClash(
     context: CoroutineContext = Dispatchers.IO,
-    block: suspend IClashManager.() -> T
+    block: suspend IClashManager.() -> T,
 ): T {
     while (true) {
         val remote = Remote.service.remote.get()
@@ -29,7 +29,7 @@ suspend fun <T> withClash(
 
 suspend fun <T> withProfile(
     context: CoroutineContext = Dispatchers.IO,
-    block: suspend IProfileManager.() -> T
+    block: suspend IProfileManager.() -> T,
 ): T {
     while (true) {
         val remote = Remote.service.remote.get()

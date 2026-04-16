@@ -6,10 +6,8 @@ import com.github.kr328.clash.design.component.ProxyView
 import com.github.kr328.clash.design.component.ProxyViewConfig
 import com.github.kr328.clash.design.component.ProxyViewState
 
-class ProxyAdapter(
-    private val config: ProxyViewConfig,
-    private val clicked: (String) -> Unit,
-) : RecyclerView.Adapter<ProxyAdapter.Holder>() {
+class ProxyAdapter(private val config: ProxyViewConfig, private val clicked: (String) -> Unit) :
+    RecyclerView.Adapter<ProxyAdapter.Holder>() {
     class Holder(val view: ProxyView) : RecyclerView.ViewHolder(view)
 
     var selectable: Boolean = false
@@ -25,9 +23,7 @@ class ProxyAdapter(
         holder.view.apply {
             state = current
 
-            setOnClickListener {
-                clicked(current.proxy.name)
-            }
+            setOnClickListener { clicked(current.proxy.name) }
 
             val isSelector = selectable
 

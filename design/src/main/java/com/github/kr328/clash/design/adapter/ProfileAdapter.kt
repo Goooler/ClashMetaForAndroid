@@ -5,7 +5,6 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.github.kr328.clash.design.databinding.AdapterProfileBinding
 import com.github.kr328.clash.design.model.ProfilePageState
-import com.github.kr328.clash.design.model.ProxyPageState
 import com.github.kr328.clash.design.ui.ObservableCurrentTime
 import com.github.kr328.clash.design.util.layoutInflater
 import com.github.kr328.clash.service.model.Profile
@@ -28,9 +27,9 @@ class ProfileAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Holder {
         return Holder(
-            AdapterProfileBinding
-                .inflate(context.layoutInflater, parent, false)
-                .also { it.currentTime = currentTime }
+            AdapterProfileBinding.inflate(context.layoutInflater, parent, false).also {
+                it.currentTime = currentTime
+            }
         )
     }
 
@@ -38,16 +37,11 @@ class ProfileAdapter(
         val current = profiles[position]
         val binding = holder.binding
 
-        if (current === binding.profile)
-            return
+        if (current === binding.profile) return
 
         binding.profile = current
-        binding.setClicked {
-            onClicked(current)
-        }
-        binding.setMenu {
-            onMenuClicked(current)
-        }
+        binding.setClicked { onClicked(current) }
+        binding.setMenu { onMenuClicked(current) }
     }
 
     override fun getItemCount(): Int {

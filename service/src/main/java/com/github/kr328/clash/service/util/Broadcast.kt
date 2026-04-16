@@ -4,40 +4,38 @@ import android.content.Context
 import android.content.Intent
 import com.github.kr328.clash.common.constants.Intents
 import com.github.kr328.clash.common.constants.Permissions
-import java.util.*
+import java.util.UUID
 
 fun Context.sendBroadcastSelf(intent: Intent) {
-    sendBroadcast(
-        intent.setPackage(this.packageName),
-        Permissions.RECEIVE_SELF_BROADCASTS
-    )
+    sendBroadcast(intent.setPackage(this.packageName), Permissions.RECEIVE_SELF_BROADCASTS)
 }
 
 fun Context.sendProfileChanged(uuid: UUID) {
-    val intent = Intent(Intents.ACTION_PROFILE_CHANGED)
-        .putExtra(Intents.EXTRA_UUID, uuid.toString())
+    val intent =
+        Intent(Intents.ACTION_PROFILE_CHANGED).putExtra(Intents.EXTRA_UUID, uuid.toString())
 
     sendBroadcastSelf(intent)
 }
 
 fun Context.sendProfileLoaded(uuid: UUID) {
-    val intent = Intent(Intents.ACTION_PROFILE_LOADED)
-        .putExtra(Intents.EXTRA_UUID, uuid.toString())
+    val intent = Intent(Intents.ACTION_PROFILE_LOADED).putExtra(Intents.EXTRA_UUID, uuid.toString())
 
     sendBroadcastSelf(intent)
 }
 
 fun Context.sendProfileUpdateCompleted(uuid: UUID) {
-    val intent = Intent(Intents.ACTION_PROFILE_UPDATE_COMPLETED)
-        .putExtra(Intents.EXTRA_UUID, uuid.toString())
+    val intent =
+        Intent(Intents.ACTION_PROFILE_UPDATE_COMPLETED)
+            .putExtra(Intents.EXTRA_UUID, uuid.toString())
 
     sendBroadcastSelf(intent)
 }
 
 fun Context.sendProfileUpdateFailed(uuid: UUID, reason: String) {
-    val intent = Intent(Intents.ACTION_PROFILE_UPDATE_FAILED)
-        .putExtra(Intents.EXTRA_UUID, uuid.toString())
-        .putExtra(Intents.EXTRA_FAIL_REASON, reason)
+    val intent =
+        Intent(Intents.ACTION_PROFILE_UPDATE_FAILED)
+            .putExtra(Intents.EXTRA_UUID, uuid.toString())
+            .putExtra(Intents.EXTRA_FAIL_REASON, reason)
 
     sendBroadcastSelf(intent)
 }
@@ -58,9 +56,6 @@ fun Context.sendClashStarted() {
 
 fun Context.sendClashStopped(reason: String?) {
     sendBroadcastSelf(
-        Intent(Intents.ACTION_CLASH_STOPPED).putExtra(
-            Intents.EXTRA_STOP_REASON,
-            reason
-        )
+        Intent(Intents.ACTION_CLASH_STOPPED).putExtra(Intents.EXTRA_STOP_REASON, reason)
     )
 }

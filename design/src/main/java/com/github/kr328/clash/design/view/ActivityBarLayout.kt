@@ -8,11 +8,13 @@ import androidx.annotation.AttrRes
 import androidx.annotation.StyleRes
 import com.github.kr328.clash.design.util.resolveThemedColor
 
-class ActivityBarLayout @JvmOverloads constructor(
+class ActivityBarLayout
+@JvmOverloads
+constructor(
     context: Context,
     attributeSet: AttributeSet? = null,
     @AttrRes defStyleAttr: Int = 0,
-    @StyleRes defStyleRes: Int = 0
+    @StyleRes defStyleRes: Int = 0,
 ) : FrameLayout(context, attributeSet, defStyleAttr, defStyleRes) {
     init {
         alpha = 0.96f

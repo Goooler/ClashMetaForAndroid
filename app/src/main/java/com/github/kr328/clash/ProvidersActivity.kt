@@ -3,13 +3,13 @@ package com.github.kr328.clash
 import com.github.kr328.clash.common.util.intent
 import com.github.kr328.clash.common.util.ticker
 import com.github.kr328.clash.design.ProvidersDesign
+import com.github.kr328.clash.design.R
 import com.github.kr328.clash.design.util.showExceptionToast
 import com.github.kr328.clash.util.withClash
+import java.util.concurrent.TimeUnit
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.selects.select
-import java.util.concurrent.TimeUnit
-import com.github.kr328.clash.design.R
 
 class ProvidersActivity : BaseActivity<ProvidersDesign>() {
     override suspend fun main() {
@@ -41,9 +41,7 @@ class ProvidersActivity : BaseActivity<ProvidersDesign>() {
                         is ProvidersDesign.Request.Update -> {
                             launch {
                                 try {
-                                    withClash {
-                                        updateProvider(it.provider.type, it.provider.name)
-                                    }
+                                    withClash { updateProvider(it.provider.type, it.provider.name) }
 
                                     design.notifyChanged(it.index)
                                 } catch (e: Exception) {
@@ -51,7 +49,7 @@ class ProvidersActivity : BaseActivity<ProvidersDesign>() {
                                         getString(
                                             R.string.format_update_provider_failure,
                                             it.provider.name,
-                                            e.message
+                                            e.message,
                                         )
                                     )
 
@@ -62,9 +60,7 @@ class ProvidersActivity : BaseActivity<ProvidersDesign>() {
                     }
                 }
                 if (activityStarted) {
-                    ticker.onReceive {
-                        design.updateElapsed()
-                    }
+                    ticker.onReceive { design.updateElapsed() }
                 }
             }
         }

@@ -2,13 +2,9 @@
 
 package com.github.kr328.clash
 
-import android.Manifest
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.net.Uri
-import android.os.Build
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.core.content.ContextCompat
 import com.github.kr328.clash.common.util.grantPermissions
 import com.github.kr328.clash.common.util.ticker
 import com.github.kr328.clash.common.util.uuid
@@ -18,10 +14,10 @@ import com.github.kr328.clash.remote.FilesClient
 import com.github.kr328.clash.service.model.Profile
 import com.github.kr328.clash.util.fileName
 import com.github.kr328.clash.util.withProfile
+import java.util.Stack
+import java.util.concurrent.TimeUnit
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.selects.select
-import java.util.*
-import java.util.concurrent.TimeUnit
 
 class FilesActivity : BaseActivity<FilesDesign>() {
     override suspend fun main() {
@@ -44,7 +40,8 @@ class FilesActivity : BaseActivity<FilesDesign>() {
             select<Unit> {
                 events.onReceive {
                     when (it) {
-                        Event.ActivityStart, Event.ActivityStop -> {
+                        Event.ActivityStart,
+                        Event.ActivityStop -> {
                             design.fetch(client, stack, root)
                         }
                         else -> Unit
@@ -66,10 +63,12 @@ class FilesActivity : BaseActivity<FilesDesign>() {
                             is FilesDesign.Request.OpenFile -> {
                                 startActivityForResult(
                                     ActivityResultContracts.StartActivityForResult(),
-                                    Intent(Intent.ACTION_VIEW).setDataAndType(
-                                        client.buildDocumentUri(it.file.id),
-                                        "text/plain"
-                                    ).grantPermissions()
+                                    Intent(Intent.ACTION_VIEW)
+                                        .setDataAndType(
+                                            client.buildDocumentUri(it.file.id),
+                                            "text/plain",
+                                        )
+                                        .grantPermissions(),
                                 )
                             }
                             is FilesDesign.Request.DeleteFile -> {
@@ -81,10 +80,11 @@ class FilesActivity : BaseActivity<FilesDesign>() {
                                 client.renameDocument(it.file.id, newName)
                             }
                             is FilesDesign.Request.ImportFile -> {
-                                val uri: Uri? = startActivityForResult(
-                                    ActivityResultContracts.GetContent(),
-                                    "*/*"
-                                )
+                                val uri: Uri? =
+                                    startActivityForResult(
+                                        ActivityResultContracts.GetContent(),
+                                        "*/*",
+                                    )
 
                                 if (uri != null) {
                                     if (it.file == null) {
@@ -97,10 +97,11 @@ class FilesActivity : BaseActivity<FilesDesign>() {
                                 }
                             }
                             is FilesDesign.Request.ExportFile -> {
-                                val uri: Uri? = startActivityForResult(
-                                    ActivityResultContracts.CreateDocument("text/plain"),
-                                    it.file.name
-                                )
+                                val uri: Uri? =
+                                    startActivityForResult(
+                                        ActivityResultContracts.CreateDocument("text/plain"),
+                                        it.file.name,
+                                    )
 
                                 if (uri != null) {
                                     client.copyDocument(uri, it.file.id)
@@ -114,9 +115,7 @@ class FilesActivity : BaseActivity<FilesDesign>() {
                     design.fetch(client, stack, root)
                 }
                 if (activityStarted) {
-                    ticker.onReceive {
-                        design.updateElapsed()
-                    }
+                    ticker.onReceive { design.updateElapsed() }
                 }
             }
         }
@@ -128,14 +127,15 @@ class FilesActivity : BaseActivity<FilesDesign>() {
 
     private suspend fun FilesDesign.fetch(client: FilesClient, stack: Stack<String>, root: String) {
         val documentId = stack.lastOrNull() ?: root
-        val files = if (stack.empty()) {
-            val list = client.list(documentId)
-            val config = list.firstOrNull { it.id.endsWith("config.yaml") }
+        val files =
+            if (stack.empty()) {
+                val list = client.list(documentId)
+                val config = list.firstOrNull { it.id.endsWith("config.yaml") }
 
-            if (config == null || config.size > 0) list else listOf(config)
-        } else {
-            client.list(documentId)
-        }
+                if (config == null || config.size > 0) list else listOf(config)
+            } else {
+                client.list(documentId)
+            }
 
         swapFiles(files, stack.empty())
     }

@@ -1,6 +1,6 @@
 package com.github.kr328.clash.design.model
 
-import java.util.*
+import java.util.Date
 
 data class LogFile(val fileName: String, val date: Date) {
     companion object {

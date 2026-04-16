@@ -6,8 +6,10 @@ import androidx.annotation.StringRes
 import com.github.kr328.clash.design.R
 import com.github.kr328.clash.design.adapter.EditableTextListAdapter
 import com.github.kr328.clash.design.dialog.requestModelTextInput
-import kotlinx.coroutines.*
 import kotlin.reflect.KMutableProperty0
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 interface EditableTextListPreference<T> : ClickablePreference {
     var placeholder: CharSequence?
@@ -41,6 +43,7 @@ fun <T> PreferenceScreen.editableTextList(
                         }
                     }
                 }
+
             override var placeholder: CharSequence? = null
         }
 
@@ -51,24 +54,15 @@ fun <T> PreferenceScreen.editableTextList(
     impl.configure()
 
     launch(Dispatchers.Main) {
-        val v = withContext(Dispatchers.IO) {
-            value.get()
-        }
+        val v = withContext(Dispatchers.IO) { value.get() }
 
         impl.list = v
 
         impl.clicked {
             this@editableTextList.launch(Dispatchers.Main) {
-                val newList = requestEditTextList(
-                    impl.list,
-                    context,
-                    adapter,
-                    impl.title
-                )
+                val newList = requestEditTextList(impl.list, context, adapter, impl.title)
 
-                withContext(Dispatchers.IO) {
-                    value.set(newList)
-                }
+                withContext(Dispatchers.IO) { value.set(newList) }
 
                 impl.list = newList
             }
@@ -84,23 +78,17 @@ private suspend fun <T> requestEditTextList(
     adapter: TextAdapter<T>,
     title: CharSequence,
 ): List<T>? {
-    val recyclerAdapter = EditableTextListAdapter(
-        context,
-        initialValue?.toMutableList() ?: mutableListOf(),
-        adapter
-    )
+    val recyclerAdapter =
+        EditableTextListAdapter(context, initialValue?.toMutableList() ?: mutableListOf(), adapter)
 
-    val result = requestEditableListOverlay(context, recyclerAdapter, title) {
-        val text = context.requestModelTextInput(
-            initial = "",
-            title = title,
-            hint = title
-        )
+    val result =
+        requestEditableListOverlay(context, recyclerAdapter, title) {
+            val text = context.requestModelTextInput(initial = "", title = title, hint = title)
 
-        if (text.isNotBlank()) {
-            recyclerAdapter.addElement(text)
+            if (text.isNotBlank()) {
+                recyclerAdapter.addElement(text)
+            }
         }
-    }
 
     return when (result) {
         EditableListOverlayResult.Cancel -> initialValue

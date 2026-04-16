@@ -7,11 +7,13 @@ import android.widget.FrameLayout
 import kotlin.math.absoluteValue
 import kotlin.math.tan
 
-class VerticalScrollableHost @JvmOverloads constructor(
+class VerticalScrollableHost
+@JvmOverloads
+constructor(
     context: Context,
     attributeSet: AttributeSet? = null,
     defStyleAttr: Int = 0,
-    defStyleRes: Int = 0
+    defStyleRes: Int = 0,
 ) : FrameLayout(context, attributeSet, defStyleAttr, defStyleRes) {
     private var initialX = 0f
     private var initialY = 0f

@@ -5,7 +5,7 @@ import com.github.kr328.clash.core.model.LogMessage
 import com.github.kr328.clash.design.util.format
 import java.io.BufferedWriter
 import java.io.Writer
-import java.util.*
+import java.util.Date
 
 class LogcatFilter(output: Writer, private val context: Context) : BufferedWriter(output) {
     fun writeHeader(time: Date) {

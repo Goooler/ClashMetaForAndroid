@@ -10,11 +10,13 @@ import com.github.kr328.clash.design.util.root
 
 class SettingsDesign(context: Context) : Design<SettingsDesign.Request>(context) {
     enum class Request {
-        StartApp, StartNetwork, StartOverride, StartMetaFeature,
+        StartApp,
+        StartNetwork,
+        StartOverride,
+        StartMetaFeature,
     }
 
-    private val binding = DesignSettingsBinding
-        .inflate(context.layoutInflater, context.root, false)
+    private val binding = DesignSettingsBinding.inflate(context.layoutInflater, context.root, false)
 
     override val root: View
         get() = binding.root

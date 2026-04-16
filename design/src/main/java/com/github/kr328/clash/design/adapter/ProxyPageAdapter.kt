@@ -10,7 +10,12 @@ import com.github.kr328.clash.design.component.ProxyViewState
 import com.github.kr328.clash.design.model.ProxyPageState
 import com.github.kr328.clash.design.model.ProxyState
 import com.github.kr328.clash.design.ui.Surface
-import com.github.kr328.clash.design.util.*
+import com.github.kr328.clash.design.util.addScrolledToBottomObserver
+import com.github.kr328.clash.design.util.bindInsets
+import com.github.kr328.clash.design.util.firstVisibleView
+import com.github.kr328.clash.design.util.getPixels
+import com.github.kr328.clash.design.util.invalidateChildren
+import com.github.kr328.clash.design.util.swapDataSet
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -30,15 +35,16 @@ class ProxyPageAdapter(
         proxies: List<Proxy>,
         selectable: Boolean,
         parent: ProxyState,
-        links: Map<String, ProxyState>
+        links: Map<String, ProxyState>,
     ) {
-        val states = withContext(Dispatchers.Default) {
-            proxies.map {
-                val link = if (it.type.group) links[it.name] else null
+        val states =
+            withContext(Dispatchers.Default) {
+                proxies.map {
+                    val link = if (it.type.group) links[it.name] else null
 
-                ProxyViewState(config, it, parent, link)
+                    ProxyViewState(config, it, parent, link)
+                }
             }
-        }
 
         withContext(Dispatchers.Main) {
             adapters[position].apply {
@@ -51,8 +57,7 @@ class ProxyPageAdapter(
     }
 
     fun requestRedrawVisible() {
-        factory.fromRoot(parent?.firstVisibleView ?: return)
-            .recyclerView.invalidateChildren()
+        factory.fromRoot(parent?.firstVisibleView ?: return).recyclerView.invalidateChildren()
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProxyPageFactory.Holder {
@@ -100,7 +105,6 @@ class ProxyPageAdapter(
     override fun onDetachedFromRecyclerView(recyclerView: RecyclerView) {
         this.parent = null
     }
-
 
     private var RecyclerView.position: Int
         get() {

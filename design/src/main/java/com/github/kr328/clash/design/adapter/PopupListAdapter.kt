@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.TextView
-import com.github.kr328.clash.design.R
 import com.github.kr328.clash.design.util.layoutInflater
 import com.github.kr328.clash.design.util.resolveThemedColor
 
@@ -16,7 +15,8 @@ class PopupListAdapter(
     private val selected: Int,
 ) : BaseAdapter() {
     private val colorPrimary = context.resolveThemedColor(android.R.attr.colorPrimary)
-    private val colorOnPrimary = context.resolveThemedColor(com.google.android.material.R.attr.colorOnPrimary)
+    private val colorOnPrimary =
+        context.resolveThemedColor(com.google.android.material.R.attr.colorOnPrimary)
     private val colorControlNormal = context.resolveThemedColor(android.R.attr.colorControlNormal)
 
     override fun getCount(): Int {
@@ -32,8 +32,13 @@ class PopupListAdapter(
     }
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
-        val view = convertView ?: context.layoutInflater
-            .inflate(android.R.layout.simple_list_item_1, parent, false)
+        val view =
+            convertView
+                ?: context.layoutInflater.inflate(
+                    android.R.layout.simple_list_item_1,
+                    parent,
+                    false,
+                )
 
         val text: TextView = view.findViewById(android.R.id.text1)
 
@@ -45,7 +50,7 @@ class PopupListAdapter(
                     200,
                     Color.red(colorPrimary),
                     Color.green(colorPrimary),
-                    Color.blue(colorPrimary)
+                    Color.blue(colorPrimary),
                 )
             )
             text.setTextColor(colorOnPrimary)

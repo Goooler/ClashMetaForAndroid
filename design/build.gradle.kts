@@ -3,11 +3,7 @@ plugins {
     alias(libs.plugins.android.legacyKapt)
 }
 
-android {
-    buildFeatures {
-        dataBinding = true
-    }
-}
+android { buildFeatures { dataBinding = true } }
 
 dependencies {
     implementation(projects.common)

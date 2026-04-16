@@ -4,7 +4,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.TypeConverters
 import com.github.kr328.clash.service.model.Profile
-import java.util.*
+import java.util.UUID
 
 @Entity(tableName = "pending", primaryKeys = ["uuid"])
 @TypeConverters(Converters::class)

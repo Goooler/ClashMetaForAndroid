@@ -1,7 +1,7 @@
 package com.github.kr328.clash.remote
 
-import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlin.coroutines.resume
+import kotlinx.coroutines.suspendCancellableCoroutine
 
 class Resource<T> {
     private interface Callback<T> {
@@ -14,15 +14,14 @@ class Resource<T> {
 
     suspend fun get(): T {
         return suspendCancellableCoroutine { ctx ->
-            val callback = object : Callback<T> {
-                override fun accept(value: T) {
-                    ctx.resume(value)
+            val callback =
+                object : Callback<T> {
+                    override fun accept(value: T) {
+                        ctx.resume(value)
+                    }
                 }
-            }
 
-            ctx.invokeOnCancellation {
-                cancel(callback)
-            }
+            ctx.invokeOnCancellation { cancel(callback) }
 
             get(callback)
         }
@@ -52,9 +51,7 @@ class Resource<T> {
         this.value = value
 
         if (value != null) {
-            pending.forEach {
-                it.accept(value)
-            }
+            pending.forEach { it.accept(value) }
 
             pending.clear()
         }
