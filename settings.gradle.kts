@@ -51,5 +51,4 @@ include(
     ":service",
     ":design",
     ":common",
-    ":hideapi",
 )

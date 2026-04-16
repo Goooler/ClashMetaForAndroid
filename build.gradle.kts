@@ -18,7 +18,7 @@ allprojects {
             namespace = "com.github.kr328.clash.${project.name}"
             compileSdk = 36
             defaultConfig.apply {
-                minSdk = 26
+                minSdk = 28
             }
             ndkVersion = "29.0.14206865"
             flavorDimensions += "feature"
