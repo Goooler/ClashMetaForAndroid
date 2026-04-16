@@ -13,8 +13,8 @@ android {
     defaultConfig {
         applicationId = "com.github.metacubex.clash"
         targetSdk = 35
-        versionCode = 211023
-        versionName = "2.11.23"
+        versionCode = 212000
+        versionName = "2.12.0"
         resValue("integer", "release_code", versionCode.toString())
         resValue("string", "release_name", "v$versionName")
         ndk.abiFilters += listOf("arm64-v8a", "armeabi-v7a", "x86", "x86_64")
