@@ -10,7 +10,6 @@ private fun fileNotFound(file: Uri): FileNotFoundException {
     return FileNotFoundException("$file not found")
 }
 
-@Suppress("BlockingMethodInNonBlockingContext")
 suspend fun ContentResolver.copyContentTo(
     source: Uri,
     target: Uri

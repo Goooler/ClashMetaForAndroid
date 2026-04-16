@@ -11,7 +11,7 @@ class StatusProvider : ContentProvider() {
     override fun call(method: String, arg: String?, extras: Bundle?): Bundle? {
         return when (method) {
             METHOD_CURRENT_PROFILE -> {
-                return if (serviceRunning)
+                if (serviceRunning)
                     Bundle().apply {
                         putString("name", currentProfile)
                     }

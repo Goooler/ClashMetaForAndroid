@@ -52,7 +52,7 @@ class AppSettingsDesign(
 
             selectableList(
                 value = uiStore::darkMode,
-                values = DarkMode.values(),
+                values = DarkMode.entries.toTypedArray(),
                 valuesText = arrayOf(
                     R.string.follow_system_android_10,
                     R.string.always_light,

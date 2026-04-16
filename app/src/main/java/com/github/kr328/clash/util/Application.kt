@@ -15,7 +15,7 @@ object ApplicationObserver {
     private var visibleChanged: (Boolean) -> Unit = {}
 
     private var appVisible = false
-        private set(value) {
+        set(value) {
             if (field != value) {
                 field = value
 

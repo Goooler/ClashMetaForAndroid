@@ -18,7 +18,7 @@ class LogsActivity : BaseActivity<LogsDesign>() {
         setContentDesign(design)
 
         while (isActive) {
-            select<Unit> {
+            select {
                 events.onReceive {
                     when (it) {
                         Event.ActivityStart -> {

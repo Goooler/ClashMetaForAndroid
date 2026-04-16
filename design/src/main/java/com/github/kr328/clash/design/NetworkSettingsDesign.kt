@@ -111,7 +111,7 @@ class NetworkSettingsDesign(
 
             selectableList(
                 value = srvStore::accessControlMode,
-                values = AccessControlMode.values(),
+                values = AccessControlMode.entries.toTypedArray(),
                 valuesText = arrayOf(
                     R.string.allow_all_apps,
                     R.string.allow_selected_apps,

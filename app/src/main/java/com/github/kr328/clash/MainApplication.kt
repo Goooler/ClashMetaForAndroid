@@ -18,7 +18,6 @@ import java.io.FileOutputStream
 import com.github.kr328.clash.design.R as DesignR
 
 
-@Suppress("unused")
 class MainApplication : Application() {
     private val uiStore by lazy(LazyThreadSafetyMode.NONE) { UiStore(this) }
 

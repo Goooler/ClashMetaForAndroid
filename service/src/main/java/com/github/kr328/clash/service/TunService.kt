@@ -47,7 +47,7 @@ class TunService : VpnService(), CoroutineScope by CoroutineScope(Dispatchers.De
             tun.open()
 
             while (isActive) {
-                val quit = select<Boolean> {
+                val quit = select {
                     close.onEvent {
                         true
                     }
@@ -57,8 +57,8 @@ class TunService : VpnService(), CoroutineScope by CoroutineScope(Dispatchers.De
                         true
                     }
                     network.onEvent { n ->
-                        if (Build.VERSION.SDK_INT in 22..28) @TargetApi(22) {
-                            setUnderlyingNetworks(n?.let { arrayOf(it) })
+                        if (Build.VERSION.SDK_INT in 22..28)  {
+                            setUnderlyingNetworks(arrayOf(n))
                         }
 
                         false

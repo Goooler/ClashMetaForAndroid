@@ -1,9 +1,5 @@
 package com.github.kr328.clash
 
-import android.content.BroadcastReceiver
-import android.content.Context
-import android.content.Intent
-import android.content.IntentFilter
 import com.github.kr328.clash.common.util.intent
 import com.github.kr328.clash.common.util.setUUID
 import com.github.kr328.clash.common.util.ticker
@@ -29,7 +25,7 @@ class ProfilesActivity : BaseActivity<ProfilesDesign>() {
         val ticker = ticker(TimeUnit.MINUTES.toMillis(1))
 
         while (isActive) {
-            select<Unit> {
+            select {
                 events.onReceive {
                     when (it) {
                         Event.ActivityStart, Event.ProfileChanged -> {
@@ -52,7 +48,7 @@ class ProfilesActivity : BaseActivity<ProfilesDesign>() {
                                 }
                                 finally {
                                     withContext(Dispatchers.Main) {
-                                        design.finishUpdateAll();
+                                        design.finishUpdateAll()
                                     }
                                 }
                             }
@@ -94,9 +90,9 @@ class ProfilesActivity : BaseActivity<ProfilesDesign>() {
 
     override fun onProfileUpdateCompleted(uuid: UUID?) {
         if(uuid == null)
-            return;
+            return
         launch {
-            var name: String? = null;
+            var name: String? = null
             withProfile {
                 name = queryByUUID(uuid)?.name
             }
@@ -108,9 +104,9 @@ class ProfilesActivity : BaseActivity<ProfilesDesign>() {
     }
     override fun onProfileUpdateFailed(uuid: UUID?, reason: String?) {
         if(uuid == null)
-            return;
+            return
         launch {
-            var name: String? = null;
+            var name: String? = null
             withProfile {
                 name = queryByUUID(uuid)?.name
             }

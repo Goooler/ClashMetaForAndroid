@@ -1,6 +1,5 @@
 package com.github.kr328.clash
 
-import android.content.ComponentName
 import android.content.pm.PackageManager
 import androidx.core.content.pm.ShortcutManagerCompat
 import com.github.kr328.clash.common.util.componentName
@@ -26,7 +25,7 @@ class AppSettingsActivity : BaseActivity<AppSettingsDesign>(), Behavior {
         setContentDesign(design)
 
         while (isActive) {
-            select<Unit> {
+            select {
                 events.onReceive {
                     when (it) {
                         Event.ClashStart, Event.ClashStop, Event.ServiceRecreated ->

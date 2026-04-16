@@ -8,7 +8,6 @@ import android.content.Intent
 import androidx.core.content.getSystemService
 import com.github.kr328.clash.common.Global
 import com.github.kr328.clash.common.compat.pendingIntentFlags
-import com.github.kr328.clash.common.compat.startForegroundServiceCompat
 import com.github.kr328.clash.common.constants.Intents
 import com.github.kr328.clash.common.log.Log
 import com.github.kr328.clash.common.util.componentName
@@ -33,13 +32,13 @@ class ProfileReceiver : BroadcastReceiver() {
                     val service = Intent(Intents.ACTION_PROFILE_SCHEDULE_UPDATES)
                         .setComponent(ProfileWorker::class.componentName)
 
-                    context.startForegroundServiceCompat(service)
+                    context.startForegroundService(service)
                 }
             }
             Intents.ACTION_PROFILE_REQUEST_UPDATE -> {
                 val redirect = intent.setComponent(ProfileWorker::class.componentName)
 
-                context.startForegroundServiceCompat(redirect)
+                context.startForegroundService(redirect)
             }
         }
     }

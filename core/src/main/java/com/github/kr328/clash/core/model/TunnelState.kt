@@ -21,8 +21,6 @@ data class TunnelState(
         @SerialName("rule")
         Rule,
 
-        @SerialName("script")
-        Script,
     }
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {

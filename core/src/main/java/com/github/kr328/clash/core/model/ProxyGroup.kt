@@ -35,7 +35,7 @@ data class ProxyGroup(
     }
 
     constructor(parcel: Parcel) : this(
-        Proxy.Type.values()[parcel.readInt()],
+        Proxy.Type.entries[parcel.readInt()],
         SliceProxyList(parcel),
         parcel.readString()!!,
     )

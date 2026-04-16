@@ -29,13 +29,12 @@ import kotlinx.coroutines.channels.Channel
 import java.util.*
 import java.util.concurrent.atomic.AtomicInteger
 import kotlin.coroutines.resume
-import kotlin.coroutines.suspendCoroutine
 import com.github.kr328.clash.design.R
 
 abstract class BaseActivity<D : Design<*>> : AppCompatActivity(),
     CoroutineScope by MainScope(),
     Broadcasts.Observer {
-    
+
     protected val uiStore by lazy { UiStore(this) }
     protected val events = Channel<Event>(Channel.UNLIMITED)
     protected var activityStarted: Boolean = false
@@ -69,7 +68,7 @@ abstract class BaseActivity<D : Design<*>> : AppCompatActivity(),
         val requestKey = nextRequestKey.getAndIncrement().toString()
 
         ActivityResultLifecycle().use { lifecycle, start ->
-            suspendCoroutine { c ->
+            suspendCancellableCoroutine { c ->
                 activityResultRegistry.register(requestKey, lifecycle, contracts) {
                     c.resume(it)
                 }.apply { start() }.launch(input)
@@ -78,7 +77,7 @@ abstract class BaseActivity<D : Design<*>> : AppCompatActivity(),
     }
 
     suspend fun setContentDesign(design: D) {
-        suspendCoroutine<Unit> {
+        suspendCancellableCoroutine {
             window.decorView.post {
                 this.design = design
                 it.resume(Unit)
@@ -145,10 +144,6 @@ abstract class BaseActivity<D : Design<*>> : AppCompatActivity(),
         }
     }
 
-    open fun shouldDisplayHomeAsUpEnabled(): Boolean {
-        return true
-    }
-
     override fun onSupportNavigateUp(): Boolean {
         this.onBackPressed()
         return true
@@ -205,17 +200,12 @@ abstract class BaseActivity<D : Design<*>> : AppCompatActivity(),
 
         window.isAllowForceDarkCompat = false
         window.isSystemBarsTranslucentCompat = true
-        
+
         window.statusBarColor = resolveThemedColor(android.R.attr.statusBarColor)
         window.navigationBarColor = resolveThemedColor(android.R.attr.navigationBarColor)
 
-        if (Build.VERSION.SDK_INT >= 23) {
-            window.isLightStatusBarsCompat = resolveThemedBoolean(android.R.attr.windowLightStatusBar)
-        }
-
-        if (Build.VERSION.SDK_INT >= 27) {
-            window.isLightNavigationBarCompat = resolveThemedBoolean(android.R.attr.windowLightNavigationBar)
-        }
+        window.isLightStatusBarsCompat = resolveThemedBoolean(android.R.attr.windowLightStatusBar)
+        window.isLightNavigationBarCompat = resolveThemedBoolean(android.R.attr.windowLightNavigationBar)
 
         this.dayNight = dayNight
     }

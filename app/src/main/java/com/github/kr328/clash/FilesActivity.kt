@@ -1,14 +1,8 @@
-@file:Suppress("BlockingMethodInNonBlockingContext")
-
 package com.github.kr328.clash
 
-import android.Manifest
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.net.Uri
-import android.os.Build
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.core.content.ContextCompat
 import com.github.kr328.clash.common.util.grantPermissions
 import com.github.kr328.clash.common.util.ticker
 import com.github.kr328.clash.common.util.uuid
@@ -41,7 +35,7 @@ class FilesActivity : BaseActivity<FilesDesign>() {
         val ticker = ticker(TimeUnit.MINUTES.toMillis(1))
 
         while (isActive) {
-            select<Unit> {
+            select {
                 events.onReceive {
                     when (it) {
                         Event.ActivityStart, Event.ActivityStop -> {

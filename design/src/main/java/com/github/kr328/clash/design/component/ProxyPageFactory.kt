@@ -35,7 +35,7 @@ class ProxyPageFactory(private val config: ProxyViewConfig) {
             layoutManager = GridLayoutManager(config.context, 6).apply {
                 spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
                     override fun getSpanSize(position: Int): Int {
-                        var grids:Int = 0
+                        var grids = 0
                         when(config.proxyLine){
                             2 -> grids = 3
                             3 -> grids = 2

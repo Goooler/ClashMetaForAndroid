@@ -99,7 +99,7 @@ object Clash {
     }
 
     fun queryGroupNames(excludeNotSelectable: Boolean): List<String> {
-        val names = Json.Default.decodeFromString(
+        val names = Json.decodeFromString(
             JsonArray.serializer(),
             Bridge.nativeQueryGroupNames(excludeNotSelectable)
         )
@@ -113,7 +113,7 @@ object Clash {
 
     fun queryGroup(name: String, sort: ProxySort): ProxyGroup {
         return Bridge.nativeQueryGroup(name, sort.name)
-            ?.let { Json.Default.decodeFromString(ProxyGroup.serializer(), it) }
+            ?.let { Json.decodeFromString(ProxyGroup.serializer(), it) }
             ?: ProxyGroup(Proxy.Type.Unknown, emptyList(), "")
     }
 
@@ -142,7 +142,7 @@ object Clash {
                 object : FetchCallback {
                     override fun report(statusJson: String) {
                         reportStatus(
-                            Json.Default.decodeFromString(
+                            Json.decodeFromString(
                                 FetchStatus.serializer(),
                                 statusJson
                             )
@@ -171,10 +171,10 @@ object Clash {
 
     fun queryProviders(): List<Provider> {
         val providers =
-            Json.Default.decodeFromString(JsonArray.serializer(), Bridge.nativeQueryProviders())
+            Json.decodeFromString(JsonArray.serializer(), Bridge.nativeQueryProviders())
 
         return List(providers.size) {
-            Json.Default.decodeFromJsonElement(Provider.serializer(), providers[it])
+            Json.decodeFromJsonElement(Provider.serializer(), providers[it])
         }
     }
 
@@ -210,7 +210,7 @@ object Clash {
     }
 
     fun queryConfiguration(): UiConfiguration {
-        return Json.Default.decodeFromString(
+        return Json.decodeFromString(
             UiConfiguration.serializer(),
             Bridge.nativeQueryConfiguration()
         )

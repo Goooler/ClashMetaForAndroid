@@ -39,7 +39,7 @@ class ClashService : BaseService() {
 
         try {
             while (isActive) {
-                val quit = select<Boolean> {
+                val quit = select {
                     close.onEvent {
                         true
                     }

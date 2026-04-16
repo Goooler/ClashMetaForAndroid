@@ -1,5 +1,3 @@
-@file:Suppress("BlockingMethodInNonBlockingContext")
-
 package com.github.kr328.clash.remote
 
 import android.content.Context

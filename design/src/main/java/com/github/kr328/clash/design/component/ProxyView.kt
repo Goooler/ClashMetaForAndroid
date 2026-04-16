@@ -6,7 +6,6 @@ import android.graphics.Paint
 import android.graphics.Path
 import android.view.View
 import com.github.kr328.clash.common.compat.getDrawableCompat
-import com.github.kr328.clash.design.store.UiStore
 
 class ProxyView(
     context: Context,
