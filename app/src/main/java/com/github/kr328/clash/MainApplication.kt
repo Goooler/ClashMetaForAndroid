@@ -7,7 +7,6 @@ import androidx.core.content.pm.ShortcutInfoCompat
 import androidx.core.content.pm.ShortcutManagerCompat
 import androidx.core.graphics.drawable.IconCompat
 import com.github.kr328.clash.common.Global
-import com.github.kr328.clash.common.compat.currentProcessName
 import com.github.kr328.clash.common.constants.Intents
 import com.github.kr328.clash.common.log.Log
 import com.github.kr328.clash.design.store.UiStore
@@ -32,7 +31,7 @@ class MainApplication : Application() {
     override fun onCreate() {
         super.onCreate()
 
-        val processName = currentProcessName
+        val processName = getProcessName()
         extractGeoFiles()
 
         Log.d("Process $processName started")

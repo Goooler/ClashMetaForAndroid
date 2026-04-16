@@ -8,7 +8,7 @@ import com.github.kr328.clash.design.model.AppInfo
 fun PackageInfo.toAppInfo(pm: PackageManager): AppInfo {
     return AppInfo(
         packageName = packageName,
-        icon = applicationInfo!!.loadIcon(pm).foreground(),
+        icon = applicationInfo!!.loadIcon(pm).foreground,
         label = applicationInfo!!.loadLabel(pm).toString(),
         installTime = firstInstallTime,
         updateDate = lastUpdateTime,
