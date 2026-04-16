@@ -13,7 +13,7 @@ class ProviderList(private val data: List<Provider>) : List<Provider> by data, P
     }
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
-        return data.writeToParcelSlice(parcel, flags)
+        data.writeToParcelSlice(parcel, flags)
     }
 
     companion object CREATOR : Parcelable.Creator<ProviderList> {

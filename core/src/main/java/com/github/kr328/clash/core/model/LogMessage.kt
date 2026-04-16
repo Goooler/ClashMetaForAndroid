@@ -2,6 +2,7 @@
 
 package com.github.kr328.clash.core.model
 
+import android.os.Parcel
 import android.os.Parcelable
 import com.github.kr328.clash.core.util.DateSerializer
 import java.util.Date
@@ -32,11 +33,11 @@ data class LogMessage(
 }
 
 object DateParceler : Parceler<Date> {
-    override fun create(parcel: android.os.Parcel): Date {
+    override fun create(parcel: Parcel): Date {
         return Date(parcel.readLong())
     }
 
-    override fun Date.write(parcel: android.os.Parcel, flags: Int) {
+    override fun Date.write(parcel: Parcel, flags: Int) {
         parcel.writeLong(time)
     }
 }
