@@ -1,20 +1,34 @@
 package com.github.kr328.clash.core
 
-import com.github.kr328.clash.core.bridge.*
-import com.github.kr328.clash.core.model.*
+import com.github.kr328.clash.core.bridge.Bridge
+import com.github.kr328.clash.core.bridge.ClashException
+import com.github.kr328.clash.core.bridge.FetchCallback
+import com.github.kr328.clash.core.bridge.LogcatInterface
+import com.github.kr328.clash.core.bridge.TunInterface
+import com.github.kr328.clash.core.model.ConfigurationOverride
+import com.github.kr328.clash.core.model.FetchStatus
+import com.github.kr328.clash.core.model.LogMessage
+import com.github.kr328.clash.core.model.Provider
+import com.github.kr328.clash.core.model.Proxy
+import com.github.kr328.clash.core.model.ProxyGroup
+import com.github.kr328.clash.core.model.ProxySort
+import com.github.kr328.clash.core.model.Traffic
+import com.github.kr328.clash.core.model.TunnelState
+import com.github.kr328.clash.core.model.UiConfiguration
 import com.github.kr328.clash.core.util.parseInetSocketAddress
+import java.io.File
+import java.net.InetSocketAddress
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.ReceiveChannel
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.jsonPrimitive
-import java.io.File
-import java.net.InetSocketAddress
 
 object Clash {
     enum class OverrideSlot {
-        Persist, Session
+        Persist,
+        Session,
     }
 
     private val ConfigurationOverrideJson = Json {
@@ -69,21 +83,28 @@ object Clash {
         portal: String,
         dns: String,
         markSocket: (Int) -> Boolean,
-        querySocketUid: (protocol: Int, source: InetSocketAddress, target: InetSocketAddress) -> Int
+        querySocketUid: (protocol: Int, source: InetSocketAddress, target: InetSocketAddress) -> Int,
     ) {
-        Bridge.nativeStartTun(fd, stack, gateway, portal, dns, object : TunInterface {
-            override fun markSocket(fd: Int) {
-                markSocket(fd)
-            }
+        Bridge.nativeStartTun(
+            fd,
+            stack,
+            gateway,
+            portal,
+            dns,
+            object : TunInterface {
+                override fun markSocket(fd: Int) {
+                    markSocket(fd)
+                }
 
-            override fun querySocketUid(protocol: Int, source: String, target: String): Int {
-                return querySocketUid(
-                    protocol,
-                    parseInetSocketAddress(source),
-                    parseInetSocketAddress(target)
-                )
-            }
-        })
+                override fun querySocketUid(protocol: Int, source: String, target: String): Int {
+                    return querySocketUid(
+                        protocol,
+                        parseInetSocketAddress(source),
+                        parseInetSocketAddress(target),
+                    )
+                }
+            },
+        )
     }
 
     fun stopTun() {
@@ -99,10 +120,11 @@ object Clash {
     }
 
     fun queryGroupNames(excludeNotSelectable: Boolean): List<String> {
-        val names = Json.decodeFromString(
-            JsonArray.serializer(),
-            Bridge.nativeQueryGroupNames(excludeNotSelectable)
-        )
+        val names =
+            Json.decodeFromString(
+                JsonArray.serializer(),
+                Bridge.nativeQueryGroupNames(excludeNotSelectable),
+            )
 
         return names.map {
             require(it.jsonPrimitive.isString)
@@ -112,15 +134,13 @@ object Clash {
     }
 
     fun queryGroup(name: String, sort: ProxySort): ProxyGroup {
-        return Bridge.nativeQueryGroup(name, sort.name)
-            ?.let { Json.decodeFromString(ProxyGroup.serializer(), it) }
-            ?: ProxyGroup(Proxy.Type.Unknown, emptyList(), "")
+        return Bridge.nativeQueryGroup(name, sort.name)?.let {
+            Json.decodeFromString(ProxyGroup.serializer(), it)
+        } ?: ProxyGroup(Proxy.Type.Unknown, emptyList(), "")
     }
 
     fun healthCheck(name: String): CompletableDeferred<Unit> {
-        return CompletableDeferred<Unit>().apply {
-            Bridge.nativeHealthCheck(this, name)
-        }
+        return CompletableDeferred<Unit>().apply { Bridge.nativeHealthCheck(this, name) }
     }
 
     fun healthCheckAll() {
@@ -135,43 +155,33 @@ object Clash {
         path: File,
         url: String,
         force: Boolean,
-        reportStatus: (FetchStatus) -> Unit
+        reportStatus: (FetchStatus) -> Unit,
     ): CompletableDeferred<Unit> {
         return CompletableDeferred<Unit>().apply {
             Bridge.nativeFetchAndValid(
                 object : FetchCallback {
                     override fun report(statusJson: String) {
-                        reportStatus(
-                            Json.decodeFromString(
-                                FetchStatus.serializer(),
-                                statusJson
-                            )
-                        )
+                        reportStatus(Json.decodeFromString(FetchStatus.serializer(), statusJson))
                     }
 
                     override fun complete(error: String?) {
-                        if (error != null)
-                            completeExceptionally(ClashException(error))
-                        else
-                            complete(Unit)
+                        if (error != null) completeExceptionally(ClashException(error))
+                        else complete(Unit)
                     }
                 },
                 path.absolutePath,
                 url,
-                force
+                force,
             )
         }
     }
 
     fun load(path: File): CompletableDeferred<Unit> {
-        return CompletableDeferred<Unit>().apply {
-            Bridge.nativeLoad(this, path.absolutePath)
-        }
+        return CompletableDeferred<Unit>().apply { Bridge.nativeLoad(this, path.absolutePath) }
     }
 
     fun queryProviders(): List<Provider> {
-        val providers =
-            Json.decodeFromString(JsonArray.serializer(), Bridge.nativeQueryProviders())
+        val providers = Json.decodeFromString(JsonArray.serializer(), Bridge.nativeQueryProviders())
 
         return List(providers.size) {
             Json.decodeFromJsonElement(Provider.serializer(), providers[it])
@@ -188,7 +198,7 @@ object Clash {
         return try {
             ConfigurationOverrideJson.decodeFromString(
                 ConfigurationOverride.serializer(),
-                Bridge.nativeReadOverride(slot.ordinal)
+                Bridge.nativeReadOverride(slot.ordinal),
             )
         } catch (e: Exception) {
             ConfigurationOverride()
@@ -200,8 +210,8 @@ object Clash {
             slot.ordinal,
             ConfigurationOverrideJson.encodeToString(
                 ConfigurationOverride.serializer(),
-                configuration
-            )
+                configuration,
+            ),
         )
     }
 
@@ -212,17 +222,19 @@ object Clash {
     fun queryConfiguration(): UiConfiguration {
         return Json.decodeFromString(
             UiConfiguration.serializer(),
-            Bridge.nativeQueryConfiguration()
+            Bridge.nativeQueryConfiguration(),
         )
     }
 
     fun subscribeLogcat(): ReceiveChannel<LogMessage> {
         return Channel<LogMessage>(32).apply {
-            Bridge.nativeSubscribeLogcat(object : LogcatInterface {
-                override fun received(jsonPayload: String) {
-                    trySend(Json.decodeFromString(LogMessage.serializer(), jsonPayload))
+            Bridge.nativeSubscribeLogcat(
+                object : LogcatInterface {
+                    override fun received(jsonPayload: String) {
+                        trySend(Json.decodeFromString(LogMessage.serializer(), jsonPayload))
+                    }
                 }
-            })
+            )
         }
     }
 }

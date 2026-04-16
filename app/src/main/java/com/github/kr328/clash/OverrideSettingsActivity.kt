@@ -10,33 +10,21 @@ class OverrideSettingsActivity : BaseActivity<OverrideSettingsDesign>() {
     override suspend fun main() {
         val configuration = withClash { queryOverride(Clash.OverrideSlot.Persist) }
 
-        defer {
-            withClash {
-                patchOverride(Clash.OverrideSlot.Persist, configuration)
-            }
-        }
+        defer { withClash { patchOverride(Clash.OverrideSlot.Persist, configuration) } }
 
-        val design = OverrideSettingsDesign(
-            this,
-            configuration
-        )
+        val design = OverrideSettingsDesign(this, configuration)
 
         setContentDesign(design)
 
         while (isActive) {
             select {
-                events.onReceive {
+                events.onReceive {}
 
-                }
                 design.requests.onReceive {
                     when (it) {
                         OverrideSettingsDesign.Request.ResetOverride -> {
                             if (design.requestResetConfirm()) {
-                                defer {
-                                    withClash {
-                                        clearOverride(Clash.OverrideSlot.Persist)
-                                    }
-                                }
+                                defer { withClash { clearOverride(Clash.OverrideSlot.Persist) } }
 
                                 finish()
                             }

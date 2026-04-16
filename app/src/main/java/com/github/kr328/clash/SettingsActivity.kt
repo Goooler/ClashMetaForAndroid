@@ -13,9 +13,8 @@ class SettingsActivity : BaseActivity<SettingsDesign>() {
 
         while (isActive) {
             select {
-                events.onReceive {
+                events.onReceive {}
 
-                }
                 design.requests.onReceive {
                     when (it) {
                         SettingsDesign.Request.StartApp ->

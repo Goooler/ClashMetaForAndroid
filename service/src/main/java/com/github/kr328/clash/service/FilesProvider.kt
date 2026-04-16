@@ -2,7 +2,6 @@ package com.github.kr328.clash.service
 
 import android.database.Cursor
 import android.database.MatrixCursor
-import android.os.Build
 import android.os.CancellationSignal
 import android.os.ParcelFileDescriptor
 import android.provider.DocumentsContract.Document as D

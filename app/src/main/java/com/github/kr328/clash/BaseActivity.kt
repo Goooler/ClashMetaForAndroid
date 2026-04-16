@@ -2,7 +2,6 @@ package com.github.kr328.clash
 
 import android.app.ActivityManager
 import android.content.res.Configuration
-import android.os.Build
 import android.os.Bundle
 import android.view.View
 import androidx.activity.result.contract.ActivityResultContract
@@ -14,6 +13,7 @@ import com.github.kr328.clash.common.compat.isLightStatusBarsCompat
 import com.github.kr328.clash.common.compat.isSystemBarsTranslucentCompat
 import com.github.kr328.clash.core.bridge.ClashException
 import com.github.kr328.clash.design.Design
+import com.github.kr328.clash.design.R
 import com.github.kr328.clash.design.model.DarkMode
 import com.github.kr328.clash.design.store.UiStore
 import com.github.kr328.clash.design.ui.DayNight
@@ -24,22 +24,28 @@ import com.github.kr328.clash.remote.Broadcasts
 import com.github.kr328.clash.remote.Remote
 import com.github.kr328.clash.util.ActivityResultLifecycle
 import com.github.kr328.clash.util.ApplicationObserver
-import kotlinx.coroutines.*
-import kotlinx.coroutines.channels.Channel
-import java.util.*
+import java.util.UUID
 import java.util.concurrent.atomic.AtomicInteger
 import kotlin.coroutines.resume
-import com.github.kr328.clash.design.R
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.NonCancellable
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.suspendCancellableCoroutine
+import kotlinx.coroutines.withContext
 
-abstract class BaseActivity<D : Design<*>> : AppCompatActivity(),
-    CoroutineScope by MainScope(),
-    Broadcasts.Observer {
+abstract class BaseActivity<D : Design<*>> :
+    AppCompatActivity(), CoroutineScope by MainScope(), Broadcasts.Observer {
 
     protected val uiStore by lazy { UiStore(this) }
     protected val events = Channel<Event>(Channel.UNLIMITED)
     protected var activityStarted: Boolean = false
     protected val clashRunning: Boolean
         get() = Remote.broadcasts.clashRunning
+
     protected var design: D? = null
         set(value) {
             field = value
@@ -64,17 +70,19 @@ abstract class BaseActivity<D : Design<*>> : AppCompatActivity(),
     suspend fun <I, O> startActivityForResult(
         contracts: ActivityResultContract<I, O>,
         input: I,
-    ): O = withContext(Dispatchers.Main) {
-        val requestKey = nextRequestKey.getAndIncrement().toString()
+    ): O =
+        withContext(Dispatchers.Main) {
+            val requestKey = nextRequestKey.getAndIncrement().toString()
 
-        ActivityResultLifecycle().use { lifecycle, start ->
-            suspendCancellableCoroutine { c ->
-                activityResultRegistry.register(requestKey, lifecycle, contracts) {
-                    c.resume(it)
-                }.apply { start() }.launch(input)
+            ActivityResultLifecycle().use { lifecycle, start ->
+                suspendCancellableCoroutine { c ->
+                    activityResultRegistry
+                        .register(requestKey, lifecycle, contracts) { c.resume(it) }
+                        .apply { start() }
+                        .launch(input)
+                }
             }
         }
-    }
 
     suspend fun setContentDesign(design: D) {
         suspendCancellableCoroutine {
@@ -94,9 +102,7 @@ abstract class BaseActivity<D : Design<*>> : AppCompatActivity(),
             task.setExcludeFromRecents(uiStore.hideFromRecents)
         }
 
-        launch {
-            main()
-        }
+        launch { main() }
     }
 
     override fun onStart() {
@@ -127,9 +133,7 @@ abstract class BaseActivity<D : Design<*>> : AppCompatActivity(),
             try {
                 defer()
             } finally {
-                withContext(NonCancellable) {
-                    super.finish()
-                }
+                withContext(NonCancellable) { super.finish() }
             }
         }
     }
@@ -138,9 +142,7 @@ abstract class BaseActivity<D : Design<*>> : AppCompatActivity(),
         super.onConfigurationChanged(newConfig)
 
         if (queryDayNight(newConfig) != dayNight) {
-            ApplicationObserver.createdActivities.forEach {
-                it.recreate()
-            }
+            ApplicationObserver.createdActivities.forEach { it.recreate() }
         }
     }
 
@@ -177,15 +179,19 @@ abstract class BaseActivity<D : Design<*>> : AppCompatActivity(),
         events.trySend(Event.ClashStop)
 
         if (cause != null && activityStarted) {
-            launch {
-                design?.showExceptionToast(ClashException(cause))
-            }
+            launch { design?.showExceptionToast(ClashException(cause)) }
         }
     }
 
     private fun queryDayNight(config: Configuration = resources.configuration): DayNight {
         return when (uiStore.darkMode) {
-            DarkMode.Auto -> if (config.uiMode and Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_YES) DayNight.Night else DayNight.Day
+            DarkMode.Auto ->
+                if (
+                    config.uiMode and Configuration.UI_MODE_NIGHT_MASK ==
+                        Configuration.UI_MODE_NIGHT_YES
+                )
+                    DayNight.Night
+                else DayNight.Day
             DarkMode.ForceLight -> DayNight.Day
             DarkMode.ForceDark -> DayNight.Night
         }
@@ -205,7 +211,8 @@ abstract class BaseActivity<D : Design<*>> : AppCompatActivity(),
         window.navigationBarColor = resolveThemedColor(android.R.attr.navigationBarColor)
 
         window.isLightStatusBarsCompat = resolveThemedBoolean(android.R.attr.windowLightStatusBar)
-        window.isLightNavigationBarCompat = resolveThemedBoolean(android.R.attr.windowLightNavigationBar)
+        window.isLightNavigationBarCompat =
+            resolveThemedBoolean(android.R.attr.windowLightNavigationBar)
 
         this.dayNight = dayNight
     }

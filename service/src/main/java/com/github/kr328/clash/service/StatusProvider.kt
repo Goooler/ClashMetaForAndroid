@@ -11,12 +11,7 @@ class StatusProvider : ContentProvider() {
     override fun call(method: String, arg: String?, extras: Bundle?): Bundle? {
         return when (method) {
             METHOD_CURRENT_PROFILE -> {
-                if (serviceRunning)
-                    Bundle().apply {
-                        putString("name", currentProfile)
-                    }
-                else
-                    null
+                if (serviceRunning) Bundle().apply { putString("name", currentProfile) } else null
             }
             else -> super.call(method, arg, extras)
         }
@@ -31,7 +26,7 @@ class StatusProvider : ContentProvider() {
         projection: Array<out String>?,
         selection: String?,
         selectionArgs: Array<out String>?,
-        sortOrder: String?
+        sortOrder: String?,
     ): Cursor? {
         throw IllegalArgumentException("Stub!")
     }
@@ -40,7 +35,7 @@ class StatusProvider : ContentProvider() {
         uri: Uri,
         values: ContentValues?,
         selection: String?,
-        selectionArgs: Array<out String>?
+        selectionArgs: Array<out String>?,
     ): Int {
         throw IllegalArgumentException("Stub!")
     }
@@ -68,16 +63,15 @@ class StatusProvider : ContentProvider() {
 
                 shouldStartClashOnBoot = value
             }
+
         var shouldStartClashOnBoot: Boolean
             get() = Global.application.filesDir.resolve(CLASH_SERVICE_RUNNING_FILE).exists()
             set(value) {
                 Global.application.filesDir.resolve(CLASH_SERVICE_RUNNING_FILE).apply {
-                    if (value)
-                        createNewFile()
-                    else
-                        delete()
+                    if (value) createNewFile() else delete()
                 }
             }
+
         var currentProfile: String? = null
     }
 }

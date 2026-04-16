@@ -1,6 +1,5 @@
 package com.github.kr328.clash.service
 
-import android.annotation.TargetApi
 import android.app.PendingIntent
 import android.content.Intent
 import android.net.ProxyInfo
@@ -10,15 +9,27 @@ import com.github.kr328.clash.common.compat.pendingIntentFlags
 import com.github.kr328.clash.common.constants.Components
 import com.github.kr328.clash.common.log.Log
 import com.github.kr328.clash.service.clash.clashRuntime
-import com.github.kr328.clash.service.clash.module.*
+import com.github.kr328.clash.service.clash.module.AppListCacheModule
+import com.github.kr328.clash.service.clash.module.CloseModule
+import com.github.kr328.clash.service.clash.module.ConfigurationModule
+import com.github.kr328.clash.service.clash.module.DynamicNotificationModule
+import com.github.kr328.clash.service.clash.module.NetworkObserveModule
+import com.github.kr328.clash.service.clash.module.StaticNotificationModule
+import com.github.kr328.clash.service.clash.module.SuspendModule
+import com.github.kr328.clash.service.clash.module.TimeZoneModule
+import com.github.kr328.clash.service.clash.module.TunModule
 import com.github.kr328.clash.service.model.AccessControlMode
 import com.github.kr328.clash.service.store.ServiceStore
 import com.github.kr328.clash.service.util.cancelAndJoinBlocking
 import com.github.kr328.clash.service.util.parseCIDR
 import com.github.kr328.clash.service.util.sendClashStarted
 import com.github.kr328.clash.service.util.sendClashStopped
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.NonCancellable
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.selects.select
+import kotlinx.coroutines.withContext
 
 class TunService : VpnService(), CoroutineScope by CoroutineScope(Dispatchers.Default) {
     private val self: TunService
@@ -34,10 +45,8 @@ class TunService : VpnService(), CoroutineScope by CoroutineScope(Dispatchers.De
         val config = install(ConfigurationModule(self))
         val network = install(NetworkObserveModule(self))
 
-        if (store.dynamicNotification)
-            install(DynamicNotificationModule(self))
-        else
-            install(StaticNotificationModule(self))
+        if (store.dynamicNotification) install(DynamicNotificationModule(self))
+        else install(StaticNotificationModule(self))
 
         install(AppListCacheModule(self))
         install(TimeZoneModule(self))
@@ -48,16 +57,14 @@ class TunService : VpnService(), CoroutineScope by CoroutineScope(Dispatchers.De
 
             while (isActive) {
                 val quit = select {
-                    close.onEvent {
-                        true
-                    }
+                    close.onEvent { true }
                     config.onEvent {
                         reason = it.message
 
                         true
                     }
                     network.onEvent { n ->
-                        if (Build.VERSION.SDK_INT in 22..28)  {
+                        if (Build.VERSION.SDK_INT in 22..28) {
                             setUnderlyingNetworks(arrayOf(n))
                         }
 
@@ -83,8 +90,7 @@ class TunService : VpnService(), CoroutineScope by CoroutineScope(Dispatchers.De
     override fun onCreate() {
         super.onCreate()
 
-        if (StatusProvider.serviceRunning)
-            return stopSelf()
+        if (StatusProvider.serviceRunning) return stopSelf()
 
         StatusProvider.serviceRunning = true
 
@@ -123,107 +129,117 @@ class TunService : VpnService(), CoroutineScope by CoroutineScope(Dispatchers.De
     private fun TunModule.open() {
         val store = ServiceStore(self)
 
-        val device = with(Builder()) {
-            // Interface address
-            addAddress(TUN_GATEWAY, TUN_SUBNET_PREFIX)
-            if (store.allowIpv6) {
-                addAddress(TUN_GATEWAY6, TUN_SUBNET_PREFIX6)
-            }
-
-            // Route
-            if (store.bypassPrivateNetwork) {
-                resources.getStringArray(R.array.bypass_private_route).map(::parseCIDR).forEach {
-                    addRoute(it.ip, it.prefix)
-                }
+        val device =
+            with(Builder()) {
+                // Interface address
+                addAddress(TUN_GATEWAY, TUN_SUBNET_PREFIX)
                 if (store.allowIpv6) {
-                    resources.getStringArray(R.array.bypass_private_route6).map(::parseCIDR).forEach {
-                        addRoute(it.ip, it.prefix)
+                    addAddress(TUN_GATEWAY6, TUN_SUBNET_PREFIX6)
+                }
+
+                // Route
+                if (store.bypassPrivateNetwork) {
+                    resources
+                        .getStringArray(R.array.bypass_private_route)
+                        .map(::parseCIDR)
+                        .forEach { addRoute(it.ip, it.prefix) }
+                    if (store.allowIpv6) {
+                        resources
+                            .getStringArray(R.array.bypass_private_route6)
+                            .map(::parseCIDR)
+                            .forEach { addRoute(it.ip, it.prefix) }
+                    }
+
+                    // Route of virtual DNS
+                    addRoute(TUN_DNS, 32)
+                    if (store.allowIpv6) {
+                        addRoute(TUN_DNS6, 128)
+                    }
+                } else {
+                    addRoute(NET_ANY, 0)
+                    if (store.allowIpv6) {
+                        addRoute(NET_ANY6, 0)
                     }
                 }
 
-                // Route of virtual DNS
-                addRoute(TUN_DNS, 32)
-                if (store.allowIpv6) {
-                    addRoute(TUN_DNS6, 128)
-                }
-            } else {
-                addRoute(NET_ANY, 0)
-                if (store.allowIpv6) {
-                    addRoute(NET_ANY6, 0)
-                }
-            }
-
-            // Access Control
-            when (store.accessControlMode) {
-                AccessControlMode.AcceptAll -> Unit
-                AccessControlMode.AcceptSelected -> {
-                    (store.accessControlPackages + packageName).forEach {
-                        runCatching { addAllowedApplication(it) }
+                // Access Control
+                when (store.accessControlMode) {
+                    AccessControlMode.AcceptAll -> Unit
+                    AccessControlMode.AcceptSelected -> {
+                        (store.accessControlPackages + packageName).forEach {
+                            runCatching { addAllowedApplication(it) }
+                        }
+                    }
+                    AccessControlMode.DenySelected -> {
+                        (store.accessControlPackages - packageName).forEach {
+                            runCatching { addDisallowedApplication(it) }
+                        }
                     }
                 }
-                AccessControlMode.DenySelected -> {
-                    (store.accessControlPackages - packageName).forEach {
-                        runCatching { addDisallowedApplication(it) }
-                    }
+
+                // Blocking
+                setBlocking(false)
+
+                // Mtu
+                setMtu(TUN_MTU)
+
+                // Session Name
+                setSession("Clash")
+
+                // Virtual Dns Server
+                addDnsServer(TUN_DNS)
+                if (store.allowIpv6) {
+                    addDnsServer(TUN_DNS6)
                 }
-            }
 
-            // Blocking
-            setBlocking(false)
-
-            // Mtu
-            setMtu(TUN_MTU)
-
-            // Session Name
-            setSession("Clash")
-
-            // Virtual Dns Server
-            addDnsServer(TUN_DNS)
-            if (store.allowIpv6) {
-                addDnsServer(TUN_DNS6)
-            }
-
-            // Open MainActivity
-            setConfigureIntent(
-                PendingIntent.getActivity(
-                    self,
-                    R.id.nf_vpn_status,
-                    Intent().setComponent(Components.MAIN_ACTIVITY),
-                    pendingIntentFlags(PendingIntent.FLAG_UPDATE_CURRENT)
-                )
-            )
-
-            // Metered
-            if (Build.VERSION.SDK_INT >= 29) {
-                setMetered(false)
-            }
-
-            // System Proxy
-            if (Build.VERSION.SDK_INT >= 29 && store.systemProxy) {
-                listenHttp()?.let {
-                    setHttpProxy(
-                        ProxyInfo.buildDirectProxy(
-                            it.address.hostAddress,
-                            it.port,
-                            HTTP_PROXY_BLACK_LIST + if (store.bypassPrivateNetwork) HTTP_PROXY_LOCAL_LIST else emptyList()
-                        )
+                // Open MainActivity
+                setConfigureIntent(
+                    PendingIntent.getActivity(
+                        self,
+                        R.id.nf_vpn_status,
+                        Intent().setComponent(Components.MAIN_ACTIVITY),
+                        pendingIntentFlags(PendingIntent.FLAG_UPDATE_CURRENT),
                     )
+                )
+
+                // Metered
+                if (Build.VERSION.SDK_INT >= 29) {
+                    setMetered(false)
                 }
-            }
 
-            if (store.allowBypass) {
-                allowBypass()
-            }
+                // System Proxy
+                if (Build.VERSION.SDK_INT >= 29 && store.systemProxy) {
+                    listenHttp()?.let {
+                        setHttpProxy(
+                            ProxyInfo.buildDirectProxy(
+                                it.address.hostAddress,
+                                it.port,
+                                HTTP_PROXY_BLACK_LIST +
+                                    if (store.bypassPrivateNetwork) HTTP_PROXY_LOCAL_LIST
+                                    else emptyList(),
+                            )
+                        )
+                    }
+                }
 
-            TunModule.TunDevice(
-                fd = establish()?.detachFd()
-                    ?: throw NullPointerException("Establish VPN rejected by system"),
-                stack = store.tunStackMode,
-                gateway = "$TUN_GATEWAY/$TUN_SUBNET_PREFIX" + if (store.allowIpv6) ",$TUN_GATEWAY6/$TUN_SUBNET_PREFIX6" else "",
-                portal = TUN_PORTAL + if (store.allowIpv6) ",$TUN_PORTAL6" else "",
-                dns = if (store.dnsHijacking) NET_ANY else (TUN_DNS + if (store.allowIpv6) ",$TUN_DNS6" else ""),
-            )
-        }
+                if (store.allowBypass) {
+                    allowBypass()
+                }
+
+                TunModule.TunDevice(
+                    fd =
+                        establish()?.detachFd()
+                            ?: throw NullPointerException("Establish VPN rejected by system"),
+                    stack = store.tunStackMode,
+                    gateway =
+                        "$TUN_GATEWAY/$TUN_SUBNET_PREFIX" +
+                            if (store.allowIpv6) ",$TUN_GATEWAY6/$TUN_SUBNET_PREFIX6" else "",
+                    portal = TUN_PORTAL + if (store.allowIpv6) ",$TUN_PORTAL6" else "",
+                    dns =
+                        if (store.dnsHijacking) NET_ANY
+                        else (TUN_DNS + if (store.allowIpv6) ",$TUN_DNS6" else ""),
+                )
+            }
 
         attach(device)
     }
@@ -241,26 +257,28 @@ class TunService : VpnService(), CoroutineScope by CoroutineScope(Dispatchers.De
         private const val NET_ANY = "0.0.0.0"
         private const val NET_ANY6 = "::"
 
-        private val HTTP_PROXY_LOCAL_LIST: List<String> = listOf(
-            "localhost",
-            "*.local",
-            "127.*",
-            "10.*",
-            "172.16.*",
-            "172.17.*",
-            "172.18.*",
-            "172.19.*",
-            "172.2*",
-            "172.30.*",
-            "172.31.*",
-            "192.168.*"
-        )
-        private val HTTP_PROXY_BLACK_LIST: List<String> = listOf(
-            "*zhihu.com",
-            "*zhimg.com",
-            "*jd.com",
-            "100ime-iat-api.xfyun.cn",
-            "*360buyimg.com",
-        )
+        private val HTTP_PROXY_LOCAL_LIST: List<String> =
+            listOf(
+                "localhost",
+                "*.local",
+                "127.*",
+                "10.*",
+                "172.16.*",
+                "172.17.*",
+                "172.18.*",
+                "172.19.*",
+                "172.2*",
+                "172.30.*",
+                "172.31.*",
+                "192.168.*",
+            )
+        private val HTTP_PROXY_BLACK_LIST: List<String> =
+            listOf(
+                "*zhihu.com",
+                "*zhimg.com",
+                "*jd.com",
+                "100ime-iat-api.xfyun.cn",
+                "*360buyimg.com",
+            )
     }
 }

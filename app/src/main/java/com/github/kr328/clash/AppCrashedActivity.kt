@@ -13,15 +13,14 @@ class AppCrashedActivity : BaseActivity<AppCrashedDesign>() {
 
         setContentDesign(design)
 
-        val packageInfo = withContext(Dispatchers.IO) {
-            packageManager.getPackageInfo(packageName, 0)
-        }
+        val packageInfo =
+            withContext(Dispatchers.IO) { packageManager.getPackageInfo(packageName, 0) }
 
-        Log.i("App version: versionName = ${packageInfo.versionName} versionCode = ${packageInfo.longVersionCode}")
+        Log.i(
+            "App version: versionName = ${packageInfo.versionName} versionCode = ${packageInfo.longVersionCode}"
+        )
 
-        val logs = withContext(Dispatchers.IO) {
-            SystemLogcat.dumpCrash()
-        }
+        val logs = withContext(Dispatchers.IO) { SystemLogcat.dumpCrash() }
 
         design.setAppLogs(logs)
 
