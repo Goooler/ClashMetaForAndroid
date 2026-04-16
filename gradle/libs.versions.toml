@@ -30,6 +30,9 @@ quickie-bundled = { module = "io.github.g00fy2.quickie:quickie-bundled", version
 okhttp-client = { module = "com.squareup.okhttp3:okhttp", version.ref = "okhttp" }
 okhttp-interceptor = { module = "com.squareup.okhttp3:logging-interceptor", version.ref = "okhttp" }
 
+# Dummy to get renovate updates, the version is used in rootProject build.gradle with spotless.
+ktfmt = "com.facebook:ktfmt:0.62"
+
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 android-library = { id = "com.android.library", version.ref = "agp" }
@@ -38,3 +41,4 @@ kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", versi
 ksp = "com.google.devtools.ksp:2.3.6"
 golang = "io.github.goooler.golang:0.1.1"
 download = "de.undercouch.download:5.7.0"
+spotless = "com.diffplug.spotless:8.4.0"

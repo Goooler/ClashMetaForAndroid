@@ -9,24 +9,34 @@ import com.github.kr328.clash.design.databinding.DialogFilesMenuBinding
 import com.github.kr328.clash.design.dialog.AppBottomSheetDialog
 import com.github.kr328.clash.design.dialog.requestModelTextInput
 import com.github.kr328.clash.design.model.File
-import com.github.kr328.clash.design.util.*
+import com.github.kr328.clash.design.util.ValidatorFileName
+import com.github.kr328.clash.design.util.applyFrom
+import com.github.kr328.clash.design.util.applyLinearAdapter
+import com.github.kr328.clash.design.util.bindAppBarElevation
+import com.github.kr328.clash.design.util.layoutInflater
+import com.github.kr328.clash.design.util.root
+import com.github.kr328.clash.design.util.swapDataSet
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 class FilesDesign(context: Context) : Design<FilesDesign.Request>(context) {
     sealed class Request {
         data class OpenFile(val file: File) : Request()
+
         data class OpenDirectory(val file: File) : Request()
+
         data class RenameFile(val file: File) : Request()
+
         data class DeleteFile(val file: File) : Request()
+
         data class ImportFile(val file: File?) : Request()
+
         data class ExportFile(val file: File) : Request()
 
         object PopStack : Request()
     }
 
-    private val binding = DesignFilesBinding
-        .inflate(context.layoutInflater, context.root, false)
+    private val binding = DesignFilesBinding.inflate(context.layoutInflater, context.root, false)
     private val adapter: FileAdapter = FileAdapter(context, this::requestOpen, this::requestMore)
 
     override val root: View

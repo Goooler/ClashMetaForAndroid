@@ -10,9 +10,9 @@ import com.github.kr328.clash.service.data.SelectionDao
 import com.github.kr328.clash.service.store.ServiceStore
 import com.github.kr328.clash.service.util.importedDir
 import com.github.kr328.clash.service.util.sendProfileLoaded
+import java.util.UUID
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.selects.select
-import java.util.*
 
 class ConfigurationModule(service: Service) : Module<ConfigurationModule.LoadException>(service) {
     data class LoadException(val message: String)
@@ -35,31 +35,30 @@ class ConfigurationModule(service: Service) : Module<ConfigurationModule.LoadExc
                 broadcasts.onReceive {
                     if (it.action == Intents.ACTION_PROFILE_CHANGED)
                         UUID.fromString(it.getStringExtra(Intents.EXTRA_UUID))
-                    else
-                        null
+                    else null
                 }
-                reload.onReceive {
-                    null
-                }
+                reload.onReceive { null }
             }
 
             try {
-                val current = store.activeProfile
-                    ?: throw NullPointerException("No profile selected")
+                val current =
+                    store.activeProfile ?: throw NullPointerException("No profile selected")
 
-                if (current == loaded && changed != null && changed != loaded)
-                    continue
+                if (current == loaded && changed != null && changed != loaded) continue
 
                 loaded = current
 
-                val active = ImportedDao().queryByUUID(current)
-                    ?: throw NullPointerException("No profile selected")
+                val active =
+                    ImportedDao().queryByUUID(current)
+                        ?: throw NullPointerException("No profile selected")
 
                 Clash.load(service.importedDir.resolve(active.uuid.toString())).await()
 
-                val remove = SelectionDao().querySelections(active.uuid)
-                    .filterNot { Clash.patchSelector(it.proxy, it.selected) }
-                    .map { it.proxy }
+                val remove =
+                    SelectionDao()
+                        .querySelections(active.uuid)
+                        .filterNot { Clash.patchSelector(it.proxy, it.selected) }
+                        .map { it.proxy }
 
                 SelectionDao().removeSelections(active.uuid, remove)
 

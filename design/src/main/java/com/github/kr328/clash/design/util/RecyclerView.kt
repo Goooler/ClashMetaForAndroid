@@ -9,9 +9,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.github.kr328.clash.design.BR
 import com.github.kr328.clash.design.ui.Surface
+import kotlin.reflect.KMutableProperty0
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import kotlin.reflect.KMutableProperty0
 
 fun RecyclerView.applyLinearAdapter(context: Context, adapter: RecyclerView.Adapter<*>) {
     this.layoutManager = LinearLayoutManager(context)
@@ -21,11 +21,9 @@ fun RecyclerView.applyLinearAdapter(context: Context, adapter: RecyclerView.Adap
 suspend fun <H : RecyclerView.ViewHolder, T> RecyclerView.Adapter<H>.swapDataSet(
     property: KMutableProperty0<List<T>>,
     newDataset: List<T>,
-    compareEquals: Boolean = true
+    compareEquals: Boolean = true,
 ) {
-    val ignore = withContext(Dispatchers.Default) {
-        compareEquals && property.get() == newDataset
-    }
+    val ignore = withContext(Dispatchers.Default) { compareEquals && property.get() == newDataset }
 
     if (ignore) return
 
@@ -48,11 +46,10 @@ suspend fun <H : RecyclerView.ViewHolder, T> RecyclerView.Adapter<H>.patchDataSe
     property: KMutableProperty0<List<T>>,
     newDataset: List<T>,
     detectMove: Boolean = false,
-    id: (T) -> Any? = { it }
+    id: (T) -> Any? = { it },
 ) {
-    val result = withContext(Dispatchers.Default) {
-        property.get().diffWith(newDataset, detectMove, id)
-    }
+    val result =
+        withContext(Dispatchers.Default) { property.get().diffWith(newDataset, detectMove, id) }
 
     withContext(Dispatchers.Main) {
         property.set(newDataset)
@@ -61,9 +58,7 @@ suspend fun <H : RecyclerView.ViewHolder, T> RecyclerView.Adapter<H>.patchDataSe
 }
 
 fun RecyclerView.invalidateChildren() {
-    children.forEach {
-        it.postInvalidate()
-    }
+    children.forEach { it.postInvalidate() }
 }
 
 fun RecyclerView.bindInsets(surface: Surface, top: Int = 0, bottom: Int = 0) {
@@ -74,25 +69,28 @@ fun RecyclerView.bindInsets(surface: Surface, top: Int = 0, bottom: Int = 0) {
         setPaddingRelative(0, t, 0, b)
     }
 
-    surface.addOnPropertyChangedCallback(object : Observable.OnPropertyChangedCallback() {
-        override fun onPropertyChanged(sender: Observable?, propertyId: Int) {
-            if (propertyId == BR.insets) {
-                applyInsets()
+    surface.addOnPropertyChangedCallback(
+        object : Observable.OnPropertyChangedCallback() {
+            override fun onPropertyChanged(sender: Observable?, propertyId: Int) {
+                if (propertyId == BR.insets) {
+                    applyInsets()
+                }
             }
         }
-    })
+    )
 
     applyInsets()
 }
 
 fun RecyclerView.addScrolledToBottomObserver(listener: (RecyclerView, Boolean) -> Unit) {
-    val observer = object : RecyclerView.OnScrollListener() {
-        override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
-            if (newState == RecyclerView.SCROLL_STATE_IDLE) {
-                listener(this@addScrolledToBottomObserver, recyclerView.isBottom)
+    val observer =
+        object : RecyclerView.OnScrollListener() {
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                    listener(this@addScrolledToBottomObserver, recyclerView.isBottom)
+                }
             }
         }
-    }
 
     addOnScrollListener(observer)
 }
@@ -100,10 +98,8 @@ fun RecyclerView.addScrolledToBottomObserver(listener: (RecyclerView, Boolean) -
 val RecyclerView.firstVisibleView: View?
     get() {
         return when (val mgr = layoutManager) {
-            is LinearLayoutManager ->
-                mgr.findViewByPosition(mgr.findFirstVisibleItemPosition())
-            else ->
-                throw UnsupportedOperationException("unsupported manager: $mgr")
+            is LinearLayoutManager -> mgr.findViewByPosition(mgr.findFirstVisibleItemPosition())
+            else -> throw UnsupportedOperationException("unsupported manager: $mgr")
         }
     }
 
@@ -115,7 +111,7 @@ val RecyclerView.isBottom: Boolean
         return when (val mgr = layoutManager) {
             is GridLayoutManager -> {
                 mgr.findFirstVisibleItemPosition() != 0 &&
-                        mgr.findLastVisibleItemPosition() == adapter!!.itemCount - 1
+                    mgr.findLastVisibleItemPosition() == adapter!!.itemCount - 1
             }
             else -> {
                 throw UnsupportedOperationException("unsupported layout manager")

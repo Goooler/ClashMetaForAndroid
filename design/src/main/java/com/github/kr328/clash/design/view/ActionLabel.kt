@@ -10,14 +10,15 @@ import com.github.kr328.clash.design.R
 import com.github.kr328.clash.design.databinding.ComponentActionLabelBinding
 import com.github.kr328.clash.design.util.layoutInflater
 
-class ActionLabel @JvmOverloads constructor(
+class ActionLabel
+@JvmOverloads
+constructor(
     context: Context,
     attributeSet: AttributeSet? = null,
     @AttrRes defStyleAttr: Int = 0,
-    @StyleRes defStyleRes: Int = 0
+    @StyleRes defStyleRes: Int = 0,
 ) : FrameLayout(context, attributeSet, defStyleAttr, defStyleRes) {
-    private val binding = ComponentActionLabelBinding
-        .inflate(context.layoutInflater, this, true)
+    private val binding = ComponentActionLabelBinding.inflate(context.layoutInflater, this, true)
 
     var icon: Drawable?
         get() = binding.iconView.background
@@ -43,19 +44,21 @@ class ActionLabel @JvmOverloads constructor(
     }
 
     init {
-        context.theme.obtainStyledAttributes(
-            attributeSet,
-            R.styleable.ActionLabel,
-            defStyleAttr,
-            defStyleRes
-        ).apply {
-            try {
-                icon = getDrawable(R.styleable.ActionLabel_icon)
-                text = getString(R.styleable.ActionLabel_text)
-                subtext = getString(R.styleable.ActionLabel_subtext)
-            } finally {
-                recycle()
+        context.theme
+            .obtainStyledAttributes(
+                attributeSet,
+                R.styleable.ActionLabel,
+                defStyleAttr,
+                defStyleRes,
+            )
+            .apply {
+                try {
+                    icon = getDrawable(R.styleable.ActionLabel_icon)
+                    text = getString(R.styleable.ActionLabel_text)
+                    subtext = getString(R.styleable.ActionLabel_subtext)
+                } finally {
+                    recycle()
+                }
             }
-        }
     }
 }

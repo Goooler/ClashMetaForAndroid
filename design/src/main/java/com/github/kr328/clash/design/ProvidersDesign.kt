@@ -5,42 +5,41 @@ import android.view.View
 import com.github.kr328.clash.core.model.Provider
 import com.github.kr328.clash.design.adapter.ProviderAdapter
 import com.github.kr328.clash.design.databinding.DesignProvidersBinding
-import com.github.kr328.clash.design.util.*
+import com.github.kr328.clash.design.util.applyFrom
+import com.github.kr328.clash.design.util.applyLinearAdapter
+import com.github.kr328.clash.design.util.bindAppBarElevation
+import com.github.kr328.clash.design.util.layoutInflater
+import com.github.kr328.clash.design.util.root
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-class ProvidersDesign(
-    context: Context,
-    providers: List<Provider>,
-) : Design<ProvidersDesign.Request>(context) {
+class ProvidersDesign(context: Context, providers: List<Provider>) :
+    Design<ProvidersDesign.Request>(context) {
     sealed class Request {
         data class Update(val index: Int, val provider: Provider) : Request()
     }
 
-    private val binding = DesignProvidersBinding
-        .inflate(context.layoutInflater, context.root, false)
+    private val binding =
+        DesignProvidersBinding.inflate(context.layoutInflater, context.root, false)
 
     override val root: View
         get() = binding.root
 
-    private val adapter = ProviderAdapter(context, providers) { index, provider ->
-        requests.trySend(Request.Update(index, provider))
-    }
+    private val adapter =
+        ProviderAdapter(context, providers) { index, provider ->
+            requests.trySend(Request.Update(index, provider))
+        }
 
     fun updateElapsed() {
         adapter.updateElapsed()
     }
 
     suspend fun notifyUpdated(index: Int) {
-        withContext(Dispatchers.Main) {
-            adapter.notifyUpdated(index)
-        }
+        withContext(Dispatchers.Main) { adapter.notifyUpdated(index) }
     }
 
     suspend fun notifyChanged(index: Int) {
-        withContext(Dispatchers.Main) {
-            adapter.notifyChanged(index)
-        }
+        withContext(Dispatchers.Main) { adapter.notifyChanged(index) }
     }
 
     init {
@@ -53,11 +52,13 @@ class ProvidersDesign(
     }
 
     fun requestUpdateAll() {
-        adapter.states.filter { !it.updating }.forEachIndexed { index, state ->
-            state.updating = true
-            if (state.provider.vehicleType != Provider.VehicleType.Inline) {
-                requests.trySend(Request.Update(index, state.provider))
+        adapter.states
+            .filter { !it.updating }
+            .forEachIndexed { index, state ->
+                state.updating = true
+                if (state.provider.vehicleType != Provider.VehicleType.Inline) {
+                    requests.trySend(Request.Update(index, state.provider))
+                }
             }
-        }
     }
 }

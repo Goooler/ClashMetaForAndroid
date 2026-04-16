@@ -48,34 +48,31 @@ android {
     }
 
     val keystore = rootProject.file("signing.properties")
-    val releaseSigning = if (keystore.exists()) {
-        signingConfigs.create("release") {
-            val prop = Properties()
-            keystore.inputStream().use(prop::load)
-            storeFile = rootProject.file("release.keystore")
-            storePassword = prop.getProperty("keystore.password")
-            keyAlias = prop.getProperty("key.alias")
-            keyPassword = prop.getProperty("key.password")
+    val releaseSigning =
+        if (keystore.exists()) {
+            signingConfigs.create("release") {
+                val prop = Properties()
+                keystore.inputStream().use(prop::load)
+                storeFile = rootProject.file("release.keystore")
+                storePassword = prop.getProperty("keystore.password")
+                keyAlias = prop.getProperty("key.alias")
+                keyPassword = prop.getProperty("key.password")
+            }
+        } else {
+            signingConfigs["debug"]
         }
-    } else {
-        signingConfigs["debug"]
-    }
 
     buildTypes {
-        all {
-            signingConfig = releaseSigning
-        }
+        all { signingConfig = releaseSigning }
         release {
             isMinifyEnabled = true
             isShrinkResources = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
+                "proguard-rules.pro",
             )
         }
-        debug {
-            versionNameSuffix = ".debug"
-        }
+        debug { versionNameSuffix = ".debug" }
     }
 
     buildFeatures {
@@ -84,12 +81,8 @@ android {
     }
 
     packaging {
-        jniLibs {
-            useLegacyPackaging = true
-        }
-        resources {
-            excludes.add("DebugProbesKt.bin")
-        }
+        jniLibs { useLegacyPackaging = true }
+        resources { excludes.add("DebugProbesKt.bin") }
     }
 
     splits {
@@ -105,11 +98,13 @@ android {
 androidComponents {
     onVariants(selector().withBuildType("release")) { variant ->
         variant.outputs.forEach { output ->
-            // TODO: https://github.com/android/gradle-recipes/blob/cbe7c7dea2a3f5b1764756f24bf453d1235c80e2/listenToArtifacts/README.md
+            // TODO:
+            // https://github.com/android/gradle-recipes/blob/cbe7c7dea2a3f5b1764756f24bf453d1235c80e2/listenToArtifacts/README.md
             with(output as com.android.build.api.variant.impl.VariantOutputImpl) {
-                val abiName = output.filters
-                    .find { it.filterType == FilterConfiguration.FilterType.ABI }
-                    ?.identifier ?: "universal"
+                val abiName =
+                    output.filters
+                        .find { it.filterType == FilterConfiguration.FilterType.ABI }
+                        ?.identifier ?: "universal"
                 val newApkName = "cmfa-${versionName.get()}-meta-$abiName-${variant.buildType}.apk"
                 outputFileName = newApkName
             }
@@ -134,27 +129,24 @@ dependencies {
     implementation(libs.quickie.bundled)
 }
 
-val downloadGeoFiles by tasks.registering(Download::class) {
-    src(
-        listOf(
-            "https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/geoip.metadb",
-            "https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/geosite.dat",
-            "https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/GeoLite2-ASN.mmdb",
-        ),
-    )
-    dest("src/main/assets")
-    onlyIfModified(true)
-    eachFile {
-        if (name == "GeoLite2-ASN.mmdb") {
-            name = "ASN.mmdb"
+val downloadGeoFiles by
+    tasks.registering(Download::class) {
+        src(
+            listOf(
+                "https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/geoip.metadb",
+                "https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/geosite.dat",
+                "https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/GeoLite2-ASN.mmdb",
+            )
+        )
+        dest("src/main/assets")
+        onlyIfModified(true)
+        eachFile {
+            if (name == "GeoLite2-ASN.mmdb") {
+                name = "ASN.mmdb"
+            }
         }
     }
-}
 
-tasks.preBuild {
-    dependsOn(downloadGeoFiles)
-}
+tasks.preBuild { dependsOn(downloadGeoFiles) }
 
-tasks.clean {
-    delete(downloadGeoFiles)
-}
+tasks.clean { delete(downloadGeoFiles) }

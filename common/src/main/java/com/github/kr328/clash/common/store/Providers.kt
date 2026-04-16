@@ -9,9 +9,7 @@ class SharedPreferenceProvider(private val preferences: SharedPreferences) : Sto
     }
 
     override fun setInt(key: String, value: Int) {
-        preferences.edit {
-            putInt(key, value)
-        }
+        preferences.edit { putInt(key, value) }
     }
 
     override fun getLong(key: String, defaultValue: Long): Long {
@@ -19,9 +17,7 @@ class SharedPreferenceProvider(private val preferences: SharedPreferences) : Sto
     }
 
     override fun setLong(key: String, value: Long) {
-        preferences.edit {
-            putLong(key, value)
-        }
+        preferences.edit { putLong(key, value) }
     }
 
     override fun getString(key: String, defaultValue: String): String {
@@ -29,9 +25,7 @@ class SharedPreferenceProvider(private val preferences: SharedPreferences) : Sto
     }
 
     override fun setString(key: String, value: String) {
-        preferences.edit {
-            putString(key, value)
-        }
+        preferences.edit { putString(key, value) }
     }
 
     override fun getStringSet(key: String, defaultValue: Set<String>): Set<String> {
@@ -39,9 +33,7 @@ class SharedPreferenceProvider(private val preferences: SharedPreferences) : Sto
     }
 
     override fun setStringSet(key: String, value: Set<String>) {
-        preferences.edit {
-            putStringSet(key, value)
-        }
+        preferences.edit { putStringSet(key, value) }
     }
 
     override fun getBoolean(key: String, defaultValue: Boolean): Boolean {
@@ -49,9 +41,7 @@ class SharedPreferenceProvider(private val preferences: SharedPreferences) : Sto
     }
 
     override fun setBoolean(key: String, value: Boolean) {
-        preferences.edit {
-            putBoolean(key, value)
-        }
+        preferences.edit { putBoolean(key, value) }
     }
 }
 

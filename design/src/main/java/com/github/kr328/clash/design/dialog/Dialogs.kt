@@ -42,7 +42,9 @@ class AppBottomSheetDialog(context: Context) : BottomSheetDialog(context) {
                     insets = it
 
                     (layoutParams as CoordinatorLayout.LayoutParams).also { params ->
-                        if (ViewCompat.getLayoutDirection(this) == ViewCompat.LAYOUT_DIRECTION_LTR) {
+                        if (
+                            ViewCompat.getLayoutDirection(this) == ViewCompat.LAYOUT_DIRECTION_LTR
+                        ) {
                             params.setMargins(it.start, 0, it.end, 0)
                         } else {
                             params.setMargins(it.end, 0, it.start, 0)
@@ -51,12 +53,7 @@ class AppBottomSheetDialog(context: Context) : BottomSheetDialog(context) {
                         val top = context.getPixels(R.dimen.bottom_sheet_background_padding_top)
                         val height = context.getPixels(R.dimen.bottom_sheet_header_height)
 
-                        setPaddingRelative(
-                            0,
-                            top * 2 + height,
-                            0,
-                            it.bottom
-                        )
+                        setPaddingRelative(0, top * 2 + height, 0, it.bottom)
                     }
                 }
             }
@@ -69,9 +66,8 @@ class AppBottomSheetDialog(context: Context) : BottomSheetDialog(context) {
     }
 }
 
-class FullScreenDialog(
-    context: Context
-) : Dialog(context, context.resolveThemedResourceId(R.attr.fullScreenDialogTheme)) {
+class FullScreenDialog(context: Context) :
+    Dialog(context, context.resolveThemedResourceId(R.attr.fullScreenDialogTheme)) {
     val surface = Surface()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -82,13 +78,10 @@ class FullScreenDialog(
 
             setLayout(
                 WindowManager.LayoutParams.MATCH_PARENT,
-                WindowManager.LayoutParams.MATCH_PARENT
+                WindowManager.LayoutParams.MATCH_PARENT,
             )
 
-            decorView.setOnInsertsChangedListener {
-                if (surface.insets != it)
-                    surface.insets = it
-            }
+            decorView.setOnInsertsChangedListener { if (surface.insets != it) surface.insets = it }
         }
     }
 }

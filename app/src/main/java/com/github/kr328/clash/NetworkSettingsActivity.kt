@@ -8,12 +8,7 @@ import kotlinx.coroutines.selects.select
 
 class NetworkSettingsActivity : BaseActivity<NetworkSettingsDesign>() {
     override suspend fun main() {
-        val design = NetworkSettingsDesign(
-            this,
-            uiStore,
-            ServiceStore(this),
-            clashRunning,
-        )
+        val design = NetworkSettingsDesign(this, uiStore, ServiceStore(this), clashRunning)
 
         setContentDesign(design)
 
@@ -21,8 +16,9 @@ class NetworkSettingsActivity : BaseActivity<NetworkSettingsDesign>() {
             select {
                 events.onReceive {
                     when (it) {
-                        Event.ClashStart, Event.ClashStop, Event.ServiceRecreated ->
-                            recreate()
+                        Event.ClashStart,
+                        Event.ClashStop,
+                        Event.ServiceRecreated -> recreate()
                         else -> Unit
                     }
                 }
@@ -35,5 +31,4 @@ class NetworkSettingsActivity : BaseActivity<NetworkSettingsDesign>() {
             }
         }
     }
-
 }

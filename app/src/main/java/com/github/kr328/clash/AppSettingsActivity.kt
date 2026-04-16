@@ -13,14 +13,15 @@ import kotlinx.coroutines.selects.select
 
 class AppSettingsActivity : BaseActivity<AppSettingsDesign>(), Behavior {
     override suspend fun main() {
-        val design = AppSettingsDesign(
-            this,
-            uiStore,
-            ServiceStore(this),
-            this,
-            clashRunning,
-            ::onHideIconChange,
-        )
+        val design =
+            AppSettingsDesign(
+                this,
+                uiStore,
+                ServiceStore(this),
+                this,
+                clashRunning,
+                ::onHideIconChange,
+            )
 
         setContentDesign(design)
 
@@ -28,15 +29,14 @@ class AppSettingsActivity : BaseActivity<AppSettingsDesign>(), Behavior {
             select {
                 events.onReceive {
                     when (it) {
-                        Event.ClashStart, Event.ClashStop, Event.ServiceRecreated ->
-                            recreate()
+                        Event.ClashStart,
+                        Event.ClashStop,
+                        Event.ServiceRecreated -> recreate()
                         else -> Unit
                     }
                 }
                 design.requests.onReceive {
-                    ApplicationObserver.createdActivities.forEach {
-                        it.recreate()
-                    }
+                    ApplicationObserver.createdActivities.forEach { it.recreate() }
                 }
             }
         }
@@ -44,17 +44,15 @@ class AppSettingsActivity : BaseActivity<AppSettingsDesign>(), Behavior {
 
     override var autoRestart: Boolean
         get() {
-            val status = packageManager.getComponentEnabledSetting(
-                RestartReceiver::class.componentName
-            )
+            val status =
+                packageManager.getComponentEnabledSetting(RestartReceiver::class.componentName)
 
             return status == PackageManager.COMPONENT_ENABLED_STATE_ENABLED
         }
         set(value) {
-            val status = if (value)
-                PackageManager.COMPONENT_ENABLED_STATE_ENABLED
-            else
-                PackageManager.COMPONENT_ENABLED_STATE_DISABLED
+            val status =
+                if (value) PackageManager.COMPONENT_ENABLED_STATE_ENABLED
+                else PackageManager.COMPONENT_ENABLED_STATE_DISABLED
 
             packageManager.setComponentEnabledSetting(
                 RestartReceiver::class.componentName,
@@ -64,15 +62,16 @@ class AppSettingsActivity : BaseActivity<AppSettingsDesign>(), Behavior {
         }
 
     private fun onHideIconChange(hide: Boolean) {
-        val newState = if (hide) {
-            PackageManager.COMPONENT_ENABLED_STATE_DISABLED
-        } else {
-            PackageManager.COMPONENT_ENABLED_STATE_ENABLED
-        }
+        val newState =
+            if (hide) {
+                PackageManager.COMPONENT_ENABLED_STATE_DISABLED
+            } else {
+                PackageManager.COMPONENT_ENABLED_STATE_ENABLED
+            }
         packageManager.setComponentEnabledSetting(
             mainActivityAlias,
             newState,
-            PackageManager.DONT_KILL_APP
+            PackageManager.DONT_KILL_APP,
         )
         if (hide) {
             // Prevent launcher activity not found.

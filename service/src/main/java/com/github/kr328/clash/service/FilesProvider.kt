@@ -5,46 +5,50 @@ import android.database.MatrixCursor
 import android.os.Build
 import android.os.CancellationSignal
 import android.os.ParcelFileDescriptor
+import android.provider.DocumentsContract.Document as D
 import android.provider.DocumentsContract.Root
 import android.provider.DocumentsProvider
 import com.github.kr328.clash.common.util.PatternFileName
-import com.github.kr328.clash.service.document.*
-import kotlinx.coroutines.runBlocking
+import com.github.kr328.clash.service.document.Document
+import com.github.kr328.clash.service.document.FileDocument
+import com.github.kr328.clash.service.document.Flag
+import com.github.kr328.clash.service.document.Paths
+import com.github.kr328.clash.service.document.Picker
 import java.io.FileNotFoundException
-import android.provider.DocumentsContract.Document as D
+import kotlinx.coroutines.runBlocking
 
 class FilesProvider : DocumentsProvider() {
     companion object {
         private const val DEFAULT_ROOT_ID = "0"
 
-        private val DEFAULT_DOCUMENT_COLUMNS = arrayOf(
-            D.COLUMN_DOCUMENT_ID,
-            D.COLUMN_DISPLAY_NAME,
-            D.COLUMN_MIME_TYPE,
-            D.COLUMN_LAST_MODIFIED,
-            D.COLUMN_SIZE,
-            D.COLUMN_FLAGS
-        )
-        private val DEFAULT_ROOT_COLUMNS = arrayOf(
-            Root.COLUMN_ROOT_ID,
-            Root.COLUMN_FLAGS,
-            Root.COLUMN_ICON,
-            Root.COLUMN_TITLE,
-            Root.COLUMN_SUMMARY,
-            Root.COLUMN_DOCUMENT_ID
-        )
+        private val DEFAULT_DOCUMENT_COLUMNS =
+            arrayOf(
+                D.COLUMN_DOCUMENT_ID,
+                D.COLUMN_DISPLAY_NAME,
+                D.COLUMN_MIME_TYPE,
+                D.COLUMN_LAST_MODIFIED,
+                D.COLUMN_SIZE,
+                D.COLUMN_FLAGS,
+            )
+        private val DEFAULT_ROOT_COLUMNS =
+            arrayOf(
+                Root.COLUMN_ROOT_ID,
+                Root.COLUMN_FLAGS,
+                Root.COLUMN_ICON,
+                Root.COLUMN_TITLE,
+                Root.COLUMN_SUMMARY,
+                Root.COLUMN_DOCUMENT_ID,
+            )
 
         private const val FLAG_VIRTUAL: Int = D.FLAG_VIRTUAL_DOCUMENT
     }
 
-    private val picker: Picker by lazy {
-        Picker(context!!)
-    }
+    private val picker: Picker by lazy { Picker(context!!) }
 
     override fun openDocument(
         documentId: String?,
         mode: String?,
-        signal: CancellationSignal?
+        signal: CancellationSignal?,
     ): ParcelFileDescriptor {
         val m = ParcelFileDescriptor.parseMode(mode)
 
@@ -67,8 +71,7 @@ class FilesProvider : DocumentsProvider() {
         runBlocking {
             val path = Paths.resolve(documentPath)
 
-            if (path.relative == null)
-                throw IllegalArgumentException("invalid path $documentId")
+            if (path.relative == null) throw IllegalArgumentException("invalid path $documentId")
 
             val document = picker.pick(path, true)
 
@@ -100,9 +103,7 @@ class FilesProvider : DocumentsProvider() {
 
             val parent = document.file.parentFile
 
-            require(parent != null) {
-                throw IllegalArgumentException("unable to rename $document")
-            }
+            require(parent != null) { throw IllegalArgumentException("unable to rename $document") }
 
             document.file.renameTo(parent.resolve(name))
 
@@ -113,7 +114,7 @@ class FilesProvider : DocumentsProvider() {
     override fun queryChildDocuments(
         parentDocumentId: String?,
         projection: Array<out String>?,
-        sortOrder: String?
+        sortOrder: String?,
     ): Cursor {
         return runBlocking {
             try {
@@ -123,8 +124,7 @@ class FilesProvider : DocumentsProvider() {
 
                 MatrixCursor(resolveDocumentProjection(projection)).apply {
                     documents.forEach {
-                        newRow().applyDocument(it)
-                            .add(D.COLUMN_DOCUMENT_ID, "$doc/${it.id}")
+                        newRow().applyDocument(it).add(D.COLUMN_DOCUMENT_ID, "$doc/${it.id}")
                     }
                 }
             } catch (e: Exception) {
@@ -170,8 +170,7 @@ class FilesProvider : DocumentsProvider() {
     }
 
     override fun isChildDocument(parentDocumentId: String?, documentId: String?): Boolean {
-        if (parentDocumentId == null || documentId == null)
-            return false
+        if (parentDocumentId == null || documentId == null) return false
 
         return documentId.startsWith(parentDocumentId)
     }
@@ -180,11 +179,12 @@ class FilesProvider : DocumentsProvider() {
         var flags = 0
 
         document.flags.forEach {
-            flags = when (it) {
-                Flag.Writable -> flags or D.FLAG_SUPPORTS_WRITE
-                Flag.Deletable -> flags or D.FLAG_SUPPORTS_DELETE
-                Flag.Virtual -> flags or FLAG_VIRTUAL
-            }
+            flags =
+                when (it) {
+                    Flag.Writable -> flags or D.FLAG_SUPPORTS_WRITE
+                    Flag.Deletable -> flags or D.FLAG_SUPPORTS_DELETE
+                    Flag.Virtual -> flags or FLAG_VIRTUAL
+                }
         }
 
         add(D.COLUMN_DISPLAY_NAME, document.name)

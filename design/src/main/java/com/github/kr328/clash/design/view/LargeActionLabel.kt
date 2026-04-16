@@ -12,14 +12,16 @@ import com.github.kr328.clash.design.util.layoutInflater
 import com.github.kr328.clash.design.util.resolveClickableAttrs
 import com.github.kr328.clash.design.util.selectableItemBackground
 
-class LargeActionLabel @JvmOverloads constructor(
+class LargeActionLabel
+@JvmOverloads
+constructor(
     context: Context,
     attributeSet: AttributeSet? = null,
     @AttrRes defStyleAttr: Int = 0,
-    @StyleRes defStyleRes: Int = 0
+    @StyleRes defStyleRes: Int = 0,
 ) : FrameLayout(context, attributeSet, defStyleAttr, defStyleRes) {
-    private val binding = ComponentLargeActionLabelBinding
-        .inflate(context.layoutInflater, this, true)
+    private val binding =
+        ComponentLargeActionLabelBinding.inflate(context.layoutInflater, this, true)
 
     var icon: Drawable?
         get() = binding.iconView.background
@@ -46,29 +48,27 @@ class LargeActionLabel @JvmOverloads constructor(
         }
 
     init {
-        context.resolveClickableAttrs(
-            attributeSet,
-            defStyleAttr,
-            defStyleRes
-        ) {
+        context.resolveClickableAttrs(attributeSet, defStyleAttr, defStyleRes) {
             isFocusable = focusable(true)
             isClickable = clickable(true)
             background = background() ?: context.selectableItemBackground
         }
 
-        context.theme.obtainStyledAttributes(
-            attributeSet,
-            R.styleable.LargeActionLabel,
-            defStyleAttr,
-            defStyleRes
-        ).apply {
-            try {
-                icon = getDrawable(R.styleable.LargeActionLabel_icon)
-                text = getString(R.styleable.LargeActionLabel_text)
-                subtext = getString(R.styleable.LargeActionLabel_subtext)
-            } finally {
-                recycle()
+        context.theme
+            .obtainStyledAttributes(
+                attributeSet,
+                R.styleable.LargeActionLabel,
+                defStyleAttr,
+                defStyleRes,
+            )
+            .apply {
+                try {
+                    icon = getDrawable(R.styleable.LargeActionLabel_icon)
+                    text = getString(R.styleable.LargeActionLabel_text)
+                    subtext = getString(R.styleable.LargeActionLabel_subtext)
+                } finally {
+                    recycle()
+                }
             }
-        }
     }
 }

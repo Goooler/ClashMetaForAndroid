@@ -5,26 +5,28 @@ import android.view.View
 import com.github.kr328.clash.design.adapter.LogFileAdapter
 import com.github.kr328.clash.design.databinding.DesignLogsBinding
 import com.github.kr328.clash.design.model.LogFile
-import com.github.kr328.clash.design.util.*
+import com.github.kr328.clash.design.util.applyFrom
+import com.github.kr328.clash.design.util.applyLinearAdapter
+import com.github.kr328.clash.design.util.layoutInflater
+import com.github.kr328.clash.design.util.patchDataSet
+import com.github.kr328.clash.design.util.root
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import kotlin.coroutines.resume
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
-import kotlin.coroutines.resume
 
 class LogsDesign(context: Context) : Design<LogsDesign.Request>(context) {
     sealed class Request {
         object StartLogcat : Request()
+
         object DeleteAll : Request()
 
         data class OpenFile(val file: LogFile) : Request()
     }
 
-    private val binding = DesignLogsBinding
-        .inflate(context.layoutInflater, context.root, false)
-    private val adapter = LogFileAdapter(context) {
-        requests.trySend(Request.OpenFile(it))
-    }
+    private val binding = DesignLogsBinding.inflate(context.layoutInflater, context.root, false)
+    private val adapter = LogFileAdapter(context) { requests.trySend(Request.OpenFile(it)) }
 
     override val root: View
         get() = binding.root

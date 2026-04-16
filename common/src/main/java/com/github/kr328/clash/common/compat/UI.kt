@@ -23,14 +23,15 @@ var Window.isSystemBarsTranslucentCompat: Boolean
             decorView.systemUiVisibility =
                 if (value) {
                     decorView.systemUiVisibility or
-                            View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or
-                            View.SYSTEM_UI_FLAG_LAYOUT_STABLE or
-                            View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                        View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or
+                        View.SYSTEM_UI_FLAG_LAYOUT_STABLE or
+                        View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
                 } else {
                     decorView.systemUiVisibility and
-                            (View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or
-                                    View.SYSTEM_UI_FLAG_LAYOUT_STABLE or
-                                    View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION).inv()
+                        (View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or
+                                View.SYSTEM_UI_FLAG_LAYOUT_STABLE or
+                                View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION)
+                            .inv()
                 }
         }
 
@@ -54,7 +55,7 @@ var Window.isLightStatusBarsCompat: Boolean
                 decorView.windowInsetsController?.apply {
                     setSystemBarsAppearance(
                         APPEARANCE_LIGHT_STATUS_BARS,
-                        APPEARANCE_LIGHT_STATUS_BARS
+                        APPEARANCE_LIGHT_STATUS_BARS,
                     )
                 }
             } else {
@@ -64,10 +65,7 @@ var Window.isLightStatusBarsCompat: Boolean
         } else {
             if (Build.VERSION.SDK_INT >= 30) {
                 decorView.windowInsetsController?.apply {
-                    setSystemBarsAppearance(
-                        0,
-                        APPEARANCE_LIGHT_STATUS_BARS
-                    )
+                    setSystemBarsAppearance(0, APPEARANCE_LIGHT_STATUS_BARS)
                 }
             } else {
                 decorView.systemUiVisibility =
@@ -87,7 +85,7 @@ var Window.isLightNavigationBarCompat: Boolean
                 decorView.windowInsetsController?.apply {
                     setSystemBarsAppearance(
                         APPEARANCE_LIGHT_NAVIGATION_BARS,
-                        APPEARANCE_LIGHT_NAVIGATION_BARS
+                        APPEARANCE_LIGHT_NAVIGATION_BARS,
                     )
                 }
             } else {
@@ -97,10 +95,7 @@ var Window.isLightNavigationBarCompat: Boolean
         } else {
             if (Build.VERSION.SDK_INT >= 30) {
                 decorView.windowInsetsController?.apply {
-                    setSystemBarsAppearance(
-                        0,
-                        APPEARANCE_LIGHT_NAVIGATION_BARS
-                    )
+                    setSystemBarsAppearance(0, APPEARANCE_LIGHT_NAVIGATION_BARS)
                 }
             } else {
                 decorView.systemUiVisibility =

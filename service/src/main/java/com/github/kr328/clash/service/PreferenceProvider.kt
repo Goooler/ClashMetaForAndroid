@@ -16,16 +16,9 @@ class PreferenceProvider : PreferenceProvider() {
 
         fun createSharedPreferencesFromContext(context: Context): SharedPreferences {
             return when (context) {
-                is BaseService, is TunService ->
-                    context.getSharedPreferences(
-                        FILE_NAME,
-                        Context.MODE_PRIVATE
-                    )
-                else ->
-                    MultiProcessPreference(
-                        context,
-                        Authorities.SETTINGS_PROVIDER
-                    )
+                is BaseService,
+                is TunService -> context.getSharedPreferences(FILE_NAME, Context.MODE_PRIVATE)
+                else -> MultiProcessPreference(context, Authorities.SETTINGS_PROVIDER)
             }
         }
     }

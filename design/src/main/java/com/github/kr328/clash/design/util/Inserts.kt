@@ -10,21 +10,12 @@ fun View.setOnInsertsChangedListener(adaptLandscape: Boolean = true, listener: (
         val compat = WindowInsetsCompat.toWindowInsetsCompat(ins)
         val insets = compat.getInsets(WindowInsetsCompat.Type.systemBars())
 
-        val rInsets = if (ViewCompat.getLayoutDirection(v) == ViewCompat.LAYOUT_DIRECTION_LTR) {
-            Insets(
-                insets.left,
-                insets.top,
-                insets.right,
-                insets.bottom,
-            )
-        } else {
-            Insets(
-                insets.right,
-                insets.top,
-                insets.left,
-                insets.bottom,
-            )
-        }
+        val rInsets =
+            if (ViewCompat.getLayoutDirection(v) == ViewCompat.LAYOUT_DIRECTION_LTR) {
+                Insets(insets.left, insets.top, insets.right, insets.bottom)
+            } else {
+                Insets(insets.right, insets.top, insets.left, insets.bottom)
+            }
 
         listener(if (adaptLandscape) rInsets.landscape(v.context) else rInsets)
 

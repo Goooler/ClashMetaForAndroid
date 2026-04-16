@@ -11,7 +11,12 @@ import com.github.kr328.clash.design.databinding.DesignProfilesBinding
 import com.github.kr328.clash.design.databinding.DialogProfilesMenuBinding
 import com.github.kr328.clash.design.dialog.AppBottomSheetDialog
 import com.github.kr328.clash.design.ui.ToastDuration
-import com.github.kr328.clash.design.util.*
+import com.github.kr328.clash.design.util.applyFrom
+import com.github.kr328.clash.design.util.applyLinearAdapter
+import com.github.kr328.clash.design.util.bindAppBarElevation
+import com.github.kr328.clash.design.util.layoutInflater
+import com.github.kr328.clash.design.util.patchDataSet
+import com.github.kr328.clash.design.util.root
 import com.github.kr328.clash.service.model.Profile
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -19,16 +24,21 @@ import kotlinx.coroutines.withContext
 class ProfilesDesign(context: Context) : Design<ProfilesDesign.Request>(context) {
     sealed class Request {
         object UpdateAll : Request()
+
         object Create : Request()
+
         data class Active(val profile: Profile) : Request()
+
         data class Update(val profile: Profile) : Request()
+
         data class Edit(val profile: Profile) : Request()
+
         data class Duplicate(val profile: Profile) : Request()
+
         data class Delete(val profile: Profile) : Request()
     }
 
-    private val binding = DesignProfilesBinding
-        .inflate(context.layoutInflater, context.root, false)
+    private val binding = DesignProfilesBinding.inflate(context.layoutInflater, context.root, false)
     private val adapter = ProfileAdapter(context, this::requestActive, this::showMenu)
 
     private var allUpdating: Boolean
@@ -36,19 +46,20 @@ class ProfilesDesign(context: Context) : Design<ProfilesDesign.Request>(context)
         set(value) {
             adapter.states.allUpdating = value
         }
-    private val rotateAnimation : Animation = AnimationUtils.loadAnimation(context, R.anim.rotate_infinite)
+
+    private val rotateAnimation: Animation =
+        AnimationUtils.loadAnimation(context, R.anim.rotate_infinite)
 
     override val root: View
         get() = binding.root
 
     suspend fun patchProfiles(profiles: List<Profile>) {
-        adapter.apply {
-            patchDataSet(this::profiles, profiles, id = { it.uuid })
-        }
+        adapter.apply { patchDataSet(this::profiles, profiles, id = { it.uuid }) }
 
-        val updatable = withContext(Dispatchers.Default) {
-            profiles.any { it.imported && it.type != Profile.Type.File }
-        }
+        val updatable =
+            withContext(Dispatchers.Default) {
+                profiles.any { it.imported && it.type != Profile.Type.File }
+            }
 
         withContext(Dispatchers.Main) {
             binding.updateView.visibility = if (updatable) View.VISIBLE else View.GONE
@@ -57,9 +68,7 @@ class ProfilesDesign(context: Context) : Design<ProfilesDesign.Request>(context)
 
     suspend fun requestSave(profile: Profile) {
         showToast(R.string.active_unsaved_tips, ToastDuration.Long) {
-            setAction(R.string.edit) {
-                requests.trySend(Request.Edit(profile))
-            }
+            setAction(R.string.edit) { requests.trySend(Request.Edit(profile)) }
         }
     }
 
@@ -81,8 +90,12 @@ class ProfilesDesign(context: Context) : Design<ProfilesDesign.Request>(context)
     private fun showMenu(profile: Profile) {
         val dialog = AppBottomSheetDialog(context)
 
-        val binding = DialogProfilesMenuBinding
-            .inflate(context.layoutInflater, dialog.window?.decorView as ViewGroup?, false)
+        val binding =
+            DialogProfilesMenuBinding.inflate(
+                context.layoutInflater,
+                dialog.window?.decorView as ViewGroup?,
+                false,
+            )
 
         binding.master = this
         binding.self = dialog

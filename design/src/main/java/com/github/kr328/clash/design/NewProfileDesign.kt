@@ -5,26 +5,31 @@ import android.view.View
 import com.github.kr328.clash.design.adapter.ProfileProviderAdapter
 import com.github.kr328.clash.design.databinding.DesignNewProfileBinding
 import com.github.kr328.clash.design.model.ProfileProvider
-import com.github.kr328.clash.design.util.*
+import com.github.kr328.clash.design.util.applyFrom
+import com.github.kr328.clash.design.util.applyLinearAdapter
+import com.github.kr328.clash.design.util.bindAppBarElevation
+import com.github.kr328.clash.design.util.layoutInflater
+import com.github.kr328.clash.design.util.patchDataSet
+import com.github.kr328.clash.design.util.root
 
 class NewProfileDesign(context: Context) : Design<NewProfileDesign.Request>(context) {
     sealed class Request {
         data class Create(val provider: ProfileProvider) : Request()
+
         data class OpenDetail(val provider: ProfileProvider.External) : Request()
+
         data class LaunchScanner(val provider: ProfileProvider.QR) : Request()
     }
 
-    private val binding = DesignNewProfileBinding
-        .inflate(context.layoutInflater, context.root, false)
+    private val binding =
+        DesignNewProfileBinding.inflate(context.layoutInflater, context.root, false)
     private val adapter = ProfileProviderAdapter(context, this::requestCreate, this::requestDetail)
 
     override val root: View
         get() = binding.root
 
     suspend fun patchProviders(providers: List<ProfileProvider>) {
-        adapter.apply {
-            patchDataSet(this::providers, providers)
-        }
+        adapter.apply { patchDataSet(this::providers, providers) }
     }
 
     init {
@@ -44,7 +49,6 @@ class NewProfileDesign(context: Context) : Design<NewProfileDesign.Request>(cont
         } else {
             requests.trySend(Request.Create(provider))
         }
-
     }
 
     private fun requestDetail(provider: ProfileProvider): Boolean {

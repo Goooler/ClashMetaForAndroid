@@ -6,11 +6,11 @@ import android.os.Build
 import androidx.core.content.getSystemService
 import com.github.kr328.clash.core.Clash
 import com.github.kr328.clash.core.util.parseInetSocketAddress
+import java.net.InetSocketAddress
+import java.security.SecureRandom
 import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.withContext
-import java.net.InetSocketAddress
-import java.security.SecureRandom
 
 class TunModule(private val vpn: VpnService) : Module<Unit>(vpn) {
     data class TunDevice(
@@ -24,13 +24,8 @@ class TunModule(private val vpn: VpnService) : Module<Unit>(vpn) {
     private val connectivity = service.getSystemService<ConnectivityManager>()!!
     private val close = Channel<Unit>(Channel.CONFLATED)
 
-    private fun queryUid(
-        protocol: Int,
-        source: InetSocketAddress,
-        target: InetSocketAddress,
-    ): Int {
-        if (Build.VERSION.SDK_INT < 29)
-            return -1
+    private fun queryUid(protocol: Int, source: InetSocketAddress, target: InetSocketAddress): Int {
+        if (Build.VERSION.SDK_INT < 29) return -1
 
         return runCatching { connectivity.getConnectionOwnerUid(protocol, source, target) }
             .getOrElse { -1 }
@@ -40,9 +35,7 @@ class TunModule(private val vpn: VpnService) : Module<Unit>(vpn) {
         try {
             return close.receive()
         } finally {
-            withContext(NonCancellable) {
-                requestStop()
-            }
+            withContext(NonCancellable) { requestStop() }
         }
     }
 
@@ -62,7 +55,7 @@ class TunModule(private val vpn: VpnService) : Module<Unit>(vpn) {
             portal = device.portal,
             dns = device.dns,
             markSocket = vpn::protect,
-            querySocketUid = this::queryUid
+            querySocketUid = this::queryUid,
         )
     }
 

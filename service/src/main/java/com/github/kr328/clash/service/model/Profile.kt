@@ -6,9 +6,9 @@ import android.os.Parcel
 import android.os.Parcelable
 import com.github.kr328.clash.core.util.Parcelizer
 import com.github.kr328.clash.service.util.UUIDSerializer
+import java.util.UUID
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.UseSerializers
-import java.util.*
 
 @Serializable
 data class Profile(
@@ -22,14 +22,14 @@ data class Profile(
     var download: Long,
     val total: Long,
     val expire: Long,
-
-
     val updatedAt: Long,
     val imported: Boolean,
     val pending: Boolean,
 ) : Parcelable {
     enum class Type {
-        File, Url, External
+        File,
+        Url,
+        External,
     }
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {

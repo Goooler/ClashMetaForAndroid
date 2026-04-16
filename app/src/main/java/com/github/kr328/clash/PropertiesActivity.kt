@@ -4,6 +4,7 @@ import com.github.kr328.clash.common.util.intent
 import com.github.kr328.clash.common.util.setUUID
 import com.github.kr328.clash.common.util.uuid
 import com.github.kr328.clash.design.PropertiesDesign
+import com.github.kr328.clash.design.R
 import com.github.kr328.clash.design.ui.ToastDuration
 import com.github.kr328.clash.design.util.showExceptionToast
 import com.github.kr328.clash.service.model.Profile
@@ -12,7 +13,6 @@ import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.selects.select
-import com.github.kr328.clash.design.R
 
 class PropertiesActivity : BaseActivity<PropertiesDesign>() {
     private var canceled: Boolean = false
@@ -45,7 +45,12 @@ class PropertiesActivity : BaseActivity<PropertiesDesign>() {
 
                             if (!canceled && profile != original) {
                                 withProfile {
-                                    patch(profile.uuid, profile.name, profile.source, profile.interval)
+                                    patch(
+                                        profile.uuid,
+                                        profile.name,
+                                        profile.source,
+                                        profile.interval,
+                                    )
                                 }
                             }
                         }
@@ -73,8 +78,7 @@ class PropertiesActivity : BaseActivity<PropertiesDesign>() {
         design?.apply {
             launch {
                 if (!progressing) {
-                    if (original == profile || requestExitWithoutSaving())
-                        finish()
+                    if (original == profile || requestExitWithoutSaving()) finish()
                 }
             }
         } ?: return super.onBackPressed()
@@ -94,13 +98,7 @@ class PropertiesActivity : BaseActivity<PropertiesDesign>() {
                         withProfile {
                             patch(profile.uuid, profile.name, profile.source, profile.interval)
 
-                            coroutineScope {
-                                commit(profile.uuid) {
-                                    launch {
-                                        updateStatus(it)
-                                    }
-                                }
-                            }
+                            coroutineScope { commit(profile.uuid) { launch { updateStatus(it) } } }
                         }
                     }
 

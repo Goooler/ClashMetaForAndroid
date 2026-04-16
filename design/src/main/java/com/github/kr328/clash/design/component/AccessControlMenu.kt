@@ -23,16 +23,12 @@ class AccessControlMenu(
     }
 
     override fun onMenuItemClick(item: MenuItem): Boolean {
-        if (item.isCheckable)
-            item.isChecked = !item.isChecked
+        if (item.isCheckable) item.isChecked = !item.isChecked
 
         when (item.itemId) {
-            R.id.select_all ->
-                requests.trySend(Request.SelectAll)
-            R.id.select_none ->
-                requests.trySend(Request.SelectNone)
-            R.id.select_invert ->
-                requests.trySend(Request.SelectInvert)
+            R.id.select_all -> requests.trySend(Request.SelectAll)
+            R.id.select_none -> requests.trySend(Request.SelectNone)
+            R.id.select_invert -> requests.trySend(Request.SelectInvert)
             R.id.system_apps -> {
                 uiStore.accessControlSystemApp = !item.isChecked
 
@@ -79,14 +75,10 @@ class AccessControlMenu(
         menu.menuInflater.inflate(R.menu.menu_access_control, menu.menu)
 
         when (uiStore.accessControlSort) {
-            AppInfoSort.Label ->
-                menu.menu.findItem(R.id.name).isChecked = true
-            AppInfoSort.PackageName ->
-                menu.menu.findItem(R.id.package_name).isChecked = true
-            AppInfoSort.InstallTime ->
-                menu.menu.findItem(R.id.install_time).isChecked = true
-            AppInfoSort.UpdateTime ->
-                menu.menu.findItem(R.id.update_time).isChecked = true
+            AppInfoSort.Label -> menu.menu.findItem(R.id.name).isChecked = true
+            AppInfoSort.PackageName -> menu.menu.findItem(R.id.package_name).isChecked = true
+            AppInfoSort.InstallTime -> menu.menu.findItem(R.id.install_time).isChecked = true
+            AppInfoSort.UpdateTime -> menu.menu.findItem(R.id.update_time).isChecked = true
         }
 
         menu.menu.findItem(R.id.system_apps).isChecked = !uiStore.accessControlSystemApp
