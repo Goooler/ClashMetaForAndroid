@@ -23,11 +23,6 @@ gradle-app.setting
 # Ignore builtin geofiles
 app/src/main/assets
 
-# KeyStore
-signing.properties
-*.keystore
-*.jks
-
 # clion cmake build
 cmake-build-*
 
