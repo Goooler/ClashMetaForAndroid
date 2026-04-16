@@ -8,9 +8,6 @@ fun View.requestTextInput() {
     post {
         requestFocus()
 
-        postDelayed({
-            context.getSystemService<InputMethodManager>()
-                ?.showSoftInput(this, 0)
-        }, 300)
+        postDelayed({ context.getSystemService<InputMethodManager>()?.showSoftInput(this, 0) }, 300)
     }
 }

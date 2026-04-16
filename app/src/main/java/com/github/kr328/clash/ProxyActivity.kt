@@ -20,12 +20,7 @@ class ProxyActivity : BaseActivity<ProxyDesign>() {
         val unorderedStates = names.indices.map { names[it] to states[it] }.toMap()
         val reloadLock = Semaphore(10)
 
-        val design = ProxyDesign(
-            this,
-            mode,
-            names,
-            uiStore
-        )
+        val design = ProxyDesign(this, mode, names, uiStore)
 
         setContentDesign(design)
 
@@ -77,7 +72,7 @@ class ProxyActivity : BaseActivity<ProxyDesign>() {
                                     group.proxies,
                                     group.type == Proxy.Type.Selector,
                                     state,
-                                    unorderedStates
+                                    unorderedStates,
                                 )
                             }
                         }
@@ -92,9 +87,7 @@ class ProxyActivity : BaseActivity<ProxyDesign>() {
                         }
                         is ProxyDesign.Request.UrlTest -> {
                             launch {
-                                withClash {
-                                    healthCheck(names[it.index])
-                                }
+                                withClash { healthCheck(names[it.index]) }
 
                                 design.requests.send(ProxyDesign.Request.Reload(it.index))
                             }

@@ -1,77 +1,84 @@
 package com.github.kr328.clash.service.clash.module
 
 import android.app.Service
-import android.net.*
+import android.net.ConnectivityManager
+import android.net.LinkProperties
+import android.net.Network
+import android.net.NetworkCapabilities
+import android.net.NetworkRequest
 import android.os.Build
 import androidx.core.content.getSystemService
 import com.github.kr328.clash.common.log.Log
 import com.github.kr328.clash.core.Clash
 import com.github.kr328.clash.service.util.asSocketAddressText
+import java.net.InetAddress
+import java.util.concurrent.ConcurrentHashMap
 import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.selects.select
 import kotlinx.coroutines.withContext
-import java.net.InetAddress
-import java.util.concurrent.ConcurrentHashMap
 
 class NetworkObserveModule(service: Service) : Module<Network>(service) {
     private val connectivity = service.getSystemService<ConnectivityManager>()!!
     private val networks: Channel<Network> = Channel(Channel.UNLIMITED)
-    private val request = NetworkRequest.Builder().apply {
-        addCapability(NetworkCapabilities.NET_CAPABILITY_NOT_VPN)
-        addCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-            addCapability(NetworkCapabilities.NET_CAPABILITY_FOREGROUND)
-        }
-        addCapability(NetworkCapabilities.NET_CAPABILITY_NOT_RESTRICTED)
-    }.build()
+    private val request =
+        NetworkRequest.Builder()
+            .apply {
+                addCapability(NetworkCapabilities.NET_CAPABILITY_NOT_VPN)
+                addCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                    addCapability(NetworkCapabilities.NET_CAPABILITY_FOREGROUND)
+                }
+                addCapability(NetworkCapabilities.NET_CAPABILITY_NOT_RESTRICTED)
+            }
+            .build()
 
     private data class NetworkInfo(
         @Volatile var losingMs: Long = 0,
-        @Volatile var dnsList: List<InetAddress> = emptyList()
+        @Volatile var dnsList: List<InetAddress> = emptyList(),
     ) {
         fun isAvailable(): Boolean = losingMs < System.currentTimeMillis()
     }
 
     private val networkInfos = ConcurrentHashMap<Network, NetworkInfo>()
 
-    @Volatile
-    private var curDnsList = emptyList<String>()
+    @Volatile private var curDnsList = emptyList<String>()
 
-    private val callback = object : ConnectivityManager.NetworkCallback() {
-        override fun onAvailable(network: Network) {
-            Log.i("NetworkObserve onAvailable network=$network")
-            networkInfos[network] = NetworkInfo()
+    private val callback =
+        object : ConnectivityManager.NetworkCallback() {
+            override fun onAvailable(network: Network) {
+                Log.i("NetworkObserve onAvailable network=$network")
+                networkInfos[network] = NetworkInfo()
+            }
+
+            override fun onLosing(network: Network, maxMsToLive: Int) {
+                Log.i("NetworkObserve onLosing network=$network")
+                networkInfos[network]?.losingMs = System.currentTimeMillis() + maxMsToLive
+                notifyDnsChange()
+
+                networks.trySend(network)
+            }
+
+            override fun onLost(network: Network) {
+                Log.i("NetworkObserve onLost network=$network")
+                networkInfos.remove(network)
+                notifyDnsChange()
+
+                networks.trySend(network)
+            }
+
+            override fun onLinkPropertiesChanged(network: Network, linkProperties: LinkProperties) {
+                Log.i("NetworkObserve onLinkPropertiesChanged network=$network $linkProperties")
+                networkInfos[network]?.dnsList = linkProperties.dnsServers
+                notifyDnsChange()
+
+                networks.trySend(network)
+            }
+
+            override fun onUnavailable() {
+                Log.i("NetworkObserve onUnavailable")
+            }
         }
-
-        override fun onLosing(network: Network, maxMsToLive: Int) {
-            Log.i("NetworkObserve onLosing network=$network")
-            networkInfos[network]?.losingMs = System.currentTimeMillis() + maxMsToLive
-            notifyDnsChange()
-
-            networks.trySend(network)
-        }
-
-        override fun onLost(network: Network) {
-            Log.i("NetworkObserve onLost network=$network")
-            networkInfos.remove(network)
-            notifyDnsChange()
-
-            networks.trySend(network)
-        }
-
-        override fun onLinkPropertiesChanged(network: Network, linkProperties: LinkProperties) {
-            Log.i("NetworkObserve onLinkPropertiesChanged network=$network $linkProperties")
-            networkInfos[network]?.dnsList = linkProperties.dnsServers
-            notifyDnsChange()
-
-            networks.trySend(network)
-        }
-
-        override fun onUnavailable() {
-            Log.i("NetworkObserve onUnavailable")
-        }
-    }
 
     private fun register(): Boolean {
         Log.i("NetworkObserve start register")
@@ -107,18 +114,23 @@ class NetworkObserveModule(service: Service) : Module<Network>(service) {
             capabilities.hasTransport(NetworkCapabilities.TRANSPORT_VPN) -> 90
             capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> 0
             capabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) -> 1
-            Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && capabilities.hasTransport(NetworkCapabilities.TRANSPORT_USB) -> 2
+            Build.VERSION.SDK_INT >= Build.VERSION_CODES.S &&
+                capabilities.hasTransport(NetworkCapabilities.TRANSPORT_USB) -> 2
             capabilities.hasTransport(NetworkCapabilities.TRANSPORT_BLUETOOTH) -> 3
             capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> 4
-            Build.VERSION.SDK_INT >= Build.VERSION_CODES.VANILLA_ICE_CREAM && capabilities.hasTransport(NetworkCapabilities.TRANSPORT_SATELLITE) -> 5
-            // TRANSPORT_LOWPAN / TRANSPORT_THREAD / TRANSPORT_WIFI_AWARE are not for general internet access, which will not set as default route.
+            Build.VERSION.SDK_INT >= Build.VERSION_CODES.VANILLA_ICE_CREAM &&
+                capabilities.hasTransport(NetworkCapabilities.TRANSPORT_SATELLITE) -> 5
+            // TRANSPORT_LOWPAN / TRANSPORT_THREAD / TRANSPORT_WIFI_AWARE are not for general
+            // internet access, which will not set as default route.
             else -> 20
         } + (if (entry.value.isAvailable()) 0 else 10)
     }
 
     private fun notifyDnsChange() {
-        val dnsList = (networkInfos.asSequence().minByOrNull { networkToInt(it) }?.value?.dnsList
-            ?: emptyList()).map { x -> x.asSocketAddressText(53) }
+        val dnsList =
+            (networkInfos.asSequence().minByOrNull { networkToInt(it) }?.value?.dnsList
+                    ?: emptyList())
+                .map { x -> x.asSocketAddressText(53) }
         val prevDnsList = curDnsList
         if (dnsList.isNotEmpty() && prevDnsList != dnsList) {
             Log.i("notifyDnsChange $prevDnsList -> $dnsList")

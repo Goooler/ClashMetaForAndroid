@@ -26,9 +26,7 @@ class ProviderAdapter(
     }
 
     fun notifyUpdated(index: Int) {
-        states[index].apply {
-            updating = false
-        }
+        states[index].apply { updating = false }
 
         notifyItemChanged(index)
     }
@@ -44,9 +42,9 @@ class ProviderAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Holder {
         return Holder(
-            AdapterProviderBinding
-                .inflate(context.layoutInflater, parent, false)
-                .also { it.currentTime = currentTime }
+            AdapterProviderBinding.inflate(context.layoutInflater, parent, false).also {
+                it.currentTime = currentTime
+            }
         )
     }
 

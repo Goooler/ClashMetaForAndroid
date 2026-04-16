@@ -23,9 +23,7 @@ class AccessControlActivity : BaseActivity<AccessControlDesign>() {
     override suspend fun main() {
         val service = ServiceStore(this)
 
-        val selected = withContext(Dispatchers.IO) {
-            service.accessControlPackages.toMutableSet()
-        }
+        val selected = withContext(Dispatchers.IO) { service.accessControlPackages.toMutableSet() }
 
         defer {
             withContext(Dispatchers.IO) {
@@ -49,9 +47,8 @@ class AccessControlActivity : BaseActivity<AccessControlDesign>() {
 
         while (isActive) {
             select<Unit> {
-                events.onReceive {
+                events.onReceive {}
 
-                }
                 design.requests.onReceive {
                     when (it) {
                         AccessControlDesign.Request.ReloadApps -> {
@@ -59,9 +56,10 @@ class AccessControlActivity : BaseActivity<AccessControlDesign>() {
                         }
 
                         AccessControlDesign.Request.SelectAll -> {
-                            val all = withContext(Dispatchers.Default) {
-                                design.apps.map(AppInfo::packageName)
-                            }
+                            val all =
+                                withContext(Dispatchers.Default) {
+                                    design.apps.map(AppInfo::packageName)
+                                }
 
                             selected.clear()
                             selected.addAll(all)
@@ -76,9 +74,10 @@ class AccessControlActivity : BaseActivity<AccessControlDesign>() {
                         }
 
                         AccessControlDesign.Request.SelectInvert -> {
-                            val all = withContext(Dispatchers.Default) {
-                                design.apps.map(AppInfo::packageName).toSet() - selected
-                            }
+                            val all =
+                                withContext(Dispatchers.Default) {
+                                    design.apps.map(AppInfo::packageName).toSet() - selected
+                                }
 
                             selected.clear()
                             selected.addAll(all)
@@ -104,10 +103,8 @@ class AccessControlActivity : BaseActivity<AccessControlDesign>() {
                         AccessControlDesign.Request.Export -> {
                             val clipboard = getSystemService<ClipboardManager>()
 
-                            val data = ClipData.newPlainText(
-                                "packages",
-                                selected.joinToString("\n")
-                            )
+                            val data =
+                                ClipData.newPlainText("packages", selected.joinToString("\n"))
 
                             clipboard?.setPrimaryClip(data)
                         }
@@ -129,22 +126,16 @@ class AccessControlActivity : BaseActivity<AccessControlDesign>() {
             val pm = packageManager
             val packages = pm.getInstalledPackages(PackageManager.GET_PERMISSIONS)
 
-            packages.asSequence()
+            packages
+                .asSequence()
+                .filter { it.packageName != packageName }
+                .filter { it.applicationInfo != null }
                 .filter {
-                    it.packageName != packageName
+                    it.requestedPermissions?.contains(INTERNET) == true ||
+                        it.applicationInfo!!.uid < android.os.Process.FIRST_APPLICATION_UID
                 }
-                .filter {
-                    it.applicationInfo != null
-                }
-                .filter {
-                    it.requestedPermissions?.contains(INTERNET) == true || it.applicationInfo!!.uid < android.os.Process.FIRST_APPLICATION_UID
-                }
-                .filter {
-                    systemApp || !it.isSystemApp
-                }
-                .map {
-                    it.toAppInfo(pm)
-                }
+                .filter { systemApp || !it.isSystemApp }
+                .map { it.toAppInfo(pm) }
                 .sortedWith(comparator)
                 .toList()
         }

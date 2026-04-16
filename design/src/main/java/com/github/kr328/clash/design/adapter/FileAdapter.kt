@@ -25,9 +25,9 @@ class FileAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Holder {
         return Holder(
-            AdapterFileBinding
-                .inflate(context.layoutInflater, parent, false)
-                .also { it.currentTime = currentTime }
+            AdapterFileBinding.inflate(context.layoutInflater, parent, false).also {
+                it.currentTime = currentTime
+            }
         )
     }
 
@@ -37,13 +37,9 @@ class FileAdapter(
         holder.binding.apply {
             file = current
 
-            setOpen {
-                open(current)
-            }
+            setOpen { open(current) }
 
-            setMore {
-                more(current)
-            }
+            setMore { more(current) }
         }
     }
 

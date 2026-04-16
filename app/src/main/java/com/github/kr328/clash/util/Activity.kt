@@ -13,15 +13,15 @@ class ActivityResultLifecycle : LifecycleOwner {
         lifecycle.currentState = Lifecycle.State.INITIALIZED
     }
 
-    suspend fun <T> use(block: suspend (lifecycle: ActivityResultLifecycle, start: () -> Unit) -> T): T {
+    suspend fun <T> use(
+        block: suspend (lifecycle: ActivityResultLifecycle, start: () -> Unit) -> T
+    ): T {
         return try {
             markCreated()
 
             block(this, this::markStarted)
         } finally {
-            withContext(NonCancellable) {
-                markDestroy()
-            }
+            withContext(NonCancellable) { markDestroy() }
         }
     }
 

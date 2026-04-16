@@ -3,26 +3,24 @@ package com.github.kr328.clash
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
-import android.os.PersistableBundle
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.result.contract.ActivityResultContracts.RequestPermission
-import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.github.kr328.clash.common.util.intent
 import com.github.kr328.clash.common.util.ticker
+import com.github.kr328.clash.core.bridge.Bridge
 import com.github.kr328.clash.design.MainDesign
+import com.github.kr328.clash.design.R
 import com.github.kr328.clash.design.ui.ToastDuration
 import com.github.kr328.clash.util.startClashService
 import com.github.kr328.clash.util.stopClashService
 import com.github.kr328.clash.util.withClash
 import com.github.kr328.clash.util.withProfile
-import com.github.kr328.clash.core.bridge.*
+import java.util.concurrent.TimeUnit
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.selects.select
 import kotlinx.coroutines.withContext
-import java.util.concurrent.TimeUnit
-import com.github.kr328.clash.design.R
 
 class MainActivity : BaseActivity<MainDesign>() {
     override suspend fun main() {
@@ -40,21 +38,19 @@ class MainActivity : BaseActivity<MainDesign>() {
                     when (it) {
                         Event.ActivityStart,
                         Event.ServiceRecreated,
-                        Event.ClashStop, Event.ClashStart,
-                        Event.ProfileLoaded, Event.ProfileChanged -> design.fetch()
+                        Event.ClashStop,
+                        Event.ClashStart,
+                        Event.ProfileLoaded,
+                        Event.ProfileChanged -> design.fetch()
                         else -> Unit
                     }
                 }
                 design.requests.onReceive {
                     when (it) {
                         MainDesign.Request.ToggleStatus -> {
-                            if (clashRunning)
-                                stopClashService()
-                            else
-                                design.startClash()
+                            if (clashRunning) stopClashService() else design.startClash()
                         }
-                        MainDesign.Request.OpenProxy ->
-                            startActivity(ProxyActivity::class.intent)
+                        MainDesign.Request.OpenProxy -> startActivity(ProxyActivity::class.intent)
                         MainDesign.Request.OpenProfiles ->
                             startActivity(ProfilesActivity::class.intent)
                         MainDesign.Request.OpenProviders ->
@@ -68,16 +64,12 @@ class MainActivity : BaseActivity<MainDesign>() {
                         }
                         MainDesign.Request.OpenSettings ->
                             startActivity(SettingsActivity::class.intent)
-                        MainDesign.Request.OpenHelp ->
-                            startActivity(HelpActivity::class.intent)
-                        MainDesign.Request.OpenAbout ->
-                            design.showAbout(queryAppVersionName())
+                        MainDesign.Request.OpenHelp -> startActivity(HelpActivity::class.intent)
+                        MainDesign.Request.OpenAbout -> design.showAbout(queryAppVersionName())
                     }
                 }
                 if (clashRunning) {
-                    ticker.onReceive {
-                        design.fetchTraffic()
-                    }
+                    ticker.onReceive { design.fetchTraffic() }
                 }
             }
         }
@@ -86,25 +78,17 @@ class MainActivity : BaseActivity<MainDesign>() {
     private suspend fun MainDesign.fetch() {
         setClashRunning(clashRunning)
 
-        val state = withClash {
-            queryTunnelState()
-        }
-        val providers = withClash {
-            queryProviders()
-        }
+        val state = withClash { queryTunnelState() }
+        val providers = withClash { queryProviders() }
 
         setMode(state.mode)
         setHasProviders(providers.isNotEmpty())
 
-        withProfile {
-            setProfileName(queryActive()?.name)
-        }
+        withProfile { setProfileName(queryActive()?.name) }
     }
 
     private suspend fun MainDesign.fetchTraffic() {
-        withClash {
-            setForwarded(queryTrafficTotal())
-        }
+        withClash { setForwarded(queryTrafficTotal()) }
     }
 
     private suspend fun MainDesign.startClash() {
@@ -112,9 +96,7 @@ class MainActivity : BaseActivity<MainDesign>() {
 
         if (active == null || !active.imported) {
             showToast(R.string.no_profile_selected, ToastDuration.Long) {
-                setAction(R.string.profiles) {
-                    startActivity(ProfilesActivity::class.intent)
-                }
+                setAction(R.string.profiles) { startActivity(ProfilesActivity::class.intent) }
             }
 
             return
@@ -124,13 +106,13 @@ class MainActivity : BaseActivity<MainDesign>() {
 
         try {
             if (vpnRequest != null) {
-                val result = startActivityForResult(
-                    ActivityResultContracts.StartActivityForResult(),
-                    vpnRequest
-                )
+                val result =
+                    startActivityForResult(
+                        ActivityResultContracts.StartActivityForResult(),
+                        vpnRequest,
+                    )
 
-                if (result.resultCode == RESULT_OK)
-                    startClashService()
+                if (result.resultCode == RESULT_OK) startClashService()
             }
         } catch (e: Exception) {
             design?.showToast(R.string.unable_to_start_vpn, ToastDuration.Long)
@@ -139,7 +121,9 @@ class MainActivity : BaseActivity<MainDesign>() {
 
     private suspend fun queryAppVersionName(): String {
         return withContext(Dispatchers.IO) {
-            packageManager.getPackageInfo(packageName, 0).versionName + "\n" + Bridge.nativeCoreVersion().replace("_", "-")
+            packageManager.getPackageInfo(packageName, 0).versionName +
+                "\n" +
+                Bridge.nativeCoreVersion().replace("_", "-")
         }
     }
 
@@ -147,13 +131,13 @@ class MainActivity : BaseActivity<MainDesign>() {
         super.onCreate(savedInstanceState)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             val requestPermissionLauncher =
-                registerForActivityResult(RequestPermission()
-                ) { isGranted: Boolean ->
-                }
-            if (ContextCompat.checkSelfPermission(
+                registerForActivityResult(RequestPermission()) { isGranted: Boolean -> }
+            if (
+                ContextCompat.checkSelfPermission(
                     this,
-                    android.Manifest.permission.POST_NOTIFICATIONS
-                ) != PackageManager.PERMISSION_GRANTED) {
+                    android.Manifest.permission.POST_NOTIFICATIONS,
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
                 requestPermissionLauncher.launch(android.Manifest.permission.POST_NOTIFICATIONS)
             }
         }

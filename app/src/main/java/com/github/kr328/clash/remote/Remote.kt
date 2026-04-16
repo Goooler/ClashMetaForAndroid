@@ -16,14 +16,14 @@ import kotlinx.coroutines.launch
 
 object Remote {
     val broadcasts: Broadcasts = Broadcasts(Global.application)
-    val service: Service = Service(Global.application) {
-        ApplicationObserver.createdActivities.forEach { it.finish() }
+    val service: Service =
+        Service(Global.application) {
+            ApplicationObserver.createdActivities.forEach { it.finish() }
 
-        val intent = AppCrashedActivity::class.intent
-            .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            val intent = AppCrashedActivity::class.intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
 
-        Global.application.startActivity(intent)
-    }
+            Global.application.startActivity(intent)
+        }
 
     private val visible = Channel<Boolean>(Channel.CONFLATED)
 
@@ -31,21 +31,18 @@ object Remote {
         ApplicationObserver.attach(Global.application)
 
         ApplicationObserver.onVisibleChanged {
-            if(it) {
+            if (it) {
                 Log.d("App becomes visible")
                 service.bind()
                 broadcasts.register()
-            }
-            else {
+            } else {
                 Log.d("App becomes invisible")
                 service.unbind()
                 broadcasts.unregister()
             }
         }
 
-        Global.launch(Dispatchers.IO) {
-            verifyApp()
-        }
+        Global.launch(Dispatchers.IO) { verifyApp() }
     }
 
     private suspend fun verifyApp() {
@@ -57,8 +54,7 @@ object Remote {
             if (!context.verifyApk()) {
                 ApplicationObserver.createdActivities.forEach { it.finish() }
 
-                val intent = ApkBrokenActivity::class.intent
-                    .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                val intent = ApkBrokenActivity::class.intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
 
                 return context.startActivity(intent)
             } else {

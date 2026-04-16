@@ -14,6 +14,7 @@ import com.github.kr328.clash.common.util.intent
 import com.github.kr328.clash.common.util.ticker
 import com.github.kr328.clash.core.model.LogMessage
 import com.github.kr328.clash.design.LogcatDesign
+import com.github.kr328.clash.design.R
 import com.github.kr328.clash.design.dialog.withModelProgressBar
 import com.github.kr328.clash.design.model.LogFile
 import com.github.kr328.clash.design.ui.ToastDuration
@@ -21,14 +22,13 @@ import com.github.kr328.clash.design.util.showExceptionToast
 import com.github.kr328.clash.log.LogcatFilter
 import com.github.kr328.clash.log.LogcatReader
 import com.github.kr328.clash.util.logsDir
+import java.io.OutputStreamWriter
+import kotlin.coroutines.resume
+import kotlin.coroutines.suspendCoroutine
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.selects.select
 import kotlinx.coroutines.withContext
-import java.io.OutputStreamWriter
-import kotlin.coroutines.resume
-import kotlin.coroutines.suspendCoroutine
-import com.github.kr328.clash.design.R
 
 class LogcatActivity : BaseActivity<LogcatDesign>() {
     private var conn: ServiceConnection? = null
@@ -46,12 +46,13 @@ class LogcatActivity : BaseActivity<LogcatDesign>() {
     }
 
     private suspend fun mainLocalFile(file: LogFile) {
-        val messages = try {
-            LogcatReader(this, file).readAll()
-        } catch (e: Exception) {
-            Log.e("Fail to read log file ${file.fileName}: ${e.message}")
-            return showInvalid()
-        }
+        val messages =
+            try {
+                LogcatReader(this, file).readAll()
+            } catch (e: Exception) {
+                Log.e("Fail to read log file ${file.fileName}: ${e.message}")
+                return showInvalid()
+            }
 
         val design = LogcatDesign(this, false)
 
@@ -62,23 +63,20 @@ class LogcatActivity : BaseActivity<LogcatDesign>() {
         while (isActive) {
             when (design.requests.receive()) {
                 LogcatDesign.Request.Delete -> {
-                    withContext(Dispatchers.IO) {
-                        logsDir.resolve(file.fileName).delete()
-                    }
+                    withContext(Dispatchers.IO) { logsDir.resolve(file.fileName).delete() }
 
                     finish()
                 }
                 LogcatDesign.Request.Export -> {
-                    val output = startActivityForResult(
-                        ActivityResultContracts.CreateDocument("text/plain"),
-                        file.fileName
-                    )
+                    val output =
+                        startActivityForResult(
+                            ActivityResultContracts.CreateDocument("text/plain"),
+                            file.fileName,
+                        )
 
                     if (output != null) {
                         try {
-                            withContext(Dispatchers.IO) {
-                                writeLogTo(messages, file, output)
-                            }
+                            withContext(Dispatchers.IO) { writeLogTo(messages, file, output) }
 
                             design.showToast(R.string.file_exported, ToastDuration.Long)
                         } catch (e: Exception) {
@@ -105,9 +103,8 @@ class LogcatActivity : BaseActivity<LogcatDesign>() {
 
         while (isActive) {
             select<Unit> {
-                events.onReceive {
+                events.onReceive {}
 
-                }
                 design.requests.onReceive {
                     when (it) {
                         LogcatDesign.Request.Close -> {
@@ -139,19 +136,23 @@ class LogcatActivity : BaseActivity<LogcatDesign>() {
 
     private suspend fun bindLogcatService(): LogcatService {
         return suspendCoroutine { ctx ->
-            bindService(LogcatService::class.intent, object : ServiceConnection {
-                override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
-                    val srv = service!!.queryLocalInterface("") as LogcatService
+            bindService(
+                LogcatService::class.intent,
+                object : ServiceConnection {
+                    override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
+                        val srv = service!!.queryLocalInterface("") as LogcatService
 
-                    ctx.resume(srv)
+                        ctx.resume(srv)
 
-                    conn = this
-                }
+                        conn = this
+                    }
 
-                override fun onServiceDisconnected(name: ComponentName?) {
-                    conn = null
-                }
-            }, Context.BIND_AUTO_CREATE)
+                    override fun onServiceDisconnected(name: ComponentName?) {
+                        conn = null
+                    }
+                },
+                Context.BIND_AUTO_CREATE,
+            )
         }
     }
 

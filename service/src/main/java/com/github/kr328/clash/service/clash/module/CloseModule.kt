@@ -8,9 +8,7 @@ class CloseModule(service: Service) : Module<CloseModule.RequestClose>(service) 
     object RequestClose
 
     override suspend fun run() {
-        val broadcasts = receiveBroadcast {
-            addAction(Intents.ACTION_CLASH_REQUEST_STOP)
-        }
+        val broadcasts = receiveBroadcast { addAction(Intents.ACTION_CLASH_REQUEST_STOP) }
 
         broadcasts.receive()
 

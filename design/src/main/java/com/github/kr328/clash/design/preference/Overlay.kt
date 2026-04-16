@@ -7,36 +7,34 @@ import com.github.kr328.clash.design.dialog.FullScreenDialog
 import com.github.kr328.clash.design.util.applyLinearAdapter
 import com.github.kr328.clash.design.util.layoutInflater
 import com.github.kr328.clash.design.util.root
+import kotlin.coroutines.resume
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
-import kotlin.coroutines.resume
 
 internal enum class EditableListOverlayResult {
-    Cancel, Apply, Reset
+    Cancel,
+    Apply,
+    Reset,
 }
 
 internal suspend fun requestEditableListOverlay(
     context: Context,
     adapter: RecyclerView.Adapter<*>,
     title: CharSequence,
-    addNewItem: suspend () -> Unit
+    addNewItem: suspend () -> Unit,
 ): EditableListOverlayResult {
     return coroutineScope {
         suspendCancellableCoroutine { ctx ->
             val dialog = FullScreenDialog(context)
-            val binding = DialogPreferenceListBinding
-                .inflate(context.layoutInflater, context.root, false)
+            val binding =
+                DialogPreferenceListBinding.inflate(context.layoutInflater, context.root, false)
 
             binding.surface = dialog.surface
             binding.mainList.applyLinearAdapter(context, adapter)
             binding.titleView.text = title
 
-            binding.newView.setOnClickListener {
-                launch {
-                    addNewItem()
-                }
-            }
+            binding.newView.setOnClickListener { launch { addNewItem() } }
 
             binding.resetView.setOnClickListener {
                 ctx.resume(EditableListOverlayResult.Reset)
@@ -44,9 +42,7 @@ internal suspend fun requestEditableListOverlay(
                 dialog.dismiss()
             }
 
-            binding.cancelView.setOnClickListener {
-                dialog.dismiss()
-            }
+            binding.cancelView.setOnClickListener { dialog.dismiss() }
 
             binding.okView.setOnClickListener {
                 ctx.resume(EditableListOverlayResult.Apply)
@@ -62,9 +58,7 @@ internal suspend fun requestEditableListOverlay(
                 }
             }
 
-            ctx.invokeOnCancellation {
-                dialog.dismiss()
-            }
+            ctx.invokeOnCancellation { dialog.dismiss() }
 
             dialog.show()
         }

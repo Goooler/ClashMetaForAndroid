@@ -2,7 +2,7 @@ package com.github.kr328.clash.service.data
 
 import androidx.room.TypeConverter
 import com.github.kr328.clash.service.model.Profile
-import java.util.*
+import java.util.UUID
 
 class Converters {
     @TypeConverter

@@ -3,18 +3,31 @@ package com.github.kr328.clash.service
 import android.content.Context
 import com.github.kr328.clash.common.log.Log
 import com.github.kr328.clash.core.Clash
-import com.github.kr328.clash.core.model.*
+import com.github.kr328.clash.core.model.ConfigurationOverride
+import com.github.kr328.clash.core.model.LogMessage
+import com.github.kr328.clash.core.model.Provider
+import com.github.kr328.clash.core.model.ProviderList
+import com.github.kr328.clash.core.model.ProxyGroup
+import com.github.kr328.clash.core.model.ProxySort
+import com.github.kr328.clash.core.model.TunnelState
+import com.github.kr328.clash.core.model.UiConfiguration
 import com.github.kr328.clash.service.data.Selection
 import com.github.kr328.clash.service.data.SelectionDao
 import com.github.kr328.clash.service.remote.IClashManager
 import com.github.kr328.clash.service.remote.ILogObserver
 import com.github.kr328.clash.service.store.ServiceStore
 import com.github.kr328.clash.service.util.sendOverrideChanged
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.channels.ReceiveChannel
+import kotlinx.coroutines.isActive
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
-class ClashManager(private val context: Context) : IClashManager,
-    CoroutineScope by CoroutineScope(Dispatchers.IO) {
+class ClashManager(private val context: Context) :
+    IClashManager, CoroutineScope by CoroutineScope(Dispatchers.IO) {
     private val store = ServiceStore(context)
     private var logReceiver: ReceiveChannel<LogMessage>? = null
 
@@ -85,26 +98,27 @@ class ClashManager(private val context: Context) : IClashManager,
             }
 
             if (observer != null) {
-                logReceiver = Clash.subscribeLogcat().also { c ->
-                    launch {
-                        try {
-                            while (isActive) {
-                                observer.newItem(c.receive())
-                            }
-                        } catch (e: CancellationException) {
-                            // intended behavior
-                            // ignore
-                        } catch (e: Exception) {
-                            Log.w("UI crashed", e)
-                        } finally {
-                            withContext(NonCancellable) {
-                                c.cancel()
+                logReceiver =
+                    Clash.subscribeLogcat().also { c ->
+                        launch {
+                            try {
+                                while (isActive) {
+                                    observer.newItem(c.receive())
+                                }
+                            } catch (e: CancellationException) {
+                                // intended behavior
+                                // ignore
+                            } catch (e: Exception) {
+                                Log.w("UI crashed", e)
+                            } finally {
+                                withContext(NonCancellable) {
+                                    c.cancel()
 
-                                Clash.forceGc()
+                                    Clash.forceGc()
+                                }
                             }
                         }
                     }
-                }
             }
         }
     }

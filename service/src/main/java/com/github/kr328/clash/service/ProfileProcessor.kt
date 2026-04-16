@@ -15,16 +15,16 @@ import com.github.kr328.clash.service.util.importedDir
 import com.github.kr328.clash.service.util.pendingDir
 import com.github.kr328.clash.service.util.processingDir
 import com.github.kr328.clash.service.util.sendProfileChanged
+import java.math.BigDecimal
+import java.util.Locale
+import java.util.UUID
+import java.util.concurrent.TimeUnit
 import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
 import okhttp3.OkHttpClient
 import okhttp3.Request
-import java.math.BigDecimal
-import java.net.URL
-import java.util.*
-import java.util.concurrent.TimeUnit
 
 object ProfileProcessor {
     private val profileLock = Mutex()
@@ -34,15 +34,17 @@ object ProfileProcessor {
         withContext(NonCancellable) {
             processLock.withLock {
                 val snapshot = profileLock.withLock {
-                    val pending = PendingDao().queryByUUID(uuid)
-                        ?: throw IllegalArgumentException("profile $uuid not found")
+                    val pending =
+                        PendingDao().queryByUUID(uuid)
+                            ?: throw IllegalArgumentException("profile $uuid not found")
 
                     pending.enforceFieldValid()
 
                     context.processingDir.deleteRecursively()
                     context.processingDir.mkdirs()
 
-                    context.pendingDir.resolve(pending.uuid.toString())
+                    context.pendingDir
+                        .resolve(pending.uuid.toString())
                         .copyRecursively(context.processingDir, overwrite = true)
 
                     pending
@@ -52,21 +54,22 @@ object ProfileProcessor {
                 var cb = callback
 
                 Clash.fetchAndValid(context.processingDir, snapshot.source, force) {
-                    try {
-                        cb?.updateStatus(it)
-                    } catch (e: Exception) {
-                        cb = null
+                        try {
+                            cb?.updateStatus(it)
+                        } catch (e: Exception) {
+                            cb = null
 
-                        Log.w("Report fetch status: $e", e)
+                            Log.w("Report fetch status: $e", e)
+                        }
                     }
-                }.await()
+                    .await()
 
                 profileLock.withLock {
                     if (PendingDao().queryByUUID(snapshot.uuid) == snapshot) {
-                        context.importedDir.resolve(snapshot.uuid.toString())
-                            .deleteRecursively()
-                        context.processingDir
-                            .copyRecursively(context.importedDir.resolve(snapshot.uuid.toString()))
+                        context.importedDir.resolve(snapshot.uuid.toString()).deleteRecursively()
+                        context.processingDir.copyRecursively(
+                            context.importedDir.resolve(snapshot.uuid.toString())
+                        )
 
                         val old = ImportedDao().queryByUUID(snapshot.uuid)
                         var upload: Long = 0
@@ -76,11 +79,15 @@ object ProfileProcessor {
                         if (snapshot?.type == Profile.Type.Url) {
                             if (snapshot.source.startsWith("https://", true)) {
                                 val client = OkHttpClient()
-                                val versionName = context.packageManager.getPackageInfo(context.packageName, 0).versionName
-                                val request = Request.Builder()
-                                    .url(snapshot.source)
-                                    .header("User-Agent", "ClashMetaForAndroid/$versionName")
-                                    .build()
+                                val versionName =
+                                    context.packageManager
+                                        .getPackageInfo(context.packageName, 0)
+                                        .versionName
+                                val request =
+                                    Request.Builder()
+                                        .url(snapshot.source)
+                                        .header("User-Agent", "ClashMetaForAndroid/$versionName")
+                                        .build()
 
                                 client.newCall(request).execute().use { response ->
                                     val userinfo = response.headers["subscription-userinfo"]
@@ -89,34 +96,44 @@ object ProfileProcessor {
                                         for (flag in flags) {
                                             val info = flag.split("=")
                                             when {
-                                                info[0].contains("upload") && info[1].isNotEmpty() -> upload =
-                                                    BigDecimal(info[1].split('.').first()).longValueExact()
+                                                info[0].contains("upload") &&
+                                                    info[1].isNotEmpty() ->
+                                                    upload =
+                                                        BigDecimal(info[1].split('.').first())
+                                                            .longValueExact()
 
-                                                info[0].contains("download") && info[1].isNotEmpty() -> download =
-                                                    BigDecimal(info[1].split('.').first()).longValueExact()
+                                                info[0].contains("download") &&
+                                                    info[1].isNotEmpty() ->
+                                                    download =
+                                                        BigDecimal(info[1].split('.').first())
+                                                            .longValueExact()
 
-                                                info[0].contains("total") && info[1].isNotEmpty() -> total =
-                                                    BigDecimal(info[1].split('.').first()).longValueExact()
+                                                info[0].contains("total") && info[1].isNotEmpty() ->
+                                                    total =
+                                                        BigDecimal(info[1].split('.').first())
+                                                            .longValueExact()
 
-                                                info[0].contains("expire") && info[1].isNotEmpty() ->  expire =
-                                                    (info[1].toDouble() * 1000).toLong()
+                                                info[0].contains("expire") &&
+                                                    info[1].isNotEmpty() ->
+                                                    expire = (info[1].toDouble() * 1000).toLong()
                                             }
                                         }
                                     }
                                 }
                             }
-                            val new = Imported(
-                                snapshot.uuid,
-                                snapshot.name,
-                                snapshot.type,
-                                snapshot.source,
-                                snapshot.interval,
-                                upload,
-                                download,
-                                total,
-                                expire,
-                                old?.createdAt ?: System.currentTimeMillis()
-                            )
+                            val new =
+                                Imported(
+                                    snapshot.uuid,
+                                    snapshot.name,
+                                    snapshot.type,
+                                    snapshot.source,
+                                    snapshot.interval,
+                                    upload,
+                                    download,
+                                    total,
+                                    expire,
+                                    old?.createdAt ?: System.currentTimeMillis(),
+                                )
                             if (old != null) {
                                 ImportedDao().update(new)
                             } else {
@@ -125,23 +142,23 @@ object ProfileProcessor {
 
                             PendingDao().remove(snapshot.uuid)
 
-                            context.pendingDir.resolve(snapshot.uuid.toString())
-                                .deleteRecursively()
+                            context.pendingDir.resolve(snapshot.uuid.toString()).deleteRecursively()
 
                             context.sendProfileChanged(snapshot.uuid)
                         } else if (snapshot?.type == Profile.Type.File) {
-                            val new = Imported(
-                                snapshot.uuid,
-                                snapshot.name,
-                                snapshot.type,
-                                snapshot.source,
-                                snapshot.interval,
-                                upload,
-                                download,
-                                total,
-                                expire,
-                                old?.createdAt ?: System.currentTimeMillis()
-                            )
+                            val new =
+                                Imported(
+                                    snapshot.uuid,
+                                    snapshot.name,
+                                    snapshot.type,
+                                    snapshot.source,
+                                    snapshot.interval,
+                                    upload,
+                                    download,
+                                    total,
+                                    expire,
+                                    old?.createdAt ?: System.currentTimeMillis(),
+                                )
                             if (old != null) {
                                 ImportedDao().update(new)
                             } else {
@@ -150,8 +167,7 @@ object ProfileProcessor {
 
                             PendingDao().remove(snapshot.uuid)
 
-                            context.pendingDir.resolve(snapshot.uuid.toString())
-                                .deleteRecursively()
+                            context.pendingDir.resolve(snapshot.uuid.toString()).deleteRecursively()
 
                             context.sendProfileChanged(snapshot.uuid)
                         }
@@ -165,13 +181,15 @@ object ProfileProcessor {
         withContext(NonCancellable) {
             processLock.withLock {
                 val snapshot = profileLock.withLock {
-                    val imported = ImportedDao().queryByUUID(uuid)
-                        ?: throw IllegalArgumentException("profile $uuid not found")
+                    val imported =
+                        ImportedDao().queryByUUID(uuid)
+                            ?: throw IllegalArgumentException("profile $uuid not found")
 
                     context.processingDir.deleteRecursively()
                     context.processingDir.mkdirs()
 
-                    context.importedDir.resolve(imported.uuid.toString())
+                    context.importedDir
+                        .resolve(imported.uuid.toString())
                         .copyRecursively(context.processingDir, overwrite = true)
 
                     imported
@@ -180,20 +198,22 @@ object ProfileProcessor {
                 var cb = callback
 
                 Clash.fetchAndValid(context.processingDir, snapshot.source, true) {
-                    try {
-                        cb?.updateStatus(it)
-                    } catch (e: Exception) {
-                        cb = null
+                        try {
+                            cb?.updateStatus(it)
+                        } catch (e: Exception) {
+                            cb = null
 
-                        Log.w("Report fetch status: $e", e)
+                            Log.w("Report fetch status: $e", e)
+                        }
                     }
-                }.await()
+                    .await()
 
                 profileLock.withLock {
                     if (ImportedDao().exists(snapshot.uuid)) {
                         context.importedDir.resolve(snapshot.uuid.toString()).deleteRecursively()
-                        context.processingDir
-                            .copyRecursively(context.importedDir.resolve(snapshot.uuid.toString()))
+                        context.processingDir.copyRecursively(
+                            context.importedDir.resolve(snapshot.uuid.toString())
+                        )
 
                         context.sendProfileChanged(snapshot.uuid)
                     }
@@ -247,8 +267,7 @@ object ProfileProcessor {
         val scheme = Uri.parse(source)?.scheme?.lowercase(Locale.getDefault())
 
         when {
-            name.isBlank() ->
-                throw IllegalArgumentException("Empty name")
+            name.isBlank() -> throw IllegalArgumentException("Empty name")
 
             source.isEmpty() && type != Profile.Type.File ->
                 throw IllegalArgumentException("Invalid url")

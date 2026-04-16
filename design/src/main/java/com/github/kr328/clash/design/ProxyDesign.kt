@@ -30,16 +30,19 @@ class ProxyDesign(
 ) : Design<ProxyDesign.Request>(context) {
     sealed class Request {
         object ReloadAll : Request()
+
         object ReLaunch : Request()
 
         data class PatchMode(val mode: TunnelState.Mode?) : Request()
+
         data class Reload(val index: Int) : Request()
+
         data class Select(val index: Int, val name: String) : Request()
+
         data class UrlTest(val index: Int) : Request()
     }
 
-    private val binding = DesignProxyBinding
-        .inflate(context.layoutInflater, context.root, false)
+    private val binding = DesignProxyBinding.inflate(context.layoutInflater, context.root, false)
 
     private var config = ProxyViewConfig(context, uiStore.proxyLine)
 
@@ -55,6 +58,7 @@ class ProxyDesign(
     private var horizontalScrolling = false
     private val verticalBottomScrolled: Boolean
         get() = adapter.states[binding.pagesView.currentItem].bottom
+
     private var urlTesting: Boolean
         get() = adapter.states[binding.pagesView.currentItem].urlTesting
         set(value) {
@@ -68,7 +72,7 @@ class ProxyDesign(
         proxies: List<Proxy>,
         selectable: Boolean,
         parent: ProxyState,
-        links: Map<String, ProxyState>
+        links: Map<String, ProxyState>,
     ) {
         adapter.updateAdapter(position, proxies, selectable, parent, links)
 
@@ -78,9 +82,7 @@ class ProxyDesign(
     }
 
     suspend fun requestRedrawVisible() {
-        withContext(Dispatchers.Main) {
-            adapter.requestRedrawVisible()
-        }
+        withContext(Dispatchers.Main) { adapter.requestRedrawVisible() }
     }
 
     suspend fun showModeSwitchTips() {
@@ -94,9 +96,7 @@ class ProxyDesign(
 
         binding.activityBarLayout.applyFrom(context)
 
-        binding.menuView.setOnClickListener {
-            menu.show()
-        }
+        binding.menuView.setOnClickListener { menu.show() }
 
         if (groupNames.isEmpty()) {
             binding.emptyView.visibility = View.VISIBLE
@@ -107,46 +107,49 @@ class ProxyDesign(
             binding.pagesView.visibility = View.GONE
             binding.urlTestFloatView.visibility = View.GONE
         } else {
-            binding.urlTestFloatView.supportImageTintList = ColorStateList.valueOf(
-                context.resolveThemedColor(com.google.android.material.R.attr.colorOnPrimary)
-            )
+            binding.urlTestFloatView.supportImageTintList =
+                ColorStateList.valueOf(
+                    context.resolveThemedColor(com.google.android.material.R.attr.colorOnPrimary)
+                )
 
             binding.pagesView.apply {
-                adapter = ProxyPageAdapter(
-                    surface,
-                    config,
-                    List(groupNames.size) { index ->
-                        ProxyAdapter(config) { name ->
-                            requests.trySend(Request.Select(index, name))
+                adapter =
+                    ProxyPageAdapter(
+                        surface,
+                        config,
+                        List(groupNames.size) { index ->
+                            ProxyAdapter(config) { name ->
+                                requests.trySend(Request.Select(index, name))
+                            }
+                        },
+                    ) {
+                        if (it == currentItem) updateUrlTestButtonStatus()
+                    }
+
+                registerOnPageChangeCallback(
+                    object : ViewPager2.OnPageChangeCallback() {
+                        override fun onPageScrollStateChanged(state: Int) {
+                            horizontalScrolling = state != ViewPager2.SCROLL_STATE_IDLE
+
+                            updateUrlTestButtonStatus()
+                        }
+
+                        override fun onPageSelected(position: Int) {
+                            uiStore.proxyLastGroup = groupNames[position]
                         }
                     }
-                ) {
-                    if (it == currentItem)
-                        updateUrlTestButtonStatus()
-                }
-
-                registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
-                    override fun onPageScrollStateChanged(state: Int) {
-                        horizontalScrolling = state != ViewPager2.SCROLL_STATE_IDLE
-
-                        updateUrlTestButtonStatus()
-                    }
-
-                    override fun onPageSelected(position: Int) {
-                        uiStore.proxyLastGroup = groupNames[position]
-                    }
-                })
+                )
             }
 
             TabLayoutMediator(binding.tabLayoutView, binding.pagesView) { tab, index ->
-                tab.text = groupNames[index]
-            }.attach()
+                    tab.text = groupNames[index]
+                }
+                .attach()
 
             val initialPosition = groupNames.indexOf(uiStore.proxyLastGroup)
 
             binding.pagesView.post {
-                if (initialPosition > 0)
-                    binding.pagesView.setCurrentItem(initialPosition, false)
+                if (initialPosition > 0) binding.pagesView.setCurrentItem(initialPosition, false)
             }
         }
     }

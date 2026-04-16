@@ -25,23 +25,29 @@ import com.github.kr328.clash.service.remote.ILogObserver
 import com.github.kr328.clash.service.remote.IRemoteService
 import com.github.kr328.clash.service.remote.unwrap
 import com.github.kr328.clash.util.logsDir
-import kotlinx.coroutines.*
-import kotlinx.coroutines.channels.Channel
 import java.io.IOException
-import java.util.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.NonCancellable
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.isActive
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class LogcatService : Service(), CoroutineScope by CoroutineScope(Dispatchers.Default), IInterface {
     private val cache = LogcatCache()
 
-    private val connection = object : ServiceConnection {
-        override fun onServiceDisconnected(name: ComponentName?) {
-            stopSelf()
-        }
+    private val connection =
+        object : ServiceConnection {
+            override fun onServiceDisconnected(name: ComponentName?) {
+                stopSelf()
+            }
 
-        override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
-            startObserver(service ?: return stopSelf())
+            override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
+                startObserver(service ?: return stopSelf())
+            }
         }
-    }
 
     override fun onCreate() {
         super.onCreate()
@@ -84,8 +90,7 @@ class LogcatService : Service(), CoroutineScope by CoroutineScope(Dispatchers.De
     }
 
     private fun startObserver(binder: IBinder) {
-        if (!binder.isBinderAlive)
-            return stopSelf()
+        if (!binder.isBinderAlive) return stopSelf()
 
         launch(Dispatchers.IO) {
             val service = binder.unwrap(IRemoteService::class).clash()
@@ -95,11 +100,12 @@ class LogcatService : Service(), CoroutineScope by CoroutineScope(Dispatchers.De
                 logsDir.mkdirs()
 
                 LogcatWriter(this@LogcatService).use {
-                    val observer = object : ILogObserver {
-                        override fun newItem(log: LogMessage) {
-                            channel.trySend(log)
+                    val observer =
+                        object : ILogObserver {
+                            override fun newItem(log: LogMessage) {
+                                channel.trySend(log)
+                            }
                         }
-                    }
 
                     service.setLogObserver(observer)
 
@@ -129,29 +135,36 @@ class LogcatService : Service(), CoroutineScope by CoroutineScope(Dispatchers.De
         NotificationManagerCompat.from(this)
             .createNotificationChannel(
                 NotificationChannelCompat.Builder(
-                    CHANNEL_ID,
-                    NotificationManagerCompat.IMPORTANCE_DEFAULT
-                ).setName(getString(com.github.kr328.clash.design.R.string.clash_logcat)).build()
+                        CHANNEL_ID,
+                        NotificationManagerCompat.IMPORTANCE_DEFAULT,
+                    )
+                    .setName(getString(com.github.kr328.clash.design.R.string.clash_logcat))
+                    .build()
             )
     }
 
     private fun showNotification() {
-        val notification = NotificationCompat
-            .Builder(this, CHANNEL_ID)
-            .setSmallIcon(com.github.kr328.clash.service.R.drawable.ic_logo_service)
-            .setColor(getColorCompat(com.github.kr328.clash.design.R.color.color_clash_light))
-            .setContentTitle(getString(com.github.kr328.clash.design.R.string.clash_logcat))
-            .setContentText(getString(com.github.kr328.clash.design.R.string.running))
-            .setContentIntent(
-                PendingIntent.getActivity(
-                    this,
-                    R.id.nf_logcat_status,
-                    LogcatActivity::class.intent
-                        .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_CLEAR_TOP),
-                    pendingIntentFlags(PendingIntent.FLAG_UPDATE_CURRENT)
+        val notification =
+            NotificationCompat.Builder(this, CHANNEL_ID)
+                .setSmallIcon(com.github.kr328.clash.service.R.drawable.ic_logo_service)
+                .setColor(getColorCompat(com.github.kr328.clash.design.R.color.color_clash_light))
+                .setContentTitle(getString(com.github.kr328.clash.design.R.string.clash_logcat))
+                .setContentText(getString(com.github.kr328.clash.design.R.string.running))
+                .setContentIntent(
+                    PendingIntent.getActivity(
+                        this,
+                        R.id.nf_logcat_status,
+                        LogcatActivity::class
+                            .intent
+                            .setFlags(
+                                Intent.FLAG_ACTIVITY_NEW_TASK or
+                                    Intent.FLAG_ACTIVITY_SINGLE_TOP or
+                                    Intent.FLAG_ACTIVITY_CLEAR_TOP
+                            ),
+                        pendingIntentFlags(PendingIntent.FLAG_UPDATE_CURRENT),
+                    )
                 )
-            )
-            .build()
+                .build()
 
         startForegroundCompat(R.id.nf_logcat_status, notification)
     }

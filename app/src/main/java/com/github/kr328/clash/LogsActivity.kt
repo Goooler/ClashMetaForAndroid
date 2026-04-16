@@ -22,9 +22,7 @@ class LogsActivity : BaseActivity<LogsDesign>() {
                 events.onReceive {
                     when (it) {
                         Event.ActivityStart -> {
-                            val files = withContext(Dispatchers.IO) {
-                                loadFiles()
-                            }
+                            val files = withContext(Dispatchers.IO) { loadFiles() }
 
                             design.patchLogs(files)
                         }
@@ -39,15 +37,15 @@ class LogsActivity : BaseActivity<LogsDesign>() {
                         }
                         LogsDesign.Request.DeleteAll -> {
                             if (design.requestDeleteAll()) {
-                                withContext(Dispatchers.IO) {
-                                    deleteAllLogs()
-                                }
+                                withContext(Dispatchers.IO) { deleteAllLogs() }
 
                                 events.trySend(Event.ActivityStart)
                             }
                         }
                         is LogsDesign.Request.OpenFile -> {
-                            startActivity(LogcatActivity::class.intent.setFileName(it.file.fileName))
+                            startActivity(
+                                LogcatActivity::class.intent.setFileName(it.file.fileName)
+                            )
                         }
                     }
                 }

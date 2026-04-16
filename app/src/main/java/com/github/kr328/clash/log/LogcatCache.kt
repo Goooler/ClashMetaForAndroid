@@ -36,13 +36,14 @@ class LogcatCache {
             }
 
             Snapshot(
-                List(array.size()) { array[it] },
-                removed,
-                if (full) array.size() + appended else appended
-            ).also {
-                removed = 0
-                appended = 0
-            }
+                    List(array.size()) { array[it] },
+                    removed,
+                    if (full) array.size() + appended else appended,
+                )
+                .also {
+                    removed = 0
+                    appended = 0
+                }
         }
     }
 

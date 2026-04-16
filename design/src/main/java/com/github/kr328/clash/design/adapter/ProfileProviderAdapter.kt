@@ -17,13 +17,7 @@ class ProfileProviderAdapter(
     var providers: List<ProfileProvider> = emptyList()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Holder {
-        return Holder(
-            AdapterProfileProviderBinding.inflate(
-                context.layoutInflater,
-                parent,
-                false
-            )
-        )
+        return Holder(AdapterProfileProviderBinding.inflate(context.layoutInflater, parent, false))
     }
 
     override fun onBindViewHolder(holder: Holder, position: Int) {
@@ -33,12 +27,8 @@ class ProfileProviderAdapter(
         binding.provider = current
 
         binding.root.apply {
-            setOnClickListener {
-                select(current)
-            }
-            setOnLongClickListener {
-                detail(current)
-            }
+            setOnClickListener { select(current) }
+            setOnLongClickListener { detail(current) }
         }
     }
 

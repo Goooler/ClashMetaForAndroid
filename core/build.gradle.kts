@@ -33,9 +33,11 @@ dependencies {
 
 androidComponents.onVariants { variant ->
     variant.sources.getByName("go").addStaticSourceDirectory("src/foss/golang")
-    variant.externalNativeBuild?.arguments?.addAll(
-        "-DGO_SOURCE:STRING=$golangSource",
-        "-DGO_OUTPUT:STRING=${goBaseOutputDir.get().asFile}",
-        "-DFLAVOR_NAME:STRING=${variant.flavorName.orEmpty()}",
-    )
+    variant.externalNativeBuild
+        ?.arguments
+        ?.addAll(
+            "-DGO_SOURCE:STRING=$golangSource",
+            "-DGO_OUTPUT:STRING=${goBaseOutputDir.get().asFile}",
+            "-DFLAVOR_NAME:STRING=${variant.flavorName.orEmpty()}",
+        )
 }

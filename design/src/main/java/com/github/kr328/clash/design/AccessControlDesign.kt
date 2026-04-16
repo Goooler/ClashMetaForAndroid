@@ -10,9 +10,23 @@ import com.github.kr328.clash.design.databinding.DialogSearchBinding
 import com.github.kr328.clash.design.dialog.FullScreenDialog
 import com.github.kr328.clash.design.model.AppInfo
 import com.github.kr328.clash.design.store.UiStore
-import com.github.kr328.clash.design.util.*
-import kotlinx.coroutines.*
+import com.github.kr328.clash.design.util.applyFrom
+import com.github.kr328.clash.design.util.applyLinearAdapter
+import com.github.kr328.clash.design.util.bindAppBarElevation
+import com.github.kr328.clash.design.util.layoutInflater
+import com.github.kr328.clash.design.util.patchDataSet
+import com.github.kr328.clash.design.util.requestTextInput
+import com.github.kr328.clash.design.util.root
+import com.github.kr328.clash.design.util.swapDataSet
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.NonCancellable
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.isActive
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class AccessControlDesign(
     context: Context,
@@ -28,8 +42,8 @@ class AccessControlDesign(
         Export,
     }
 
-    private val binding = DesignAccessControlBinding
-        .inflate(context.layoutInflater, context.root, false)
+    private val binding =
+        DesignAccessControlBinding.inflate(context.layoutInflater, context.root, false)
 
     private val adapter = AppAdapter(context, selected)
 
@@ -48,9 +62,7 @@ class AccessControlDesign(
     }
 
     suspend fun rebindAll() {
-        withContext(Dispatchers.Main) {
-            adapter.rebindAll()
-        }
+        withContext(Dispatchers.Main) { adapter.rebindAll() }
     }
 
     init {
@@ -63,18 +75,14 @@ class AccessControlDesign(
             it.applyLinearAdapter(context, adapter)
         }
 
-        binding.menuView.setOnClickListener {
-            menu.show()
-        }
+        binding.menuView.setOnClickListener { menu.show() }
 
         binding.searchView.setOnClickListener {
             launch {
                 try {
                     requestSearch()
                 } finally {
-                    withContext(NonCancellable) {
-                        rebindAll()
-                    }
+                    withContext(NonCancellable) { rebindAll() }
                 }
             }
         }
@@ -82,8 +90,7 @@ class AccessControlDesign(
 
     private suspend fun requestSearch() {
         coroutineScope {
-            val binding = DialogSearchBinding
-                .inflate(context.layoutInflater, context.root, false)
+            val binding = DialogSearchBinding.inflate(context.layoutInflater, context.root, false)
             val adapter = AppAdapter(context, selected)
             val dialog = FullScreenDialog(context)
             val filter = Channel<Unit>(Channel.CONFLATED)
@@ -92,20 +99,12 @@ class AccessControlDesign(
 
             binding.surface = dialog.surface
             binding.mainList.applyLinearAdapter(context, adapter)
-            binding.keywordView.addTextChangedListener {
-                filter.trySend(Unit)
-            }
-            binding.closeView.setOnClickListener {
-                dialog.dismiss()
-            }
+            binding.keywordView.addTextChangedListener { filter.trySend(Unit) }
+            binding.closeView.setOnClickListener { dialog.dismiss() }
 
-            dialog.setOnDismissListener {
-                cancel()
-            }
+            dialog.setOnDismissListener { cancel() }
 
-            dialog.setOnShowListener {
-                binding.keywordView.requestTextInput()
-            }
+            dialog.setOnShowListener { binding.keywordView.requestTextInput() }
 
             dialog.show()
 
@@ -114,16 +113,17 @@ class AccessControlDesign(
 
                 val keyword = binding.keywordView.text?.toString() ?: ""
 
-                val apps: List<AppInfo> = if (keyword.isEmpty()) {
-                    emptyList()
-                } else {
-                    withContext(Dispatchers.Default) {
-                        apps.filter {
-                            it.label.contains(keyword, ignoreCase = true) ||
+                val apps: List<AppInfo> =
+                    if (keyword.isEmpty()) {
+                        emptyList()
+                    } else {
+                        withContext(Dispatchers.Default) {
+                            apps.filter {
+                                it.label.contains(keyword, ignoreCase = true) ||
                                     it.packageName.contains(keyword, ignoreCase = true)
+                            }
                         }
                     }
-                }
 
                 adapter.patchDataSet(adapter::apps, apps, false, AppInfo::packageName)
 

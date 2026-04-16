@@ -16,10 +16,11 @@ class SuspendModule(service: Service) : Module<Unit>(service) {
 
         Clash.suspendCore(!interactive)
 
-        val screenToggle = receiveBroadcast(false, Channel.CONFLATED) {
-            addAction(Intent.ACTION_SCREEN_ON)
-            addAction(Intent.ACTION_SCREEN_OFF)
-        }
+        val screenToggle =
+            receiveBroadcast(false, Channel.CONFLATED) {
+                addAction(Intent.ACTION_SCREEN_ON)
+                addAction(Intent.ACTION_SCREEN_OFF)
+            }
 
         try {
             while (true) {
@@ -42,9 +43,7 @@ class SuspendModule(service: Service) : Module<Unit>(service) {
                 }
             }
         } finally {
-            withContext(NonCancellable) {
-                Clash.suspendCore(false)
-            }
+            withContext(NonCancellable) { Clash.suspendCore(false) }
         }
     }
 }

@@ -7,24 +7,32 @@ import com.github.kr328.clash.design.databinding.DesignPropertiesBinding
 import com.github.kr328.clash.design.dialog.ModelProgressBarConfigure
 import com.github.kr328.clash.design.dialog.requestModelTextInput
 import com.github.kr328.clash.design.dialog.withModelProgressBar
-import com.github.kr328.clash.design.util.*
+import com.github.kr328.clash.design.util.ValidatorAutoUpdateInterval
+import com.github.kr328.clash.design.util.ValidatorHttpUrl
+import com.github.kr328.clash.design.util.ValidatorNotBlank
+import com.github.kr328.clash.design.util.applyFrom
+import com.github.kr328.clash.design.util.bindAppBarElevation
+import com.github.kr328.clash.design.util.getHtml
+import com.github.kr328.clash.design.util.layoutInflater
+import com.github.kr328.clash.design.util.root
 import com.github.kr328.clash.service.model.Profile
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import java.util.concurrent.TimeUnit
+import kotlin.coroutines.resume
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
-import java.util.concurrent.TimeUnit
-import kotlin.coroutines.resume
 
 class PropertiesDesign(context: Context) : Design<PropertiesDesign.Request>(context) {
     sealed class Request {
         object Commit : Request()
+
         object BrowseFiles : Request()
     }
 
-    private val binding = DesignPropertiesBinding
-        .inflate(context.layoutInflater, context.root, false)
+    private val binding =
+        DesignPropertiesBinding.inflate(context.layoutInflater, context.root, false)
 
     override val root: View
         get() = binding.root
@@ -48,11 +56,7 @@ class PropertiesDesign(context: Context) : Design<PropertiesDesign.Request>(cont
                     text = context.getString(R.string.initializing)
                 }
 
-                executeTask {
-                    configure {
-                        applyFrom(it)
-                    }
-                }
+                executeTask { configure { applyFrom(it) } }
             }
         } finally {
             binding.processing = false
@@ -62,14 +66,15 @@ class PropertiesDesign(context: Context) : Design<PropertiesDesign.Request>(cont
     suspend fun requestExitWithoutSaving(): Boolean {
         return withContext(Dispatchers.Main) {
             suspendCancellableCoroutine { ctx ->
-                val dialog = MaterialAlertDialogBuilder(context)
-                    .setTitle(R.string.exit_without_save)
-                    .setMessage(R.string.exit_without_save_warning)
-                    .setCancelable(true)
-                    .setPositiveButton(R.string.ok) { _, _ -> ctx.resume(true) }
-                    .setNegativeButton(R.string.cancel) { _, _ -> }
-                    .setOnDismissListener { if (!ctx.isCompleted) ctx.resume(false) }
-                    .show()
+                val dialog =
+                    MaterialAlertDialogBuilder(context)
+                        .setTitle(R.string.exit_without_save)
+                        .setMessage(R.string.exit_without_save_warning)
+                        .setCancelable(true)
+                        .setPositiveButton(R.string.ok) { _, _ -> ctx.resume(true) }
+                        .setNegativeButton(R.string.cancel) { _, _ -> }
+                        .setOnDismissListener { if (!ctx.isCompleted) ctx.resume(false) }
+                        .show()
 
                 ctx.invokeOnCancellation { dialog.dismiss() }
             }
@@ -88,13 +93,14 @@ class PropertiesDesign(context: Context) : Design<PropertiesDesign.Request>(cont
 
     fun inputName() {
         launch {
-            val name = context.requestModelTextInput(
-                initial = profile.name,
-                title = context.getText(R.string.name),
-                hint = context.getText(R.string.properties),
-                error = context.getText(R.string.should_not_be_blank),
-                validator = ValidatorNotBlank
-            )
+            val name =
+                context.requestModelTextInput(
+                    initial = profile.name,
+                    title = context.getText(R.string.name),
+                    hint = context.getText(R.string.properties),
+                    error = context.getText(R.string.should_not_be_blank),
+                    validator = ValidatorNotBlank,
+                )
 
             if (name != profile.name) {
                 profile = profile.copy(name = name)
@@ -103,17 +109,17 @@ class PropertiesDesign(context: Context) : Design<PropertiesDesign.Request>(cont
     }
 
     fun inputUrl() {
-        if (profile.type == Profile.Type.External)
-            return
+        if (profile.type == Profile.Type.External) return
 
         launch {
-            val url = context.requestModelTextInput(
-                initial = profile.source,
-                title = context.getText(R.string.url),
-                hint = context.getText(R.string.profile_url),
-                error = context.getText(R.string.accept_http_content),
-                validator = ValidatorHttpUrl
-            )
+            val url =
+                context.requestModelTextInput(
+                    initial = profile.source,
+                    title = context.getText(R.string.url),
+                    hint = context.getText(R.string.profile_url),
+                    error = context.getText(R.string.accept_http_content),
+                    validator = ValidatorHttpUrl,
+                )
 
             if (url != profile.source) {
                 profile = profile.copy(source = url)
@@ -125,13 +131,16 @@ class PropertiesDesign(context: Context) : Design<PropertiesDesign.Request>(cont
         launch {
             var minutes = TimeUnit.MILLISECONDS.toMinutes(profile.interval)
 
-            minutes = context.requestModelTextInput(
-                initial = if (minutes == 0L) "" else minutes.toString(),
-                title = context.getText(R.string.auto_update),
-                hint = context.getText(R.string.auto_update_minutes),
-                error = context.getText(R.string.at_least_15_minutes),
-                validator = ValidatorAutoUpdateInterval
-            ).toLongOrNull() ?: 0
+            minutes =
+                context
+                    .requestModelTextInput(
+                        initial = if (minutes == 0L) "" else minutes.toString(),
+                        title = context.getText(R.string.auto_update),
+                        hint = context.getText(R.string.auto_update_minutes),
+                        error = context.getText(R.string.at_least_15_minutes),
+                        validator = ValidatorAutoUpdateInterval,
+                    )
+                    .toLongOrNull() ?: 0
 
             val interval = TimeUnit.MINUTES.toMillis(minutes)
 

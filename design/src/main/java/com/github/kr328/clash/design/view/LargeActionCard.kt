@@ -6,16 +6,19 @@ import android.util.AttributeSet
 import androidx.annotation.AttrRes
 import com.github.kr328.clash.design.R
 import com.github.kr328.clash.design.databinding.ComponentLargeActionLabelBinding
-import com.github.kr328.clash.design.util.*
+import com.github.kr328.clash.design.util.getPixels
+import com.github.kr328.clash.design.util.layoutInflater
+import com.github.kr328.clash.design.util.resolveClickableAttrs
+import com.github.kr328.clash.design.util.resolveThemedColor
+import com.github.kr328.clash.design.util.selectableItemBackground
 import com.google.android.material.card.MaterialCardView
 
-class LargeActionCard @JvmOverloads constructor(
-    context: Context,
-    attributeSet: AttributeSet? = null,
-    @AttrRes defStyleAttr: Int = 0
-) : MaterialCardView(context, attributeSet, defStyleAttr) {
-    private val binding = ComponentLargeActionLabelBinding
-        .inflate(context.layoutInflater, this, true)
+class LargeActionCard
+@JvmOverloads
+constructor(context: Context, attributeSet: AttributeSet? = null, @AttrRes defStyleAttr: Int = 0) :
+    MaterialCardView(context, attributeSet, defStyleAttr) {
+    private val binding =
+        ComponentLargeActionLabelBinding.inflate(context.layoutInflater, this, true)
 
     var text: CharSequence?
         get() = binding.textView.text
@@ -42,24 +45,23 @@ class LargeActionCard @JvmOverloads constructor(
             foreground = foreground() ?: context.selectableItemBackground
         }
 
-        context.theme.obtainStyledAttributes(
-            attributeSet,
-            R.styleable.LargeActionCard,
-            defStyleAttr,
-            0
-        ).apply {
-            try {
-                icon = getDrawable(R.styleable.LargeActionCard_icon)
-                text = getString(R.styleable.LargeActionCard_text)
-                subtext = getString(R.styleable.LargeActionCard_subtext)
-            } finally {
-                recycle()
+        context.theme
+            .obtainStyledAttributes(attributeSet, R.styleable.LargeActionCard, defStyleAttr, 0)
+            .apply {
+                try {
+                    icon = getDrawable(R.styleable.LargeActionCard_icon)
+                    text = getString(R.styleable.LargeActionCard_text)
+                    subtext = getString(R.styleable.LargeActionCard_subtext)
+                } finally {
+                    recycle()
+                }
             }
-        }
 
         minimumHeight = context.getPixels(R.dimen.large_action_card_min_height)
         radius = context.getPixels(R.dimen.large_action_card_radius).toFloat()
         elevation = context.getPixels(R.dimen.large_action_card_elevation).toFloat()
-        setCardBackgroundColor(context.resolveThemedColor(com.google.android.material.R.attr.colorSurface))
+        setCardBackgroundColor(
+            context.resolveThemedColor(com.google.android.material.R.attr.colorSurface)
+        )
     }
 }
