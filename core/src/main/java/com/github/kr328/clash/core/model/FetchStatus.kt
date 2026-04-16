@@ -1,10 +1,10 @@
 package com.github.kr328.clash.core.model
 
-import android.os.Parcel
 import android.os.Parcelable
-import com.github.kr328.clash.core.util.Parcelizer
+import kotlinx.parcelize.Parcelize
 import kotlinx.serialization.Serializable
 
+@Parcelize
 @Serializable
 data class FetchStatus(
     val action: Action,
@@ -16,23 +16,5 @@ data class FetchStatus(
         FetchConfiguration,
         FetchProviders,
         Verifying,
-    }
-
-    override fun describeContents(): Int {
-        return 0
-    }
-
-    override fun writeToParcel(dest: Parcel, flags: Int) {
-        Parcelizer.encodeToParcel(serializer(), dest, this)
-    }
-
-    companion object CREATOR : Parcelable.Creator<FetchStatus> {
-        override fun createFromParcel(parcel: Parcel): FetchStatus {
-            return Parcelizer.decodeFromParcel(serializer(), parcel)
-        }
-
-        override fun newArray(size: Int): Array<FetchStatus?> {
-            return arrayOfNulls(size)
-        }
     }
 }

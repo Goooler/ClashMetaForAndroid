@@ -1,11 +1,11 @@
 package com.github.kr328.clash.core.model
 
-import android.os.Parcel
 import android.os.Parcelable
-import com.github.kr328.clash.core.util.Parcelizer
+import kotlinx.parcelize.Parcelize
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
+@Parcelize
 @Serializable
 data class ConfigurationOverride(
     @SerialName("port") var httpPort: Int? = null,
@@ -34,6 +34,7 @@ data class ConfigurationOverride(
     @SerialName("sniffer") val sniffer: Sniffer = Sniffer(),
     @SerialName("geox-url") val geoxurl: GeoXUrl = GeoXUrl(),
 ) : Parcelable {
+    @Parcelize
     @Serializable
     data class Dns(
         @SerialName("enable") var enable: Boolean? = null,
@@ -49,39 +50,46 @@ data class ConfigurationOverride(
         @SerialName("fake-ip-filter-mode") var fakeIPFilterMode: FilterMode? = null,
         @SerialName("fallback-filter") val fallbackFilter: DnsFallbackFilter = DnsFallbackFilter(),
         @SerialName("nameserver-policy") var nameserverPolicy: Map<String, String>? = null,
-    )
+    ) : Parcelable
 
+    @Parcelize
     @Serializable
     data class DnsFallbackFilter(
         @SerialName("geoip") var geoIp: Boolean? = null,
         @SerialName("geoip-code") var geoIpCode: String? = null,
         @SerialName("ipcidr") var ipcidr: List<String>? = null,
         @SerialName("domain") var domain: List<String>? = null,
-    )
+    ) : Parcelable
 
+    @Parcelize
     @Serializable
-    data class App(@SerialName("append-system-dns") var appendSystemDns: Boolean? = null)
+    data class App(@SerialName("append-system-dns") var appendSystemDns: Boolean? = null) :
+        Parcelable
 
+    @Parcelize
     @Serializable
-    enum class FindProcessMode {
+    enum class FindProcessMode : Parcelable {
         @SerialName("off") Off,
         @SerialName("strict") Strict,
         @SerialName("always") Always,
     }
 
+    @Parcelize
     @Serializable
-    enum class DnsEnhancedMode {
+    enum class DnsEnhancedMode : Parcelable {
         @SerialName("normal") None,
         @SerialName("redir-host") Mapping,
         @SerialName("fake-ip") FakeIp,
     }
 
+    @Parcelize
     @Serializable
-    enum class FilterMode {
+    enum class FilterMode : Parcelable {
         @SerialName("blacklist") BlackList,
         @SerialName("whitelist") WhiteList,
     }
 
+    @Parcelize
     @Serializable
     data class Sniffer(
         @SerialName("enable") var enable: Boolean? = null,
@@ -93,49 +101,35 @@ data class ConfigurationOverride(
         @SerialName("skip-domain") var skipDomain: List<String>? = null,
         @SerialName("skip-src-address") var skipSrcAddress: List<String>? = null,
         @SerialName("skip-dst-address") var skipDstAddress: List<String>? = null,
-    )
+    ) : Parcelable
 
+    @Parcelize
     @Serializable
     data class GeoXUrl(
         @SerialName("geoip") var geoip: String? = null,
         @SerialName("mmdb") var mmdb: String? = null,
         @SerialName("geosite") var geosite: String? = null,
-    )
+    ) : Parcelable
 
+    @Parcelize
     @Serializable
     data class ExternalControllerCors(
         @SerialName("allow-origins") var allowOrigins: List<String>? = null,
         @SerialName("allow-private-network") var allowPrivateNetwork: Boolean? = null,
-    )
+    ) : Parcelable
 
+    @Parcelize
     @Serializable
     data class Sniff(
         @SerialName("HTTP") var http: ProtocolConig = ProtocolConig(),
         @SerialName("TLS") var tls: ProtocolConig = ProtocolConig(),
         @SerialName("QUIC") var quic: ProtocolConig = ProtocolConig(),
-    )
+    ) : Parcelable
 
+    @Parcelize
     @Serializable
     data class ProtocolConig(
         @SerialName("ports") var ports: List<String>? = null,
         @SerialName("override-destination") var overrideDestination: Boolean? = null,
-    )
-
-    override fun writeToParcel(parcel: Parcel, flags: Int) {
-        Parcelizer.encodeToParcel(serializer(), parcel, this)
-    }
-
-    override fun describeContents(): Int {
-        return 0
-    }
-
-    companion object CREATOR : Parcelable.Creator<ConfigurationOverride> {
-        override fun createFromParcel(parcel: Parcel): ConfigurationOverride {
-            return Parcelizer.decodeFromParcel(serializer(), parcel)
-        }
-
-        override fun newArray(size: Int): Array<ConfigurationOverride?> {
-            return arrayOfNulls(size)
-        }
-    }
+    ) : Parcelable
 }
