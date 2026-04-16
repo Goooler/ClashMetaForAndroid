@@ -1,6 +1,5 @@
 package com.github.kr328.clash
 
-import android.app.Activity
 import android.content.ComponentName
 import android.content.Intent
 import android.net.Uri
@@ -43,7 +42,7 @@ class NewProfileActivity : BaseActivity<NewProfileDesign>() {
         setContentDesign(design)
 
         while (isActive) {
-            select<Unit> {
+            select {
                 events.onReceive {}
 
                 design.requests.onReceive {
@@ -109,7 +108,7 @@ class NewProfileActivity : BaseActivity<NewProfileDesign>() {
                 PropertiesActivity::class.intent.setUUID(uuid),
             )
 
-        if (r.resultCode == Activity.RESULT_OK) finish()
+        if (r.resultCode == RESULT_OK) finish()
     }
 
     private suspend fun ProfileProvider.External.get(): Pair<Uri, String?>? {

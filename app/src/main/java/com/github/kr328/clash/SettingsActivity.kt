@@ -12,7 +12,7 @@ class SettingsActivity : BaseActivity<SettingsDesign>() {
         setContentDesign(design)
 
         while (isActive) {
-            select<Unit> {
+            select {
                 events.onReceive {}
 
                 design.requests.onReceive {

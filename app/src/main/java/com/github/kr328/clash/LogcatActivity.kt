@@ -1,13 +1,11 @@
 package com.github.kr328.clash
 
 import android.content.ComponentName
-import android.content.Context
 import android.content.ServiceConnection
 import android.net.Uri
 import android.os.IBinder
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
-import com.github.kr328.clash.common.compat.startForegroundServiceCompat
 import com.github.kr328.clash.common.log.Log
 import com.github.kr328.clash.common.util.fileName
 import com.github.kr328.clash.common.util.intent
@@ -24,10 +22,10 @@ import com.github.kr328.clash.log.LogcatReader
 import com.github.kr328.clash.util.logsDir
 import java.io.OutputStreamWriter
 import kotlin.coroutines.resume
-import kotlin.coroutines.suspendCoroutine
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.selects.select
+import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
 
 class LogcatActivity : BaseActivity<LogcatDesign>() {
@@ -94,7 +92,7 @@ class LogcatActivity : BaseActivity<LogcatDesign>() {
 
         setContentDesign(design)
 
-        startForegroundServiceCompat(LogcatService::class.intent)
+        startForegroundService(LogcatService::class.intent)
 
         val logcat = bindLogcatService()
         val ticker = ticker(500)
@@ -102,7 +100,7 @@ class LogcatActivity : BaseActivity<LogcatDesign>() {
         var initial = true
 
         while (isActive) {
-            select<Unit> {
+            select {
                 events.onReceive {}
 
                 design.requests.onReceive {
@@ -135,7 +133,7 @@ class LogcatActivity : BaseActivity<LogcatDesign>() {
     }
 
     private suspend fun bindLogcatService(): LogcatService {
-        return suspendCoroutine { ctx ->
+        return suspendCancellableCoroutine { ctx ->
             bindService(
                 LogcatService::class.intent,
                 object : ServiceConnection {
@@ -151,12 +149,11 @@ class LogcatActivity : BaseActivity<LogcatDesign>() {
                         conn = null
                     }
                 },
-                Context.BIND_AUTO_CREATE,
+                BIND_AUTO_CREATE,
             )
         }
     }
 
-    @Suppress("BlockingMethodInNonBlockingContext")
     private suspend fun writeLogTo(messages: List<LogMessage>, file: LogFile, uri: Uri) {
         LogcatFilter(OutputStreamWriter(contentResolver.openOutputStream(uri)), this).use {
             withContext(Dispatchers.Main) {

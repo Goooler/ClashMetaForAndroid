@@ -13,7 +13,6 @@ data class TunnelState(val mode: Mode) : Parcelable {
         @SerialName("direct") Direct,
         @SerialName("global") Global,
         @SerialName("rule") Rule,
-        @SerialName("script") Script,
     }
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {

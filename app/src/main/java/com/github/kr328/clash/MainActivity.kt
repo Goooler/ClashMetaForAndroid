@@ -33,7 +33,7 @@ class MainActivity : BaseActivity<MainDesign>() {
         val ticker = ticker(TimeUnit.SECONDS.toMillis(1))
 
         while (isActive) {
-            select<Unit> {
+            select {
                 events.onReceive {
                     when (it) {
                         Event.ActivityStart,

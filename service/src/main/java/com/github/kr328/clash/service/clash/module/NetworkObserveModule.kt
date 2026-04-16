@@ -26,9 +26,7 @@ class NetworkObserveModule(service: Service) : Module<Network>(service) {
             .apply {
                 addCapability(NetworkCapabilities.NET_CAPABILITY_NOT_VPN)
                 addCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                    addCapability(NetworkCapabilities.NET_CAPABILITY_FOREGROUND)
-                }
+                addCapability(NetworkCapabilities.NET_CAPABILITY_FOREGROUND)
                 addCapability(NetworkCapabilities.NET_CAPABILITY_NOT_RESTRICTED)
             }
             .build()

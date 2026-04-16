@@ -3,7 +3,6 @@ package com.github.kr328.clash.design.view
 import android.content.Context
 import android.graphics.drawable.Drawable
 import android.util.AttributeSet
-import android.view.View
 import android.widget.FrameLayout
 import androidx.annotation.AttrRes
 import androidx.annotation.StyleRes
@@ -42,9 +41,9 @@ constructor(
             binding.subtextView.text = value
 
             if (value == null) {
-                binding.subtextView.visibility = View.GONE
+                binding.subtextView.visibility = GONE
             } else {
-                binding.subtextView.visibility = View.VISIBLE
+                binding.subtextView.visibility = VISIBLE
             }
         }
 

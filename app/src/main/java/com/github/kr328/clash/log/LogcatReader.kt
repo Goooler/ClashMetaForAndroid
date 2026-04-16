@@ -23,7 +23,7 @@ class LogcatReader(context: Context, file: LogFile) : AutoCloseable {
             .filter { !it.startsWith("#") }
             .map { it.split(":", limit = 3) }
             .map {
-                val time = it[0].toLongOrNull()?.let { Date(it) } ?: lastTime
+                val time = it[0].toLongOrNull()?.let { date -> Date(date) } ?: lastTime
                 val logMessage =
                     if (it[0].toLongOrNull() != null) {
                         LogMessage(

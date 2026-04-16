@@ -16,7 +16,7 @@ private const val INT16SZ = 2
 private const val INADDRSZ = 16
 
 private fun numericToTextFormat(address: Inet6Address): String {
-    var src = address.getAddress()
+    val src = address.address
     val sb = StringBuilder(39)
     for (i in 0 until INADDRSZ / INT16SZ) {
         sb.append(
@@ -33,9 +33,9 @@ private fun numericToTextFormat(address: Inet6Address): String {
     // link-local address
     // Note that the Scope must be returned as an int type, not a string format
     // Reference: https://github.com/golang/go/issues/68082
-    if (address.getScopeId() > 0) {
+    if (address.scopeId > 0) {
         sb.append("%")
-        sb.append(address.getScopeId())
+        sb.append(address.scopeId)
     }
     return sb.toString()
 }

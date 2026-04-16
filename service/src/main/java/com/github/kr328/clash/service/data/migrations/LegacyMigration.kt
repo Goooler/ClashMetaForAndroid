@@ -1,5 +1,3 @@
-@file:Suppress("BlockingMethodInNonBlockingContext")
-
 package com.github.kr328.clash.service.data.migrations
 
 import android.content.Context

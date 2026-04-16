@@ -58,7 +58,7 @@ class ProfileManager(private val context: Context) :
             deleteRecursively()
             mkdirs()
 
-            @Suppress("BlockingMethodInNonBlockingContext") resolve("config.yaml").createNewFile()
+            resolve("config.yaml").createNewFile()
             resolve("providers").mkdir()
         }
 
@@ -211,7 +211,7 @@ class ProfileManager(private val context: Context) :
                 // println(response.body!!.string())
             }
         } catch (e: Exception) {
-            System.out.println(e)
+            println(e)
         }
     }
 

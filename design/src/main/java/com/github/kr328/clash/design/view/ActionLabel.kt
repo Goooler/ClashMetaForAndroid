@@ -3,7 +3,6 @@ package com.github.kr328.clash.design.view
 import android.content.Context
 import android.graphics.drawable.Drawable
 import android.util.AttributeSet
-import android.view.View
 import android.widget.FrameLayout
 import androidx.annotation.AttrRes
 import androidx.annotation.StyleRes
@@ -37,7 +36,7 @@ constructor(
         get() = binding.subtextView.text
         set(value) {
             binding.subtextView.text = value
-            binding.subtextView.visibility = if (value == null) View.GONE else View.VISIBLE
+            binding.subtextView.visibility = if (value == null) GONE else VISIBLE
         }
 
     override fun setOnClickListener(l: OnClickListener?) {

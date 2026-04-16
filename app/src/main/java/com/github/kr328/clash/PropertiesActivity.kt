@@ -37,7 +37,7 @@ class PropertiesActivity : BaseActivity<PropertiesDesign>() {
         }
 
         while (isActive) {
-            select<Unit> {
+            select {
                 events.onReceive {
                     when (it) {
                         Event.ActivityStop -> {

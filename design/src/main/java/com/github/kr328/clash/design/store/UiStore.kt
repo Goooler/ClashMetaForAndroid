@@ -16,7 +16,11 @@ class UiStore(context: Context) {
     var enableVpn: Boolean by store.boolean(key = "enable_vpn", defaultValue = true)
 
     var darkMode: DarkMode by
-        store.enum(key = "dark_mode", defaultValue = DarkMode.Auto, values = DarkMode.values())
+        store.enum(
+            key = "dark_mode",
+            defaultValue = DarkMode.Auto,
+            values = DarkMode.entries.toTypedArray(),
+        )
 
     var hideAppIcon: Boolean by
         store.boolean(
@@ -40,7 +44,7 @@ class UiStore(context: Context) {
         store.enum(
             key = "proxy_sort",
             defaultValue = ProxySort.Default,
-            values = ProxySort.values(),
+            values = ProxySort.entries.toTypedArray(),
         )
 
     var proxyLastGroup: String by store.string(key = "proxy_last_group", defaultValue = "")
@@ -49,7 +53,7 @@ class UiStore(context: Context) {
         store.enum(
             key = "access_control_sort",
             defaultValue = AppInfoSort.Label,
-            values = AppInfoSort.values(),
+            values = AppInfoSort.entries.toTypedArray(),
         )
 
     var accessControlReverse: Boolean by

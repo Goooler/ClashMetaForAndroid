@@ -14,5 +14,5 @@ val Context.processingDir: File
 
 val File.directoryLastModified: Long?
     get() {
-        return walk().map { it.lastModified() }.maxOrNull()
+        return walk().maxOfOrNull { it.lastModified() }
     }

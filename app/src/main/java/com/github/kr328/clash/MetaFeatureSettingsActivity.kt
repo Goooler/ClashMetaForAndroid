@@ -29,7 +29,7 @@ class MetaFeatureSettingsActivity : BaseActivity<MetaFeatureSettingsDesign>() {
         setContentDesign(design)
 
         while (isActive) {
-            select<Unit> {
+            select {
                 events.onReceive {}
 
                 design.requests.onReceive {

@@ -2,7 +2,6 @@ package com.github.kr328.clash
 
 import android.app.ActivityManager
 import android.content.res.Configuration
-import android.os.Build
 import android.os.Bundle
 import android.view.View
 import androidx.activity.result.contract.ActivityResultContract
@@ -28,7 +27,6 @@ import com.github.kr328.clash.util.ApplicationObserver
 import java.util.UUID
 import java.util.concurrent.atomic.AtomicInteger
 import kotlin.coroutines.resume
-import kotlin.coroutines.suspendCoroutine
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
@@ -36,6 +34,7 @@ import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
 
 abstract class BaseActivity<D : Design<*>> :
@@ -76,7 +75,7 @@ abstract class BaseActivity<D : Design<*>> :
             val requestKey = nextRequestKey.getAndIncrement().toString()
 
             ActivityResultLifecycle().use { lifecycle, start ->
-                suspendCoroutine { c ->
+                suspendCancellableCoroutine { c ->
                     activityResultRegistry
                         .register(requestKey, lifecycle, contracts) { c.resume(it) }
                         .apply { start() }
@@ -86,7 +85,7 @@ abstract class BaseActivity<D : Design<*>> :
         }
 
     suspend fun setContentDesign(design: D) {
-        suspendCoroutine<Unit> {
+        suspendCancellableCoroutine {
             window.decorView.post {
                 this.design = design
                 it.resume(Unit)
@@ -145,10 +144,6 @@ abstract class BaseActivity<D : Design<*>> :
         if (queryDayNight(newConfig) != dayNight) {
             ApplicationObserver.createdActivities.forEach { it.recreate() }
         }
-    }
-
-    open fun shouldDisplayHomeAsUpEnabled(): Boolean {
-        return true
     }
 
     override fun onSupportNavigateUp(): Boolean {
@@ -215,15 +210,9 @@ abstract class BaseActivity<D : Design<*>> :
         window.statusBarColor = resolveThemedColor(android.R.attr.statusBarColor)
         window.navigationBarColor = resolveThemedColor(android.R.attr.navigationBarColor)
 
-        if (Build.VERSION.SDK_INT >= 23) {
-            window.isLightStatusBarsCompat =
-                resolveThemedBoolean(android.R.attr.windowLightStatusBar)
-        }
-
-        if (Build.VERSION.SDK_INT >= 27) {
-            window.isLightNavigationBarCompat =
-                resolveThemedBoolean(android.R.attr.windowLightNavigationBar)
-        }
+        window.isLightStatusBarsCompat = resolveThemedBoolean(android.R.attr.windowLightStatusBar)
+        window.isLightNavigationBarCompat =
+            resolveThemedBoolean(android.R.attr.windowLightNavigationBar)
 
         this.dayNight = dayNight
     }

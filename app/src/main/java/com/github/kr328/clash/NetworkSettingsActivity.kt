@@ -13,7 +13,7 @@ class NetworkSettingsActivity : BaseActivity<NetworkSettingsDesign>() {
         setContentDesign(design)
 
         while (isActive) {
-            select<Unit> {
+            select {
                 events.onReceive {
                     when (it) {
                         Event.ClashStart,

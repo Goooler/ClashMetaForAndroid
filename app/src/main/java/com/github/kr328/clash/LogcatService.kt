@@ -3,7 +3,6 @@ package com.github.kr328.clash
 import android.app.PendingIntent
 import android.app.Service
 import android.content.ComponentName
-import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
 import android.os.Binder
@@ -58,7 +57,7 @@ class LogcatService : Service(), CoroutineScope by CoroutineScope(Dispatchers.De
 
         showNotification()
 
-        bindService(RemoteService::class.intent, connection, Context.BIND_AUTO_CREATE)
+        bindService(RemoteService::class.intent, connection, BIND_AUTO_CREATE)
     }
 
     override fun onDestroy() {

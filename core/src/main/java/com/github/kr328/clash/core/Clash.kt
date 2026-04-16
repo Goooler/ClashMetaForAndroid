@@ -121,7 +121,7 @@ object Clash {
 
     fun queryGroupNames(excludeNotSelectable: Boolean): List<String> {
         val names =
-            Json.Default.decodeFromString(
+            Json.decodeFromString(
                 JsonArray.serializer(),
                 Bridge.nativeQueryGroupNames(excludeNotSelectable),
             )
@@ -135,7 +135,7 @@ object Clash {
 
     fun queryGroup(name: String, sort: ProxySort): ProxyGroup {
         return Bridge.nativeQueryGroup(name, sort.name)?.let {
-            Json.Default.decodeFromString(ProxyGroup.serializer(), it)
+            Json.decodeFromString(ProxyGroup.serializer(), it)
         } ?: ProxyGroup(Proxy.Type.Unknown, emptyList(), "")
     }
 
@@ -161,9 +161,7 @@ object Clash {
             Bridge.nativeFetchAndValid(
                 object : FetchCallback {
                     override fun report(statusJson: String) {
-                        reportStatus(
-                            Json.Default.decodeFromString(FetchStatus.serializer(), statusJson)
-                        )
+                        reportStatus(Json.decodeFromString(FetchStatus.serializer(), statusJson))
                     }
 
                     override fun complete(error: String?) {
@@ -183,11 +181,10 @@ object Clash {
     }
 
     fun queryProviders(): List<Provider> {
-        val providers =
-            Json.Default.decodeFromString(JsonArray.serializer(), Bridge.nativeQueryProviders())
+        val providers = Json.decodeFromString(JsonArray.serializer(), Bridge.nativeQueryProviders())
 
         return List(providers.size) {
-            Json.Default.decodeFromJsonElement(Provider.serializer(), providers[it])
+            Json.decodeFromJsonElement(Provider.serializer(), providers[it])
         }
     }
 
@@ -223,7 +220,7 @@ object Clash {
     }
 
     fun queryConfiguration(): UiConfiguration {
-        return Json.Default.decodeFromString(
+        return Json.decodeFromString(
             UiConfiguration.serializer(),
             Bridge.nativeQueryConfiguration(),
         )

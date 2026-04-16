@@ -1,5 +1,3 @@
-@file:Suppress("BlockingMethodInNonBlockingContext")
-
 package com.github.kr328.clash
 
 import android.content.Intent
@@ -37,7 +35,7 @@ class FilesActivity : BaseActivity<FilesDesign>() {
         val ticker = ticker(TimeUnit.MINUTES.toMillis(1))
 
         while (isActive) {
-            select<Unit> {
+            select {
                 events.onReceive {
                     when (it) {
                         Event.ActivityStart,

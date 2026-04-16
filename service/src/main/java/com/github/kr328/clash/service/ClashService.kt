@@ -44,16 +44,15 @@ class ClashService : BaseService() {
 
         try {
             while (isActive) {
-                val quit =
-                    select<Boolean> {
-                        close.onEvent { true }
-                        config.onEvent {
-                            reason = it.message
+                val quit = select {
+                    close.onEvent { true }
+                    config.onEvent {
+                        reason = it.message
 
-                            true
-                        }
-                        network.onEvent { false }
+                        true
                     }
+                    network.onEvent { false }
+                }
 
                 if (quit) break
             }

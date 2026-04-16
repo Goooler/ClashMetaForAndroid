@@ -17,7 +17,6 @@ import com.github.kr328.clash.util.clashDir
 import java.io.File
 import java.io.FileOutputStream
 
-@Suppress("unused")
 class MainApplication : Application() {
     private val uiStore by lazy(LazyThreadSafetyMode.NONE) { UiStore(this) }
 

@@ -33,7 +33,7 @@ data class ProxyGroup(val type: Proxy.Type, val proxies: List<Proxy>, val now: S
 
     constructor(
         parcel: Parcel
-    ) : this(Proxy.Type.values()[parcel.readInt()], SliceProxyList(parcel), parcel.readString()!!)
+    ) : this(Proxy.Type.entries[parcel.readInt()], SliceProxyList(parcel), parcel.readString()!!)
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeInt(type.ordinal)

@@ -25,7 +25,7 @@ class ProfilesActivity : BaseActivity<ProfilesDesign>() {
         val ticker = ticker(TimeUnit.MINUTES.toMillis(1))
 
         while (isActive) {
-            select<Unit> {
+            select {
                 events.onReceive {
                     when (it) {
                         Event.ActivityStart,

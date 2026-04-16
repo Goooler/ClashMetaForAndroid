@@ -2,7 +2,6 @@ package com.github.kr328.clash.service
 
 import android.database.Cursor
 import android.database.MatrixCursor
-import android.os.Build
 import android.os.CancellationSignal
 import android.os.ParcelFileDescriptor
 import android.provider.DocumentsContract.Document as D
@@ -40,8 +39,7 @@ class FilesProvider : DocumentsProvider() {
                 Root.COLUMN_DOCUMENT_ID,
             )
 
-        private val FLAG_VIRTUAL: Int =
-            if (Build.VERSION.SDK_INT >= 24) D.FLAG_VIRTUAL_DOCUMENT else 0
+        private const val FLAG_VIRTUAL: Int = D.FLAG_VIRTUAL_DOCUMENT
     }
 
     private val picker: Picker by lazy { Picker(context!!) }
