@@ -38,7 +38,7 @@ develocity {
     }
 }
 
-rootProject.name = "ClashMetaForAndroid"
+rootProject.name = "MihomoForAndroid"
 
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
