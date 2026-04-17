@@ -23,7 +23,7 @@ dependencyResolutionManagement {
       }
     }
     mavenCentral()
-    maven("https://raw.githubusercontent.com/MetaCubeX/maven-backup/main/releases")
+    maven("https://central.sonatype.com/repository/maven-snapshots/")
   }
 }
 
