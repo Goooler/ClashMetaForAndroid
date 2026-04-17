@@ -7,17 +7,17 @@ import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 
 fun CoroutineScope.ticker(period: Long): Channel<Long> {
-    val channel = Channel<Long>(Channel.RENDEZVOUS)
+  val channel = Channel<Long>(Channel.RENDEZVOUS)
 
-    launch {
-        try {
-            while (isActive) {
-                channel.send(System.currentTimeMillis())
+  launch {
+    try {
+      while (isActive) {
+        channel.send(System.currentTimeMillis())
 
-                delay(period)
-            }
-        } catch (ignored: Exception) {}
-    }
+        delay(period)
+      }
+    } catch (ignored: Exception) {}
+  }
 
-    return channel
+  return channel
 }

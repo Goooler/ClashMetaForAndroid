@@ -12,41 +12,41 @@ import kotlinx.serialization.UseSerializers
 
 @Serializable
 data class Profile(
-    val uuid: UUID,
-    val name: String,
-    val type: Type,
-    val source: String,
-    val active: Boolean,
-    val interval: Long,
-    val upload: Long,
-    var download: Long,
-    val total: Long,
-    val expire: Long,
-    val updatedAt: Long,
-    val imported: Boolean,
-    val pending: Boolean,
+  val uuid: UUID,
+  val name: String,
+  val type: Type,
+  val source: String,
+  val active: Boolean,
+  val interval: Long,
+  val upload: Long,
+  var download: Long,
+  val total: Long,
+  val expire: Long,
+  val updatedAt: Long,
+  val imported: Boolean,
+  val pending: Boolean,
 ) : Parcelable {
-    enum class Type {
-        File,
-        Url,
-        External,
+  enum class Type {
+    File,
+    Url,
+    External,
+  }
+
+  override fun writeToParcel(parcel: Parcel, flags: Int) {
+    Parcelizer.encodeToParcel(serializer(), parcel, this)
+  }
+
+  override fun describeContents(): Int {
+    return 0
+  }
+
+  companion object CREATOR : Parcelable.Creator<Profile> {
+    override fun createFromParcel(parcel: Parcel): Profile {
+      return Parcelizer.decodeFromParcel(serializer(), parcel)
     }
 
-    override fun writeToParcel(parcel: Parcel, flags: Int) {
-        Parcelizer.encodeToParcel(serializer(), parcel, this)
+    override fun newArray(size: Int): Array<Profile?> {
+      return arrayOfNulls(size)
     }
-
-    override fun describeContents(): Int {
-        return 0
-    }
-
-    companion object CREATOR : Parcelable.Creator<Profile> {
-        override fun createFromParcel(parcel: Parcel): Profile {
-            return Parcelizer.decodeFromParcel(serializer(), parcel)
-        }
-
-        override fun newArray(size: Int): Array<Profile?> {
-            return arrayOfNulls(size)
-        }
-    }
+  }
 }

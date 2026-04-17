@@ -6,15 +6,15 @@ import com.github.kr328.clash.core.Clash
 import java.util.TimeZone
 
 class TimeZoneModule(service: Service) : Module<Unit>(service) {
-    override suspend fun run() {
-        val timeZones = receiveBroadcast { addAction(Intent.ACTION_TIMEZONE_CHANGED) }
+  override suspend fun run() {
+    val timeZones = receiveBroadcast { addAction(Intent.ACTION_TIMEZONE_CHANGED) }
 
-        while (true) {
-            val timeZone = TimeZone.getDefault()
+    while (true) {
+      val timeZone = TimeZone.getDefault()
 
-            Clash.notifyTimeZoneChanged(timeZone.id, timeZone.rawOffset / 1000)
+      Clash.notifyTimeZoneChanged(timeZone.id, timeZone.rawOffset / 1000)
 
-            timeZones.receive()
-        }
+      timeZones.receive()
     }
+  }
 }

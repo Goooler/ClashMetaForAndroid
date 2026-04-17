@@ -8,37 +8,37 @@ import com.github.kr328.clash.design.util.layoutInflater
 import com.github.kr328.clash.design.util.root
 
 interface TipsPreference : Preference {
-    var text: CharSequence?
+  var text: CharSequence?
 }
 
 fun PreferenceScreen.tips(
-    @StringRes text: Int,
-    configure: TipsPreference.() -> Unit = {},
+  @StringRes text: Int,
+  configure: TipsPreference.() -> Unit = {},
 ): TipsPreference {
-    val binding = PreferenceTipsBinding.inflate(context.layoutInflater, context.root, false)
-    val impl =
-        object : TipsPreference {
-            override var text: CharSequence?
-                get() = binding.tips.text
-                set(value) {
-                    binding.tips.text = value
-                }
-
-            override val view: View
-                get() = binding.root
-
-            override var enabled: Boolean
-                get() = binding.root.isEnabled
-                set(value) {
-                    binding.root.isEnabled = value
-                }
+  val binding = PreferenceTipsBinding.inflate(context.layoutInflater, context.root, false)
+  val impl =
+    object : TipsPreference {
+      override var text: CharSequence?
+        get() = binding.tips.text
+        set(value) {
+          binding.tips.text = value
         }
 
-    binding.tips.text = context.getHtml(text)
+      override val view: View
+        get() = binding.root
 
-    impl.configure()
+      override var enabled: Boolean
+        get() = binding.root.isEnabled
+        set(value) {
+          binding.root.isEnabled = value
+        }
+    }
 
-    addElement(impl)
+  binding.tips.text = context.getHtml(text)
 
-    return impl
+  impl.configure()
+
+  addElement(impl)
+
+  return impl
 }

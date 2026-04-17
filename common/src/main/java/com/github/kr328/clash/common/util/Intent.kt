@@ -5,41 +5,41 @@ import android.net.Uri
 import java.util.UUID
 
 fun Intent.grantPermissions(read: Boolean = true, write: Boolean = true): Intent {
-    var flags = 0
+  var flags = 0
 
-    if (read) flags = flags or Intent.FLAG_GRANT_READ_URI_PERMISSION
+  if (read) flags = flags or Intent.FLAG_GRANT_READ_URI_PERMISSION
 
-    if (write) flags = flags or Intent.FLAG_GRANT_WRITE_URI_PERMISSION
+  if (write) flags = flags or Intent.FLAG_GRANT_WRITE_URI_PERMISSION
 
-    addFlags(flags)
+  addFlags(flags)
 
-    return this
+  return this
 }
 
 var Intent.fileName: String?
-    get() {
-        return data?.takeIf { it.scheme == "file" }?.schemeSpecificPart
-    }
-    set(value) {
-        data = Uri.fromParts("file", value, null)
-    }
+  get() {
+    return data?.takeIf { it.scheme == "file" }?.schemeSpecificPart
+  }
+  set(value) {
+    data = Uri.fromParts("file", value, null)
+  }
 
 var Intent.uuid: UUID?
-    get() {
-        return data?.takeIf { it.scheme == "uuid" }?.schemeSpecificPart?.let(UUID::fromString)
-    }
-    set(value) {
-        data = Uri.fromParts("uuid", value.toString(), null)
-    }
+  get() {
+    return data?.takeIf { it.scheme == "uuid" }?.schemeSpecificPart?.let(UUID::fromString)
+  }
+  set(value) {
+    data = Uri.fromParts("uuid", value.toString(), null)
+  }
 
 fun Intent.setUUID(uuid: UUID): Intent {
-    this.uuid = uuid
+  this.uuid = uuid
 
-    return this
+  return this
 }
 
 fun Intent.setFileName(fileName: String): Intent {
-    this.fileName = fileName
+  this.fileName = fileName
 
-    return this
+  return this
 }

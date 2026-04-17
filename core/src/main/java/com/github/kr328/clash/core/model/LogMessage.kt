@@ -13,35 +13,35 @@ import kotlinx.serialization.UseSerializers
 
 @Serializable
 data class LogMessage(val level: Level, val message: String, val time: Date) : Parcelable {
-    @Serializable
-    enum class Level {
-        @SerialName("debug") Debug,
-        @SerialName("info") Info,
-        @SerialName("warning") Warning,
-        @SerialName("error") Error,
-        @SerialName("silent") Silent,
-        @SerialName("unknown") Unknown,
-    }
+  @Serializable
+  enum class Level {
+    @SerialName("debug") Debug,
+    @SerialName("info") Info,
+    @SerialName("warning") Warning,
+    @SerialName("error") Error,
+    @SerialName("silent") Silent,
+    @SerialName("unknown") Unknown,
+  }
 
-    override fun writeToParcel(parcel: Parcel, flags: Int) {
-        Parcelizer.encodeToParcel(serializer(), parcel, this)
-    }
+  override fun writeToParcel(parcel: Parcel, flags: Int) {
+    Parcelizer.encodeToParcel(serializer(), parcel, this)
+  }
 
-    override fun describeContents(): Int {
-        return 0
-    }
+  override fun describeContents(): Int {
+    return 0
+  }
 
-    companion object {
-        @JvmField
-        val CREATOR =
-            object : Parcelable.Creator<LogMessage> {
-                override fun createFromParcel(parcel: Parcel): LogMessage {
-                    return Parcelizer.decodeFromParcel(serializer(), parcel)
-                }
+  companion object {
+    @JvmField
+    val CREATOR =
+      object : Parcelable.Creator<LogMessage> {
+        override fun createFromParcel(parcel: Parcel): LogMessage {
+          return Parcelizer.decodeFromParcel(serializer(), parcel)
+        }
 
-                override fun newArray(size: Int): Array<LogMessage?> {
-                    return arrayOfNulls(size)
-                }
-            }
-    }
+        override fun newArray(size: Int): Array<LogMessage?> {
+          return arrayOfNulls(size)
+        }
+      }
+  }
 }

@@ -4,5 +4,5 @@ import androidx.annotation.Keep
 
 @Keep
 interface LogcatInterface {
-    fun received(jsonPayload: String)
+  fun received(jsonPayload: String)
 }

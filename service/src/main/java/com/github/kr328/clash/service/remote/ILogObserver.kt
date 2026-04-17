@@ -5,5 +5,5 @@ import com.github.kr328.kaidl.BinderInterface
 
 @BinderInterface
 interface ILogObserver {
-    fun newItem(log: LogMessage)
+  fun newItem(log: LogMessage)
 }

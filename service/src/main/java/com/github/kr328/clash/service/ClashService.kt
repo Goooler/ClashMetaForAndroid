@@ -23,86 +23,86 @@ import kotlinx.coroutines.selects.select
 import kotlinx.coroutines.withContext
 
 class ClashService : BaseService() {
-    private val self: ClashService
-        get() = this
+  private val self: ClashService
+    get() = this
 
-    private var reason: String? = null
+  private var reason: String? = null
 
-    private val runtime = clashRuntime {
-        val store = ServiceStore(self)
+  private val runtime = clashRuntime {
+    val store = ServiceStore(self)
 
-        val close = install(CloseModule(self))
-        val config = install(ConfigurationModule(self))
-        val network = install(NetworkObserveModule(self))
+    val close = install(CloseModule(self))
+    val config = install(ConfigurationModule(self))
+    val network = install(NetworkObserveModule(self))
 
-        if (store.dynamicNotification) install(DynamicNotificationModule(self))
-        else install(StaticNotificationModule(self))
+    if (store.dynamicNotification) install(DynamicNotificationModule(self))
+    else install(StaticNotificationModule(self))
 
-        install(AppListCacheModule(self))
-        install(TimeZoneModule(self))
-        install(SuspendModule(self))
+    install(AppListCacheModule(self))
+    install(TimeZoneModule(self))
+    install(SuspendModule(self))
 
-        try {
-            while (isActive) {
-                val quit = select {
-                    close.onEvent { true }
-                    config.onEvent {
-                        reason = it.message
+    try {
+      while (isActive) {
+        val quit = select {
+          close.onEvent { true }
+          config.onEvent {
+            reason = it.message
 
-                        true
-                    }
-                    network.onEvent { false }
-                }
-
-                if (quit) break
-            }
-        } catch (e: Exception) {
-            Log.e("Create clash runtime: ${e.message}", e)
-
-            reason = e.message
-        } finally {
-            withContext(NonCancellable) { stopSelf() }
+            true
+          }
+          network.onEvent { false }
         }
+
+        if (quit) break
+      }
+    } catch (e: Exception) {
+      Log.e("Create clash runtime: ${e.message}", e)
+
+      reason = e.message
+    } finally {
+      withContext(NonCancellable) { stopSelf() }
     }
+  }
 
-    override fun onCreate() {
-        super.onCreate()
+  override fun onCreate() {
+    super.onCreate()
 
-        if (StatusProvider.serviceRunning) return stopSelf()
+    if (StatusProvider.serviceRunning) return stopSelf()
 
-        StatusProvider.serviceRunning = true
+    StatusProvider.serviceRunning = true
 
-        StaticNotificationModule.createNotificationChannel(this)
-        StaticNotificationModule.notifyLoadingNotification(this)
+    StaticNotificationModule.createNotificationChannel(this)
+    StaticNotificationModule.notifyLoadingNotification(this)
 
-        runtime.launch()
-    }
+    runtime.launch()
+  }
 
-    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        sendClashStarted()
+  override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+    sendClashStarted()
 
-        return START_STICKY
-    }
+    return START_STICKY
+  }
 
-    override fun onBind(intent: Intent?): IBinder {
-        return Binder()
-    }
+  override fun onBind(intent: Intent?): IBinder {
+    return Binder()
+  }
 
-    override fun onDestroy() {
-        StatusProvider.serviceRunning = false
+  override fun onDestroy() {
+    StatusProvider.serviceRunning = false
 
-        sendClashStopped(reason)
+    sendClashStopped(reason)
 
-        cancelAndJoinBlocking()
+    cancelAndJoinBlocking()
 
-        Log.i("ClashService destroyed: ${reason ?: "successfully"}")
+    Log.i("ClashService destroyed: ${reason ?: "successfully"}")
 
-        super.onDestroy()
-    }
+    super.onDestroy()
+  }
 
-    override fun onTrimMemory(level: Int) {
-        super.onTrimMemory(level)
+  override fun onTrimMemory(level: Int) {
+    super.onTrimMemory(level)
 
-        runtime.requestGc()
-    }
+    runtime.requestGc()
+  }
 }

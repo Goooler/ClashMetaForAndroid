@@ -20,114 +20,114 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 class FilesDesign(context: Context) : Design<FilesDesign.Request>(context) {
-    sealed class Request {
-        data class OpenFile(val file: File) : Request()
+  sealed class Request {
+    data class OpenFile(val file: File) : Request()
 
-        data class OpenDirectory(val file: File) : Request()
+    data class OpenDirectory(val file: File) : Request()
 
-        data class RenameFile(val file: File) : Request()
+    data class RenameFile(val file: File) : Request()
 
-        data class DeleteFile(val file: File) : Request()
+    data class DeleteFile(val file: File) : Request()
 
-        data class ImportFile(val file: File?) : Request()
+    data class ImportFile(val file: File?) : Request()
 
-        data class ExportFile(val file: File) : Request()
+    data class ExportFile(val file: File) : Request()
 
-        object PopStack : Request()
+    object PopStack : Request()
+  }
+
+  private val binding = DesignFilesBinding.inflate(context.layoutInflater, context.root, false)
+  private val adapter: FileAdapter = FileAdapter(context, this::requestOpen, this::requestMore)
+
+  override val root: View
+    get() = binding.root
+
+  var configurationEditable: Boolean
+    get() = binding.configurationEditable
+    set(value) {
+      binding.configurationEditable = value
     }
 
-    private val binding = DesignFilesBinding.inflate(context.layoutInflater, context.root, false)
-    private val adapter: FileAdapter = FileAdapter(context, this::requestOpen, this::requestMore)
-
-    override val root: View
-        get() = binding.root
-
-    var configurationEditable: Boolean
-        get() = binding.configurationEditable
-        set(value) {
-            binding.configurationEditable = value
-        }
-
-    suspend fun swapFiles(files: List<File>, currentInBaseDir: Boolean) {
-        withContext(Dispatchers.Main) {
-            adapter.swapDataSet(adapter::files, files)
-            binding.currentInBaseDir = currentInBaseDir
-        }
+  suspend fun swapFiles(files: List<File>, currentInBaseDir: Boolean) {
+    withContext(Dispatchers.Main) {
+      adapter.swapDataSet(adapter::files, files)
+      binding.currentInBaseDir = currentInBaseDir
     }
+  }
 
-    fun updateElapsed() {
-        adapter.updateElapsed()
+  fun updateElapsed() {
+    adapter.updateElapsed()
+  }
+
+  suspend fun requestFileName(name: String): String {
+    return context.requestModelTextInput(
+      initial = name,
+      title = context.getText(R.string.file_name),
+      hint = context.getText(R.string.file_name),
+      error = context.getText(R.string.invalid_file_name),
+      validator = ValidatorFileName,
+    )
+  }
+
+  init {
+    binding.self = this
+
+    binding.activityBarLayout.applyFrom(context)
+
+    binding.mainList.recyclerList.also {
+      it.applyLinearAdapter(context, adapter)
+      it.bindAppBarElevation(binding.activityBarLayout)
     }
+  }
 
-    suspend fun requestFileName(name: String): String {
-        return context.requestModelTextInput(
-            initial = name,
-            title = context.getText(R.string.file_name),
-            hint = context.getText(R.string.file_name),
-            error = context.getText(R.string.invalid_file_name),
-            validator = ValidatorFileName,
-        )
+  private fun requestOpen(file: File) {
+    if (file.isDirectory) {
+      requests.trySend(Request.OpenDirectory(file))
+    } else {
+      requests.trySend(Request.OpenFile(file))
     }
+  }
 
-    init {
-        binding.self = this
+  fun requestRename(dialog: Dialog, file: File) {
+    requests.trySend(Request.RenameFile(file))
 
-        binding.activityBarLayout.applyFrom(context)
+    dialog.dismiss()
+  }
 
-        binding.mainList.recyclerList.also {
-            it.applyLinearAdapter(context, adapter)
-            it.bindAppBarElevation(binding.activityBarLayout)
-        }
-    }
+  fun requestImport(dialog: Dialog, file: File) {
+    requests.trySend(Request.ImportFile(file))
 
-    private fun requestOpen(file: File) {
-        if (file.isDirectory) {
-            requests.trySend(Request.OpenDirectory(file))
-        } else {
-            requests.trySend(Request.OpenFile(file))
-        }
-    }
+    dialog.dismiss()
+  }
 
-    fun requestRename(dialog: Dialog, file: File) {
-        requests.trySend(Request.RenameFile(file))
+  fun requestExport(dialog: Dialog, file: File) {
+    requests.trySend(Request.ExportFile(file))
 
-        dialog.dismiss()
-    }
+    dialog.dismiss()
+  }
 
-    fun requestImport(dialog: Dialog, file: File) {
-        requests.trySend(Request.ImportFile(file))
+  fun requestDelete(dialog: Dialog, file: File) {
+    requests.trySend(Request.DeleteFile(file))
 
-        dialog.dismiss()
-    }
+    dialog.dismiss()
+  }
 
-    fun requestExport(dialog: Dialog, file: File) {
-        requests.trySend(Request.ExportFile(file))
+  fun requestNew() {
+    requests.trySend(Request.ImportFile(null))
+  }
 
-        dialog.dismiss()
-    }
+  private fun requestMore(file: File) {
+    val dialog = AppBottomSheetDialog(context)
 
-    fun requestDelete(dialog: Dialog, file: File) {
-        requests.trySend(Request.DeleteFile(file))
+    val binding = DialogFilesMenuBinding.inflate(context.layoutInflater)
 
-        dialog.dismiss()
-    }
+    binding.master = this
+    binding.self = dialog
+    binding.file = file
+    binding.currentInBase = this.binding.currentInBaseDir
+    binding.configurationEditable = this.binding.configurationEditable
 
-    fun requestNew() {
-        requests.trySend(Request.ImportFile(null))
-    }
-
-    private fun requestMore(file: File) {
-        val dialog = AppBottomSheetDialog(context)
-
-        val binding = DialogFilesMenuBinding.inflate(context.layoutInflater)
-
-        binding.master = this
-        binding.self = dialog
-        binding.file = file
-        binding.currentInBase = this.binding.currentInBaseDir
-        binding.configurationEditable = this.binding.configurationEditable
-
-        dialog.setContentView(binding.root)
-        dialog.show()
-    }
+    dialog.setContentView(binding.root)
+    dialog.show()
+  }
 }

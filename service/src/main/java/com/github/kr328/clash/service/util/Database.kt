@@ -5,11 +5,11 @@ import com.github.kr328.clash.service.data.PendingDao
 import java.util.UUID
 
 suspend fun generateProfileUUID(): UUID {
-    var result = UUID.randomUUID()
+  var result = UUID.randomUUID()
 
-    while (ImportedDao().exists(result) || PendingDao().exists(result)) {
-        result = UUID.randomUUID()
-    }
+  while (ImportedDao().exists(result) || PendingDao().exists(result)) {
+    result = UUID.randomUUID()
+  }
 
-    return result
+  return result
 }

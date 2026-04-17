@@ -9,14 +9,14 @@ import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 
 object DateSerializer : KSerializer<Date> {
-    override val descriptor: SerialDescriptor
-        get() = PrimitiveSerialDescriptor("Date", PrimitiveKind.LONG)
+  override val descriptor: SerialDescriptor
+    get() = PrimitiveSerialDescriptor("Date", PrimitiveKind.LONG)
 
-    override fun deserialize(decoder: Decoder): Date {
-        return Date(decoder.decodeLong())
-    }
+  override fun deserialize(decoder: Decoder): Date {
+    return Date(decoder.decodeLong())
+  }
 
-    override fun serialize(encoder: Encoder, value: Date) {
-        encoder.encodeLong(value.time)
-    }
+  override fun serialize(encoder: Encoder, value: Date) {
+    encoder.encodeLong(value.time)
+  }
 }

@@ -8,8 +8,8 @@ import androidx.recyclerview.widget.RecyclerView
 class AppRecyclerView
 @JvmOverloads
 constructor(context: Context, attributeSet: AttributeSet? = null, @AttrRes defStyleAttr: Int = 0) :
-    RecyclerView(context, attributeSet, defStyleAttr) {
-    init {
-        isFocusable = false
-    }
+  RecyclerView(context, attributeSet, defStyleAttr) {
+  init {
+    isFocusable = false
+  }
 }

@@ -22,137 +22,137 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 class ProfilesDesign(context: Context) : Design<ProfilesDesign.Request>(context) {
-    sealed class Request {
-        object UpdateAll : Request()
+  sealed class Request {
+    object UpdateAll : Request()
 
-        object Create : Request()
+    object Create : Request()
 
-        data class Active(val profile: Profile) : Request()
+    data class Active(val profile: Profile) : Request()
 
-        data class Update(val profile: Profile) : Request()
+    data class Update(val profile: Profile) : Request()
 
-        data class Edit(val profile: Profile) : Request()
+    data class Edit(val profile: Profile) : Request()
 
-        data class Duplicate(val profile: Profile) : Request()
+    data class Duplicate(val profile: Profile) : Request()
 
-        data class Delete(val profile: Profile) : Request()
+    data class Delete(val profile: Profile) : Request()
+  }
+
+  private val binding = DesignProfilesBinding.inflate(context.layoutInflater, context.root, false)
+  private val adapter = ProfileAdapter(context, this::requestActive, this::showMenu)
+
+  private var allUpdating: Boolean
+    get() = adapter.states.allUpdating
+    set(value) {
+      adapter.states.allUpdating = value
     }
 
-    private val binding = DesignProfilesBinding.inflate(context.layoutInflater, context.root, false)
-    private val adapter = ProfileAdapter(context, this::requestActive, this::showMenu)
+  private val rotateAnimation: Animation =
+    AnimationUtils.loadAnimation(context, R.anim.rotate_infinite)
 
-    private var allUpdating: Boolean
-        get() = adapter.states.allUpdating
-        set(value) {
-            adapter.states.allUpdating = value
-        }
+  override val root: View
+    get() = binding.root
 
-    private val rotateAnimation: Animation =
-        AnimationUtils.loadAnimation(context, R.anim.rotate_infinite)
+  suspend fun patchProfiles(profiles: List<Profile>) {
+    adapter.apply { patchDataSet(this::profiles, profiles, id = { it.uuid }) }
 
-    override val root: View
-        get() = binding.root
+    val updatable =
+      withContext(Dispatchers.Default) {
+        profiles.any { it.imported && it.type != Profile.Type.File }
+      }
 
-    suspend fun patchProfiles(profiles: List<Profile>) {
-        adapter.apply { patchDataSet(this::profiles, profiles, id = { it.uuid }) }
-
-        val updatable =
-            withContext(Dispatchers.Default) {
-                profiles.any { it.imported && it.type != Profile.Type.File }
-            }
-
-        withContext(Dispatchers.Main) {
-            binding.updateView.visibility = if (updatable) View.VISIBLE else View.GONE
-        }
+    withContext(Dispatchers.Main) {
+      binding.updateView.visibility = if (updatable) View.VISIBLE else View.GONE
     }
+  }
 
-    suspend fun requestSave(profile: Profile) {
-        showToast(R.string.active_unsaved_tips, ToastDuration.Long) {
-            setAction(R.string.edit) { requests.trySend(Request.Edit(profile)) }
-        }
+  suspend fun requestSave(profile: Profile) {
+    showToast(R.string.active_unsaved_tips, ToastDuration.Long) {
+      setAction(R.string.edit) { requests.trySend(Request.Edit(profile)) }
     }
+  }
 
-    fun updateElapsed() {
-        adapter.updateElapsed()
+  fun updateElapsed() {
+    adapter.updateElapsed()
+  }
+
+  init {
+    binding.self = this
+
+    binding.activityBarLayout.applyFrom(context)
+
+    binding.mainList.recyclerList.also {
+      it.bindAppBarElevation(binding.activityBarLayout)
+      it.applyLinearAdapter(context, adapter)
     }
+  }
 
-    init {
-        binding.self = this
+  private fun showMenu(profile: Profile) {
+    val dialog = AppBottomSheetDialog(context)
 
-        binding.activityBarLayout.applyFrom(context)
+    val binding =
+      DialogProfilesMenuBinding.inflate(
+        context.layoutInflater,
+        dialog.window?.decorView as ViewGroup?,
+        false,
+      )
 
-        binding.mainList.recyclerList.also {
-            it.bindAppBarElevation(binding.activityBarLayout)
-            it.applyLinearAdapter(context, adapter)
-        }
+    binding.master = this
+    binding.self = dialog
+    binding.profile = profile
+
+    dialog.setContentView(binding.root)
+    dialog.show()
+  }
+
+  fun requestUpdateAll() {
+    allUpdating = true
+    changeUpdateAllButtonStatus()
+    requests.trySend(Request.UpdateAll)
+  }
+
+  fun finishUpdateAll() {
+    allUpdating = false
+    changeUpdateAllButtonStatus()
+  }
+
+  fun requestCreate() {
+    requests.trySend(Request.Create)
+  }
+
+  private fun requestActive(profile: Profile) {
+    requests.trySend(Request.Active(profile))
+  }
+
+  fun requestUpdate(dialog: Dialog, profile: Profile) {
+    requests.trySend(Request.Update(profile))
+
+    dialog.dismiss()
+  }
+
+  fun requestEdit(dialog: Dialog, profile: Profile) {
+    requests.trySend(Request.Edit(profile))
+
+    dialog.dismiss()
+  }
+
+  fun requestDuplicate(dialog: Dialog, profile: Profile) {
+    requests.trySend(Request.Duplicate(profile))
+
+    dialog.dismiss()
+  }
+
+  fun requestDelete(dialog: Dialog, profile: Profile) {
+    requests.trySend(Request.Delete(profile))
+
+    dialog.dismiss()
+  }
+
+  private fun changeUpdateAllButtonStatus() {
+    if (allUpdating) {
+      binding.updateView.startAnimation(rotateAnimation)
+    } else {
+      binding.updateView.clearAnimation()
     }
-
-    private fun showMenu(profile: Profile) {
-        val dialog = AppBottomSheetDialog(context)
-
-        val binding =
-            DialogProfilesMenuBinding.inflate(
-                context.layoutInflater,
-                dialog.window?.decorView as ViewGroup?,
-                false,
-            )
-
-        binding.master = this
-        binding.self = dialog
-        binding.profile = profile
-
-        dialog.setContentView(binding.root)
-        dialog.show()
-    }
-
-    fun requestUpdateAll() {
-        allUpdating = true
-        changeUpdateAllButtonStatus()
-        requests.trySend(Request.UpdateAll)
-    }
-
-    fun finishUpdateAll() {
-        allUpdating = false
-        changeUpdateAllButtonStatus()
-    }
-
-    fun requestCreate() {
-        requests.trySend(Request.Create)
-    }
-
-    private fun requestActive(profile: Profile) {
-        requests.trySend(Request.Active(profile))
-    }
-
-    fun requestUpdate(dialog: Dialog, profile: Profile) {
-        requests.trySend(Request.Update(profile))
-
-        dialog.dismiss()
-    }
-
-    fun requestEdit(dialog: Dialog, profile: Profile) {
-        requests.trySend(Request.Edit(profile))
-
-        dialog.dismiss()
-    }
-
-    fun requestDuplicate(dialog: Dialog, profile: Profile) {
-        requests.trySend(Request.Duplicate(profile))
-
-        dialog.dismiss()
-    }
-
-    fun requestDelete(dialog: Dialog, profile: Profile) {
-        requests.trySend(Request.Delete(profile))
-
-        dialog.dismiss()
-    }
-
-    private fun changeUpdateAllButtonStatus() {
-        if (allUpdating) {
-            binding.updateView.startAnimation(rotateAnimation)
-        } else {
-            binding.updateView.clearAnimation()
-        }
-    }
+  }
 }

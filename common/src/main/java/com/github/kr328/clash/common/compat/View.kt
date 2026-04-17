@@ -6,7 +6,7 @@ import android.widget.TextView
 import androidx.annotation.StyleRes
 
 var TextView.textAppearance: Int
-    get() = throw UnsupportedOperationException("set value only")
-    set(@StyleRes value) {
-        setTextAppearance(value)
-    }
+  get() = throw UnsupportedOperationException("set value only")
+  set(@StyleRes value) {
+    setTextAppearance(value)
+  }
