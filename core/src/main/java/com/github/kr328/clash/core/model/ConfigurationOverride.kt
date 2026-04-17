@@ -7,7 +7,7 @@ import kotlinx.serialization.Serializable
 
 @Parcelize
 @Serializable
-class ConfigurationOverride(
+data class ConfigurationOverride(
   @SerialName("port") var httpPort: Int? = null,
   @SerialName("socks-port") var socksPort: Int? = null,
   @SerialName("redir-port") var redirectPort: Int? = null,
@@ -36,7 +36,7 @@ class ConfigurationOverride(
 ) : Parcelable {
   @Serializable
   @Parcelize
-  class Dns(
+  data class Dns(
     @SerialName("enable") var enable: Boolean? = null,
     @SerialName("prefer-h3") var preferH3: Boolean? = null,
     @SerialName("listen") var listen: String? = null,
@@ -54,7 +54,7 @@ class ConfigurationOverride(
 
   @Serializable
   @Parcelize
-  class DnsFallbackFilter(
+  data class DnsFallbackFilter(
     @SerialName("geoip") var geoIp: Boolean? = null,
     @SerialName("geoip-code") var geoIpCode: String? = null,
     @SerialName("ipcidr") var ipcidr: List<String>? = null,
@@ -63,7 +63,7 @@ class ConfigurationOverride(
 
   @Serializable
   @Parcelize
-  class App(@SerialName("append-system-dns") var appendSystemDns: Boolean? = null) : Parcelable
+  data class App(@SerialName("append-system-dns") var appendSystemDns: Boolean? = null) : Parcelable
 
   @Serializable
   enum class FindProcessMode {
@@ -87,7 +87,7 @@ class ConfigurationOverride(
 
   @Serializable
   @Parcelize
-  class Sniffer(
+  data class Sniffer(
     @SerialName("enable") var enable: Boolean? = null,
     @SerialName("sniff") var sniff: Sniff = Sniff(),
     @SerialName("force-dns-mapping") var forceDnsMapping: Boolean? = null,
@@ -101,7 +101,7 @@ class ConfigurationOverride(
 
   @Serializable
   @Parcelize
-  class GeoXUrl(
+  data class GeoXUrl(
     @SerialName("geoip") var geoip: String? = null,
     @SerialName("mmdb") var mmdb: String? = null,
     @SerialName("geosite") var geosite: String? = null,
@@ -109,14 +109,14 @@ class ConfigurationOverride(
 
   @Serializable
   @Parcelize
-  class ExternalControllerCors(
+  data class ExternalControllerCors(
     @SerialName("allow-origins") var allowOrigins: List<String>? = null,
     @SerialName("allow-private-network") var allowPrivateNetwork: Boolean? = null,
   ) : Parcelable
 
   @Serializable
   @Parcelize
-  class Sniff(
+  data class Sniff(
     @SerialName("HTTP") var http: ProtocolConfig = ProtocolConfig(),
     @SerialName("TLS") var tls: ProtocolConfig = ProtocolConfig(),
     @SerialName("QUIC") var quic: ProtocolConfig = ProtocolConfig(),
@@ -124,7 +124,7 @@ class ConfigurationOverride(
 
   @Serializable
   @Parcelize
-  class ProtocolConfig(
+  data class ProtocolConfig(
     @SerialName("ports") var ports: List<String>? = null,
     @SerialName("override-destination") var overrideDestination: Boolean? = null,
   ) : Parcelable
