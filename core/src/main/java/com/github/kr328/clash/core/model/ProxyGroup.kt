@@ -10,6 +10,11 @@ import kotlinx.parcelize.TypeParceler
 import kotlinx.parcelize.parcelableCreator
 import kotlinx.serialization.Serializable
 
+@Parcelize
+@TypeParceler<List<Proxy>, ProxyGroupListParceler>
+@Serializable
+data class ProxyGroup(val type: Proxy.Type, val proxies: List<Proxy>, val now: String) : Parcelable
+
 private object ProxyGroupListParceler : Parceler<List<Proxy>> {
   override fun create(parcel: Parcel): List<Proxy> {
     return parcelableCreator<Proxy>().createListFromParcelSlice(parcel, 0, 50)
@@ -19,8 +24,3 @@ private object ProxyGroupListParceler : Parceler<List<Proxy>> {
     writeToParcelSlice(parcel, flags)
   }
 }
-
-@Parcelize
-@TypeParceler<List<Proxy>, ProxyGroupListParceler>
-@Serializable
-data class ProxyGroup(val type: Proxy.Type, val proxies: List<Proxy>, val now: String) : Parcelable

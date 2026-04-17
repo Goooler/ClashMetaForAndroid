@@ -13,16 +13,6 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.UseSerializers
 
-private object DateParceler : Parceler<Date> {
-  override fun create(parcel: Parcel): Date {
-    return Date(parcel.readLong())
-  }
-
-  override fun Date.write(parcel: Parcel, flags: Int) {
-    parcel.writeLong(time)
-  }
-}
-
 @Parcelize
 @TypeParceler<Date, DateParceler>
 @Serializable
@@ -35,5 +25,15 @@ data class LogMessage(val level: Level, val message: String, val time: Date) : P
     @SerialName("error") Error,
     @SerialName("silent") Silent,
     @SerialName("unknown") Unknown,
+  }
+}
+
+private object DateParceler : Parceler<Date> {
+  override fun create(parcel: Parcel): Date {
+    return Date(parcel.readLong())
+  }
+
+  override fun Date.write(parcel: Parcel, flags: Int) {
+    parcel.writeLong(time)
   }
 }

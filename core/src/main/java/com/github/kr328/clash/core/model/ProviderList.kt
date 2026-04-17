@@ -9,6 +9,10 @@ import kotlinx.parcelize.Parcelize
 import kotlinx.parcelize.TypeParceler
 import kotlinx.parcelize.parcelableCreator
 
+@Parcelize
+@TypeParceler<List<Provider>, ProviderListParceler>
+class ProviderList(private val data: List<Provider>) : List<Provider> by data, Parcelable
+
 private object ProviderListParceler : Parceler<List<Provider>> {
   override fun create(parcel: Parcel): List<Provider> {
     return parcelableCreator<Provider>().createListFromParcelSlice(parcel, 0, 20)
@@ -18,7 +22,3 @@ private object ProviderListParceler : Parceler<List<Provider>> {
     writeToParcelSlice(parcel, flags)
   }
 }
-
-@Parcelize
-@TypeParceler<List<Provider>, ProviderListParceler>
-class ProviderList(private val data: List<Provider>) : List<Provider> by data, Parcelable
