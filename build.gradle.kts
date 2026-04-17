@@ -18,7 +18,7 @@ allprojects {
   plugins.withType<AndroidBasePlugin>().configureEach {
     extensions.configure<CommonExtension> {
       namespace = "com.github.kr328.clash.${project.name}"
-      compileSdk = 36
+      compileSdk = 37
       defaultConfig.apply { minSdk = 28 }
       ndkVersion = "29.0.14206865"
       flavorDimensions += "feature"
