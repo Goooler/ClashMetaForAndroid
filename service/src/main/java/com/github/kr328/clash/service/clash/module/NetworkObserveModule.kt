@@ -32,8 +32,8 @@ class NetworkObserveModule(service: Service) : Module<Network>(service) {
       .build()
 
   private data class NetworkInfo(
-    @Volatile val losingMs: Long = 0,
-    @Volatile val dnsList: List<InetAddress> = emptyList(),
+    @Volatile var losingMs: Long = 0,
+    @Volatile var dnsList: List<InetAddress> = emptyList(),
   ) {
     fun isAvailable(): Boolean = losingMs < System.currentTimeMillis()
   }
