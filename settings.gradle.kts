@@ -23,7 +23,6 @@ dependencyResolutionManagement {
       }
     }
     mavenCentral()
-    maven("https://central.sonatype.com/repository/maven-snapshots/")
   }
 }
 
