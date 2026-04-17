@@ -15,7 +15,7 @@ import kotlinx.coroutines.withContext
 class TunModule(private val vpn: VpnService) : Module<Unit>(vpn) {
   data class TunDevice(
     val fd: Int,
-    val stack: String,
+    var stack: String,
     val gateway: String,
     val portal: String,
     val dns: String,

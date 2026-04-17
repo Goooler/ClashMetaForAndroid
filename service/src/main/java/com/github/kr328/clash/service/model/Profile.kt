@@ -19,7 +19,7 @@ data class Profile(
   val active: Boolean,
   val interval: Long,
   val upload: Long,
-  val download: Long,
+  var download: Long,
   val total: Long,
   val expire: Long,
   val updatedAt: Long,
