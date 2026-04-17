@@ -4,6 +4,4 @@ import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 import kotlinx.serialization.Serializable
 
-@Parcelize
-@Serializable
-class UiConfiguration : Parcelable
+@Parcelize @Serializable class UiConfiguration : Parcelable
