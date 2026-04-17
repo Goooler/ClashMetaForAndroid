@@ -117,14 +117,14 @@ data class ConfigurationOverride(
   @Serializable
   @Parcelize
   data class Sniff(
-    @SerialName("HTTP") var http: ProtocolConig = ProtocolConig(),
-    @SerialName("TLS") var tls: ProtocolConig = ProtocolConig(),
-    @SerialName("QUIC") var quic: ProtocolConig = ProtocolConig(),
+    @SerialName("HTTP") var http: ProtocolConfig = ProtocolConfig(),
+    @SerialName("TLS") var tls: ProtocolConfig = ProtocolConfig(),
+    @SerialName("QUIC") var quic: ProtocolConfig = ProtocolConfig(),
   ) : Parcelable
 
   @Serializable
   @Parcelize
-  data class ProtocolConig(
+  data class ProtocolConfig(
     @SerialName("ports") var ports: List<String>? = null,
     @SerialName("override-destination") var overrideDestination: Boolean? = null,
   ) : Parcelable
