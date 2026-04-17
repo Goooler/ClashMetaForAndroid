@@ -7,11 +7,12 @@ import com.github.kr328.clash.common.util.writeToParcelSlice
 import kotlinx.parcelize.Parceler
 import kotlinx.parcelize.Parcelize
 import kotlinx.parcelize.TypeParceler
+import kotlinx.parcelize.parcelableCreator
 import kotlinx.serialization.Serializable
 
 private object ProxyGroupListParceler : Parceler<List<Proxy>> {
   override fun create(parcel: Parcel): List<Proxy> {
-    return Proxy.CREATOR.createListFromParcelSlice(parcel, 0, 50)
+    return parcelableCreator<Proxy>().createListFromParcelSlice(parcel, 0, 50)
   }
 
   override fun List<Proxy>.write(parcel: Parcel, flags: Int) {

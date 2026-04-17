@@ -7,10 +7,11 @@ import com.github.kr328.clash.common.util.writeToParcelSlice
 import kotlinx.parcelize.Parceler
 import kotlinx.parcelize.Parcelize
 import kotlinx.parcelize.TypeParceler
+import kotlinx.parcelize.parcelableCreator
 
 private object ProviderListParceler : Parceler<List<Provider>> {
   override fun create(parcel: Parcel): List<Provider> {
-    return Provider.CREATOR.createListFromParcelSlice(parcel, 0, 20)
+    return parcelableCreator<Provider>().createListFromParcelSlice(parcel, 0, 20)
   }
 
   override fun List<Provider>.write(parcel: Parcel, flags: Int) {
