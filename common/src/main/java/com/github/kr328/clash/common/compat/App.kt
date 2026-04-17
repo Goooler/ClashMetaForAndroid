@@ -4,9 +4,9 @@ import android.graphics.drawable.AdaptiveIconDrawable
 import android.graphics.drawable.Drawable
 
 val Drawable.foreground: Drawable
-    get() {
-        if (this is AdaptiveIconDrawable && this.background == null) {
-            return this.foreground
-        }
-        return this
+  get() {
+    if (this is AdaptiveIconDrawable && this.background == null) {
+      return this.foreground
     }
+    return this
+  }

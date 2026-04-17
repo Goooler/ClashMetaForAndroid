@@ -5,10 +5,10 @@ import kotlinx.coroutines.job
 import kotlinx.coroutines.runBlocking
 
 fun CoroutineScope.cancelAndJoinBlocking() {
-    val scope = this
+  val scope = this
 
-    runBlocking {
-        scope.coroutineContext.job.cancel()
-        scope.coroutineContext.job.join()
-    }
+  runBlocking {
+    scope.coroutineContext.job.cancel()
+    scope.coroutineContext.job.join()
+  }
 }

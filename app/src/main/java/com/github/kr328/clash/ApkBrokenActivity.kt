@@ -6,15 +6,15 @@ import com.github.kr328.clash.design.ApkBrokenDesign
 import kotlinx.coroutines.isActive
 
 class ApkBrokenActivity : BaseActivity<ApkBrokenDesign>() {
-    override suspend fun main() {
-        val design = ApkBrokenDesign(this)
+  override suspend fun main() {
+    val design = ApkBrokenDesign(this)
 
-        setContentDesign(design)
+    setContentDesign(design)
 
-        while (isActive) {
-            val req = design.requests.receive()
+    while (isActive) {
+      val req = design.requests.receive()
 
-            startActivity(Intent(Intent.ACTION_VIEW).setData(Uri.parse(req.url)))
-        }
+      startActivity(Intent(Intent.ACTION_VIEW).setData(Uri.parse(req.url)))
     }
+  }
 }

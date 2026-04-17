@@ -10,24 +10,24 @@ import androidx.annotation.DimenRes
 import androidx.annotation.StringRes
 
 val Context.layoutInflater: LayoutInflater
-    get() = LayoutInflater.from(this)
+  get() = LayoutInflater.from(this)
 
 val Context.root: ViewGroup?
-    get() {
-        return when (this) {
-            is Activity -> {
-                findViewById(android.R.id.content)
-            }
-            else -> {
-                null
-            }
-        }
+  get() {
+    return when (this) {
+      is Activity -> {
+        findViewById(android.R.id.content)
+      }
+      else -> {
+        null
+      }
     }
+  }
 
 fun Context.getPixels(@DimenRes resId: Int): Int {
-    return resources.getDimensionPixelSize(resId)
+  return resources.getDimensionPixelSize(resId)
 }
 
 fun Context.getHtml(@StringRes resId: Int): Spanned {
-    return Html.fromHtml(getString(resId), Html.FROM_HTML_MODE_COMPACT)
+  return Html.fromHtml(getString(resId), Html.FROM_HTML_MODE_COMPACT)
 }

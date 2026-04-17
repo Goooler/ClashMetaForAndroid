@@ -20,56 +20,56 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class LogcatDesign(context: Context, private val streaming: Boolean) :
-    Design<LogcatDesign.Request>(context) {
-    enum class Request {
-        Close,
-        Delete,
-        Export,
+  Design<LogcatDesign.Request>(context) {
+  enum class Request {
+    Close,
+    Delete,
+    Export,
+  }
+
+  private val binding = DesignLogcatBinding.inflate(context.layoutInflater, context.root, false)
+  private val adapter =
+    LogMessageAdapter(context) {
+      launch {
+        val data = ClipData.newPlainText("log_message", it.message)
+
+        context.getSystemService<ClipboardManager>()?.setPrimaryClip(data)
+
+        showToast(R.string.copied, ToastDuration.Short)
+      }
     }
 
-    private val binding = DesignLogcatBinding.inflate(context.layoutInflater, context.root, false)
-    private val adapter =
-        LogMessageAdapter(context) {
-            launch {
-                val data = ClipData.newPlainText("log_message", it.message)
+  suspend fun patchMessages(messages: List<LogMessage>, removed: Int, appended: Int) {
+    withContext(Dispatchers.Main) {
+      adapter.messages = messages
 
-                context.getSystemService<ClipboardManager>()?.setPrimaryClip(data)
+      adapter.notifyItemRangeInserted(adapter.messages.size, appended)
+      adapter.notifyItemRangeRemoved(0, removed)
 
-                showToast(R.string.copied, ToastDuration.Short)
-            }
+      if (streaming && binding.recyclerList.isTop) {
+        binding.recyclerList.scrollToPosition(messages.size - 1)
+      }
+    }
+  }
+
+  override val root: View
+    get() = binding.root
+
+  init {
+    binding.self = this
+    binding.streaming = streaming
+
+    binding.activityBarLayout.applyFrom(context)
+
+    binding.recyclerList.bindAppBarElevation(binding.activityBarLayout)
+
+    binding.recyclerList.layoutManager =
+      LinearLayoutManager(context).apply {
+        if (streaming) {
+          reverseLayout = true
+          stackFromEnd = true
         }
-
-    suspend fun patchMessages(messages: List<LogMessage>, removed: Int, appended: Int) {
-        withContext(Dispatchers.Main) {
-            adapter.messages = messages
-
-            adapter.notifyItemRangeInserted(adapter.messages.size, appended)
-            adapter.notifyItemRangeRemoved(0, removed)
-
-            if (streaming && binding.recyclerList.isTop) {
-                binding.recyclerList.scrollToPosition(messages.size - 1)
-            }
-        }
-    }
-
-    override val root: View
-        get() = binding.root
-
-    init {
-        binding.self = this
-        binding.streaming = streaming
-
-        binding.activityBarLayout.applyFrom(context)
-
-        binding.recyclerList.bindAppBarElevation(binding.activityBarLayout)
-
-        binding.recyclerList.layoutManager =
-            LinearLayoutManager(context).apply {
-                if (streaming) {
-                    reverseLayout = true
-                    stackFromEnd = true
-                }
-            }
-        binding.recyclerList.adapter = adapter
-    }
+      }
+    binding.recyclerList.adapter = adapter
+  }
 }

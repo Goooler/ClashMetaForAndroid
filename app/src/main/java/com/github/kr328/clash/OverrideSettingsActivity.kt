@@ -7,31 +7,31 @@ import kotlinx.coroutines.isActive
 import kotlinx.coroutines.selects.select
 
 class OverrideSettingsActivity : BaseActivity<OverrideSettingsDesign>() {
-    override suspend fun main() {
-        val configuration = withClash { queryOverride(Clash.OverrideSlot.Persist) }
+  override suspend fun main() {
+    val configuration = withClash { queryOverride(Clash.OverrideSlot.Persist) }
 
-        defer { withClash { patchOverride(Clash.OverrideSlot.Persist, configuration) } }
+    defer { withClash { patchOverride(Clash.OverrideSlot.Persist, configuration) } }
 
-        val design = OverrideSettingsDesign(this, configuration)
+    val design = OverrideSettingsDesign(this, configuration)
 
-        setContentDesign(design)
+    setContentDesign(design)
 
-        while (isActive) {
-            select {
-                events.onReceive {}
+    while (isActive) {
+      select {
+        events.onReceive {}
 
-                design.requests.onReceive {
-                    when (it) {
-                        OverrideSettingsDesign.Request.ResetOverride -> {
-                            if (design.requestResetConfirm()) {
-                                defer { withClash { clearOverride(Clash.OverrideSlot.Persist) } }
+        design.requests.onReceive {
+          when (it) {
+            OverrideSettingsDesign.Request.ResetOverride -> {
+              if (design.requestResetConfirm()) {
+                defer { withClash { clearOverride(Clash.OverrideSlot.Persist) } }
 
-                                finish()
-                            }
-                        }
-                    }
-                }
+                finish()
+              }
             }
+          }
         }
+      }
     }
+  }
 }

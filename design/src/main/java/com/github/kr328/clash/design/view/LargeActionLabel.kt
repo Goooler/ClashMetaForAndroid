@@ -15,60 +15,54 @@ import com.github.kr328.clash.design.util.selectableItemBackground
 class LargeActionLabel
 @JvmOverloads
 constructor(
-    context: Context,
-    attributeSet: AttributeSet? = null,
-    @AttrRes defStyleAttr: Int = 0,
-    @StyleRes defStyleRes: Int = 0,
+  context: Context,
+  attributeSet: AttributeSet? = null,
+  @AttrRes defStyleAttr: Int = 0,
+  @StyleRes defStyleRes: Int = 0,
 ) : FrameLayout(context, attributeSet, defStyleAttr, defStyleRes) {
-    private val binding =
-        ComponentLargeActionLabelBinding.inflate(context.layoutInflater, this, true)
+  private val binding = ComponentLargeActionLabelBinding.inflate(context.layoutInflater, this, true)
 
-    var icon: Drawable?
-        get() = binding.iconView.background
-        set(value) {
-            binding.iconView.background = value
-        }
-
-    var text: CharSequence?
-        get() = binding.textView.text
-        set(value) {
-            binding.textView.text = value
-        }
-
-    var subtext: CharSequence?
-        get() = binding.subtextView.text
-        set(value) {
-            binding.subtextView.text = value
-
-            if (value == null) {
-                binding.subtextView.visibility = GONE
-            } else {
-                binding.subtextView.visibility = VISIBLE
-            }
-        }
-
-    init {
-        context.resolveClickableAttrs(attributeSet, defStyleAttr, defStyleRes) {
-            isFocusable = focusable(true)
-            isClickable = clickable(true)
-            background = background() ?: context.selectableItemBackground
-        }
-
-        context.theme
-            .obtainStyledAttributes(
-                attributeSet,
-                R.styleable.LargeActionLabel,
-                defStyleAttr,
-                defStyleRes,
-            )
-            .apply {
-                try {
-                    icon = getDrawable(R.styleable.LargeActionLabel_icon)
-                    text = getString(R.styleable.LargeActionLabel_text)
-                    subtext = getString(R.styleable.LargeActionLabel_subtext)
-                } finally {
-                    recycle()
-                }
-            }
+  var icon: Drawable?
+    get() = binding.iconView.background
+    set(value) {
+      binding.iconView.background = value
     }
+
+  var text: CharSequence?
+    get() = binding.textView.text
+    set(value) {
+      binding.textView.text = value
+    }
+
+  var subtext: CharSequence?
+    get() = binding.subtextView.text
+    set(value) {
+      binding.subtextView.text = value
+
+      if (value == null) {
+        binding.subtextView.visibility = GONE
+      } else {
+        binding.subtextView.visibility = VISIBLE
+      }
+    }
+
+  init {
+    context.resolveClickableAttrs(attributeSet, defStyleAttr, defStyleRes) {
+      isFocusable = focusable(true)
+      isClickable = clickable(true)
+      background = background() ?: context.selectableItemBackground
+    }
+
+    context.theme
+      .obtainStyledAttributes(attributeSet, R.styleable.LargeActionLabel, defStyleAttr, defStyleRes)
+      .apply {
+        try {
+          icon = getDrawable(R.styleable.LargeActionLabel_icon)
+          text = getString(R.styleable.LargeActionLabel_text)
+          subtext = getString(R.styleable.LargeActionLabel_subtext)
+        } finally {
+          recycle()
+        }
+      }
+  }
 }

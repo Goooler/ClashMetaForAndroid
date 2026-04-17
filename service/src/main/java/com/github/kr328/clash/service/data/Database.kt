@@ -12,39 +12,35 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 @DB(
-    version = 1,
-    entities = [Imported::class, Pending::class, Selection::class],
-    exportSchema = false,
+  version = 1,
+  entities = [Imported::class, Pending::class, Selection::class],
+  exportSchema = false,
 )
 abstract class Database : RoomDatabase() {
-    abstract fun openImportedDao(): ImportedDao
+  abstract fun openImportedDao(): ImportedDao
 
-    abstract fun openPendingDao(): PendingDao
+  abstract fun openPendingDao(): PendingDao
 
-    abstract fun openSelectionProxyDao(): SelectionDao
+  abstract fun openSelectionProxyDao(): SelectionDao
 
-    companion object {
-        val database: Database
-            @Synchronized
-            get() {
-                return softDatabase.get()
-                    ?: open(Global.application).apply { softDatabase = SoftReference(this) }
-            }
+  companion object {
+    val database: Database
+      @Synchronized
+      get() {
+        return softDatabase.get()
+          ?: open(Global.application).apply { softDatabase = SoftReference(this) }
+      }
 
-        private var softDatabase: SoftReference<Database?> = SoftReference(null)
+    private var softDatabase: SoftReference<Database?> = SoftReference(null)
 
-        private fun open(context: Context): Database {
-            return Room.databaseBuilder(
-                    context.applicationContext,
-                    Database::class.java,
-                    "profiles",
-                )
-                .addMigrations(*MIGRATIONS)
-                .build()
-        }
-
-        init {
-            Global.launch(Dispatchers.IO) { LEGACY_MIGRATION(Global.application) }
-        }
+    private fun open(context: Context): Database {
+      return Room.databaseBuilder(context.applicationContext, Database::class.java, "profiles")
+        .addMigrations(*MIGRATIONS)
+        .build()
     }
+
+    init {
+      Global.launch(Dispatchers.IO) { LEGACY_MIGRATION(Global.application) }
+    }
+  }
 }

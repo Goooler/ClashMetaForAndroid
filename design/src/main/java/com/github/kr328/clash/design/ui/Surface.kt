@@ -5,11 +5,11 @@ import androidx.databinding.Bindable
 import com.github.kr328.clash.design.BR
 
 class Surface : BaseObservable() {
-    var insets: Insets = Insets.EMPTY
-        @Bindable get
-        set(value) {
-            field = value
+  var insets: Insets = Insets.EMPTY
+    @Bindable get
+    set(value) {
+      field = value
 
-            notifyPropertyChanged(BR.insets)
-        }
+      notifyPropertyChanged(BR.insets)
+    }
 }

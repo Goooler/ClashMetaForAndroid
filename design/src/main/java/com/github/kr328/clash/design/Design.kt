@@ -13,49 +13,45 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.withContext
 
 abstract class Design<R>(val context: Context) :
-    CoroutineScope by CoroutineScope(Dispatchers.Unconfined) {
-    abstract val root: View
+  CoroutineScope by CoroutineScope(Dispatchers.Unconfined) {
+  abstract val root: View
 
-    val surface = Surface()
-    val requests: Channel<R> = Channel(Channel.UNLIMITED)
+  val surface = Surface()
+  val requests: Channel<R> = Channel(Channel.UNLIMITED)
 
-    suspend fun showToast(
-        resId: Int,
-        duration: ToastDuration,
-        configure: Snackbar.() -> Unit = {},
-    ) {
-        return showToast(context.getString(resId), duration, configure)
+  suspend fun showToast(resId: Int, duration: ToastDuration, configure: Snackbar.() -> Unit = {}) {
+    return showToast(context.getString(resId), duration, configure)
+  }
+
+  suspend fun showToast(
+    message: CharSequence,
+    duration: ToastDuration,
+    configure: Snackbar.() -> Unit = {},
+  ) {
+    withContext(Dispatchers.Main) {
+      Snackbar.make(
+          root,
+          message,
+          when (duration) {
+            ToastDuration.Short -> Snackbar.LENGTH_SHORT
+            ToastDuration.Long -> Snackbar.LENGTH_LONG
+            ToastDuration.Indefinite -> Snackbar.LENGTH_INDEFINITE
+          },
+        )
+        .apply(configure)
+        .show()
     }
+  }
 
-    suspend fun showToast(
-        message: CharSequence,
-        duration: ToastDuration,
-        configure: Snackbar.() -> Unit = {},
-    ) {
-        withContext(Dispatchers.Main) {
-            Snackbar.make(
-                    root,
-                    message,
-                    when (duration) {
-                        ToastDuration.Short -> Snackbar.LENGTH_SHORT
-                        ToastDuration.Long -> Snackbar.LENGTH_LONG
-                        ToastDuration.Indefinite -> Snackbar.LENGTH_INDEFINITE
-                    },
-                )
-                .apply(configure)
-                .show()
+  init {
+    when (context) {
+      is AppCompatActivity -> {
+        context.window.decorView.setOnInsertsChangedListener {
+          if (surface.insets != it) {
+            surface.insets = it
+          }
         }
+      }
     }
-
-    init {
-        when (context) {
-            is AppCompatActivity -> {
-                context.window.decorView.setOnInsertsChangedListener {
-                    if (surface.insets != it) {
-                        surface.insets = it
-                    }
-                }
-            }
-        }
-    }
+  }
 }

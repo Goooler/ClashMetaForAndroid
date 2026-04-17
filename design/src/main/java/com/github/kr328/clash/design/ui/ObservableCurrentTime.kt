@@ -5,15 +5,15 @@ import androidx.databinding.Bindable
 import androidx.databinding.library.baseAdapters.BR
 
 class ObservableCurrentTime : BaseObservable() {
-    var value: Long = System.currentTimeMillis()
-        @Bindable get
-        private set(value) {
-            field = value
+  var value: Long = System.currentTimeMillis()
+    @Bindable get
+    private set(value) {
+      field = value
 
-            notifyPropertyChanged(BR.value)
-        }
-
-    fun update() {
-        value = System.currentTimeMillis()
+      notifyPropertyChanged(BR.value)
     }
+
+  fun update() {
+    value = System.currentTimeMillis()
+  }
 }

@@ -9,27 +9,27 @@ import com.github.kr328.clash.design.util.layoutInflater
 import com.github.kr328.clash.design.util.root
 
 class SettingsDesign(context: Context) : Design<SettingsDesign.Request>(context) {
-    enum class Request {
-        StartApp,
-        StartNetwork,
-        StartOverride,
-        StartMetaFeature,
-    }
+  enum class Request {
+    StartApp,
+    StartNetwork,
+    StartOverride,
+    StartMetaFeature,
+  }
 
-    private val binding = DesignSettingsBinding.inflate(context.layoutInflater, context.root, false)
+  private val binding = DesignSettingsBinding.inflate(context.layoutInflater, context.root, false)
 
-    override val root: View
-        get() = binding.root
+  override val root: View
+    get() = binding.root
 
-    init {
-        binding.self = this
+  init {
+    binding.self = this
 
-        binding.activityBarLayout.applyFrom(context)
+    binding.activityBarLayout.applyFrom(context)
 
-        binding.scrollRoot.bindAppBarElevation(binding.activityBarLayout)
-    }
+    binding.scrollRoot.bindAppBarElevation(binding.activityBarLayout)
+  }
 
-    fun request(request: Request) {
-        requests.trySend(request)
-    }
+  fun request(request: Request) {
+    requests.trySend(request)
+  }
 }

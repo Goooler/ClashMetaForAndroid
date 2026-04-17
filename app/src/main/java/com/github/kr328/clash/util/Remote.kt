@@ -10,37 +10,37 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 suspend fun <T> withClash(
-    context: CoroutineContext = Dispatchers.IO,
-    block: suspend IClashManager.() -> T,
+  context: CoroutineContext = Dispatchers.IO,
+  block: suspend IClashManager.() -> T,
 ): T {
-    while (true) {
-        val remote = Remote.service.remote.get()
-        val client = remote.clash()
+  while (true) {
+    val remote = Remote.service.remote.get()
+    val client = remote.clash()
 
-        try {
-            return withContext(context) { client.block() }
-        } catch (e: DeadObjectException) {
-            Log.w("Remote services panic")
+    try {
+      return withContext(context) { client.block() }
+    } catch (e: DeadObjectException) {
+      Log.w("Remote services panic")
 
-            Remote.service.remote.reset(remote)
-        }
+      Remote.service.remote.reset(remote)
     }
+  }
 }
 
 suspend fun <T> withProfile(
-    context: CoroutineContext = Dispatchers.IO,
-    block: suspend IProfileManager.() -> T,
+  context: CoroutineContext = Dispatchers.IO,
+  block: suspend IProfileManager.() -> T,
 ): T {
-    while (true) {
-        val remote = Remote.service.remote.get()
-        val client = remote.profile()
+  while (true) {
+    val remote = Remote.service.remote.get()
+    val client = remote.profile()
 
-        try {
-            return withContext(context) { client.block() }
-        } catch (e: DeadObjectException) {
-            Log.w("Remote services panic")
+    try {
+      return withContext(context) { client.block() }
+    } catch (e: DeadObjectException) {
+      Log.w("Remote services panic")
 
-            Remote.service.remote.reset(remote)
-        }
+      Remote.service.remote.reset(remote)
     }
+  }
 }
