@@ -23,7 +23,6 @@ dependencyResolutionManagement {
       }
     }
     mavenCentral()
-    maven("https://raw.githubusercontent.com/MetaCubeX/maven-backup/main/releases")
   }
 }
 

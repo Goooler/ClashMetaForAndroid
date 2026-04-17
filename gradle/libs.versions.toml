@@ -1,7 +1,7 @@
 [versions]
 agp = "9.1.1"
 kotlin = "2.3.20"
-kaidl = "1.15"
+kaidl = "0.1.0"
 room = "2.8.4"
 okhttp = "5.3.2"
 jvmTarget = "21"
@@ -22,8 +22,8 @@ androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "
 androidx-room-ktx = { module = "androidx.room:room-ktx", version.ref = "room" }
 
 google-material = "com.google.android.material:material:1.13.0"
-kaidl-compiler = { module = "com.github.kr328.kaidl:kaidl", version.ref = "kaidl" }
-kaidl-runtime = { module = "com.github.kr328.kaidl:kaidl-runtime", version.ref = "kaidl" }
+kaidl-compiler = { module = "io.github.goooler.kaidl:kaidl-compiler", version.ref = "kaidl" }
+kaidl-runtime = { module = "io.github.goooler.kaidl:kaidl-runtime", version.ref = "kaidl" }
 rikkax-multiprocess = "dev.rikka.rikkax.preference:multiprocess:1.0.0"
 quickie-bundled = "io.github.g00fy2.quickie:quickie-bundled:1.11.0"
 okhttp-client = { module = "com.squareup.okhttp3:okhttp", version.ref = "okhttp" }
@@ -36,6 +36,7 @@ ktfmt = "com.facebook:ktfmt:0.62"
 android-application = { id = "com.android.application", version.ref = "agp" }
 android-library = { id = "com.android.library", version.ref = "agp" }
 android-legacyKapt = { id = "com.android.legacy-kapt", version.ref = "agp" }
+kotlin-parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize", version.ref = "kotlin" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 ksp = "com.google.devtools.ksp:2.3.6"
 golang = "io.github.goooler.golang:0.1.2"

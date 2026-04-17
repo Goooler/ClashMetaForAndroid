@@ -4,54 +4,23 @@ import android.os.Parcel
 import android.os.Parcelable
 import com.github.kr328.clash.common.util.createListFromParcelSlice
 import com.github.kr328.clash.common.util.writeToParcelSlice
+import kotlinx.parcelize.Parceler
+import kotlinx.parcelize.Parcelize
+import kotlinx.parcelize.TypeParceler
+import kotlinx.parcelize.parcelableCreator
 import kotlinx.serialization.Serializable
 
+@Parcelize
+@TypeParceler<List<Proxy>, ProxyGroupListParceler>
 @Serializable
-data class ProxyGroup(val type: Proxy.Type, val proxies: List<Proxy>, val now: String) :
-  Parcelable {
-  class SliceProxyList(data: List<Proxy>) : List<Proxy> by data, Parcelable {
-    constructor(parcel: Parcel) : this(Proxy.createListFromParcelSlice(parcel, 0, 50))
+data class ProxyGroup(val type: Proxy.Type, val proxies: List<Proxy>, val now: String) : Parcelable
 
-    override fun describeContents(): Int {
-      return 0
-    }
-
-    override fun writeToParcel(dest: Parcel, flags: Int) {
-      writeToParcelSlice(dest, flags)
-    }
-
-    companion object CREATOR : Parcelable.Creator<SliceProxyList> {
-      override fun createFromParcel(parcel: Parcel): SliceProxyList {
-        return SliceProxyList(parcel)
-      }
-
-      override fun newArray(size: Int): Array<SliceProxyList?> {
-        return arrayOfNulls(size)
-      }
-    }
+private object ProxyGroupListParceler : Parceler<List<Proxy>> {
+  override fun create(parcel: Parcel): List<Proxy> {
+    return parcelableCreator<Proxy>().createListFromParcelSlice(parcel, 0, 50)
   }
 
-  constructor(
-    parcel: Parcel
-  ) : this(Proxy.Type.entries[parcel.readInt()], SliceProxyList(parcel), parcel.readString()!!)
-
-  override fun writeToParcel(parcel: Parcel, flags: Int) {
-    parcel.writeInt(type.ordinal)
-    SliceProxyList(proxies).writeToParcel(parcel, 0)
-    parcel.writeString(now)
-  }
-
-  override fun describeContents(): Int {
-    return 0
-  }
-
-  companion object CREATOR : Parcelable.Creator<ProxyGroup> {
-    override fun createFromParcel(parcel: Parcel): ProxyGroup {
-      return ProxyGroup(parcel)
-    }
-
-    override fun newArray(size: Int): Array<ProxyGroup?> {
-      return arrayOfNulls(size)
-    }
+  override fun List<Proxy>.write(parcel: Parcel, flags: Int) {
+    writeToParcelSlice(parcel, flags)
   }
 }

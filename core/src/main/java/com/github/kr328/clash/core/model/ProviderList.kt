@@ -4,25 +4,21 @@ import android.os.Parcel
 import android.os.Parcelable
 import com.github.kr328.clash.common.util.createListFromParcelSlice
 import com.github.kr328.clash.common.util.writeToParcelSlice
+import kotlinx.parcelize.Parceler
+import kotlinx.parcelize.Parcelize
+import kotlinx.parcelize.TypeParceler
+import kotlinx.parcelize.parcelableCreator
 
-class ProviderList(data: List<Provider>) : List<Provider> by data, Parcelable {
-  constructor(parcel: Parcel) : this(Provider.createListFromParcelSlice(parcel, 0, 20))
+@Parcelize
+@TypeParceler<List<Provider>, ProviderListParceler>
+class ProviderList(private val data: List<Provider>) : List<Provider> by data, Parcelable
 
-  override fun describeContents(): Int {
-    return 0
+private object ProviderListParceler : Parceler<List<Provider>> {
+  override fun create(parcel: Parcel): List<Provider> {
+    return parcelableCreator<Provider>().createListFromParcelSlice(parcel, 0, 20)
   }
 
-  override fun writeToParcel(parcel: Parcel, flags: Int) {
-    return writeToParcelSlice(parcel, flags)
-  }
-
-  companion object CREATOR : Parcelable.Creator<ProviderList> {
-    override fun createFromParcel(parcel: Parcel): ProviderList {
-      return ProviderList(parcel)
-    }
-
-    override fun newArray(size: Int): Array<ProviderList?> {
-      return arrayOfNulls(size)
-    }
+  override fun List<Provider>.write(parcel: Parcel, flags: Int) {
+    writeToParcelSlice(parcel, flags)
   }
 }

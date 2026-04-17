@@ -2,14 +2,14 @@
 
 package com.github.kr328.clash.service.model
 
-import android.os.Parcel
 import android.os.Parcelable
-import com.github.kr328.clash.core.util.Parcelizer
 import com.github.kr328.clash.service.util.UUIDSerializer
 import java.util.UUID
+import kotlinx.parcelize.Parcelize
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.UseSerializers
 
+@Parcelize
 @Serializable
 data class Profile(
   val uuid: UUID,
@@ -30,23 +30,5 @@ data class Profile(
     File,
     Url,
     External,
-  }
-
-  override fun writeToParcel(parcel: Parcel, flags: Int) {
-    Parcelizer.encodeToParcel(serializer(), parcel, this)
-  }
-
-  override fun describeContents(): Int {
-    return 0
-  }
-
-  companion object CREATOR : Parcelable.Creator<Profile> {
-    override fun createFromParcel(parcel: Parcel): Profile {
-      return Parcelizer.decodeFromParcel(serializer(), parcel)
-    }
-
-    override fun newArray(size: Int): Array<Profile?> {
-      return arrayOfNulls(size)
-    }
   }
 }
