@@ -51,7 +51,9 @@ class NetworkObserveModule(service: Service) : Module<Network>(service) {
 
       override fun onLosing(network: Network, maxMsToLive: Int) {
         Log.i("NetworkObserve onLosing network=$network")
-        networkInfos[network]?.losingMs = System.currentTimeMillis() + maxMsToLive
+        networkInfos.computeIfPresent(network) { _, info ->
+          info.copy(losingMs = System.currentTimeMillis() + maxMsToLive)
+        }
         notifyDnsChange()
 
         networks.trySend(network)
@@ -67,7 +69,9 @@ class NetworkObserveModule(service: Service) : Module<Network>(service) {
 
       override fun onLinkPropertiesChanged(network: Network, linkProperties: LinkProperties) {
         Log.i("NetworkObserve onLinkPropertiesChanged network=$network $linkProperties")
-        networkInfos[network]?.dnsList = linkProperties.dnsServers
+        networkInfos.computeIfPresent(network) { _, info ->
+          info.copy(dnsList = linkProperties.dnsServers)
+        }
         notifyDnsChange()
 
         networks.trySend(network)
