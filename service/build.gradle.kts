@@ -1,5 +1,6 @@
 plugins {
   alias(libs.plugins.android.library)
+  alias(libs.plugins.kotlin.parcelize)
   alias(libs.plugins.kotlin.serialization)
   alias(libs.plugins.ksp)
 }

@@ -1,11 +1,11 @@
 package com.github.kr328.clash.core.model
 
-import android.os.Parcel
 import android.os.Parcelable
-import com.github.kr328.clash.core.util.Parcelizer
+import kotlinx.parcelize.Parcelize
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
+@Parcelize
 @Serializable
 data class ConfigurationOverride(
   @SerialName("port") var httpPort: Int? = null,
@@ -120,22 +120,4 @@ data class ConfigurationOverride(
     @SerialName("ports") var ports: List<String>? = null,
     @SerialName("override-destination") var overrideDestination: Boolean? = null,
   )
-
-  override fun writeToParcel(parcel: Parcel, flags: Int) {
-    Parcelizer.encodeToParcel(serializer(), parcel, this)
-  }
-
-  override fun describeContents(): Int {
-    return 0
-  }
-
-  companion object CREATOR : Parcelable.Creator<ConfigurationOverride> {
-    override fun createFromParcel(parcel: Parcel): ConfigurationOverride {
-      return Parcelizer.decodeFromParcel(serializer(), parcel)
-    }
-
-    override fun newArray(size: Int): Array<ConfigurationOverride?> {
-      return arrayOfNulls(size)
-    }
-  }
 }
