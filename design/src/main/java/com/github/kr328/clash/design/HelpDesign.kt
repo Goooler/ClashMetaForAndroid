@@ -6,8 +6,6 @@ import android.view.View
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.ComposeView
-import androidx.compose.ui.platform.ViewCompositionStrategy
 import com.github.kr328.clash.design.databinding.DesignSettingsCommonBinding
 import com.github.kr328.clash.design.preference.category
 import com.github.kr328.clash.design.preference.clickable
@@ -24,11 +22,7 @@ class HelpDesign(context: Context, openLink: (Uri) -> Unit) : Design<Unit>(conte
     DesignSettingsCommonBinding.inflate(context.layoutInflater, context.root, false)
 
   override val root: View
-    get() =
-      ComposeView(context = context).apply {
-        setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
-        setContent { MihomoDesignTheme { HelpScreen(modifier = Modifier.fillMaxSize()) } }
-      }
+    get() = composeView { MihomoDesignTheme { HelpScreen(modifier = Modifier.fillMaxSize()) } }
 
   init {
     binding.surface = surface
