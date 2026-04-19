@@ -3,7 +3,6 @@ package com.github.kr328.clash.design
 import android.content.Context
 import android.content.Intent
 import android.view.View
-import androidx.activity.ComponentActivity
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
@@ -34,9 +33,7 @@ class HelpDesign(context: Context) : Design<Unit>(context) {
 @Composable
 private fun HelpScreen(modifier: Modifier = Modifier) {
   val context = LocalContext.current
-  val title = (context as? ComponentActivity)?.title?.toString().orEmpty()
-
-  SettingsCommonScreen(title = title, modifier = modifier) {
+  SettingsCommonScreen(title = stringResource(R.string.help), modifier = modifier) {
     SettingsTipsItem(text = AnnotatedString.fromHtml(stringResource(R.string.tips_help)))
 
     SettingsCategoryTitle(text = stringResource(id = R.string.document))
