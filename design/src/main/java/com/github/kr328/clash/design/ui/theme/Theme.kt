@@ -179,6 +179,6 @@ fun MihomoDesignTheme(darkTheme: Boolean = isSystemInDarkTheme(), content: @Comp
   }
 }
 
-@Preview(name = "Light", showSystemUi = true, showBackground = true)
-@Preview(name = "Dark", showSystemUi = true, showBackground = true, uiMode = UI_MODE_NIGHT_YES)
+@Preview(name = "Light", showBackground = true)
+@Preview(name = "Dark", showBackground = true, uiMode = UI_MODE_NIGHT_YES)
 annotation class PreviewMihomo
