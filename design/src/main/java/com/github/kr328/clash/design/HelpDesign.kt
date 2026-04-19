@@ -3,11 +3,17 @@ package com.github.kr328.clash.design
 import android.content.Context
 import android.net.Uri
 import android.view.View
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.ViewCompositionStrategy
 import com.github.kr328.clash.design.databinding.DesignSettingsCommonBinding
 import com.github.kr328.clash.design.preference.category
 import com.github.kr328.clash.design.preference.clickable
 import com.github.kr328.clash.design.preference.preferenceScreen
 import com.github.kr328.clash.design.preference.tips
+import com.github.kr328.clash.design.ui.theme.MihomoDesignTheme
 import com.github.kr328.clash.design.util.applyFrom
 import com.github.kr328.clash.design.util.bindAppBarElevation
 import com.github.kr328.clash.design.util.layoutInflater
@@ -18,7 +24,11 @@ class HelpDesign(context: Context, openLink: (Uri) -> Unit) : Design<Unit>(conte
     DesignSettingsCommonBinding.inflate(context.layoutInflater, context.root, false)
 
   override val root: View
-    get() = binding.root
+    get() =
+      ComposeView(context = context).apply {
+        setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
+        setContent { MihomoDesignTheme { HelpScreen(modifier = Modifier.fillMaxSize()) } }
+      }
 
   init {
     binding.surface = surface
@@ -55,3 +65,5 @@ class HelpDesign(context: Context, openLink: (Uri) -> Unit) : Design<Unit>(conte
     binding.content.addView(screen.root)
   }
 }
+
+@Composable private fun HelpScreen(modifier: Modifier = Modifier) {}
