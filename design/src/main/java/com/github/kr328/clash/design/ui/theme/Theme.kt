@@ -77,7 +77,7 @@ data class MihomoDimens(
   val itemTailingMargin: Dp,
   val itemPaddingVertical: Dp,
   val itemTextMargin: Dp,
-  val itemMiddenMargin: Dp,
+  val itemMiddleMargin: Dp,
   val largeActionCardRadius: Dp,
   val largeActionCardElevation: Dp,
   val largeActionCardMinHeight: Dp,
