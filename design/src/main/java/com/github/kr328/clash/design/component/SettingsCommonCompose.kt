@@ -27,6 +27,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.github.kr328.clash.design.R
@@ -68,7 +69,7 @@ fun SettingsCommonScreen(
 }
 
 @Composable
-fun SettingsTipsItem(text: String, modifier: Modifier = Modifier) {
+fun SettingsTipsItem(text: AnnotatedString, modifier: Modifier = Modifier) {
   Row(
     modifier = modifier.padding(vertical = 16.dp),
     verticalAlignment = Alignment.CenterVertically,

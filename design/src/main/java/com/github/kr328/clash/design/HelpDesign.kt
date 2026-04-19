@@ -8,10 +8,11 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.fromHtml
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import com.github.kr328.clash.design.component.SettingsCategoryTitle
@@ -34,10 +35,6 @@ class HelpDesign(context: Context) : Design<Unit>(context) {
 private fun HelpScreen(modifier: Modifier = Modifier) {
   val context = LocalContext.current
   val title = (context as? ComponentActivity)?.title?.toString().orEmpty()
-  val tipsText =
-    remember(context) {
-      context.getString(R.string.tips_help).replace("<strong>", "").replace("</strong>", "")
-    }
 
   SettingsCommonScreen(
     title = title,
@@ -48,7 +45,7 @@ private fun HelpScreen(modifier: Modifier = Modifier) {
     },
     modifier = modifier,
   ) {
-    SettingsTipsItem(text = tipsText)
+    SettingsTipsItem(text = AnnotatedString.fromHtml(stringResource(R.string.tips_help)))
 
     SettingsCategoryTitle(text = stringResource(id = R.string.document))
 
