@@ -25,7 +25,7 @@ val MihomoError = Color(0xFFB00020)
 data class MihomoColorTokens(
   val controlNormal: Color,
   val controlDisabled: Color,
-  val mihomoStopped: Color,
+  val stopped: Color,
   val logo: Color,
   val systemUiOverlay: Color,
 )
@@ -34,7 +34,7 @@ internal val LightMihomoColorTokens =
   MihomoColorTokens(
     controlNormal = MihomoLightControlNormal,
     controlDisabled = MihomoLightControlDisabled,
-    mihomoStopped = MihomoLightStopped,
+    stopped = MihomoLightStopped,
     logo = MihomoLightPrimary,
     systemUiOverlay = MihomoSystemUiOverlay,
   )
@@ -43,7 +43,7 @@ internal val DarkMihomoColorTokens =
   MihomoColorTokens(
     controlNormal = MihomoDarkControlNormal,
     controlDisabled = MihomoDarkControlDisabled,
-    mihomoStopped = MihomoDarkSurface,
+    stopped = MihomoDarkSurface,
     logo = MihomoDarkControlNormal,
     systemUiOverlay = Color.Transparent,
   )
