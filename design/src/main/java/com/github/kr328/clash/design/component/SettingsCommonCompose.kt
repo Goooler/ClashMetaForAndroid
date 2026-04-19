@@ -1,5 +1,7 @@
 package com.github.kr328.clash.design.component
 
+import androidx.activity.OnBackPressedDispatcher
+import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -36,8 +38,10 @@ import com.github.kr328.clash.design.R
 @OptIn(ExperimentalMaterial3Api::class)
 fun SettingsCommonScreen(
   title: String,
-  onBack: () -> Unit,
   modifier: Modifier = Modifier,
+  onBackPressedDispatcher: OnBackPressedDispatcher? =
+    LocalOnBackPressedDispatcherOwner.current?.onBackPressedDispatcher,
+  onBack: () -> Unit = { onBackPressedDispatcher?.onBackPressed() },
   content: @Composable ColumnScope.() -> Unit,
 ) {
   val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()

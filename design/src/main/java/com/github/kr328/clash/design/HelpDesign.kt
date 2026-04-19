@@ -36,15 +36,7 @@ private fun HelpScreen(modifier: Modifier = Modifier) {
   val context = LocalContext.current
   val title = (context as? ComponentActivity)?.title?.toString().orEmpty()
 
-  SettingsCommonScreen(
-    title = title,
-    onBack = {
-      when (context) {
-        is ComponentActivity -> context.onBackPressedDispatcher.onBackPressed()
-      }
-    },
-    modifier = modifier,
-  ) {
+  SettingsCommonScreen(title = title, modifier = modifier) {
     SettingsTipsItem(text = AnnotatedString.fromHtml(stringResource(R.string.tips_help)))
 
     SettingsCategoryTitle(text = stringResource(id = R.string.document))
