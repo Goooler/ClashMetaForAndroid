@@ -30,7 +30,7 @@ data class MihomoColorTokens(
   val systemUiOverlay: Color,
 )
 
-internal val LightMihomoColorTokens =
+internal val lightMihomoColorTokens =
   MihomoColorTokens(
     controlNormal = MihomoLightControlNormal,
     controlDisabled = MihomoLightControlDisabled,
@@ -39,7 +39,7 @@ internal val LightMihomoColorTokens =
     systemUiOverlay = MihomoSystemUiOverlay,
   )
 
-internal val DarkMihomoColorTokens =
+internal val darkMihomoColorTokens =
   MihomoColorTokens(
     controlNormal = MihomoDarkControlNormal,
     controlDisabled = MihomoDarkControlDisabled,

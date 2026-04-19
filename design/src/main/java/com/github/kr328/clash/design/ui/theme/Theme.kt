@@ -15,7 +15,7 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
-private val DarkColorScheme =
+private val darkColorScheme =
   darkColorScheme(
     primary = MihomoDarkPrimary,
     onPrimary = MihomoOnPrimary,
@@ -32,7 +32,7 @@ private val DarkColorScheme =
     onError = MihomoOnPrimary,
   )
 
-private val LightColorScheme =
+private val lightColorScheme =
   lightColorScheme(
     primary = MihomoLightPrimary,
     onPrimary = MihomoOnPrimary,
@@ -161,33 +161,24 @@ private val DefaultMihomoDimens =
     logcatPaddingHorizontal = 12.dp,
   )
 
-private val LocalMihomoColors = staticCompositionLocalOf { LightMihomoColorTokens }
-private val LocalMihomoDimens = staticCompositionLocalOf { DefaultMihomoDimens }
-private val LocalMihomoTypography = staticCompositionLocalOf { DefaultMihomoTextStyles }
+private val localMihomoColors = staticCompositionLocalOf { lightMihomoColorTokens }
+private val localMihomoDimens = staticCompositionLocalOf { DefaultMihomoDimens }
+private val localMihomoTypography = staticCompositionLocalOf { DefaultMihomoTextStyles }
 
 @Composable
 fun MihomoDesignTheme(darkTheme: Boolean = isSystemInDarkTheme(), content: @Composable () -> Unit) {
-  val colorScheme = if (darkTheme) DarkColorScheme else LightColorScheme
-  val mihomoColors = if (darkTheme) DarkMihomoColorTokens else LightMihomoColorTokens
+  val colorScheme = if (darkTheme) darkColorScheme else lightColorScheme
+  val mihomoColors = if (darkTheme) darkMihomoColorTokens else lightMihomoColorTokens
 
   CompositionLocalProvider(
-    LocalMihomoColors provides mihomoColors,
-    LocalMihomoDimens provides DefaultMihomoDimens,
-    LocalMihomoTypography provides DefaultMihomoTextStyles,
+    localMihomoColors provides mihomoColors,
+    localMihomoDimens provides DefaultMihomoDimens,
+    localMihomoTypography provides DefaultMihomoTextStyles,
   ) {
     MaterialTheme(colorScheme = colorScheme, typography = Typography, content = content)
   }
 }
 
-@Preview(
-  name = "Light",
-  showSystemUi = true,
-  showBackground = true,
-)
-@Preview(
-  name = "Dark",
-  showSystemUi = true,
-  showBackground = true,
-  uiMode = UI_MODE_NIGHT_YES,
-)
+@Preview(name = "Light", showSystemUi = true, showBackground = true)
+@Preview(name = "Dark", showSystemUi = true, showBackground = true, uiMode = UI_MODE_NIGHT_YES)
 annotation class PreviewMihomo
