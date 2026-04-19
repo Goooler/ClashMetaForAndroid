@@ -66,7 +66,7 @@ val Typography =
   )
 
 @Immutable
-data class ClashTextStyles(
+data class MihomoTextStyles(
   val toolbarTitle: TextStyle,
   val title: TextStyle,
   val body: TextStyle,
@@ -77,8 +77,8 @@ data class ClashTextStyles(
   val proxyGrid3: TextStyle,
 )
 
-internal val DefaultClashTextStyles =
-  ClashTextStyles(
+internal val DefaultMihomoTextStyles =
+  MihomoTextStyles(
     toolbarTitle = Headline6TextStyle,
     title = Headline6TextStyle,
     body = Body1TextStyle,

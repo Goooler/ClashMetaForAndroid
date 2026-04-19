@@ -15,40 +15,40 @@ import androidx.compose.ui.unit.sp
 
 private val DarkColorScheme =
   darkColorScheme(
-    primary = ClashDarkPrimary,
-    onPrimary = ClashOnPrimary,
-    secondary = ClashDarkPrimary,
-    onSecondary = ClashOnPrimary,
-    background = ClashDarkBackground,
-    onBackground = ClashDarkControlNormal,
-    surface = ClashDarkSurface,
-    onSurface = ClashDarkControlNormal,
-    surfaceVariant = ClashDarkSurface,
-    onSurfaceVariant = ClashDarkControlNormal,
-    outline = ClashDarkControlDisabled,
-    error = ClashError,
-    onError = ClashOnPrimary,
+    primary = MihomoDarkPrimary,
+    onPrimary = MihomoOnPrimary,
+    secondary = MihomoDarkPrimary,
+    onSecondary = MihomoOnPrimary,
+    background = MihomoDarkBackground,
+    onBackground = MihomoDarkControlNormal,
+    surface = MihomoDarkSurface,
+    onSurface = MihomoDarkControlNormal,
+    surfaceVariant = MihomoDarkSurface,
+    onSurfaceVariant = MihomoDarkControlNormal,
+    outline = MihomoDarkControlDisabled,
+    error = MihomoError,
+    onError = MihomoOnPrimary,
   )
 
 private val LightColorScheme =
   lightColorScheme(
-    primary = ClashLightPrimary,
-    onPrimary = ClashOnPrimary,
-    secondary = ClashLightPrimary,
-    onSecondary = ClashOnPrimary,
-    background = ClashLightBackground,
-    onBackground = ClashLightControlNormal,
-    surface = ClashLightBackground,
-    onSurface = ClashLightControlNormal,
-    surfaceVariant = ClashLightBackground,
-    onSurfaceVariant = ClashLightControlNormal,
-    outline = ClashLightControlDisabled,
-    error = ClashError,
-    onError = ClashOnPrimary,
+    primary = MihomoLightPrimary,
+    onPrimary = MihomoOnPrimary,
+    secondary = MihomoLightPrimary,
+    onSecondary = MihomoOnPrimary,
+    background = MihomoLightBackground,
+    onBackground = MihomoLightControlNormal,
+    surface = MihomoLightBackground,
+    onSurface = MihomoLightControlNormal,
+    surfaceVariant = MihomoLightBackground,
+    onSurfaceVariant = MihomoLightControlNormal,
+    outline = MihomoLightControlDisabled,
+    error = MihomoError,
+    onError = MihomoOnPrimary,
   )
 
 @Immutable
-data class ClashDimens(
+data class MihomoDimens(
   val dividerSize: Dp,
   val dialogPadding: Dp,
   val dialogButtonMargin: Dp,
@@ -103,8 +103,8 @@ data class ClashDimens(
   val logcatPaddingHorizontal: Dp,
 )
 
-private val DefaultClashDimens =
-  ClashDimens(
+private val DefaultMihomoDimens =
+  MihomoDimens(
     dividerSize = 1.dp,
     dialogPadding = 20.dp,
     dialogButtonMargin = 5.dp,
@@ -159,19 +159,19 @@ private val DefaultClashDimens =
     logcatPaddingHorizontal = 12.dp,
   )
 
-private val LocalClashColors = staticCompositionLocalOf { LightClashColorTokens }
-private val LocalClashDimens = staticCompositionLocalOf { DefaultClashDimens }
-private val LocalClashTypography = staticCompositionLocalOf { DefaultClashTextStyles }
+private val LocalMihomoColors = staticCompositionLocalOf { LightMihomoColorTokens }
+private val LocalMihomoDimens = staticCompositionLocalOf { DefaultMihomoDimens }
+private val LocalMihomoTypography = staticCompositionLocalOf { DefaultMihomoTextStyles }
 
 @Composable
-fun ClashDesignTheme(darkTheme: Boolean = isSystemInDarkTheme(), content: @Composable () -> Unit) {
+fun MihomoDesignTheme(darkTheme: Boolean = isSystemInDarkTheme(), content: @Composable () -> Unit) {
   val colorScheme = if (darkTheme) DarkColorScheme else LightColorScheme
-  val clashColors = if (darkTheme) DarkClashColorTokens else LightClashColorTokens
+  val mihomoColors = if (darkTheme) DarkMihomoColorTokens else LightMihomoColorTokens
 
   CompositionLocalProvider(
-    LocalClashColors provides clashColors,
-    LocalClashDimens provides DefaultClashDimens,
-    LocalClashTypography provides DefaultClashTextStyles,
+    LocalMihomoColors provides mihomoColors,
+    LocalMihomoDimens provides DefaultMihomoDimens,
+    LocalMihomoTypography provides DefaultMihomoTextStyles,
   ) {
     MaterialTheme(colorScheme = colorScheme, typography = Typography, content = content)
   }

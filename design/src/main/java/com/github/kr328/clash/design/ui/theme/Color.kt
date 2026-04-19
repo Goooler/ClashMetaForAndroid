@@ -3,47 +3,47 @@ package com.github.kr328.clash.design.ui.theme
 import androidx.compose.runtime.Immutable
 import androidx.compose.ui.graphics.Color
 
-val ClashLightPrimary = Color(0xFF1E4376)
-val ClashDarkPrimary = Color(0xFF1976D2)
-val ClashOnPrimary = Color(0xFFFFFFFF)
+val MihomoLightPrimary = Color(0xFF1E4376)
+val MihomoDarkPrimary = Color(0xFF1976D2)
+val MihomoOnPrimary = Color(0xFFFFFFFF)
 
-val ClashSystemUiOverlay = Color(0x50000000)
+val MihomoSystemUiOverlay = Color(0x50000000)
 
-val ClashLightBackground = Color(0xFFFAFAFA)
-val ClashDarkBackground = Color(0xFF121212)
-val ClashDarkSurface = Color(0xFF202020)
+val MihomoLightBackground = Color(0xFFFAFAFA)
+val MihomoDarkBackground = Color(0xFF121212)
+val MihomoDarkSurface = Color(0xFF202020)
 
-val ClashLightControlNormal = Color(0xFF000000)
-val ClashDarkControlNormal = Color(0xFFFFFFFF)
-val ClashLightClashStopped = Color(0xFF808080)
-val ClashLightControlDisabled = Color(0xFFD3D3D3)
-val ClashDarkControlDisabled = Color(0xFF808080)
+val MihomoLightControlNormal = Color(0xFF000000)
+val MihomoDarkControlNormal = Color(0xFFFFFFFF)
+val MihomoLightStopped = Color(0xFF808080)
+val MihomoLightControlDisabled = Color(0xFFD3D3D3)
+val MihomoDarkControlDisabled = Color(0xFF808080)
 
-val ClashError = Color(0xFFB00020)
+val MihomoError = Color(0xFFB00020)
 
 @Immutable
-data class ClashColorTokens(
+data class MihomoColorTokens(
   val controlNormal: Color,
   val controlDisabled: Color,
-  val clashStopped: Color,
+  val mihomoStopped: Color,
   val logo: Color,
   val systemUiOverlay: Color,
 )
 
-internal val LightClashColorTokens =
-  ClashColorTokens(
-    controlNormal = ClashLightControlNormal,
-    controlDisabled = ClashLightControlDisabled,
-    clashStopped = ClashLightClashStopped,
-    logo = ClashLightPrimary,
-    systemUiOverlay = ClashSystemUiOverlay,
+internal val LightMihomoColorTokens =
+  MihomoColorTokens(
+    controlNormal = MihomoLightControlNormal,
+    controlDisabled = MihomoLightControlDisabled,
+    mihomoStopped = MihomoLightStopped,
+    logo = MihomoLightPrimary,
+    systemUiOverlay = MihomoSystemUiOverlay,
   )
 
-internal val DarkClashColorTokens =
-  ClashColorTokens(
-    controlNormal = ClashDarkControlNormal,
-    controlDisabled = ClashDarkControlDisabled,
-    clashStopped = ClashDarkSurface,
-    logo = ClashDarkControlNormal,
+internal val DarkMihomoColorTokens =
+  MihomoColorTokens(
+    controlNormal = MihomoDarkControlNormal,
+    controlDisabled = MihomoDarkControlDisabled,
+    mihomoStopped = MihomoDarkSurface,
+    logo = MihomoDarkControlNormal,
     systemUiOverlay = Color.Transparent,
   )
