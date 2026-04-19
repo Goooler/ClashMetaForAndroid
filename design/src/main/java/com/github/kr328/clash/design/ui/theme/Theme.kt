@@ -7,7 +7,6 @@ import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.Immutable
-import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
@@ -176,15 +175,4 @@ fun ClashDesignTheme(darkTheme: Boolean = isSystemInDarkTheme(), content: @Compo
   ) {
     MaterialTheme(colorScheme = colorScheme, typography = Typography, content = content)
   }
-}
-
-object ClashTheme {
-  val colors: ClashColorTokens
-    @Composable @ReadOnlyComposable get() = LocalClashColors.current
-
-  val dimens: ClashDimens
-    @Composable @ReadOnlyComposable get() = LocalClashDimens.current
-
-  val typography: ClashTextStyles
-    @Composable @ReadOnlyComposable get() = LocalClashTypography.current
 }
