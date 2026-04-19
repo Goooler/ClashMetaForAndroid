@@ -221,6 +221,7 @@
     <string name="github_issues">Github Issues</string>
     <string name="google_play">Google Play</string>
     <string name="clash_meta_core">Clash Meta Core</string>
+    <string name="meta_github_url" translatable="false">https://github.com/MetaCubeX/ClashMetaForAndroid</string>
 
     <string name="tips_properties"><![CDATA[Accept Only <strong>Clash Config</strong>(including <strong>Proxy</strong>/<strong>Rules</strong>)]]></string>
     <string name="tips_help"><![CDATA[Clash Meta for Android is a <strong>freeware</strong> and we do <strong>NOT</strong> provide any service for it]]></string>
