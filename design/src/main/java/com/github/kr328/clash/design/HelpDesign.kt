@@ -18,6 +18,7 @@ import com.github.kr328.clash.design.component.SettingsClickableItem
 import com.github.kr328.clash.design.component.SettingsCommonScreen
 import com.github.kr328.clash.design.component.SettingsTipsItem
 import com.github.kr328.clash.design.ui.theme.MihomoDesignTheme
+import com.github.kr328.clash.design.ui.theme.PreviewMihomo
 
 class HelpDesign(context: Context, openLink: (Uri) -> Unit) : Design<Unit>(context) {
   private val composeRoot = composeView {
@@ -79,3 +80,7 @@ private fun HelpScreen(modifier: Modifier = Modifier, openLink: (Uri) -> Unit) {
     Spacer(modifier = Modifier.height(12.dp))
   }
 }
+
+@PreviewMihomo
+@Composable
+private fun HelpScreenPreview() = MihomoDesignTheme { HelpScreen(openLink = {}) }
