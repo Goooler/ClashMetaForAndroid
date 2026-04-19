@@ -1,5 +1,6 @@
 package com.github.kr328.clash.design.ui.theme
 
+import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
@@ -8,6 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.staticCompositionLocalOf
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
@@ -176,3 +178,16 @@ fun MihomoDesignTheme(darkTheme: Boolean = isSystemInDarkTheme(), content: @Comp
     MaterialTheme(colorScheme = colorScheme, typography = Typography, content = content)
   }
 }
+
+@Preview(
+  name = "Light",
+  showSystemUi = true,
+  showBackground = true,
+)
+@Preview(
+  name = "Dark",
+  showSystemUi = true,
+  showBackground = true,
+  uiMode = UI_MODE_NIGHT_YES,
+)
+annotation class PreviewMihomo
