@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -36,7 +37,9 @@ import com.github.kr328.clash.core.model.LogMessage
 import com.github.kr328.clash.design.component.MihomoScaffold
 import com.github.kr328.clash.design.ui.ToastDuration
 import com.github.kr328.clash.design.ui.theme.MihomoDesignTheme
+import com.github.kr328.clash.design.ui.theme.PreviewMihomo
 import com.github.kr328.clash.design.util.format
+import java.util.Date
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -79,7 +82,7 @@ class LogcatDesign(context: Context, private val streaming: Boolean) :
     withContext(Dispatchers.Main) {
       this@LogcatDesign.messages = messages
 
-      if (streaming && listState.isTop() && messages.isNotEmpty()) {
+      if (streaming && listState.isTop && messages.isNotEmpty()) {
         listState.scrollToItem(messages.lastIndex)
       }
     }
@@ -162,6 +165,25 @@ private fun LogcatMessageItem(message: LogMessage, onCopyMessage: (LogMessage) -
   }
 }
 
-private fun LazyListState.isTop(): Boolean {
-  return firstVisibleItemIndex == 0 && firstVisibleItemScrollOffset == 0
+private val LazyListState.isTop: Boolean
+  get() = firstVisibleItemIndex == 0 && firstVisibleItemScrollOffset == 0
+
+@PreviewMihomo
+@Composable
+private fun LogcatScreenPreview() = MihomoDesignTheme {
+  LogcatScreen(
+    title = stringResource(R.string.clash_logcat),
+    streaming = false,
+    messages =
+      listOf(
+        LogMessage(LogMessage.Level.Info, "Mihomo started successfully", Date(1710000000000)),
+        LogMessage(LogMessage.Level.Warning, "Proxy group fallback in use", Date(1710000005000)),
+        LogMessage(LogMessage.Level.Error, "Connection timeout to upstream", Date(1710000010000)),
+      ),
+    listState = rememberLazyListState(),
+    onClose = {},
+    onDelete = {},
+    onExport = {},
+    onCopyMessage = {},
+  )
 }
