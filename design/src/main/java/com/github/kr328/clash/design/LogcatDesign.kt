@@ -75,7 +75,7 @@ class LogcatDesign(context: Context, private val streaming: Boolean) :
     }
   }
 
-  suspend fun patchMessages(messages: List<LogMessage>, removed: Int, appended: Int) =
+  suspend fun patchMessages(messages: List<LogMessage>) =
     withContext(Dispatchers.Main) {
       this@LogcatDesign.messages = messages
 
@@ -123,13 +123,8 @@ private fun LogcatScreen(
       }
     },
   ) { innerPadding ->
-    LazyColumn(
-      modifier = Modifier.fillMaxSize().padding(innerPadding),
-      state = listState,
-    ) {
-      items(items = messages) {
-        LogcatMessageItem(message = it, onCopyMessage = onCopyMessage)
-      }
+    LazyColumn(modifier = Modifier.fillMaxSize().padding(innerPadding), state = listState) {
+      items(items = messages) { LogcatMessageItem(message = it, onCopyMessage = onCopyMessage) }
     }
   }
 }
