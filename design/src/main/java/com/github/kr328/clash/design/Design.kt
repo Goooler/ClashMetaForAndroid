@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
+import com.github.kr328.clash.common.store.unsafeLazy
 import com.github.kr328.clash.design.ui.Surface
 import com.github.kr328.clash.design.ui.ToastDuration
 import com.github.kr328.clash.design.util.setOnInsertsChangedListener
@@ -22,11 +23,12 @@ abstract class Design<R>(val context: Context) :
   val surface = Surface()
   val requests: Channel<R> = Channel(Channel.UNLIMITED)
 
-  protected fun composeView(content: @Composable () -> Unit): ComposeView =
+  protected fun composeView(content: @Composable () -> Unit): Lazy<ComposeView> = unsafeLazy {
     ComposeView(context = context).apply {
       setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
       setContent(content = content)
     }
+  }
 
   suspend fun showToast(resId: Int, duration: ToastDuration, configure: Snackbar.() -> Unit = {}) {
     return showToast(context.getString(resId), duration, configure)

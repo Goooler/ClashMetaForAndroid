@@ -131,9 +131,7 @@
             android:label="@string/providers" />
         <activity
             android:name=".LogsActivity"
-            android:configChanges="uiMode"
-            android:exported="false"
-            android:label="@string/logs" />
+            android:exported="false" />
         <activity
             android:name=".LogcatActivity"
             android:configChanges="uiMode"

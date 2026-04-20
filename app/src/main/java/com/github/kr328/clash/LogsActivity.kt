@@ -36,11 +36,9 @@ class LogsActivity : BaseActivity<LogsDesign>() {
               finish()
             }
             LogsDesign.Request.DeleteAll -> {
-              if (design.requestDeleteAll()) {
-                withContext(Dispatchers.IO) { deleteAllLogs() }
+              withContext(Dispatchers.IO) { deleteAllLogs() }
 
-                events.trySend(Event.ActivityStart)
-              }
+              events.trySend(Event.ActivityStart)
             }
             is LogsDesign.Request.OpenFile -> {
               startActivity(LogcatActivity::class.intent.setFileName(it.file.fileName))
