@@ -110,9 +110,7 @@
             android:exported="false" />
         <activity
             android:name=".PropertiesActivity"
-            android:configChanges="uiMode"
-            android:exported="false"
-            android:label="@string/profile" />
+            android:exported="false" />
         <activity
             android:name=".ProxyActivity"
             android:configChanges="uiMode"
