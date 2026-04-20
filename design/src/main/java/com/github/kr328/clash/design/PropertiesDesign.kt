@@ -91,7 +91,7 @@ class PropertiesDesign(context: Context) : Design<PropertiesDesign.Request>(cont
     get() = requireNotNull(profileState)
     set(value) {
       if (originalProfileState == null) {
-        originalProfileState = value
+        originalProfileState = value.copy()
       }
 
       profileState = value
@@ -121,7 +121,7 @@ class PropertiesDesign(context: Context) : Design<PropertiesDesign.Request>(cont
     val profile = profileState ?: return
     val original = originalProfileState
 
-    if (original == null || profile == original) {
+    if (original == null || !hasUnsavedChanges(profile, original)) {
       finishSelf()
     } else {
       showExitWithoutSavingDialogState = true
@@ -206,6 +206,14 @@ class PropertiesDesign(context: Context) : Design<PropertiesDesign.Request>(cont
     requests.trySend(Request.BrowseFiles)
   }
 
+  private fun hasUnsavedChanges(profile: Profile, original: Profile): Boolean {
+    return (
+      profile.name != original.name ||
+        profile.source != original.source ||
+        profile.interval != original.interval
+    )
+  }
+
   private fun ModelProgressBarConfigure.applyFrom(status: FetchStatus) {
     when (status.action) {
       FetchStatus.Action.FetchConfiguration -> {
@@ -288,7 +296,7 @@ private fun PropertiesScreen(
         text = profile.source,
         placeholder = stringResource(R.string.accept_http_content),
         iconRes = R.drawable.ic_outline_inbox,
-        enabled = profile.type != Profile.Type.File,
+        enabled = profile.type != Profile.Type.File && profile.type != Profile.Type.External,
         onClick = onInputUrl,
         itemPaddingVertical = itemPaddingVertical,
       )
@@ -321,7 +329,13 @@ private fun PropertiesScreen(
     }
   }
 
-  BackHandler(enabled = true, onBack = onBack)
+  BackHandler(enabled = true) {
+    if (showExitWithoutSavingDialog) {
+      onExitWithoutSavingDismiss()
+    } else {
+      onBack()
+    }
+  }
 
   if (showExitWithoutSavingDialog) {
     ExitWithoutSavingDialog(
