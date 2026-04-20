@@ -43,7 +43,7 @@ import com.github.kr328.clash.design.ui.theme.PreviewMihomo
 import com.github.kr328.clash.design.util.ValidatorFileName
 import com.github.kr328.clash.design.util.elapsedIntervalString
 import com.github.kr328.clash.design.util.toBytesString
-import java.util.concurrent.TimeUnit
+import kotlin.time.Duration.Companion.minutes
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
@@ -197,7 +197,7 @@ private fun FilesScreen(
 
     LaunchedEffect(Unit) {
       while (true) {
-        delay(TimeUnit.MINUTES.toMillis(1))
+        delay(1.minutes)
         currentTime = System.currentTimeMillis()
       }
     }
