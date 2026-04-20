@@ -37,7 +37,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.github.kr328.clash.design.component.MihomoScaffold
 import com.github.kr328.clash.design.model.LogFile
-import com.github.kr328.clash.design.ui.theme.MihomoDesignTheme
+import com.github.kr328.clash.design.ui.theme.MihomoTheme
 import com.github.kr328.clash.design.ui.theme.PreviewMihomo
 import com.github.kr328.clash.design.util.format
 import kotlinx.coroutines.Dispatchers
@@ -55,7 +55,7 @@ class LogsDesign(context: Context) : Design<LogsDesign.Request>(context) {
   private var logs by mutableStateOf<List<LogFile>>(emptyList())
 
   override val root: View by composeView {
-    MihomoDesignTheme {
+    MihomoTheme {
       LogsScreen(
         logs = logs,
         onDeleteAll = { requests.trySend(Request.DeleteAll) },
@@ -178,7 +178,7 @@ private fun LogsActionItem(
 
 @PreviewMihomo
 @Composable
-private fun LogsScreenPreview() = MihomoDesignTheme {
+private fun LogsScreenPreview() = MihomoTheme {
   LogsScreen(
     logs =
       listOf(

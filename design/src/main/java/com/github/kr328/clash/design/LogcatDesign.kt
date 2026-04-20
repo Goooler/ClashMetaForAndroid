@@ -36,7 +36,7 @@ import androidx.core.content.getSystemService
 import com.github.kr328.clash.core.model.LogMessage
 import com.github.kr328.clash.design.component.MihomoScaffold
 import com.github.kr328.clash.design.ui.ToastDuration
-import com.github.kr328.clash.design.ui.theme.MihomoDesignTheme
+import com.github.kr328.clash.design.ui.theme.MihomoTheme
 import com.github.kr328.clash.design.ui.theme.PreviewMihomo
 import com.github.kr328.clash.design.util.format
 import java.util.Date
@@ -64,7 +64,7 @@ class LogcatDesign(context: Context, private val streaming: Boolean) :
   }
 
   override val root: View by composeView {
-    MihomoDesignTheme {
+    MihomoTheme {
       LogcatScreen(
         title = stringResource(R.string.clash_logcat),
         streaming = streaming,
@@ -177,7 +177,7 @@ private val LazyListState.isBottom: Boolean
 
 @PreviewMihomo
 @Composable
-private fun LogcatScreenPreview() = MihomoDesignTheme {
+private fun LogcatScreenPreview() = MihomoTheme {
   LogcatScreen(
     title = stringResource(R.string.clash_logcat),
     streaming = false,

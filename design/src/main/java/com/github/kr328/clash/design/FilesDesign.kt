@@ -38,7 +38,7 @@ import androidx.compose.ui.unit.dp
 import com.github.kr328.clash.design.component.MihomoScaffold
 import com.github.kr328.clash.design.dialog.requestModelTextInput
 import com.github.kr328.clash.design.model.File
-import com.github.kr328.clash.design.ui.theme.MihomoDesignTheme
+import com.github.kr328.clash.design.ui.theme.MihomoTheme
 import com.github.kr328.clash.design.ui.theme.PreviewMihomo
 import com.github.kr328.clash.design.util.ValidatorFileName
 import com.github.kr328.clash.design.util.elapsedIntervalString
@@ -70,7 +70,7 @@ class FilesDesign(context: Context) : Design<FilesDesign.Request>(context) {
   private var configurationEditable by mutableStateOf(false)
 
   override val root: View by composeView {
-    MihomoDesignTheme {
+    MihomoTheme {
       FilesScreen(
         files = files,
         currentInBaseDir = currentInBaseDir,
@@ -299,7 +299,7 @@ private fun FilesMenuAction(
 
 @PreviewMihomo
 @Composable
-private fun FilesScreenPreview() = MihomoDesignTheme {
+private fun FilesScreenPreview() = MihomoTheme {
   FilesScreen(
     files =
       listOf(

@@ -18,7 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.github.kr328.clash.design.component.MihomoScaffold
-import com.github.kr328.clash.design.ui.theme.MihomoDesignTheme
+import com.github.kr328.clash.design.ui.theme.MihomoTheme
 import com.github.kr328.clash.design.ui.theme.PreviewMihomo
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -26,7 +26,7 @@ import kotlinx.coroutines.withContext
 class AppCrashedDesign(context: Context) : Design<Unit>(context) {
   private var logs by mutableStateOf("")
 
-  override val root: View by composeView { MihomoDesignTheme { AppCrashedScreen(logs = logs) } }
+  override val root: View by composeView { MihomoTheme { AppCrashedScreen(logs = logs) } }
 
   suspend fun updateLogs(logs: String) =
     withContext(Dispatchers.Main) { this@AppCrashedDesign.logs = logs }
@@ -56,7 +56,7 @@ private fun AppCrashedScreen(logs: String) {
 
 @PreviewMihomo
 @Composable
-private fun AppCrashedScreenPreview() = MihomoDesignTheme {
+private fun AppCrashedScreenPreview() = MihomoTheme {
   AppCrashedScreen(
     logs =
       "04-20 10:10:10.000 I/App( 1234): App version: 2.0.0\n" +

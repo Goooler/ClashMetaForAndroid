@@ -176,7 +176,7 @@ private val LocalMihomoDimens = staticCompositionLocalOf { DefaultMihomoDimens }
 private val LocalMihomoTypography = staticCompositionLocalOf { DefaultMihomoTextStyles }
 
 @Composable
-fun MihomoDesignTheme(darkTheme: Boolean = isSystemInDarkTheme(), content: @Composable () -> Unit) {
+fun MihomoTheme(darkTheme: Boolean = isSystemInDarkTheme(), content: @Composable () -> Unit) {
   val colorScheme = if (darkTheme) DarkColorScheme else LightColorScheme
   val mihomoColors = if (darkTheme) DarkMihomoColorTokens else LightMihomoColorTokens
 

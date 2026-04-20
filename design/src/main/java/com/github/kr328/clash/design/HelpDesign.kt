@@ -15,12 +15,12 @@ import com.github.kr328.clash.design.component.SettingsCategoryTitle
 import com.github.kr328.clash.design.component.SettingsClickableItem
 import com.github.kr328.clash.design.component.SettingsCommonScreen
 import com.github.kr328.clash.design.component.SettingsTipsItem
-import com.github.kr328.clash.design.ui.theme.MihomoDesignTheme
+import com.github.kr328.clash.design.ui.theme.MihomoTheme
 import com.github.kr328.clash.design.ui.theme.PreviewMihomo
 
 class HelpDesign(context: Context) : Design<Unit>(context) {
   override val root: View by composeView {
-    MihomoDesignTheme { HelpScreen(modifier = Modifier.fillMaxSize()) }
+    MihomoTheme { HelpScreen(modifier = Modifier.fillMaxSize()) }
   }
 }
 
@@ -63,4 +63,4 @@ internal fun Context.openLink(link: String) {
   startActivity(Intent(Intent.ACTION_VIEW).setData(link.toUri()))
 }
 
-@PreviewMihomo @Composable private fun HelpScreenPreview() = MihomoDesignTheme { HelpScreen() }
+@PreviewMihomo @Composable private fun HelpScreenPreview() = MihomoTheme { HelpScreen() }

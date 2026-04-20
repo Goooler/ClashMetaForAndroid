@@ -9,11 +9,11 @@ import com.github.kr328.clash.design.component.SettingsCategoryTitle
 import com.github.kr328.clash.design.component.SettingsClickableItem
 import com.github.kr328.clash.design.component.SettingsCommonScreen
 import com.github.kr328.clash.design.component.SettingsTipsItem
-import com.github.kr328.clash.design.ui.theme.MihomoDesignTheme
+import com.github.kr328.clash.design.ui.theme.MihomoTheme
 import com.github.kr328.clash.design.ui.theme.PreviewMihomo
 
 class ApkBrokenDesign(context: Context) : Design<Unit>(context) {
-  override val root: View by composeView { MihomoDesignTheme { ApkBrokenScreen() } }
+  override val root: View by composeView { MihomoTheme { ApkBrokenScreen() } }
 }
 
 @Composable
@@ -31,6 +31,4 @@ private fun ApkBrokenScreen() {
   }
 }
 
-@PreviewMihomo
-@Composable
-private fun ApkBrokenScreenPreview() = MihomoDesignTheme { ApkBrokenScreen() }
+@PreviewMihomo @Composable private fun ApkBrokenScreenPreview() = MihomoTheme { ApkBrokenScreen() }
