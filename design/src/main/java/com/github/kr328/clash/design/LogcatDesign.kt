@@ -1,6 +1,5 @@
 package com.github.kr328.clash.design
 
-import android.app.Activity
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
@@ -29,10 +28,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
 import androidx.core.content.getSystemService
 import com.github.kr328.clash.core.model.LogMessage
 import com.github.kr328.clash.design.component.MihomoScaffold
@@ -57,9 +56,7 @@ class LogcatDesign(context: Context, private val streaming: Boolean) :
   private val onCopyMessage: (LogMessage) -> Unit = {
     launch {
       val data = ClipData.newPlainText("log_message", it.message)
-
       context.getSystemService<ClipboardManager>()?.setPrimaryClip(data)
-
       showToast(R.string.copied, ToastDuration.Short)
     }
   }
@@ -67,8 +64,7 @@ class LogcatDesign(context: Context, private val streaming: Boolean) :
   override val root: View by composeView {
     MihomoDesignTheme {
       LogcatScreen(
-        title =
-          (context as? Activity)?.title?.toString() ?: context.getString(R.string.clash_logcat),
+        title = stringResource(R.string.clash_logcat),
         streaming = streaming,
         messages = messages,
         listState = listState,
@@ -80,7 +76,7 @@ class LogcatDesign(context: Context, private val streaming: Boolean) :
     }
   }
 
-  suspend fun patchMessages(messages: List<LogMessage>, removed: Int, appended: Int) {
+  suspend fun patchMessages(messages: List<LogMessage>, removed: Int, appended: Int) =
     withContext(Dispatchers.Main) {
       this@LogcatDesign.messages = messages
 
@@ -88,7 +84,6 @@ class LogcatDesign(context: Context, private val streaming: Boolean) :
         listState.scrollToItem(messages.lastIndex)
       }
     }
-  }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -146,15 +141,11 @@ private fun LogcatScreen(
 @Composable
 private fun LogcatMessageItem(message: LogMessage, onCopyMessage: (LogMessage) -> Unit) {
   val context = LocalContext.current
-  val horizontalPadding = dimensionResource(R.dimen.logcat_padding_horizontal)
-  val verticalPadding = dimensionResource(R.dimen.logcat_padding_vertical)
-  val messageTopMargin = dimensionResource(R.dimen.item_text_margin)
-
   Column(
     modifier =
       Modifier.fillMaxWidth()
         .combinedClickable(onClick = {}, onLongClick = { onCopyMessage(message) })
-        .padding(horizontal = horizontalPadding, vertical = verticalPadding),
+        .padding(12.dp),
     verticalArrangement = Arrangement.Center,
   ) {
     Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
@@ -171,11 +162,10 @@ private fun LogcatMessageItem(message: LogMessage, onCopyMessage: (LogMessage) -
         textAlign = TextAlign.End,
       )
     }
-
     Text(
       text = message.message,
       style = MaterialTheme.typography.bodyMedium,
-      modifier = Modifier.fillMaxWidth().padding(top = messageTopMargin),
+      modifier = Modifier.fillMaxWidth().padding(top = 5.dp),
     )
   }
 }

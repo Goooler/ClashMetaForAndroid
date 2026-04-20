@@ -134,9 +134,7 @@
             android:exported="false" />
         <activity
             android:name=".LogcatActivity"
-            android:configChanges="uiMode"
-            android:exported="false"
-            android:label="@string/logcat" />
+            android:exported="false" />
         <activity
             android:name=".SettingsActivity"
             android:configChanges="uiMode"

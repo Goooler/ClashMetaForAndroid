@@ -80,8 +80,4 @@
     <!-- About Design -->
     <dimen name="about_icon_size">50dp</dimen>
     <dimen name="about_text_margin">15dp</dimen>
-
-    <!-- Logcat Design -->
-    <dimen name="logcat_padding_vertical">12dp</dimen>
-    <dimen name="logcat_padding_horizontal">12dp</dimen>
 </resources>
