@@ -16,7 +16,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import com.github.kr328.clash.design.component.MihomoScaffold
 import com.github.kr328.clash.design.ui.theme.MihomoDesignTheme
@@ -41,7 +40,7 @@ private fun AppCrashedScreen(logs: String) {
       Text(
         text = logs,
         style =
-          TextStyle(
+          MaterialTheme.typography.bodyMedium.copy(
             color = MaterialTheme.colorScheme.onSurface,
             lineHeight = MaterialTheme.typography.bodyMedium.lineHeight * 1.5,
           ),
