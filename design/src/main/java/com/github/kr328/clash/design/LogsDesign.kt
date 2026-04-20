@@ -16,15 +16,18 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -37,10 +40,7 @@ import com.github.kr328.clash.design.model.LogFile
 import com.github.kr328.clash.design.ui.theme.MihomoDesignTheme
 import com.github.kr328.clash.design.ui.theme.PreviewMihomo
 import com.github.kr328.clash.design.util.format
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import kotlin.coroutines.resume
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
 
 class LogsDesign(context: Context) : Design<LogsDesign.Request>(context) {
@@ -68,20 +68,6 @@ class LogsDesign(context: Context) : Design<LogsDesign.Request>(context) {
   suspend fun patchLogs(logs: List<LogFile>) {
     withContext(Dispatchers.Main) { this@LogsDesign.logs = logs }
   }
-
-  suspend fun requestDeleteAll(): Boolean {
-    return withContext(Dispatchers.Main) {
-      suspendCancellableCoroutine { ctx ->
-        MaterialAlertDialogBuilder(context)
-          .setTitle(R.string.delete_all_logs)
-          .setMessage(R.string.delete_all_logs_warn)
-          .setPositiveButton(R.string.ok) { _, _ -> ctx.resume(true) }
-          .setNegativeButton(R.string.cancel) { _, _ -> }
-          .show()
-          .setOnDismissListener { if (!ctx.isCompleted) ctx.resume(false) }
-      }
-    }
-  }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -92,10 +78,35 @@ private fun LogsScreen(
   onStartLogcat: () -> Unit,
   onOpenFile: (LogFile) -> Unit,
 ) {
+  var showDeleteAllDialog by remember { mutableStateOf(false) }
+
+  if (showDeleteAllDialog) {
+    AlertDialog(
+      onDismissRequest = { showDeleteAllDialog = false },
+      title = { Text(text = stringResource(R.string.delete_all_logs)) },
+      text = { Text(text = stringResource(R.string.delete_all_logs_warn)) },
+      confirmButton = {
+        TextButton(
+          onClick = {
+            showDeleteAllDialog = false
+            onDeleteAll()
+          }
+        ) {
+          Text(text = stringResource(R.string.ok))
+        }
+      },
+      dismissButton = {
+        TextButton(onClick = { showDeleteAllDialog = false }) {
+          Text(text = stringResource(R.string.cancel))
+        }
+      },
+    )
+  }
+
   MihomoScaffold(
     title = stringResource(R.string.logs),
     actions = {
-      IconButton(onClick = onDeleteAll) {
+      IconButton(onClick = { showDeleteAllDialog = true }) {
         Icon(
           painter = painterResource(R.drawable.ic_baseline_clear_all),
           contentDescription = stringResource(R.string.delete_all_logs),
