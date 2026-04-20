@@ -67,16 +67,6 @@ class PropertiesActivity : BaseActivity<PropertiesDesign>() {
     }
   }
 
-  override fun onBackPressed() {
-    design?.apply {
-      launch {
-        if (!progressing) {
-          if (original == profile || requestExitWithoutSaving()) finish()
-        }
-      }
-    } ?: return super.onBackPressed()
-  }
-
   private suspend fun PropertiesDesign.verifyAndCommit() {
     when {
       profile.name.isBlank() -> {
