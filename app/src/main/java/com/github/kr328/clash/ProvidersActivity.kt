@@ -1,12 +1,10 @@
 package com.github.kr328.clash
 
 import com.github.kr328.clash.common.util.intent
-import com.github.kr328.clash.common.util.ticker
 import com.github.kr328.clash.design.ProvidersDesign
 import com.github.kr328.clash.design.R
 import com.github.kr328.clash.design.util.showExceptionToast
 import com.github.kr328.clash.util.withClash
-import java.util.concurrent.TimeUnit
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.selects.select
@@ -17,8 +15,6 @@ class ProvidersActivity : BaseActivity<ProvidersDesign>() {
     val design = ProvidersDesign(this, providers)
 
     setContentDesign(design)
-
-    val ticker = ticker(TimeUnit.MINUTES.toMillis(1))
 
     while (isActive) {
       select<Unit> {
@@ -54,9 +50,6 @@ class ProvidersActivity : BaseActivity<ProvidersDesign>() {
               }
             }
           }
-        }
-        if (activityStarted) {
-          ticker.onReceive { design.updateElapsed() }
         }
       }
     }
