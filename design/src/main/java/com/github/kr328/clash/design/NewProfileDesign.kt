@@ -117,7 +117,7 @@ private fun ProfileProviderItem(
   val textMargin = dimensionResource(R.dimen.item_text_margin)
   val iconSizePx = with(density) { headerSize.toPx().roundToInt() }
   val iconPainter =
-    remember(provider.icon, iconSizePx) {
+    remember(provider, iconSizePx) {
       provider.icon
         ?.toBitmap(width = iconSizePx, height = iconSizePx)
         ?.asImageBitmap()
