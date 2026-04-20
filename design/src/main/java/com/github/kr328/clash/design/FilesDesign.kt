@@ -299,23 +299,21 @@ private fun FilesMenuAction(
 
 @PreviewMihomo
 @Composable
-private fun FilesScreenPreview() {
-  MihomoDesignTheme {
-    FilesScreen(
-      files =
-        listOf(
-          File("1", "config.yaml", 1024, System.currentTimeMillis() - 60_000, false),
-          File("2", "scripts", 0, System.currentTimeMillis() - 3_600_000, true),
-        ),
-      currentInBaseDir = true,
-      configurationEditable = false,
-      onBack = {},
-      onOpen = {},
-      onNew = {},
-      onImport = {},
-      onExport = {},
-      onRename = {},
-      onDelete = {},
-    )
-  }
+private fun FilesScreenPreview() = MihomoDesignTheme {
+  FilesScreen(
+    files =
+      listOf(
+        File("1", "config.yaml", 1024, System.currentTimeMillis() - 60_000, false),
+        File("2", "scripts", 0, System.currentTimeMillis() - 3_600_000, true),
+      ),
+    currentInBaseDir = true,
+    configurationEditable = false,
+    onBack = {},
+    onOpen = {},
+    onNew = {},
+    onImport = {},
+    onExport = {},
+    onRename = {},
+    onDelete = {},
+  )
 }

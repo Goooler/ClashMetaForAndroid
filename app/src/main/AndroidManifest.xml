@@ -95,9 +95,7 @@
         </activity>
         <activity
             android:name=".ApkBrokenActivity"
-            android:configChanges="uiMode"
-            android:exported="false"
-            android:label="@string/application_broken" />
+            android:exported="false" />
         <activity
             android:name=".AppCrashedActivity"
             android:exported="false"

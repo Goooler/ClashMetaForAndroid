@@ -56,14 +56,12 @@ private fun AppCrashedScreen(logs: String) {
 
 @PreviewMihomo
 @Composable
-private fun AppCrashedScreenPreview() {
-  MihomoDesignTheme {
-    AppCrashedScreen(
-      logs =
-        "04-20 10:10:10.000 I/App( 1234): App version: 2.0.0\n" +
-          "04-20 10:10:10.100 E/App( 1234): java.lang.IllegalStateException: Example crash\n" +
-          "    at com.example.app.MainActivity.onCreate(MainActivity.kt:42)\n" +
-          "    at android.app.Activity.performCreate(Activity.java:9000)"
-    )
-  }
+private fun AppCrashedScreenPreview() = MihomoDesignTheme {
+  AppCrashedScreen(
+    logs =
+      "04-20 10:10:10.000 I/App( 1234): App version: 2.0.0\n" +
+        "04-20 10:10:10.100 E/App( 1234): java.lang.IllegalStateException: Example crash\n" +
+        "    at com.example.app.MainActivity.onCreate(MainActivity.kt:42)\n" +
+        "    at android.app.Activity.performCreate(Activity.java:9000)"
+  )
 }

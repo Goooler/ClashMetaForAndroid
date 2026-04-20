@@ -178,17 +178,15 @@ private fun LogsActionItem(
 
 @PreviewMihomo
 @Composable
-private fun LogsScreenPreview() {
-  MihomoDesignTheme {
-    LogsScreen(
-      logs =
-        listOf(
-          LogFile("clash-1710000000000.log", java.util.Date(1710000000000)),
-          LogFile("clash-1710000000001.log", java.util.Date(1710000000001)),
-        ),
-      onDeleteAll = {},
-      onStartLogcat = {},
-      onOpenFile = {},
-    )
-  }
+private fun LogsScreenPreview() = MihomoDesignTheme {
+  LogsScreen(
+    logs =
+      listOf(
+        LogFile("clash-1710000000000.log", java.util.Date(1710000000000)),
+        LogFile("clash-1710000000001.log", java.util.Date(1710000000001)),
+      ),
+    onDeleteAll = {},
+    onStartLogcat = {},
+    onOpenFile = {},
+  )
 }
