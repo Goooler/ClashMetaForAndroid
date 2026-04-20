@@ -266,7 +266,7 @@ private fun FileItem(
     IconButton(onClick = onMore) {
       Icon(
         painter = painterResource(R.drawable.ic_baseline_more_vert),
-        contentDescription = "More options",
+        contentDescription = stringResource(R.string.more),
       )
     }
   }
