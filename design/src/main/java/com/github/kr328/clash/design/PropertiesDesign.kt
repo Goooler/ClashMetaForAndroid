@@ -207,11 +207,9 @@ class PropertiesDesign(context: Context) : Design<PropertiesDesign.Request>(cont
   }
 
   private fun hasUnsavedChanges(profile: Profile, original: Profile): Boolean {
-    return (
-      profile.name != original.name ||
-        profile.source != original.source ||
-        profile.interval != original.interval
-    )
+    return profile.name != original.name ||
+      profile.source != original.source ||
+      profile.interval != original.interval
   }
 
   private fun ModelProgressBarConfigure.applyFrom(status: FetchStatus) {
