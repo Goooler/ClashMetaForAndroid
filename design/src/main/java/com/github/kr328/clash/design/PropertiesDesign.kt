@@ -146,26 +146,23 @@ class PropertiesDesign(context: Context) : Design<PropertiesDesign.Request>(cont
     }
   }
 
-  private fun inputInterval() {
-    launch {
-      var minutes = profile.interval.milliseconds.inWholeMinutes
+  private fun inputInterval() = launch {
+    var minutes = profile.interval.milliseconds.inWholeMinutes
+    minutes =
+      context
+        .requestModelTextInput(
+          initial = if (minutes == 0L) "" else minutes.toString(),
+          title = context.getText(R.string.auto_update),
+          hint = context.getText(R.string.auto_update_minutes),
+          error = context.getText(R.string.at_least_15_minutes),
+          validator = ValidatorAutoUpdateInterval,
+        )
+        .toLongOrNull() ?: 0
 
-      minutes =
-        context
-          .requestModelTextInput(
-            initial = if (minutes == 0L) "" else minutes.toString(),
-            title = context.getText(R.string.auto_update),
-            hint = context.getText(R.string.auto_update_minutes),
-            error = context.getText(R.string.at_least_15_minutes),
-            validator = ValidatorAutoUpdateInterval,
-          )
-          .toLongOrNull() ?: 0
+    val interval = minutes.minutes.inWholeMilliseconds
 
-      val interval = minutes.minutes.inWholeMilliseconds
-
-      if (interval != profile.interval) {
-        profile = profile.copy(interval = interval)
-      }
+    if (interval != profile.interval) {
+      profile = profile.copy(interval = interval)
     }
   }
 
