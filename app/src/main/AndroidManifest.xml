@@ -133,9 +133,7 @@
             android:label="@string/network" />
         <activity
             android:name=".AppSettingsActivity"
-            android:configChanges="uiMode"
-            android:exported="false"
-            android:label="@string/app" />
+            android:exported="false" />
         <activity
             android:name=".OverrideSettingsActivity"
             android:configChanges="uiMode"
