@@ -172,9 +172,7 @@
             android:exported="false" />
         <activity
             android:name=".FilesActivity"
-            android:configChanges="uiMode"
-            android:exported="false"
-            android:label="@string/files" />
+            android:exported="false" />
 
         <service
             android:name=".LogcatService"
