@@ -15,7 +15,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 
-abstract class Design<R>(val context: Context) :
+sealed class Design<R>(val context: Context) :
   CoroutineScope by CoroutineScope(Dispatchers.Unconfined) {
   abstract val root: View
 
