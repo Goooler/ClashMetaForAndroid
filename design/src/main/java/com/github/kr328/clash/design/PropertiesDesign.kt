@@ -327,7 +327,7 @@ private fun PropertiesScreen(
     }
   }
 
-  BackHandler(enabled = true) {
+  BackHandler {
     if (showExitWithoutSavingDialog) {
       onExitWithoutSavingDismiss()
     } else {
