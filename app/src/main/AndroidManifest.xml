@@ -128,9 +128,7 @@
             android:exported="false" />
         <activity
             android:name=".NetworkSettingsActivity"
-            android:configChanges="uiMode"
-            android:exported="false"
-            android:label="@string/network" />
+            android:exported="false" />
         <activity
             android:name=".AppSettingsActivity"
             android:exported="false" />
