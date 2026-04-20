@@ -16,7 +16,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -127,11 +126,9 @@ private fun LogcatScreen(
     LazyColumn(
       modifier = Modifier.fillMaxSize().padding(innerPadding),
       state = listState,
-      reverseLayout = streaming,
     ) {
       items(items = messages) {
         LogcatMessageItem(message = it, onCopyMessage = onCopyMessage)
-        HorizontalDivider()
       }
     }
   }
