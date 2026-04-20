@@ -57,9 +57,9 @@ private fun HelpScreen(modifier: Modifier = Modifier) {
 private const val CLASH_WIKI = "https://github.com/Dreamacro/clash/wiki"
 private const val CLASH_META_WIKI = "https://docs.metacubex.one/"
 private const val CLASH_META_CORE = "https://github.com/MetaCubeX/Clash.Meta"
-private const val CMFA_GITHUB = "https://github.com/MetaCubeX/ClashMetaForAndroid"
+internal const val CMFA_GITHUB = "https://github.com/MetaCubeX/ClashMetaForAndroid"
 
-private fun Context.openLink(link: String) {
+internal fun Context.openLink(link: String) {
   startActivity(Intent(Intent.ACTION_VIEW).setData(link.toUri()))
 }
 

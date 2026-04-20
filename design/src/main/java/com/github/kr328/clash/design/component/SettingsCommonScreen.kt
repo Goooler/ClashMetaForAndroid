@@ -46,7 +46,7 @@ fun SettingsCommonScreen(
 }
 
 @Composable
-fun SettingsTipsItem(text: AnnotatedString, modifier: Modifier = Modifier) {
+fun SettingsTipsItem(modifier: Modifier = Modifier, text: CharSequence) {
   Row(
     modifier = modifier.padding(vertical = 16.dp),
     verticalAlignment = Alignment.CenterVertically,
@@ -58,11 +58,20 @@ fun SettingsTipsItem(text: AnnotatedString, modifier: Modifier = Modifier) {
       modifier = Modifier.size(25.dp),
     )
     Spacer(modifier = Modifier.width(20.dp))
-    Text(
-      text = text,
-      style = MaterialTheme.typography.bodyMedium,
-      modifier = Modifier.padding(end = 20.dp),
-    )
+    when (text) {
+      is String ->
+        Text(
+          text = text,
+          style = MaterialTheme.typography.bodyMedium,
+          modifier = Modifier.padding(end = 20.dp),
+        )
+      is AnnotatedString ->
+        Text(
+          text = text,
+          style = MaterialTheme.typography.bodyMedium,
+          modifier = Modifier.padding(end = 20.dp),
+        )
+    }
   }
 }
 
