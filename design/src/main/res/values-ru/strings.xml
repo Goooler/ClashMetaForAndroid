@@ -203,9 +203,6 @@
     <string name="github_issues">Сообщения об ошибках на GitHub</string>
     <string name="google_play">Google Play</string>
     <string name="clash_meta_core">Ядро Clash Meta</string>
-    <string name="clash_wiki_url" translatable="false">https://github.com/Dreamacro/clash/wiki</string>
-    <string name="meta_github_url" translatable="false">https://github.com/MetaCubeX/ClashMetaForAndroid</string>
-    <string name="clash_meta_core_url" translatable="false">https://github.com/MetaCubeX/Clash.Meta</string>
 
     <string name="tips_properties"><![CDATA[Принимается только <strong>конфиг Clash</strong> (включая <strong>Прокси</strong>/<strong>Правила</strong>)]]></string>
     <string name="tips_help"><![CDATA[Clash Meta для Android — <strong>бесплатен</strong> и мы <strong>НЕ</strong> предоставляем по нему поддержку]]></string>
@@ -273,7 +270,6 @@
     <string name="mode_switch_tips">Действует только для текущей сессии</string>
 
     <string name="clash_meta_wiki">Clash Meta Wiki</string>
-    <string name="clash_meta_wiki_url" translatable="false">https://docs.metacubex.one/</string>
 
     <string name="meta_features">Функции Meta</string>
     <string name="unified_delay">Унифицированная задержка</string>
