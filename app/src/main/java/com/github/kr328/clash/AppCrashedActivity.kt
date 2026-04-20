@@ -21,7 +21,7 @@ class AppCrashedActivity : BaseActivity<AppCrashedDesign>() {
 
     val logs = withContext(Dispatchers.IO) { SystemLogcat.dumpCrash() }
 
-    design.setAppLogs(logs)
+    design.updateLogs(logs)
 
     while (isActive) {
       events.receive()
