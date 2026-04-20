@@ -2,8 +2,6 @@ package com.github.kr328.clash.design
 
 import android.content.Context
 import android.view.View
-import androidx.activity.OnBackPressedDispatcher
-import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -92,12 +90,9 @@ private fun LogsScreen(
   onDeleteAll: () -> Unit,
   onStartLogcat: () -> Unit,
   onOpenFile: (LogFile) -> Unit,
-  onBackPressedDispatcher: OnBackPressedDispatcher? =
-    LocalOnBackPressedDispatcherOwner.current?.onBackPressedDispatcher,
 ) {
   MihomoScaffold(
     title = stringResource(R.string.logs),
-    onBackPressedDispatcher = onBackPressedDispatcher,
     actions = {
       IconButton(onClick = onDeleteAll) {
         Icon(

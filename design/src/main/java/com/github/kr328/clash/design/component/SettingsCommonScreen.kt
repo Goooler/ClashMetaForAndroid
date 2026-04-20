@@ -1,7 +1,5 @@
 package com.github.kr328.clash.design.component
 
-import androidx.activity.OnBackPressedDispatcher
-import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -32,16 +30,11 @@ import com.github.kr328.clash.design.R
 fun SettingsCommonScreen(
   title: String,
   modifier: Modifier = Modifier,
-  onBackPressedDispatcher: OnBackPressedDispatcher? =
-    LocalOnBackPressedDispatcherOwner.current?.onBackPressedDispatcher,
-  onBack: () -> Unit = { onBackPressedDispatcher?.onBackPressed() },
   content: @Composable ColumnScope.() -> Unit,
 ) {
   MihomoScaffold(
     title = title,
     modifier = modifier,
-    onBackPressedDispatcher = onBackPressedDispatcher,
-    onBack = onBack,
     scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(),
   ) { innerPadding ->
     Column(
