@@ -3,16 +3,13 @@ package com.github.kr328.clash.design
 import android.content.Context
 import android.content.Intent
 import android.view.View
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.fromHtml
-import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import com.github.kr328.clash.common.store.unsafeLazy
 import com.github.kr328.clash.design.component.SettingsCategoryTitle
@@ -30,39 +27,31 @@ class HelpDesign(context: Context) : Design<Unit>(context) {
 
 @Composable
 private fun HelpScreen(modifier: Modifier = Modifier) {
-  val context = LocalContext.current
   SettingsCommonScreen(title = stringResource(R.string.help), modifier = modifier) {
+    val context = LocalContext.current
     SettingsTipsItem(text = AnnotatedString.fromHtml(stringResource(R.string.tips_help)))
-
-    SettingsCategoryTitle(text = stringResource(id = R.string.document))
-
+    SettingsCategoryTitle(text = stringResource(R.string.document))
     SettingsClickableItem(
-      title = stringResource(id = R.string.clash_wiki),
+      title = stringResource(R.string.clash_wiki),
       summary = CLASH_WIKI,
       onClick = { context.openLink(CLASH_WIKI) },
     )
-
     SettingsClickableItem(
-      title = stringResource(id = R.string.clash_meta_wiki),
+      title = stringResource(R.string.clash_meta_wiki),
       summary = CLASH_META_WIKI,
       onClick = { context.openLink(CLASH_META_WIKI) },
     )
-
-    SettingsCategoryTitle(text = stringResource(id = R.string.sources))
-
+    SettingsCategoryTitle(text = stringResource(R.string.sources))
     SettingsClickableItem(
-      title = stringResource(id = R.string.clash_meta_core),
+      title = stringResource(R.string.clash_meta_core),
       summary = CLASH_META_CORE,
       onClick = { context.openLink(CLASH_META_CORE) },
     )
-
     SettingsClickableItem(
-      title = stringResource(id = R.string.clash_meta_for_android),
+      title = stringResource(R.string.clash_meta_for_android),
       summary = CMFA_GITHUB,
       onClick = { context.openLink(CMFA_GITHUB) },
     )
-
-    Spacer(modifier = Modifier.height(12.dp))
   }
 }
 

@@ -43,8 +43,6 @@ fun SettingsCommonScreen(
   onBack: () -> Unit = { onBackPressedDispatcher?.onBackPressed() },
   content: @Composable ColumnScope.() -> Unit,
 ) {
-  val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
-
   Scaffold(
     modifier = modifier,
     topBar = {
@@ -53,12 +51,12 @@ fun SettingsCommonScreen(
         navigationIcon = {
           IconButton(onClick = onBack) {
             Icon(
-              painter = painterResource(id = R.drawable.ic_baseline_arrow_back),
-              contentDescription = stringResource(id = R.string.close),
+              painter = painterResource(R.drawable.ic_baseline_arrow_back),
+              contentDescription = stringResource(R.string.close),
             )
           }
         },
-        scrollBehavior = scrollBehavior,
+        scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(),
       )
     },
   ) { innerPadding ->
@@ -77,15 +75,12 @@ fun SettingsTipsItem(text: AnnotatedString, modifier: Modifier = Modifier) {
     verticalAlignment = Alignment.CenterVertically,
   ) {
     Spacer(modifier = Modifier.width(20.dp))
-
     Image(
-      painter = painterResource(id = R.drawable.ic_outline_info),
+      painter = painterResource(R.drawable.ic_outline_info),
       contentDescription = null,
       modifier = Modifier.size(25.dp),
     )
-
     Spacer(modifier = Modifier.width(20.dp))
-
     Text(
       text = text,
       style = MaterialTheme.typography.bodyMedium,
@@ -121,7 +116,6 @@ fun SettingsClickableItem(
     verticalAlignment = Alignment.CenterVertically,
   ) {
     Spacer(modifier = Modifier.width(65.dp))
-
     Column {
       Text(text = title, style = MaterialTheme.typography.bodyLarge)
       Text(
