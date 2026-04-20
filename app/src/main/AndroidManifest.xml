@@ -100,9 +100,7 @@
             android:label="@string/application_broken" />
         <activity
             android:name=".AppCrashedActivity"
-            android:configChanges="uiMode"
             android:exported="false"
-            android:label="@string/application_crashed"
             android:launchMode="singleTask" />
         <activity
             android:name=".ProfilesActivity"
