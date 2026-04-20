@@ -3,7 +3,6 @@ package com.github.kr328.clash.design
 import android.app.Activity
 import android.content.Context
 import android.view.View
-import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -28,6 +27,7 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -37,6 +37,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.fromHtml
+import androidx.compose.ui.unit.Dp
 import com.github.kr328.clash.core.model.FetchStatus
 import com.github.kr328.clash.design.component.MihomoScaffold
 import com.github.kr328.clash.design.component.SettingsTipsItem
@@ -50,7 +51,8 @@ import com.github.kr328.clash.design.util.ValidatorHttpUrl
 import com.github.kr328.clash.design.util.ValidatorNotBlank
 import com.github.kr328.clash.service.model.Profile
 import java.util.UUID
-import java.util.concurrent.TimeUnit
+import kotlin.time.Duration.Companion.milliseconds
+import kotlin.time.Duration.Companion.minutes
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -65,7 +67,6 @@ class PropertiesDesign(context: Context) : Design<PropertiesDesign.Request>(cont
   private var profileState by mutableStateOf<Profile?>(null)
   private var originalProfileState by mutableStateOf<Profile?>(null)
   private var processingState by mutableStateOf(false)
-  private var showExitWithoutSavingDialogState by mutableStateOf(false)
 
   override val root: View by composeView {
     MihomoTheme {
@@ -73,15 +74,14 @@ class PropertiesDesign(context: Context) : Design<PropertiesDesign.Request>(cont
         PropertiesScreen(
           profile = profile,
           processing = processingState,
-          showExitWithoutSavingDialog = showExitWithoutSavingDialogState,
+          hasUnsavedChanges =
+            originalProfileState?.let { original -> hasUnsavedChanges(profile, original) } == true,
           onInputName = ::inputName,
           onInputUrl = ::inputUrl,
           onInputInterval = ::inputInterval,
-          onBrowseFiles = ::requestBrowseFiles,
-          onCommit = ::requestCommit,
-          onBack = ::requestExitOrFinish,
-          onExitWithoutSavingConfirm = ::confirmExitWithoutSaving,
-          onExitWithoutSavingDismiss = ::dismissExitWithoutSaving,
+          onBrowseFiles = { requests.trySend(Request.BrowseFiles) },
+          onCommit = { requests.trySend(Request.Commit) },
+          onRequestClose = { (context as? Activity)?.finish() },
         )
       }
     }
@@ -93,7 +93,6 @@ class PropertiesDesign(context: Context) : Design<PropertiesDesign.Request>(cont
       if (originalProfileState == null) {
         originalProfileState = value.copy()
       }
-
       profileState = value
     }
 
@@ -101,45 +100,17 @@ class PropertiesDesign(context: Context) : Design<PropertiesDesign.Request>(cont
     withContext(Dispatchers.Main) {
       try {
         processingState = true
-
         context.withModelProgressBar {
           configure {
             isIndeterminate = true
             text = context.getString(R.string.initializing)
           }
-
           executeTask { configure { applyFrom(it) } }
         }
       } finally {
         processingState = false
       }
     }
-
-  private fun requestExitOrFinish() {
-    if (processingState) return
-
-    val profile = profileState ?: return
-    val original = originalProfileState
-
-    if (original == null || !hasUnsavedChanges(profile, original)) {
-      finishSelf()
-    } else {
-      showExitWithoutSavingDialogState = true
-    }
-  }
-
-  private fun confirmExitWithoutSaving() {
-    showExitWithoutSavingDialogState = false
-    finishSelf()
-  }
-
-  private fun dismissExitWithoutSaving() {
-    showExitWithoutSavingDialogState = false
-  }
-
-  private fun finishSelf() {
-    (context as? Activity)?.finish()
-  }
 
   private fun inputName() = launch {
     val name =
@@ -158,7 +129,6 @@ class PropertiesDesign(context: Context) : Design<PropertiesDesign.Request>(cont
 
   private fun inputUrl() {
     if (profile.type == Profile.Type.External) return
-
     launch {
       val url =
         context.requestModelTextInput(
@@ -177,7 +147,7 @@ class PropertiesDesign(context: Context) : Design<PropertiesDesign.Request>(cont
 
   private fun inputInterval() {
     launch {
-      var minutes = TimeUnit.MILLISECONDS.toMinutes(profile.interval)
+      var minutes = profile.interval.milliseconds.inWholeMinutes
 
       minutes =
         context
@@ -190,20 +160,12 @@ class PropertiesDesign(context: Context) : Design<PropertiesDesign.Request>(cont
           )
           .toLongOrNull() ?: 0
 
-      val interval = TimeUnit.MINUTES.toMillis(minutes)
+      val interval = minutes.minutes.inWholeMilliseconds
 
       if (interval != profile.interval) {
         profile = profile.copy(interval = interval)
       }
     }
-  }
-
-  private fun requestCommit() {
-    requests.trySend(Request.Commit)
-  }
-
-  private fun requestBrowseFiles() {
-    requests.trySend(Request.BrowseFiles)
   }
 
   private fun hasUnsavedChanges(profile: Profile, original: Profile): Boolean {
@@ -239,22 +201,30 @@ class PropertiesDesign(context: Context) : Design<PropertiesDesign.Request>(cont
 private fun PropertiesScreen(
   profile: Profile,
   processing: Boolean,
-  showExitWithoutSavingDialog: Boolean,
+  hasUnsavedChanges: Boolean,
   onInputName: () -> Unit,
   onInputUrl: () -> Unit,
   onInputInterval: () -> Unit,
   onBrowseFiles: () -> Unit,
   onCommit: () -> Unit,
-  onBack: () -> Unit,
-  onExitWithoutSavingConfirm: () -> Unit,
-  onExitWithoutSavingDismiss: () -> Unit,
+  onRequestClose: () -> Unit,
 ) {
   val contentPaddingHorizontal = dimensionResource(R.dimen.item_tailing_margin)
   val itemPaddingVertical = dimensionResource(R.dimen.item_padding_vertical)
+  var showExitWithoutSavingDialog by rememberSaveable { mutableStateOf(false) }
+
+  val handleBack: () -> Unit = {
+    when {
+      processing -> Unit
+      showExitWithoutSavingDialog -> showExitWithoutSavingDialog = false
+      hasUnsavedChanges -> showExitWithoutSavingDialog = true
+      else -> onRequestClose()
+    }
+  }
 
   MihomoScaffold(
     title = stringResource(R.string.properties),
-    onBack = onBack,
+    onBack = handleBack,
     scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(),
     actions = {
       if (processing) {
@@ -304,10 +274,7 @@ private fun PropertiesScreen(
           if (profile.interval == 0L) {
             stringResource(R.string.disabled)
           } else {
-            stringResource(
-              R.string.format_minutes,
-              TimeUnit.MILLISECONDS.toMinutes(profile.interval),
-            )
+            stringResource(R.string.format_minutes, profile.interval.milliseconds.inWholeMinutes)
           },
         placeholder = stringResource(R.string.at_least_15_minutes),
         iconRes = R.drawable.ic_outline_update,
@@ -327,18 +294,10 @@ private fun PropertiesScreen(
     }
   }
 
-  BackHandler {
-    if (showExitWithoutSavingDialog) {
-      onExitWithoutSavingDismiss()
-    } else {
-      onBack()
-    }
-  }
-
   if (showExitWithoutSavingDialog) {
     ExitWithoutSavingDialog(
-      onConfirm = onExitWithoutSavingConfirm,
-      onDismiss = onExitWithoutSavingDismiss,
+      onConfirm = onRequestClose,
+      onDismiss = { showExitWithoutSavingDialog = false },
     )
   }
 }
@@ -366,7 +325,7 @@ private fun PropertiesActionItem(
   iconRes: Int,
   enabled: Boolean,
   onClick: () -> Unit,
-  itemPaddingVertical: androidx.compose.ui.unit.Dp,
+  itemPaddingVertical: Dp,
 ) {
   val itemHeaderComponentSize = dimensionResource(R.dimen.item_header_component_size)
   val itemHeaderMargin = dimensionResource(R.dimen.item_header_margin)
@@ -411,7 +370,7 @@ private fun PropertiesScreenPreview() = MihomoTheme {
         type = Profile.Type.Url,
         source = "https://example.com/config.yaml",
         active = false,
-        interval = TimeUnit.MINUTES.toMillis(60),
+        interval = 60.minutes.inWholeMilliseconds,
         upload = 0,
         download = 0,
         total = 0,
@@ -421,14 +380,12 @@ private fun PropertiesScreenPreview() = MihomoTheme {
         pending = false,
       ),
     processing = false,
-    showExitWithoutSavingDialog = false,
+    hasUnsavedChanges = false,
     onInputName = {},
     onInputUrl = {},
     onInputInterval = {},
     onBrowseFiles = {},
     onCommit = {},
-    onBack = {},
-    onExitWithoutSavingConfirm = {},
-    onExitWithoutSavingDismiss = {},
+    onRequestClose = {},
   )
 }
