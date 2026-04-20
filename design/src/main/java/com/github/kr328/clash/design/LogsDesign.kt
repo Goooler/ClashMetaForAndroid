@@ -2,14 +2,45 @@ package com.github.kr328.clash.design
 
 import android.content.Context
 import android.view.View
-import com.github.kr328.clash.design.adapter.LogFileAdapter
-import com.github.kr328.clash.design.databinding.DesignLogsBinding
+import androidx.activity.OnBackPressedDispatcher
+import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
+import androidx.annotation.DrawableRes
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.dp
+import com.github.kr328.clash.common.store.unsafeLazy
 import com.github.kr328.clash.design.model.LogFile
-import com.github.kr328.clash.design.util.applyFrom
-import com.github.kr328.clash.design.util.applyLinearAdapter
-import com.github.kr328.clash.design.util.layoutInflater
-import com.github.kr328.clash.design.util.patchDataSet
-import com.github.kr328.clash.design.util.root
+import com.github.kr328.clash.design.ui.theme.MihomoDesignTheme
+import com.github.kr328.clash.design.ui.theme.PreviewMihomo
+import com.github.kr328.clash.design.util.format
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlin.coroutines.resume
 import kotlinx.coroutines.Dispatchers
@@ -25,14 +56,23 @@ class LogsDesign(context: Context) : Design<LogsDesign.Request>(context) {
     data class OpenFile(val file: LogFile) : Request()
   }
 
-  private val binding = DesignLogsBinding.inflate(context.layoutInflater, context.root, false)
-  private val adapter = LogFileAdapter(context) { requests.trySend(Request.OpenFile(it)) }
+  private var logs by mutableStateOf<List<LogFile>>(emptyList())
 
-  override val root: View
-    get() = binding.root
+  override val root: View by unsafeLazy {
+    composeView {
+      MihomoDesignTheme {
+        LogsScreen(
+          logs = logs,
+          onDeleteAll = { requests.trySend(Request.DeleteAll) },
+          onStartLogcat = { requests.trySend(Request.StartLogcat) },
+          onOpenFile = { requests.trySend(Request.OpenFile(it)) },
+        )
+      }
+    }
+  }
 
   suspend fun patchLogs(logs: List<LogFile>) {
-    adapter.patchDataSet(adapter::logs, logs, false, LogFile::fileName)
+    withContext(Dispatchers.Main) { this@LogsDesign.logs = logs }
   }
 
   suspend fun requestDeleteAll(): Boolean {
@@ -48,12 +88,119 @@ class LogsDesign(context: Context) : Design<LogsDesign.Request>(context) {
       }
     }
   }
+}
 
-  init {
-    binding.self = this
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun LogsScreen(
+  logs: List<LogFile>,
+  onDeleteAll: () -> Unit,
+  onStartLogcat: () -> Unit,
+  onOpenFile: (LogFile) -> Unit,
+  onBackPressedDispatcher: OnBackPressedDispatcher? =
+    LocalOnBackPressedDispatcherOwner.current?.onBackPressedDispatcher,
+) {
+  Scaffold(
+    topBar = {
+      TopAppBar(
+        title = {
+          Text(text = stringResource(R.string.logs), maxLines = 1, overflow = TextOverflow.Ellipsis)
+        },
+        navigationIcon = {
+          IconButton(onClick = { onBackPressedDispatcher?.onBackPressed() }) {
+            Icon(
+              painter = painterResource(R.drawable.ic_baseline_arrow_back),
+              contentDescription = stringResource(R.string.close),
+            )
+          }
+        },
+        actions = {
+          IconButton(onClick = onDeleteAll) {
+            Icon(
+              painter = painterResource(R.drawable.ic_baseline_clear_all),
+              contentDescription = stringResource(R.string.delete_all_logs),
+            )
+          }
+        },
+      )
+    }
+  ) { innerPadding ->
+    LazyColumn(modifier = Modifier.fillMaxSize().padding(innerPadding)) {
+      item {
+        LogsActionItem(
+          title = stringResource(R.string.clash_logcat),
+          summary = stringResource(R.string.tap_to_start),
+          icon = R.drawable.ic_baseline_adb,
+          onClick = onStartLogcat,
+        )
+      }
 
-    binding.activityBarLayout.applyFrom(context)
+      item { HorizontalDivider() }
 
-    binding.recyclerList.applyLinearAdapter(context, adapter)
+      item {
+        Text(
+          text = stringResource(R.string.history),
+          color = androidx.compose.material3.MaterialTheme.colorScheme.primary,
+          modifier =
+            Modifier.fillMaxWidth().padding(start = 65.dp, end = 20.dp, top = 16.dp, bottom = 16.dp),
+        )
+      }
+
+      items(items = logs, key = LogFile::fileName) { file ->
+        val context = LocalContext.current
+
+        LogsActionItem(
+          title = file.fileName,
+          summary = file.date.format(context),
+          onClick = { onOpenFile(file) },
+        )
+      }
+    }
+  }
+}
+
+@Composable
+private fun LogsActionItem(
+  title: String,
+  summary: String,
+  onClick: () -> Unit,
+  modifier: Modifier = Modifier,
+  @DrawableRes icon: Int? = null,
+) {
+  Row(
+    modifier = modifier.fillMaxWidth().clickable(onClick = onClick).padding(end = 20.dp),
+    verticalAlignment = Alignment.CenterVertically,
+  ) {
+    Box(
+      modifier = Modifier.size(width = 65.dp, height = 75.dp),
+      contentAlignment = Alignment.Center,
+    ) {
+      if (icon != null) {
+        Icon(
+          painter = painterResource(icon),
+          contentDescription = null,
+          modifier = Modifier.size(30.dp),
+        )
+      }
+    }
+
+    Column(modifier = Modifier.heightIn(min = 75.dp), verticalArrangement = Arrangement.Center) {
+      Text(text = title)
+      Spacer(modifier = Modifier.size(5.dp))
+      Text(text = summary, style = androidx.compose.material3.MaterialTheme.typography.bodyMedium)
+    }
+  }
+}
+
+@PreviewMihomo
+@Composable
+private fun LogsScreenPreview() {
+  MihomoDesignTheme {
+    LogsScreen(
+      logs = listOf(LogFile("clash-1710000000000.log", java.util.Date(1710000000000))),
+      onDeleteAll = {},
+      onStartLogcat = {},
+      onOpenFile = {},
+    )
   }
 }
