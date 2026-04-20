@@ -20,6 +20,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -111,21 +112,17 @@ private fun LogsScreen(
           onClick = onStartLogcat,
         )
       }
-
       item { HorizontalDivider() }
-
       item {
         Text(
           text = stringResource(R.string.history),
-          color = androidx.compose.material3.MaterialTheme.colorScheme.primary,
+          color = MaterialTheme.colorScheme.primary,
           modifier =
             Modifier.fillMaxWidth().padding(start = 65.dp, end = 20.dp, top = 16.dp, bottom = 16.dp),
         )
       }
-
       items(items = logs, key = LogFile::fileName) { file ->
         val context = LocalContext.current
-
         LogsActionItem(
           title = file.fileName,
           summary = file.date.format(context),
@@ -164,7 +161,7 @@ private fun LogsActionItem(
     Column(modifier = Modifier.heightIn(min = 75.dp), verticalArrangement = Arrangement.Center) {
       Text(text = title)
       Spacer(modifier = Modifier.size(5.dp))
-      Text(text = summary, style = androidx.compose.material3.MaterialTheme.typography.bodyMedium)
+      Text(text = summary, style = MaterialTheme.typography.bodyMedium)
     }
   }
 }
@@ -174,7 +171,11 @@ private fun LogsActionItem(
 private fun LogsScreenPreview() {
   MihomoDesignTheme {
     LogsScreen(
-      logs = listOf(LogFile("clash-1710000000000.log", java.util.Date(1710000000000))),
+      logs =
+        listOf(
+          LogFile("clash-1710000000000.log", java.util.Date(1710000000000)),
+          LogFile("clash-1710000000001.log", java.util.Date(1710000000001)),
+        ),
       onDeleteAll = {},
       onStartLogcat = {},
       onOpenFile = {},
