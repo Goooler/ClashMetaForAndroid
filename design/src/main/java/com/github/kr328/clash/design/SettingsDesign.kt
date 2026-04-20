@@ -2,6 +2,7 @@ package com.github.kr328.clash.design
 
 import android.content.Context
 import android.view.View
+import androidx.annotation.DrawableRes
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -74,7 +75,7 @@ private fun SettingsScreen(
 
 @Composable
 private fun SettingsEntryItem(
-  icon: Int,
+  @DrawableRes icon: Int,
   title: String,
   onClick: () -> Unit,
   modifier: Modifier = Modifier,
