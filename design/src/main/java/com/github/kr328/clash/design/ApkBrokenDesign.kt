@@ -12,7 +12,7 @@ import com.github.kr328.clash.design.component.SettingsTipsItem
 import com.github.kr328.clash.design.ui.theme.MihomoDesignTheme
 import com.github.kr328.clash.design.ui.theme.PreviewMihomo
 
-class ApkBrokenDesign(context: Context) : Design<Any>(context) {
+class ApkBrokenDesign(context: Context) : Design<Unit>(context) {
   override val root: View by composeView { MihomoDesignTheme { ApkBrokenScreen() } }
 }
 
