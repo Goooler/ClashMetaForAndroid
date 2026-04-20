@@ -107,9 +107,7 @@
             android:label="@string/profiles" />
         <activity
             android:name=".NewProfileActivity"
-            android:configChanges="uiMode"
-            android:exported="false"
-            android:label="@string/create_profile" />
+            android:exported="false" />
         <activity
             android:name=".PropertiesActivity"
             android:configChanges="uiMode"
