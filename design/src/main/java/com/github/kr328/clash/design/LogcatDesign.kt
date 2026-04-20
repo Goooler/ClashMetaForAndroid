@@ -80,9 +80,10 @@ class LogcatDesign(context: Context, private val streaming: Boolean) :
 
   suspend fun patchMessages(messages: List<LogMessage>) =
     withContext(Dispatchers.Main) {
+      val shouldAutoFollow = streaming && listState.isBottom
       this@LogcatDesign.messages = messages
 
-      if (streaming && listState.isTop && messages.isNotEmpty()) {
+      if (shouldAutoFollow && messages.isNotEmpty()) {
         listState.scrollToItem(messages.lastIndex)
       }
     }
@@ -167,8 +168,14 @@ private fun LogcatMessageItem(message: LogMessage, onCopyMessage: (LogMessage) -
   }
 }
 
-private val LazyListState.isTop: Boolean
-  get() = firstVisibleItemIndex == 0 && firstVisibleItemScrollOffset == 0
+private val LazyListState.isBottom: Boolean
+  get() {
+    val layoutInfo = layoutInfo
+    val lastVisibleItem = layoutInfo.visibleItemsInfo.lastOrNull() ?: return true
+
+    return lastVisibleItem.index == layoutInfo.totalItemsCount - 1 &&
+      lastVisibleItem.offset + lastVisibleItem.size <= layoutInfo.viewportEndOffset
+  }
 
 @PreviewMihomo
 @Composable
