@@ -22,9 +22,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -34,8 +32,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import com.github.kr328.clash.design.component.MihomoScaffold
 import com.github.kr328.clash.design.model.LogFile
 import com.github.kr328.clash.design.ui.theme.MihomoDesignTheme
 import com.github.kr328.clash.design.ui.theme.PreviewMihomo
@@ -97,30 +95,17 @@ private fun LogsScreen(
   onBackPressedDispatcher: OnBackPressedDispatcher? =
     LocalOnBackPressedDispatcherOwner.current?.onBackPressedDispatcher,
 ) {
-  Scaffold(
-    topBar = {
-      TopAppBar(
-        title = {
-          Text(text = stringResource(R.string.logs), maxLines = 1, overflow = TextOverflow.Ellipsis)
-        },
-        navigationIcon = {
-          IconButton(onClick = { onBackPressedDispatcher?.onBackPressed() }) {
-            Icon(
-              painter = painterResource(R.drawable.ic_baseline_arrow_back),
-              contentDescription = stringResource(R.string.close),
-            )
-          }
-        },
-        actions = {
-          IconButton(onClick = onDeleteAll) {
-            Icon(
-              painter = painterResource(R.drawable.ic_baseline_clear_all),
-              contentDescription = stringResource(R.string.delete_all_logs),
-            )
-          }
-        },
-      )
-    }
+  MihomoScaffold(
+    title = stringResource(R.string.logs),
+    onBackPressedDispatcher = onBackPressedDispatcher,
+    actions = {
+      IconButton(onClick = onDeleteAll) {
+        Icon(
+          painter = painterResource(R.drawable.ic_baseline_clear_all),
+          contentDescription = stringResource(R.string.delete_all_logs),
+        )
+      }
+    },
   ) { innerPadding ->
     LazyColumn(modifier = Modifier.fillMaxSize().padding(innerPadding)) {
       item {
