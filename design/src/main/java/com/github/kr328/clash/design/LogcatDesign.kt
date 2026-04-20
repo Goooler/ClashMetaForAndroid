@@ -128,7 +128,7 @@ private fun LogcatScreen(
     },
   ) { innerPadding ->
     LazyColumn(modifier = Modifier.fillMaxSize().padding(innerPadding), state = listState) {
-      items(items = messages, key = LogMessage::toString) {
+      items(items = messages) {
         LogcatMessageItem(message = it, onCopyMessage = onCopyMessage)
       }
     }
