@@ -11,7 +11,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.fromHtml
 import androidx.core.net.toUri
-import com.github.kr328.clash.common.store.unsafeLazy
 import com.github.kr328.clash.design.component.SettingsCategoryTitle
 import com.github.kr328.clash.design.component.SettingsClickableItem
 import com.github.kr328.clash.design.component.SettingsCommonScreen
@@ -20,8 +19,8 @@ import com.github.kr328.clash.design.ui.theme.MihomoDesignTheme
 import com.github.kr328.clash.design.ui.theme.PreviewMihomo
 
 class HelpDesign(context: Context) : Design<Unit>(context) {
-  override val root: View by unsafeLazy {
-    composeView { MihomoDesignTheme { HelpScreen(modifier = Modifier.fillMaxSize()) } }
+  override val root: View by composeView {
+    MihomoDesignTheme { HelpScreen(modifier = Modifier.fillMaxSize()) }
   }
 }
 

@@ -36,7 +36,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import com.github.kr328.clash.common.store.unsafeLazy
 import com.github.kr328.clash.design.model.LogFile
 import com.github.kr328.clash.design.ui.theme.MihomoDesignTheme
 import com.github.kr328.clash.design.ui.theme.PreviewMihomo
@@ -58,16 +57,14 @@ class LogsDesign(context: Context) : Design<LogsDesign.Request>(context) {
 
   private var logs by mutableStateOf<List<LogFile>>(emptyList())
 
-  override val root: View by unsafeLazy {
-    composeView {
-      MihomoDesignTheme {
-        LogsScreen(
-          logs = logs,
-          onDeleteAll = { requests.trySend(Request.DeleteAll) },
-          onStartLogcat = { requests.trySend(Request.StartLogcat) },
-          onOpenFile = { requests.trySend(Request.OpenFile(it)) },
-        )
-      }
+  override val root: View by composeView {
+    MihomoDesignTheme {
+      LogsScreen(
+        logs = logs,
+        onDeleteAll = { requests.trySend(Request.DeleteAll) },
+        onStartLogcat = { requests.trySend(Request.StartLogcat) },
+        onOpenFile = { requests.trySend(Request.OpenFile(it)) },
+      )
     }
   }
 
