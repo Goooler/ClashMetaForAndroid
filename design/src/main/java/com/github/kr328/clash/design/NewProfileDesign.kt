@@ -133,12 +133,7 @@ private fun ProfileProviderItem(
   ) {
     Spacer(modifier = Modifier.width(headerMargin))
     if (iconPainter != null) {
-      Icon(
-        painter = iconPainter,
-        contentDescription = null,
-        tint = MaterialTheme.colorScheme.onSurface,
-        modifier = Modifier.size(headerSize),
-      )
+      Icon(painter = iconPainter, contentDescription = null, modifier = Modifier.size(headerSize))
     } else {
       Spacer(modifier = Modifier.size(headerSize))
     }
