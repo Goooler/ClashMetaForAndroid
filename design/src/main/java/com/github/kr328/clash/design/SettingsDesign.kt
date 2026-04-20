@@ -3,6 +3,7 @@ package com.github.kr328.clash.design
 import android.content.Context
 import android.view.View
 import androidx.annotation.DrawableRes
+import androidx.annotation.StringRes
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -48,26 +49,26 @@ private fun SettingsScreen(
     modifier = modifier.fillMaxSize(),
   ) {
     SettingsEntryItem(
-      icon = R.drawable.ic_baseline_settings,
-      title = stringResource(R.string.app),
+      iconRes = R.drawable.ic_baseline_settings,
+      titleRes = R.string.app,
       onClick = { onRequest(SettingsDesign.Request.StartApp) },
     )
 
     SettingsEntryItem(
-      icon = R.drawable.ic_baseline_dns,
-      title = stringResource(R.string.network),
+      iconRes = R.drawable.ic_baseline_dns,
+      titleRes = R.string.network,
       onClick = { onRequest(SettingsDesign.Request.StartNetwork) },
     )
 
     SettingsEntryItem(
-      icon = R.drawable.ic_baseline_extension,
-      title = stringResource(R.string.override),
+      iconRes = R.drawable.ic_baseline_extension,
+      titleRes = R.string.override,
       onClick = { onRequest(SettingsDesign.Request.StartOverride) },
     )
 
     SettingsEntryItem(
-      icon = R.drawable.ic_baseline_meta,
-      title = stringResource(R.string.meta_features),
+      iconRes = R.drawable.ic_baseline_meta,
+      titleRes = R.string.meta_features,
       onClick = { onRequest(SettingsDesign.Request.StartMetaFeature) },
     )
   }
@@ -75,8 +76,8 @@ private fun SettingsScreen(
 
 @Composable
 private fun SettingsEntryItem(
-  @DrawableRes icon: Int,
-  title: String,
+  @DrawableRes iconRes: Int,
+  @StringRes titleRes: Int,
   onClick: () -> Unit,
   modifier: Modifier = Modifier,
 ) {
@@ -91,12 +92,12 @@ private fun SettingsEntryItem(
   ) {
     Spacer(modifier = Modifier.width(17.5.dp))
     Icon(
-      painter = painterResource(icon),
+      painter = painterResource(iconRes),
       contentDescription = null,
       modifier = Modifier.size(30.dp),
     )
     Spacer(modifier = Modifier.width(17.5.dp))
-    Text(text = title, style = MaterialTheme.typography.bodyLarge)
+    Text(text = stringResource(titleRes), style = MaterialTheme.typography.bodyLarge)
   }
 }
 
