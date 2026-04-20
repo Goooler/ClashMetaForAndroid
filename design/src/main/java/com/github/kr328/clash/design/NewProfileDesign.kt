@@ -135,7 +135,7 @@ private fun ProfileProviderItem(
     if (iconPainter != null) {
       Icon(
         painter = iconPainter,
-        contentDescription = provider.name,
+        contentDescription = null,
         modifier = Modifier.size(headerSize),
       )
     } else {
