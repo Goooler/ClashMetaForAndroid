@@ -67,7 +67,7 @@ class FilesDesign(context: Context) : Design<FilesDesign.Request>(context) {
 
   private var files by mutableStateOf<List<File>>(emptyList())
   private var currentInBaseDir by mutableStateOf(false)
-  var configurationEditable by mutableStateOf(false)
+  private var configurationEditable by mutableStateOf(false)
 
   override val root: View by composeView {
     MihomoDesignTheme {
@@ -91,11 +91,14 @@ class FilesDesign(context: Context) : Design<FilesDesign.Request>(context) {
     }
   }
 
-  suspend fun swapFiles(files: List<File>, currentInBaseDir: Boolean) {
+  suspend fun swapFiles(files: List<File>, currentInBaseDir: Boolean) =
     withContext(Dispatchers.Main) {
       this@FilesDesign.files = files
       this@FilesDesign.currentInBaseDir = currentInBaseDir
     }
+
+  fun updateConfigurationEditable(editable: Boolean) {
+    configurationEditable = editable
   }
 
   fun updateElapsed() = Unit
@@ -215,7 +218,7 @@ private fun FilesScreen(
 private fun FileItem(
   file: File,
   currentTime: Long,
-  context: android.content.Context,
+  context: Context,
   onClick: () -> Unit,
   onMore: () -> Unit,
 ) {

@@ -27,7 +27,7 @@ class FilesActivity : BaseActivity<FilesDesign>() {
     val client = FilesClient(this)
     val stack = Stack<String>()
 
-    design.configurationEditable = profile.type != Profile.Type.Url
+    design.updateConfigurationEditable(profile.type != Profile.Type.Url)
     design.fetch(client, stack, root)
 
     setContentDesign(design)
