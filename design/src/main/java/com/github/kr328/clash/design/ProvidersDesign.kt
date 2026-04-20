@@ -85,11 +85,12 @@ class ProvidersDesign(context: Context, providers: List<Provider>) :
 
   private fun requestUpdateAll() {
     states.forEachIndexed { index, state ->
-      if (state.updating) return@forEachIndexed
-      states[index] = state.copy(updating = true)
-      if (state.provider.vehicleType != Provider.VehicleType.Inline) {
-        requests.trySend(Request.Update(index, state.provider))
+      if (state.updating || state.provider.vehicleType == Provider.VehicleType.Inline) {
+        return@forEachIndexed
       }
+
+      states[index] = state.copy(updating = true)
+      requests.trySend(Request.Update(index, state.provider))
     }
   }
 }
