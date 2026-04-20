@@ -65,9 +65,8 @@ class LogsDesign(context: Context) : Design<LogsDesign.Request>(context) {
     }
   }
 
-  suspend fun patchLogs(logs: List<LogFile>) {
+  suspend fun patchLogs(logs: List<LogFile>) =
     withContext(Dispatchers.Main) { this@LogsDesign.logs = logs }
-  }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -114,6 +113,7 @@ private fun LogsScreen(
       }
     },
   ) { innerPadding ->
+    val context = LocalContext.current
     LazyColumn(modifier = Modifier.fillMaxSize().padding(innerPadding)) {
       item {
         LogsActionItem(
@@ -133,7 +133,6 @@ private fun LogsScreen(
         )
       }
       items(items = logs, key = LogFile::fileName) { file ->
-        val context = LocalContext.current
         LogsActionItem(
           title = file.fileName,
           summary = file.date.format(context),
