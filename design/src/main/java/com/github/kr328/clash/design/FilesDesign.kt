@@ -102,8 +102,6 @@ class FilesDesign(context: Context) : Design<FilesDesign.Request>(context) {
     configurationEditable = editable
   }
 
-  fun updateElapsed() = Unit
-
   suspend fun requestFileName(name: String): String {
     return context.requestModelTextInput(
       initial = name,

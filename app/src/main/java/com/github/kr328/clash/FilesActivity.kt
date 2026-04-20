@@ -4,7 +4,6 @@ import android.content.Intent
 import android.net.Uri
 import androidx.activity.result.contract.ActivityResultContracts
 import com.github.kr328.clash.common.util.grantPermissions
-import com.github.kr328.clash.common.util.ticker
 import com.github.kr328.clash.common.util.uuid
 import com.github.kr328.clash.design.FilesDesign
 import com.github.kr328.clash.design.util.showExceptionToast
@@ -13,7 +12,6 @@ import com.github.kr328.clash.service.model.Profile
 import com.github.kr328.clash.util.fileName
 import com.github.kr328.clash.util.withProfile
 import java.util.Stack
-import java.util.concurrent.TimeUnit
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.selects.select
 
@@ -31,8 +29,6 @@ class FilesActivity : BaseActivity<FilesDesign>() {
     design.fetch(client, stack, root)
 
     setContentDesign(design)
-
-    val ticker = ticker(TimeUnit.MINUTES.toMillis(1))
 
     while (isActive) {
       select {
@@ -104,9 +100,6 @@ class FilesActivity : BaseActivity<FilesDesign>() {
           }
 
           design.fetch(client, stack, root)
-        }
-        if (activityStarted) {
-          ticker.onReceive { design.updateElapsed() }
         }
       }
     }
