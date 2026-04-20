@@ -75,6 +75,7 @@ class FilesDesign(context: Context) : Design<FilesDesign.Request>(context) {
         files = files,
         currentInBaseDir = currentInBaseDir,
         configurationEditable = configurationEditable,
+        onBack = { requests.trySend(Request.PopStack) },
         onOpen = { file ->
           if (file.isDirectory) {
             requests.trySend(Request.OpenDirectory(file))
@@ -120,6 +121,7 @@ private fun FilesScreen(
   files: List<File>,
   currentInBaseDir: Boolean,
   configurationEditable: Boolean,
+  onBack: () -> Unit,
   onOpen: (File) -> Unit,
   onNew: () -> Unit,
   onImport: (File) -> Unit,
@@ -178,6 +180,7 @@ private fun FilesScreen(
 
   MihomoScaffold(
     title = stringResource(R.string.files),
+    onBack = onBack,
     actions = {
       if (!currentInBaseDir) {
         IconButton(onClick = onNew) {
@@ -305,6 +308,7 @@ private fun FilesScreenPreview() {
         ),
       currentInBaseDir = true,
       configurationEditable = false,
+      onBack = {},
       onOpen = {},
       onNew = {},
       onImport = {},
