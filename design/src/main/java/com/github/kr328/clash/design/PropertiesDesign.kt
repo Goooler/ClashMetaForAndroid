@@ -3,6 +3,7 @@ package com.github.kr328.clash.design
 import android.app.Activity
 import android.content.Context
 import android.view.View
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -213,7 +214,7 @@ private fun PropertiesScreen(
   val itemPaddingVertical = dimensionResource(R.dimen.item_padding_vertical)
   var showExitWithoutSavingDialog by rememberSaveable { mutableStateOf(false) }
 
-  val handleBack: () -> Unit = {
+  val onBack = {
     when {
       processing -> Unit
       showExitWithoutSavingDialog -> showExitWithoutSavingDialog = false
@@ -222,9 +223,11 @@ private fun PropertiesScreen(
     }
   }
 
+  BackHandler(onBack = onBack)
+
   MihomoScaffold(
     title = stringResource(R.string.properties),
-    onBack = handleBack,
+    onBack = onBack,
     scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(),
     actions = {
       if (processing) {
