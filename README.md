@@ -34,7 +34,7 @@ Feature of [Clash.Meta](https://github.com/MetaCubeX/mihomo)
 4. (Optional) Custom app package name. Add the following configuration to `local.properties`.
 
    ```properties
-   # config your ownn applicationId, or it will be 'com.github.metacubex.clash'
+   # config your own applicationId, or it will be 'com.github.metacubex.clash'
    custom.application.id=com.my.compile.clash
 
 5. Create `signing.properties` in project root with
@@ -55,6 +55,7 @@ Feature of [Clash.Meta](https://github.com/MetaCubeX/mihomo)
 ### Automation
 
 APP package name is `com.github.metacubex.clash`
+Automation action strings remain `com.github.metacubex.clash.meta.action.*` for compatibility.
 
 - Toggle Clash.Meta service status
   - Send intent to activity `com.github.kr328.clash.ExternalControlActivity` with action `com.github.metacubex.clash.meta.action.TOGGLE_CLASH`
