@@ -166,6 +166,7 @@ class ProxyDesign(
     withContext(Dispatchers.Main) {
       groups[position].apply {
         rawStates = states
+        items = emptyList()
         this.selectable = selectable
         urlTesting = false
         refresh()
@@ -205,20 +206,10 @@ private class ProxyGroupUiState {
   var selectable by mutableStateOf(false)
   var urlTesting by mutableStateOf(false)
   var rawStates: List<ProxyViewState> = emptyList()
+  var refreshVersion by mutableIntStateOf(0)
 
   fun refresh() {
-    items = rawStates.map { state ->
-      state.update(true)
-
-      ProxyItemUiState(
-        key = state.proxy.name,
-        title = state.title,
-        subtitle = state.subtitle,
-        delayText = state.delayText,
-        background = state.background,
-        controls = state.controls,
-      )
-    }
+    refreshVersion++
   }
 }
 
@@ -373,6 +364,9 @@ private fun ProxyGroupPage(
   group: ProxyGroupUiState,
   onProxySelected: (Int, String) -> Unit,
 ) {
+  val refreshVersion = group.refreshVersion
+  val useRawStates = remember(refreshVersion, group.rawStates) { group.rawStates.isNotEmpty() }
+
   LazyVerticalGrid(
     columns = GridCells.Fixed(columnsForProxyLine(proxyLine)),
     state = rememberLazyGridState(),
@@ -381,8 +375,31 @@ private fun ProxyGroupPage(
     horizontalArrangement = Arrangement.spacedBy(12.dp),
     verticalArrangement = Arrangement.spacedBy(12.dp),
   ) {
-    items(count = group.items.size, key = { group.items[it].key }) { itemIndex ->
-      val item = group.items[itemIndex]
+    items(
+      count = if (useRawStates) group.rawStates.size else group.items.size,
+      key = { itemIndex ->
+        if (useRawStates) {
+          group.rawStates[itemIndex].proxy.name
+        } else {
+          group.items[itemIndex].key
+        }
+      },
+    ) { itemIndex ->
+      val item =
+        if (useRawStates) {
+          group.rawStates[itemIndex].apply { update(true) }.run {
+            ProxyItemUiState(
+              key = proxy.name,
+              title = title,
+              subtitle = subtitle,
+              delayText = delayText,
+              background = background,
+              controls = controls,
+            )
+          }
+        } else {
+          group.items[itemIndex]
+        }
 
       ProxyItemCard(
         item = item,
