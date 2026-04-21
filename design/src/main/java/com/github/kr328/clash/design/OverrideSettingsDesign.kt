@@ -2,10 +2,22 @@ package com.github.kr328.clash.design
 
 import android.content.Context
 import android.view.View
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.viewinterop.AndroidView
 import com.github.kr328.clash.core.model.ConfigurationOverride
 import com.github.kr328.clash.core.model.LogMessage
 import com.github.kr328.clash.core.model.TunnelState
-import com.github.kr328.clash.design.databinding.DesignSettingsOverideBinding
+import com.github.kr328.clash.design.component.MihomoScaffold
 import com.github.kr328.clash.design.preference.NullableTextAdapter
 import com.github.kr328.clash.design.preference.OnChangedListener
 import com.github.kr328.clash.design.preference.Preference
@@ -16,10 +28,8 @@ import com.github.kr328.clash.design.preference.editableTextList
 import com.github.kr328.clash.design.preference.editableTextMap
 import com.github.kr328.clash.design.preference.preferenceScreen
 import com.github.kr328.clash.design.preference.selectableList
-import com.github.kr328.clash.design.util.applyFrom
-import com.github.kr328.clash.design.util.bindAppBarElevation
-import com.github.kr328.clash.design.util.layoutInflater
-import com.github.kr328.clash.design.util.root
+import com.github.kr328.clash.design.ui.theme.MihomoTheme
+import com.github.kr328.clash.design.ui.theme.PreviewMihomo
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlin.coroutines.resume
 import kotlinx.coroutines.suspendCancellableCoroutine
@@ -30,11 +40,15 @@ class OverrideSettingsDesign(context: Context, configuration: ConfigurationOverr
     ResetOverride
   }
 
-  private val binding =
-    DesignSettingsOverideBinding.inflate(context.layoutInflater, context.root, false)
+  private val preferenceRoot: View = createPreferenceRoot(context, configuration)
 
-  override val root: View
-    get() = binding.root
+  override val root: View by composeView {
+    MihomoTheme {
+      OverrideSettingsScreen(onReset = ::requestClear) {
+        AndroidView(factory = { preferenceRoot }, modifier = Modifier.fillMaxSize())
+      }
+    }
+  }
 
   suspend fun requestResetConfirm(): Boolean {
     return suspendCancellableCoroutine { ctx ->
@@ -52,13 +66,7 @@ class OverrideSettingsDesign(context: Context, configuration: ConfigurationOverr
     }
   }
 
-  init {
-    binding.self = this
-
-    binding.activityBarLayout.applyFrom(context)
-
-    binding.scrollRoot.bindAppBarElevation(binding.activityBarLayout)
-
+  private fun createPreferenceRoot(context: Context, configuration: ConfigurationOverride): View {
     val booleanValues: Array<Boolean?> = arrayOf(null, true, false)
     val booleanValuesText: Array<Int> =
       arrayOf(R.string.dont_modify, R.string.enabled, R.string.disabled)
@@ -386,10 +394,38 @@ class OverrideSettingsDesign(context: Context, configuration: ConfigurationOverr
         dns.listener?.onChanged()
       }
 
-    binding.content.addView(screen.root)
+    return screen.root
   }
 
   fun requestClear() {
     requests.trySend(Request.ResetOverride)
   }
+}
+
+@Composable
+@OptIn(ExperimentalMaterial3Api::class)
+private fun OverrideSettingsScreen(
+  onReset: () -> Unit,
+  modifier: Modifier = Modifier,
+  content: @Composable () -> Unit,
+) {
+  MihomoScaffold(
+    title = stringResource(R.string.override),
+    modifier = modifier,
+    scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(),
+    actions = {
+      IconButton(onClick = onReset) {
+        Icon(
+          painter = painterResource(R.drawable.ic_baseline_replay),
+          contentDescription = stringResource(R.string.reset),
+        )
+      }
+    },
+  ) { innerPadding -> Box(modifier = Modifier.fillMaxSize().padding(innerPadding)) { content() } }
+}
+
+@PreviewMihomo
+@Composable
+private fun OverrideSettingsScreenPreview() = MihomoTheme {
+  OverrideSettingsScreen(onReset = {}) { Box(modifier = Modifier.fillMaxSize()) }
 }
