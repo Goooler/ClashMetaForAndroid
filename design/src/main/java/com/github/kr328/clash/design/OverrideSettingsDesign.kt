@@ -187,8 +187,8 @@ private fun LazyListScope.generalPreferenceItems(configuration: ConfigurationOve
       values = booleanOptions,
       modifier = Modifier.fillMaxWidth(),
       title = { Text(stringResource(R.string.allow_lan)) },
-      summary = { Text(booleanText(value)) },
-      valueToText = { v: Boolean? -> AnnotatedString(booleanText(v)) },
+      summary = { Text(value.text) },
+      valueToText = { v: Boolean? -> AnnotatedString(v.text) },
     )
   }
   item(key = "ipv6", contentType = "ListPreference") {
@@ -199,8 +199,8 @@ private fun LazyListScope.generalPreferenceItems(configuration: ConfigurationOve
       values = booleanOptions,
       modifier = Modifier.fillMaxWidth(),
       title = { Text(stringResource(R.string.ipv6)) },
-      summary = { Text(booleanText(value)) },
-      valueToText = { v: Boolean? -> AnnotatedString(booleanText(v)) },
+      summary = { Text(value.text) },
+      valueToText = { v: Boolean? -> AnnotatedString(v.text) },
     )
   }
   item(key = "bindAddress", contentType = "EditTextPreference") {
@@ -255,8 +255,8 @@ private fun LazyListScope.generalPreferenceItems(configuration: ConfigurationOve
       values = booleanOptions,
       modifier = Modifier.fillMaxWidth(),
       title = { Text(stringResource(R.string.allow_private_network)) },
-      summary = { Text(booleanText(value)) },
-      valueToText = { v: Boolean? -> AnnotatedString(booleanText(v)) },
+      summary = { Text(value.text) },
+      valueToText = { v: Boolean? -> AnnotatedString(v.text) },
     )
   }
   item(key = "secret", contentType = "EditTextPreference") {
@@ -275,8 +275,8 @@ private fun LazyListScope.generalPreferenceItems(configuration: ConfigurationOve
       values = TunnelState.Mode.entries,
       modifier = Modifier.fillMaxWidth(),
       title = { Text(stringResource(R.string.mode)) },
-      summary = { Text(modeText(value)) },
-      valueToText = { v: TunnelState.Mode? -> AnnotatedString(modeText(v)) },
+      summary = { Text(value.text) },
+      valueToText = { v: TunnelState.Mode? -> AnnotatedString(v.text) },
     )
   }
   item(key = "logLevel", contentType = "ListPreference") {
@@ -287,8 +287,8 @@ private fun LazyListScope.generalPreferenceItems(configuration: ConfigurationOve
       values = LogMessage.Level.entries,
       modifier = Modifier.fillMaxWidth(),
       title = { Text(stringResource(R.string.log_level)) },
-      summary = { Text(logLevelText(value)) },
-      valueToText = { v: LogMessage.Level? -> AnnotatedString(logLevelText(v)) },
+      summary = { Text(value.text) },
+      valueToText = { v: LogMessage.Level? -> AnnotatedString(v.text) },
     )
   }
   item(key = "hosts", contentType = "EditTextMapPreference") {
@@ -346,8 +346,8 @@ private fun LazyListScope.dnsPreferenceItems(
       modifier = Modifier.fillMaxWidth(),
       enabled = dnsEnabled != false,
       title = { Text(stringResource(R.string.prefer_h3)) },
-      summary = { Text(booleanText(value)) },
-      valueToText = { v: Boolean? -> AnnotatedString(booleanText(v)) },
+      summary = { Text(value.text) },
+      valueToText = { v: Boolean? -> AnnotatedString(v.text) },
     )
   }
   item(key = "dnsListen", contentType = "EditTextPreference") {
@@ -371,8 +371,8 @@ private fun LazyListScope.dnsPreferenceItems(
       modifier = Modifier.fillMaxWidth(),
       enabled = dnsEnabled != false,
       title = { Text(stringResource(R.string.append_system_dns)) },
-      summary = { Text(booleanText(value)) },
-      valueToText = { v: Boolean? -> AnnotatedString(booleanText(v)) },
+      summary = { Text(value.text) },
+      valueToText = { v: Boolean? -> AnnotatedString(v.text) },
     )
   }
   item(key = "dnsIpv6", contentType = "ListPreference") {
@@ -384,8 +384,8 @@ private fun LazyListScope.dnsPreferenceItems(
       modifier = Modifier.fillMaxWidth(),
       enabled = dnsEnabled != false,
       title = { Text(stringResource(R.string.ipv6)) },
-      summary = { Text(booleanText(value)) },
-      valueToText = { v: Boolean? -> AnnotatedString(booleanText(v)) },
+      summary = { Text(value.text) },
+      valueToText = { v: Boolean? -> AnnotatedString(v.text) },
     )
   }
   item(key = "dnsUseHosts", contentType = "ListPreference") {
@@ -398,8 +398,8 @@ private fun LazyListScope.dnsPreferenceItems(
       modifier = Modifier.fillMaxWidth(),
       enabled = dnsEnabled != false,
       title = { Text(stringResource(R.string.use_hosts)) },
-      summary = { Text(booleanText(value)) },
-      valueToText = { v: Boolean? -> AnnotatedString(booleanText(v)) },
+      summary = { Text(value.text) },
+      valueToText = { v: Boolean? -> AnnotatedString(v.text) },
     )
   }
   item(key = "dnsEnhancedMode", contentType = "ListPreference") {
@@ -414,10 +414,8 @@ private fun LazyListScope.dnsPreferenceItems(
       modifier = Modifier.fillMaxWidth(),
       enabled = dnsEnabled != false,
       title = { Text(stringResource(R.string.enhanced_mode)) },
-      summary = { Text(enhancedModeText(value)) },
-      valueToText = { v: ConfigurationOverride.DnsEnhancedMode? ->
-        AnnotatedString(enhancedModeText(v))
-      },
+      summary = { Text(value.text) },
+      valueToText = { v: ConfigurationOverride.DnsEnhancedMode? -> AnnotatedString(v.text) },
     )
   }
   item(key = "dnsNameServer", contentType = "EditTextListPreference") {
@@ -474,8 +472,8 @@ private fun LazyListScope.dnsPreferenceItems(
       modifier = Modifier.fillMaxWidth(),
       enabled = dnsEnabled != false,
       title = { Text(stringResource(R.string.fakeip_filter_mode)) },
-      summary = { Text(filterModeText(value)) },
-      valueToText = { v: ConfigurationOverride.FilterMode? -> AnnotatedString(filterModeText(v)) },
+      summary = { Text(value.text) },
+      valueToText = { v: ConfigurationOverride.FilterMode? -> AnnotatedString(v.text) },
     )
   }
   item(key = "dnsGeoIpFallback", contentType = "ListPreference") {
@@ -490,8 +488,8 @@ private fun LazyListScope.dnsPreferenceItems(
       modifier = Modifier.fillMaxWidth(),
       enabled = dnsEnabled != false,
       title = { Text(stringResource(R.string.geoip_fallback)) },
-      summary = { Text(booleanText(value)) },
-      valueToText = { v: Boolean? -> AnnotatedString(booleanText(v)) },
+      summary = { Text(value.text) },
+      valueToText = { v: Boolean? -> AnnotatedString(v.text) },
     )
   }
   item(key = "dnsGeoIpCode", contentType = "EditTextPreference") {
@@ -744,60 +742,66 @@ private fun <T> rememberWriteThroughState(initial: T, sync: (T) -> Unit): Mutabl
     }
   }
 
-@Composable
-private fun booleanText(v: Boolean?) =
-  stringResource(
-    when (v) {
-      null -> R.string.dont_modify
-      true -> R.string.enabled
-      false -> R.string.disabled
-    }
-  )
+private val Boolean?.text: String
+  @Composable
+  get() =
+    stringResource(
+      when (this) {
+        true -> R.string.enabled
+        false -> R.string.disabled
+        null -> R.string.dont_modify
+      }
+    )
 
-@Composable
-private fun modeText(v: TunnelState.Mode?) =
-  stringResource(
-    when (v) {
-      TunnelState.Mode.Direct -> R.string.direct_mode
-      TunnelState.Mode.Global -> R.string.global_mode
-      TunnelState.Mode.Rule -> R.string.rule_mode
-      else -> R.string.dont_modify
-    }
-  )
+private val TunnelState.Mode?.text: String
+  @Composable
+  get() =
+    stringResource(
+      when (this) {
+        TunnelState.Mode.Direct -> R.string.direct_mode
+        TunnelState.Mode.Global -> R.string.global_mode
+        TunnelState.Mode.Rule -> R.string.rule_mode
+        null -> R.string.dont_modify
+      }
+    )
 
-@Composable
-private fun logLevelText(v: LogMessage.Level?) =
-  stringResource(
-    when (v) {
-      LogMessage.Level.Info -> R.string.info
-      LogMessage.Level.Warning -> R.string.warning
-      LogMessage.Level.Error -> R.string.error
-      LogMessage.Level.Debug -> R.string.debug
-      LogMessage.Level.Silent -> R.string.silent
-      else -> R.string.dont_modify
-    }
-  )
+private val LogMessage.Level?.text: String
+  @Composable
+  get() =
+    stringResource(
+      when (this) {
+        LogMessage.Level.Info -> R.string.info
+        LogMessage.Level.Warning -> R.string.warning
+        LogMessage.Level.Error -> R.string.error
+        LogMessage.Level.Debug -> R.string.debug
+        LogMessage.Level.Silent -> R.string.silent
+        LogMessage.Level.Unknown -> R.string.dont_modify
+        null -> R.string.dont_modify
+      }
+    )
 
-@Composable
-private fun enhancedModeText(v: ConfigurationOverride.DnsEnhancedMode?) =
-  stringResource(
-    when (v) {
-      ConfigurationOverride.DnsEnhancedMode.None -> R.string.disabled
-      ConfigurationOverride.DnsEnhancedMode.FakeIp -> R.string.fakeip
-      ConfigurationOverride.DnsEnhancedMode.Mapping -> R.string.mapping
-      else -> R.string.dont_modify
-    }
-  )
+private val ConfigurationOverride.DnsEnhancedMode?.text: String
+  @Composable
+  get() =
+    stringResource(
+      when (this) {
+        ConfigurationOverride.DnsEnhancedMode.None -> R.string.disabled
+        ConfigurationOverride.DnsEnhancedMode.FakeIp -> R.string.fakeip
+        ConfigurationOverride.DnsEnhancedMode.Mapping -> R.string.mapping
+        null -> R.string.dont_modify
+      }
+    )
 
-@Composable
-private fun filterModeText(v: ConfigurationOverride.FilterMode?) =
-  stringResource(
-    when (v) {
-      ConfigurationOverride.FilterMode.BlackList -> R.string.blacklist
-      ConfigurationOverride.FilterMode.WhiteList -> R.string.whitelist
-      else -> R.string.dont_modify
-    }
-  )
+private val ConfigurationOverride.FilterMode?.text: String
+  @Composable
+  get() =
+    stringResource(
+      when (this) {
+        ConfigurationOverride.FilterMode.BlackList -> R.string.blacklist
+        ConfigurationOverride.FilterMode.WhiteList -> R.string.whitelist
+        null -> R.string.dont_modify
+      }
+    )
 
 private val booleanOptions: List<Boolean?> = listOf(null, true, false)
 
