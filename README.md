@@ -71,9 +71,7 @@ APP package name is `com.github.metacubex.clash.meta`
 
 #### Meta Kernel
 
-- CMFA uses the kernel from `android-real` branch under `MetaCubeX/Clash.Meta`, which is a merge of the main `Alpha` branch and `android-open`.
-  - If you want to contribute to the kernel, make PRs to `Alpha` branch of the Meta kernel repository.
-  - If you want to contribute Android-specific patches to the kernel, make PRs to  `android-open` branch of the Meta kernel repository.
+- CMFA uses the kernel from tagged releases under `MetaCubeX/mihomo` (currently pinned to `v1.19.24`).
 
 #### Maintenance
 
