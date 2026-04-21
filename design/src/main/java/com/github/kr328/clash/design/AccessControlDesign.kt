@@ -30,11 +30,13 @@ import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.mutableStateSetOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -55,6 +57,9 @@ import com.github.kr328.clash.design.ui.theme.MihomoTheme
 import com.github.kr328.clash.design.ui.theme.PreviewMihomo
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.mapLatest
 
 class AccessControlDesign(
   context: Context,
@@ -291,17 +296,26 @@ private fun AccessControlSearchContent(
   onToggleApp: (String) -> Unit,
 ) {
   var keyword by rememberSaveable { mutableStateOf("") }
-  val filtered =
-    remember(apps, keyword) {
-      if (keyword.isBlank()) {
-        emptyList()
-      } else {
-        apps.filter {
-          it.label.contains(keyword, ignoreCase = true) ||
-            it.packageName.contains(keyword, ignoreCase = true)
+  var filtered by remember(apps) { mutableStateOf(emptyList<AppInfo>()) }
+
+  LaunchedEffect(apps) {
+    snapshotFlow { keyword }
+      .debounce(200)
+      .distinctUntilChanged()
+      .mapLatest { keyword ->
+        if (keyword.isBlank()) {
+          emptyList()
+        } else {
+          withContext(Dispatchers.Default) {
+            apps.filter {
+              it.label.contains(keyword, ignoreCase = true) ||
+                it.packageName.contains(keyword, ignoreCase = true)
+            }
+          }
         }
       }
-    }
+      .collect { filtered = it }
+  }
 
   TextField(
     value = keyword,
