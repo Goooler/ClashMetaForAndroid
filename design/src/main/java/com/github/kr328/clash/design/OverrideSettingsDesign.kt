@@ -16,16 +16,22 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.TextRange
+import androidx.compose.ui.text.input.TextFieldValue
 import com.github.kr328.clash.core.model.ConfigurationOverride
 import com.github.kr328.clash.core.model.LogMessage
 import com.github.kr328.clash.core.model.TunnelState
@@ -558,7 +564,17 @@ private fun OverrideEditTextPreferenceItem(
     onClick = { showDialog = true },
   )
   if (showDialog) {
-    var inputText by remember { mutableStateOf(text ?: "") }
+    var inputText by remember {
+      mutableStateOf(
+        TextFieldValue(text = text.orEmpty(), selection = TextRange(text.orEmpty().length))
+      )
+    }
+    val focusRequester = remember { FocusRequester() }
+    val keyboardController = LocalSoftwareKeyboardController.current
+    LaunchedEffect(Unit) {
+      focusRequester.requestFocus()
+      keyboardController?.show()
+    }
     AlertDialog(
       onDismissRequest = { showDialog = false },
       title = { Text(title) },
@@ -567,13 +583,13 @@ private fun OverrideEditTextPreferenceItem(
           value = inputText,
           onValueChange = { inputText = it },
           singleLine = true,
-          modifier = Modifier.fillMaxWidth(),
+          modifier = Modifier.fillMaxWidth().focusRequester(focusRequester),
         )
       },
       confirmButton = {
         TextButton(
           onClick = {
-            text = inputText
+            text = inputText.text
             showDialog = false
           }
         ) {
@@ -615,7 +631,16 @@ private fun OverrideEditTextListPreferenceItem(
     onClick = { showDialog = true },
   )
   if (showDialog) {
-    var inputText by remember { mutableStateOf(values?.joinToString("\n") ?: "") }
+    var inputText by remember {
+      val content = values?.joinToString("\n").orEmpty()
+      mutableStateOf(TextFieldValue(text = content, selection = TextRange(content.length)))
+    }
+    val focusRequester = remember { FocusRequester() }
+    val keyboardController = LocalSoftwareKeyboardController.current
+    LaunchedEffect(Unit) {
+      focusRequester.requestFocus()
+      keyboardController?.show()
+    }
     AlertDialog(
       onDismissRequest = { showDialog = false },
       title = { Text(title) },
@@ -624,13 +649,13 @@ private fun OverrideEditTextListPreferenceItem(
           value = inputText,
           onValueChange = { inputText = it },
           minLines = 4,
-          modifier = Modifier.fillMaxWidth(),
+          modifier = Modifier.fillMaxWidth().focusRequester(focusRequester),
         )
       },
       confirmButton = {
         TextButton(
           onClick = {
-            val items = inputText.lines().filter { it.isNotBlank() }
+            val items = inputText.text.lines().filter { it.isNotBlank() }
             values = items.takeIf { it.isNotEmpty() }
             showDialog = false
           }
@@ -674,7 +699,14 @@ private fun OverrideEditTextMapPreferenceItem(
   )
   if (showDialog) {
     var inputText by remember {
-      mutableStateOf(values?.entries?.joinToString("\n") { "${it.key}=${it.value}" } ?: "")
+      val content = values?.entries?.joinToString("\n") { "${it.key}=${it.value}" }.orEmpty()
+      mutableStateOf(TextFieldValue(text = content, selection = TextRange(content.length)))
+    }
+    val focusRequester = remember { FocusRequester() }
+    val keyboardController = LocalSoftwareKeyboardController.current
+    LaunchedEffect(Unit) {
+      focusRequester.requestFocus()
+      keyboardController?.show()
     }
     AlertDialog(
       onDismissRequest = { showDialog = false },
@@ -684,14 +716,14 @@ private fun OverrideEditTextMapPreferenceItem(
           value = inputText,
           onValueChange = { inputText = it },
           minLines = 4,
-          modifier = Modifier.fillMaxWidth(),
+          modifier = Modifier.fillMaxWidth().focusRequester(focusRequester),
         )
       },
       confirmButton = {
         TextButton(
           onClick = {
             val map =
-              inputText
+              inputText.text
                 .lines()
                 .filter { it.isNotBlank() }
                 .mapNotNull { line ->
