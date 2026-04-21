@@ -166,7 +166,6 @@ class ProxyDesign(
     withContext(Dispatchers.Main) {
       groups[position].apply {
         rawStates = states
-        items = emptyList()
         this.selectable = selectable
         urlTesting = false
         refresh()
@@ -389,8 +388,9 @@ private fun ProxyGroupPage(
     ) { itemIndex ->
       val item =
         if (useRawStates) {
-          remember(refreshVersion, itemIndex) {
-            rawStates[itemIndex].apply { update(true) }.run {
+          val state = rawStates[itemIndex]
+          remember(refreshVersion, state.proxy.name) {
+            state.apply { update(true) }.run {
               ProxyItemUiState(
                 key = proxy.name,
                 title = title,
