@@ -35,10 +35,8 @@ class MetaFeatureSettingsActivity : BaseActivity<MetaFeatureSettingsDesign>() {
         design.requests.onReceive {
           when (it) {
             MetaFeatureSettingsDesign.Request.ResetOverride -> {
-              if (design.requestResetConfirm()) {
-                defer { withClash { clearOverride(Clash.OverrideSlot.Persist) } }
-                finish()
-              }
+              defer { withClash { clearOverride(Clash.OverrideSlot.Persist) } }
+              finish()
             }
             MetaFeatureSettingsDesign.Request.ImportGeoIp -> {
               val uri = startActivityForResult(ActivityResultContracts.GetContent(), "*/*")

@@ -4,12 +4,10 @@ import android.content.Context
 import android.view.View
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -31,7 +29,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
@@ -39,20 +36,22 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.Dialog
-import androidx.compose.ui.window.DialogProperties
 import com.github.kr328.clash.core.model.ConfigurationOverride
 import com.github.kr328.clash.core.model.LogMessage
 import com.github.kr328.clash.core.model.TunnelState
+import com.github.kr328.clash.design.component.EmptyEditorContent
+import com.github.kr328.clash.design.component.FullScreenPreferenceDialog
 import com.github.kr328.clash.design.component.MihomoScaffold
+import com.github.kr328.clash.design.component.SettingsEditTextListPreferenceItem
+import com.github.kr328.clash.design.component.SettingsListPreferenceItem
+import com.github.kr328.clash.design.component.initialTextFieldValue
+import com.github.kr328.clash.design.component.rememberWriteThroughState
 import com.github.kr328.clash.design.ui.theme.MihomoTheme
 import com.github.kr328.clash.design.ui.theme.PreviewMihomo
-import me.zhanghai.compose.preference.ListPreference
 import me.zhanghai.compose.preference.Preference
 import me.zhanghai.compose.preference.ProvidePreferenceLocals
 import me.zhanghai.compose.preference.preferenceCategory
@@ -195,7 +194,7 @@ private fun LazyListScope.generalPreferenceItems(configuration: ConfigurationOve
     )
   }
   item(key = "authentication", contentType = "EditTextListPreference") {
-    OverrideEditTextListPreferenceItem(
+    SettingsEditTextListPreferenceItem(
       title = R.string.authentication,
       placeholder = R.string.dont_modify,
       state =
@@ -207,7 +206,7 @@ private fun LazyListScope.generalPreferenceItems(configuration: ConfigurationOve
   item(key = "allowLan", contentType = "ListPreference") {
     val state = rememberWriteThroughState(configuration.allowLan) { configuration.allowLan = it }
     val value by state
-    OverrideListPreferenceItem(
+    SettingsListPreferenceItem(
       state = state,
       values = booleanOptions,
       modifier = Modifier.fillMaxWidth(),
@@ -219,7 +218,7 @@ private fun LazyListScope.generalPreferenceItems(configuration: ConfigurationOve
   item(key = "ipv6", contentType = "ListPreference") {
     val state = rememberWriteThroughState(configuration.ipv6) { configuration.ipv6 = it }
     val value by state
-    OverrideListPreferenceItem(
+    SettingsListPreferenceItem(
       state = state,
       values = booleanOptions,
       modifier = Modifier.fillMaxWidth(),
@@ -260,7 +259,7 @@ private fun LazyListScope.generalPreferenceItems(configuration: ConfigurationOve
     )
   }
   item(key = "allowOrigins", contentType = "EditTextListPreference") {
-    OverrideEditTextListPreferenceItem(
+    SettingsEditTextListPreferenceItem(
       title = R.string.allow_origins,
       placeholder = R.string.dont_modify,
       state =
@@ -275,7 +274,7 @@ private fun LazyListScope.generalPreferenceItems(configuration: ConfigurationOve
         configuration.externalControllerCors.allowPrivateNetwork = it
       }
     val value by state
-    OverrideListPreferenceItem(
+    SettingsListPreferenceItem(
       state = state,
       values = booleanOptions,
       modifier = Modifier.fillMaxWidth(),
@@ -295,7 +294,7 @@ private fun LazyListScope.generalPreferenceItems(configuration: ConfigurationOve
   item(key = "mode", contentType = "ListPreference") {
     val state = rememberWriteThroughState(configuration.mode) { configuration.mode = it }
     val value by state
-    OverrideListPreferenceItem(
+    SettingsListPreferenceItem(
       state = state,
       values = TunnelState.Mode.entries,
       modifier = Modifier.fillMaxWidth(),
@@ -307,7 +306,7 @@ private fun LazyListScope.generalPreferenceItems(configuration: ConfigurationOve
   item(key = "logLevel", contentType = "ListPreference") {
     val state = rememberWriteThroughState(configuration.logLevel) { configuration.logLevel = it }
     val value by state
-    OverrideListPreferenceItem(
+    SettingsListPreferenceItem(
       state = state,
       values = LogMessage.Level.entries,
       modifier = Modifier.fillMaxWidth(),
@@ -332,7 +331,7 @@ private fun LazyListScope.dnsPreferenceItems(
 ) {
   preferenceCategory(key = "cat_dns", title = { Text(stringResource(R.string.dns)) })
   item(key = "dnsStrategy", contentType = "ListPreference") {
-    OverrideListPreferenceItem(
+    SettingsListPreferenceItem(
       state = dnsEnableState,
       values = booleanOptions,
       modifier = Modifier.fillMaxWidth(),
@@ -345,7 +344,7 @@ private fun LazyListScope.dnsPreferenceItems(
     val state =
       rememberWriteThroughState(configuration.dns.preferH3) { configuration.dns.preferH3 = it }
     val value by state
-    OverrideListPreferenceItem(
+    SettingsListPreferenceItem(
       state = state,
       values = booleanOptions,
       modifier = Modifier.fillMaxWidth(),
@@ -370,7 +369,7 @@ private fun LazyListScope.dnsPreferenceItems(
         configuration.app.appendSystemDns = it
       }
     val value by state
-    OverrideListPreferenceItem(
+    SettingsListPreferenceItem(
       state = state,
       values = booleanOptions,
       modifier = Modifier.fillMaxWidth(),
@@ -383,7 +382,7 @@ private fun LazyListScope.dnsPreferenceItems(
   item(key = "dnsIpv6", contentType = "ListPreference") {
     val state = rememberWriteThroughState(configuration.dns.ipv6) { configuration.dns.ipv6 = it }
     val value by state
-    OverrideListPreferenceItem(
+    SettingsListPreferenceItem(
       state = state,
       values = booleanOptions,
       modifier = Modifier.fillMaxWidth(),
@@ -397,7 +396,7 @@ private fun LazyListScope.dnsPreferenceItems(
     val state =
       rememberWriteThroughState(configuration.dns.useHosts) { configuration.dns.useHosts = it }
     val value by state
-    OverrideListPreferenceItem(
+    SettingsListPreferenceItem(
       state = state,
       values = booleanOptions,
       modifier = Modifier.fillMaxWidth(),
@@ -413,7 +412,7 @@ private fun LazyListScope.dnsPreferenceItems(
         configuration.dns.enhancedMode = it
       }
     val value by state
-    OverrideListPreferenceItem(
+    SettingsListPreferenceItem(
       state = state,
       values = ConfigurationOverride.DnsEnhancedMode.entries,
       modifier = Modifier.fillMaxWidth(),
@@ -424,7 +423,7 @@ private fun LazyListScope.dnsPreferenceItems(
     )
   }
   item(key = "dnsNameServer", contentType = "EditTextListPreference") {
-    OverrideEditTextListPreferenceItem(
+    SettingsEditTextListPreferenceItem(
       title = R.string.name_server,
       placeholder = R.string.dont_modify,
       state =
@@ -435,7 +434,7 @@ private fun LazyListScope.dnsPreferenceItems(
     )
   }
   item(key = "dnsFallback", contentType = "EditTextListPreference") {
-    OverrideEditTextListPreferenceItem(
+    SettingsEditTextListPreferenceItem(
       title = R.string.fallback,
       placeholder = R.string.dont_modify,
       state =
@@ -444,7 +443,7 @@ private fun LazyListScope.dnsPreferenceItems(
     )
   }
   item(key = "dnsDefaultServer", contentType = "EditTextListPreference") {
-    OverrideEditTextListPreferenceItem(
+    SettingsEditTextListPreferenceItem(
       title = R.string.default_name_server,
       placeholder = R.string.dont_modify,
       state =
@@ -455,7 +454,7 @@ private fun LazyListScope.dnsPreferenceItems(
     )
   }
   item(key = "dnsFakeIpFilter", contentType = "EditTextListPreference") {
-    OverrideEditTextListPreferenceItem(
+    SettingsEditTextListPreferenceItem(
       title = R.string.fakeip_filter,
       placeholder = R.string.dont_modify,
       state =
@@ -471,7 +470,7 @@ private fun LazyListScope.dnsPreferenceItems(
         configuration.dns.fakeIPFilterMode = it
       }
     val value by state
-    OverrideListPreferenceItem(
+    SettingsListPreferenceItem(
       state = state,
       values = ConfigurationOverride.FilterMode.entries,
       modifier = Modifier.fillMaxWidth(),
@@ -487,7 +486,7 @@ private fun LazyListScope.dnsPreferenceItems(
         configuration.dns.fallbackFilter.geoIp = it
       }
     val value by state
-    OverrideListPreferenceItem(
+    SettingsListPreferenceItem(
       state = state,
       values = booleanOptions,
       modifier = Modifier.fillMaxWidth(),
@@ -510,7 +509,7 @@ private fun LazyListScope.dnsPreferenceItems(
     )
   }
   item(key = "dnsDomainFallback", contentType = "EditTextListPreference") {
-    OverrideEditTextListPreferenceItem(
+    SettingsEditTextListPreferenceItem(
       title = R.string.domain_fallback,
       placeholder = R.string.dont_modify,
       state =
@@ -521,7 +520,7 @@ private fun LazyListScope.dnsPreferenceItems(
     )
   }
   item(key = "dnsIpcidrFallback", contentType = "EditTextListPreference") {
-    OverrideEditTextListPreferenceItem(
+    SettingsEditTextListPreferenceItem(
       title = R.string.ipcidr_fallback,
       placeholder = R.string.dont_modify,
       state =
@@ -630,56 +629,6 @@ private fun OverrideEditTextPreferenceItem(
 }
 
 @Composable
-private fun <T> OverrideListPreferenceItem(
-  state: MutableState<T>,
-  values: List<T>,
-  @StringRes title: Int,
-  @StringRes summary: Int,
-  modifier: Modifier = Modifier,
-  enabled: Boolean = true,
-  valueToText: @Composable (T) -> Int,
-) {
-  ListPreference(
-    state = state,
-    values = values,
-    modifier = modifier,
-    enabled = enabled,
-    title = { Text(stringResource(title)) },
-    summary = { Text(stringResource(summary)) },
-    valueToText = { AnnotatedString(stringResource(valueToText(it))) },
-  )
-}
-
-@Composable
-private fun OverrideEditTextListPreferenceItem(
-  @StringRes title: Int,
-  @StringRes placeholder: Int,
-  state: MutableState<List<String>?>,
-  enabled: Boolean = true,
-) {
-  var values by state
-  var showDialog by remember { mutableStateOf(false) }
-  Preference(
-    modifier = Modifier.fillMaxWidth(),
-    title = { Text(stringResource(title)) },
-    summary = { Text(values.summary(placeholder)) },
-    enabled = enabled,
-    onClick = { showDialog = true },
-  )
-  if (showDialog) {
-    EditableTextListDialog(
-      title = title,
-      initialValues = values,
-      onDismiss = { showDialog = false },
-      onApply = {
-        values = it
-        showDialog = false
-      },
-    )
-  }
-}
-
-@Composable
 private fun OverrideEditTextMapPreferenceItem(
   @StringRes title: Int,
   @StringRes placeholder: Int,
@@ -703,60 +652,6 @@ private fun OverrideEditTextMapPreferenceItem(
       onApply = {
         values = it
         showDialog = false
-      },
-    )
-  }
-}
-
-@Composable
-private fun EditableTextListDialog(
-  @StringRes title: Int,
-  initialValues: List<String>?,
-  onDismiss: () -> Unit,
-  onApply: (List<String>?) -> Unit,
-) {
-  var values by remember(initialValues) { mutableStateOf(initialValues.orEmpty()) }
-  var showAddDialog by remember { mutableStateOf(false) }
-
-  FullScreenPreferenceDialog(
-    title = title,
-    onDismiss = onDismiss,
-    onAdd = { showAddDialog = true },
-    onReset = { onApply(null) },
-    onConfirm = { onApply(values) },
-  ) { modifier ->
-    if (values.isEmpty()) {
-      EmptyEditorContent(modifier)
-    } else {
-      LazyColumn(modifier = modifier) {
-        itemsIndexed(values) { index, value ->
-          ListItem(
-            headlineContent = { Text(value) },
-            trailingContent = {
-              IconButton(onClick = { values = values.toMutableList().apply { removeAt(index) } }) {
-                Icon(
-                  painter = painterResource(R.drawable.ic_outline_delete),
-                  contentDescription = stringResource(R.string.delete),
-                )
-              }
-            },
-          )
-          HorizontalDivider()
-        }
-      }
-    }
-  }
-
-  if (showAddDialog) {
-    SingleTextInputDialog(
-      title = title,
-      initialValue = "",
-      onDismiss = { showAddDialog = false },
-      onConfirm = { newValue ->
-        if (newValue.isNotBlank()) {
-          values = values + newValue
-        }
-        showAddDialog = false
       },
     )
   }
@@ -817,89 +712,6 @@ private fun EditableTextMapDialog(
   }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-private fun FullScreenPreferenceDialog(
-  @StringRes title: Int,
-  onDismiss: () -> Unit,
-  onAdd: () -> Unit,
-  onReset: () -> Unit,
-  onConfirm: () -> Unit,
-  content: @Composable (Modifier) -> Unit,
-) {
-  Dialog(
-    onDismissRequest = onDismiss,
-    properties = DialogProperties(usePlatformDefaultWidth = false),
-  ) {
-    MihomoScaffold(
-      modifier = Modifier.fillMaxSize(),
-      title = stringResource(title),
-      onBack = onDismiss,
-      actions = {
-        IconButton(onClick = onAdd) {
-          Icon(
-            painter = painterResource(R.drawable.ic_baseline_add),
-            contentDescription = stringResource(R.string._new),
-          )
-        }
-      },
-    ) { innerPadding ->
-      Column(modifier = Modifier.fillMaxSize().padding(innerPadding)) {
-        content(Modifier.weight(1f))
-        Row(
-          modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 8.dp),
-          horizontalArrangement = Arrangement.End,
-        ) {
-          TextButton(onClick = onReset) { Text(stringResource(R.string.reset)) }
-          TextButton(onClick = onDismiss) { Text(stringResource(R.string.cancel)) }
-          TextButton(onClick = onConfirm) { Text(stringResource(R.string.ok)) }
-        }
-      }
-    }
-  }
-}
-
-@Composable
-private fun EmptyEditorContent(modifier: Modifier = Modifier) {
-  Box(modifier = modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
-    Text(stringResource(R.string.empty))
-  }
-}
-
-@Composable
-private fun SingleTextInputDialog(
-  @StringRes title: Int,
-  initialValue: String,
-  onDismiss: () -> Unit,
-  onConfirm: (String) -> Unit,
-) {
-  var inputText by remember { mutableStateOf(initialTextFieldValue(initialValue)) }
-  val focusRequester = remember { FocusRequester() }
-  val keyboardController = LocalSoftwareKeyboardController.current
-
-  LaunchedEffect(Unit) {
-    focusRequester.requestFocus()
-    keyboardController?.show()
-  }
-
-  AlertDialog(
-    onDismissRequest = onDismiss,
-    title = { Text(stringResource(title)) },
-    text = {
-      OutlinedTextField(
-        value = inputText,
-        onValueChange = { inputText = it },
-        singleLine = true,
-        modifier = Modifier.fillMaxWidth().focusRequester(focusRequester),
-      )
-    },
-    confirmButton = {
-      TextButton(onClick = { onConfirm(inputText.text) }) { Text(stringResource(R.string.ok)) }
-    },
-    dismissButton = { TextButton(onClick = onDismiss) { Text(stringResource(R.string.cancel)) } },
-  )
-}
-
 @Composable
 private fun MapEntryInputDialog(
   @StringRes title: Int,
@@ -952,28 +764,6 @@ private fun MapEntryInputDialog(
   )
 }
 
-@Composable
-private fun <T> rememberWriteThroughState(initial: T, sync: (T) -> Unit): MutableState<T> =
-  remember {
-    object : MutableState<T> {
-      private val inner = mutableStateOf(initial)
-
-      override var value: T
-        get() = inner.value
-        set(v) {
-          inner.value = v
-          sync(v)
-        }
-
-      override fun component1(): T = value
-
-      override fun component2(): (T) -> Unit = { value = it }
-    }
-  }
-
-private fun initialTextFieldValue(text: String) =
-  TextFieldValue(text = text, selection = TextRange(text.length))
-
 private fun TextFieldValue.filterDigits(): TextFieldValue {
   val filtered = text.filter(Char::isDigit)
   if (filtered == text) return this
@@ -983,14 +773,6 @@ private fun TextFieldValue.filterDigits(): TextFieldValue {
 }
 
 @Composable
-private fun List<String>?.summary(@StringRes placeholder: Int) =
-  when {
-    this == null -> stringResource(placeholder)
-    isEmpty() -> stringResource(R.string.empty)
-    else -> stringResource(R.string.format_elements, size)
-  }
-
-@Composable
 private fun Map<String, String>?.summary(@StringRes placeholder: Int) =
   when {
     this == null -> stringResource(placeholder)
@@ -998,7 +780,7 @@ private fun Map<String, String>?.summary(@StringRes placeholder: Int) =
     else -> stringResource(R.string.format_elements, size)
   }
 
-private val Boolean?.textRes: Int
+internal val Boolean?.textRes: Int
   @StringRes
   get() =
     when (this) {
@@ -1058,7 +840,7 @@ private val ConfigurationOverride.FilterMode?.textRes: Int
       null -> R.string.dont_modify
     }
 
-private val booleanOptions: List<Boolean?> = listOf(null, true, false)
+internal val booleanOptions: List<Boolean?> = listOf(null, true, false)
 
 private fun portText(port: Int?): String? =
   when {

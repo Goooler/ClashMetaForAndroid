@@ -130,14 +130,10 @@
             android:exported="false" />
         <activity
             android:name=".OverrideSettingsActivity"
-            android:configChanges="uiMode"
-            android:exported="false"
-            android:label="@string/override" />
+            android:exported="false" />
         <activity
             android:name=".MetaFeatureSettingsActivity"
-            android:configChanges="uiMode"
-            android:exported="false"
-            android:label="@string/meta_features" />
+            android:exported="false" />
         <activity
             android:name=".AccessControlActivity"
             android:exported="false" />
