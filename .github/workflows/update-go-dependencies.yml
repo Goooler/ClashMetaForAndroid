@@ -11,8 +11,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
-      - name: Checkout submodules # This is required, don't use submodules flag for actions/checkout instead.
-        run: git submodule update --init --recursive --force
+        with:
+          submodules: recursive
       - uses: actions/setup-go@v6
         with:
           go-version: "1.26"
