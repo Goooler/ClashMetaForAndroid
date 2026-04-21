@@ -600,7 +600,12 @@ private fun OverrideEditTextPreferenceItem(
       confirmButton = {
         TextButton(
           onClick = {
-            text = inputText.text
+            text =
+              if (numericOnly) {
+                portText(parsePort(inputText.text))
+              } else {
+                inputText.text
+              }
             showDialog = false
           }
         ) {
