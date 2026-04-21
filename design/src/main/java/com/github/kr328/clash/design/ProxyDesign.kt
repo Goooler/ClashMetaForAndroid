@@ -372,7 +372,7 @@ private fun ProxyGroupPage(
     columns = GridCells.Fixed(columnsForProxyLine(proxyLine)),
     state = gridState,
     modifier = Modifier.fillMaxSize(),
-    contentPadding = PaddingValues(start = 12.dp, top = 12.dp, end = 12.dp, bottom = 88.dp),
+    contentPadding = PaddingValues(start = 12.dp, top = 12.dp, end = 12.dp, bottom = 12.dp),
     horizontalArrangement = Arrangement.spacedBy(12.dp),
     verticalArrangement = Arrangement.spacedBy(12.dp),
   ) {
