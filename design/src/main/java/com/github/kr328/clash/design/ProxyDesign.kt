@@ -163,7 +163,6 @@ class ProxyDesign(
       groups[position].apply {
         rawStates = states
         this.selectable = selectable
-        bottom = false
         urlTesting = false
         refresh()
       }
@@ -345,7 +344,6 @@ private fun ProxyPagerContent(
         index = page,
         proxyLine = proxyLine,
         group = groups[page],
-        onBottomChanged = { bottom -> groups[page].bottom = bottom },
         onProxySelected = onProxySelected,
       )
     }
@@ -357,18 +355,11 @@ private fun ProxyGroupPage(
   index: Int,
   proxyLine: Int,
   group: ProxyGroupUiState,
-  onBottomChanged: (Boolean) -> Unit,
   onProxySelected: (Int, String) -> Unit,
 ) {
-  val gridState = rememberLazyGridState()
-
-  LaunchedEffect(gridState) {
-    snapshotFlow { !gridState.canScrollForward }.collect(onBottomChanged)
-  }
-
   LazyVerticalGrid(
     columns = GridCells.Fixed(columnsForProxyLine(proxyLine)),
-    state = gridState,
+    state = rememberLazyGridState(),
     modifier = Modifier.fillMaxSize(),
     contentPadding = PaddingValues(start = 12.dp, top = 12.dp, end = 12.dp, bottom = 12.dp),
     horizontalArrangement = Arrangement.spacedBy(12.dp),
