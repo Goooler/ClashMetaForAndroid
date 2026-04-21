@@ -30,10 +30,10 @@ jobs:
       - uses: gradle/actions/setup-gradle@v6
       - name: Build
         run: |
-          ./gradlew app:assembleRelease
+          ./gradlew app:assembleMetaRelease
       - name: Create release
         if: github.repository == 'Goooler/MihomoForAndroid'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          gh release create ${{ github.ref_name }} "./app/build/outputs/apk/release/"*.apk --generate-notes
+          gh release create ${{ github.ref_name }} "./app/build/outputs/apk/meta/release/"*.apk --generate-notes

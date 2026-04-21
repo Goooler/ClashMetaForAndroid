@@ -37,7 +37,7 @@ Run checks before submitting a pull request:
 
 ```bash
 ./gradlew spotlessCheck
-./gradlew app:assembleRelease
+./gradlew app:assembleMetaRelease
 ```
 
 ### Pull request guidelines
