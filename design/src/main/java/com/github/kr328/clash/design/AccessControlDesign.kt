@@ -7,6 +7,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -27,6 +28,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.RadioButton
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
@@ -158,53 +160,61 @@ private fun AccessControlScreen(
   var showMenu by remember { mutableStateOf(false) }
 
   if (showMenu) {
-    AccessControlMenuSheet(
-      sort = sort,
-      reverse = reverse,
-      showSystemApps = showSystemApps,
-      onDismiss = { showMenu = false },
-      onSelectAll = {
-        showMenu = false
-        onSelectAll()
-      },
-      onSelectNone = {
-        showMenu = false
-        onSelectNone()
-      },
-      onSelectInvert = {
-        showMenu = false
-        onSelectInvert()
-      },
-      onImport = {
-        showMenu = false
-        onImport()
-      },
-      onExport = {
-        showMenu = false
-        onExport()
-      },
-      onUpdateSort = {
-        sort = it
-        onUpdateSort(it)
-      },
-      onUpdateReverse = {
-        reverse = it
-        onUpdateReverse(it)
-      },
-      onUpdateShowSystemApps = {
-        showSystemApps = it
-        onUpdateShowSystemApps(it)
-      },
-    )
+    ModalBottomSheet(
+      onDismissRequest = { showMenu = false },
+      sheetState = rememberModalBottomSheetState(),
+    ) {
+      AccessControlMenuContent(
+        sort = sort,
+        reverse = reverse,
+        showSystemApps = showSystemApps,
+        onSelectAll = {
+          showMenu = false
+          onSelectAll()
+        },
+        onSelectNone = {
+          showMenu = false
+          onSelectNone()
+        },
+        onSelectInvert = {
+          showMenu = false
+          onSelectInvert()
+        },
+        onImport = {
+          showMenu = false
+          onImport()
+        },
+        onExport = {
+          showMenu = false
+          onExport()
+        },
+        onUpdateSort = {
+          sort = it
+          showMenu = false
+          onUpdateSort(it)
+        },
+        onUpdateReverse = {
+          reverse = it
+          showMenu = false
+          onUpdateReverse(it)
+        },
+        onUpdateShowSystemApps = {
+          showSystemApps = it
+          showMenu = false
+          onUpdateShowSystemApps(it)
+        },
+      )
+      Spacer(modifier = Modifier.height(16.dp))
+    }
   }
 
   if (showSearch) {
-    AccessControlSearchSheet(
-      apps = apps,
-      selected = selected,
-      onToggleApp = onToggleApp,
-      onDismiss = { showSearch = false },
-    )
+    ModalBottomSheet(
+      onDismissRequest = { showSearch = false },
+      sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
+    ) {
+      AccessControlSearchContent(apps = apps, selected = selected, onToggleApp = onToggleApp)
+    }
   }
 
   MihomoScaffold(
@@ -237,63 +247,8 @@ private fun AccessControlScreen(
   }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun AccessControlMenuSheet(
-  sort: AppInfoSort,
-  reverse: Boolean,
-  showSystemApps: Boolean,
-  modifier: Modifier = Modifier,
-  onDismiss: () -> Unit,
-  onSelectAll: () -> Unit,
-  onSelectNone: () -> Unit,
-  onSelectInvert: () -> Unit,
-  onImport: () -> Unit,
-  onExport: () -> Unit,
-  onUpdateSort: (AppInfoSort) -> Unit,
-  onUpdateReverse: (Boolean) -> Unit,
-  onUpdateShowSystemApps: (Boolean) -> Unit,
-) {
-  ModalBottomSheet(
-    modifier = modifier,
-    onDismissRequest = onDismiss,
-    sheetState = rememberModalBottomSheetState(),
-  ) {
-    AccessControlMenuContent(
-      sort = sort,
-      reverse = reverse,
-      showSystemApps = showSystemApps,
-      onSelectAll = onSelectAll,
-      onSelectNone = onSelectNone,
-      onSelectInvert = onSelectInvert,
-      onImport = onImport,
-      onExport = onExport,
-      onUpdateSort = onUpdateSort,
-      onUpdateReverse = onUpdateReverse,
-      onUpdateShowSystemApps = onUpdateShowSystemApps,
-    )
-    Spacer(modifier = Modifier.height(16.dp))
-  }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-private fun AccessControlSearchSheet(
-  apps: List<AppInfo>,
-  selected: Set<String>,
-  onToggleApp: (String) -> Unit,
-  onDismiss: () -> Unit,
-) {
-  ModalBottomSheet(
-    onDismissRequest = onDismiss,
-    sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
-  ) {
-    AccessControlSearchContent(apps = apps, selected = selected, onToggleApp = onToggleApp)
-  }
-}
-
-@Composable
-private fun AccessControlSearchContent(
+private fun ColumnScope.AccessControlSearchContent(
   apps: List<AppInfo>,
   selected: Set<String>,
   onToggleApp: (String) -> Unit,
@@ -346,7 +301,7 @@ private fun AccessControlSearchContent(
 }
 
 @Composable
-private fun AccessControlMenuContent(
+private fun ColumnScope.AccessControlMenuContent(
   sort: AppInfoSort,
   reverse: Boolean,
   showSystemApps: Boolean,
@@ -543,43 +498,51 @@ private fun AccessControlScreenPreview() = MihomoTheme {
 @PreviewMihomo
 @Composable
 private fun AccessControlMenuSheetPreview() = MihomoTheme {
-  AccessControlMenuContent(
-    sort = AppInfoSort.Label,
-    reverse = false,
-    showSystemApps = true,
-    onSelectAll = {},
-    onSelectNone = {},
-    onSelectInvert = {},
-    onImport = {},
-    onExport = {},
-    onUpdateSort = {},
-    onUpdateReverse = {},
-    onUpdateShowSystemApps = {},
-  )
+  Surface {
+    Column {
+      AccessControlMenuContent(
+        sort = AppInfoSort.Label,
+        reverse = false,
+        showSystemApps = true,
+        onSelectAll = {},
+        onSelectNone = {},
+        onSelectInvert = {},
+        onImport = {},
+        onExport = {},
+        onUpdateSort = {},
+        onUpdateReverse = {},
+        onUpdateShowSystemApps = {},
+      )
+    }
+  }
 }
 
 @PreviewMihomo
 @Composable
 private fun AccessControlSearchSheetPreview() = MihomoTheme {
-  AccessControlSearchContent(
-    apps =
-      listOf(
-        AppInfo(
-          packageName = "com.example.alpha",
-          label = "Alpha",
-          icon = Color.Gray.toArgb().toDrawable(),
-          installTime = 1_700_000_000_000,
-          updateDate = 1_710_000_000_000,
-        ),
-        AppInfo(
-          packageName = "com.example.beta",
-          label = "Beta",
-          icon = Color.DarkGray.toArgb().toDrawable(),
-          installTime = 1_690_000_000_000,
-          updateDate = 1_715_000_000_000,
-        ),
-      ),
-    selected = setOf("com.example.alpha"),
-    onToggleApp = {},
-  )
+  Surface {
+    Column {
+      AccessControlSearchContent(
+        apps =
+          listOf(
+            AppInfo(
+              packageName = "com.example.alpha",
+              label = "Alpha",
+              icon = Color.Gray.toArgb().toDrawable(),
+              installTime = 1_700_000_000_000,
+              updateDate = 1_710_000_000_000,
+            ),
+            AppInfo(
+              packageName = "com.example.beta",
+              label = "Beta",
+              icon = Color.DarkGray.toArgb().toDrawable(),
+              installTime = 1_690_000_000_000,
+              updateDate = 1_715_000_000_000,
+            ),
+          ),
+        selected = setOf("com.example.alpha"),
+        onToggleApp = {},
+      )
+    }
+  }
 }
