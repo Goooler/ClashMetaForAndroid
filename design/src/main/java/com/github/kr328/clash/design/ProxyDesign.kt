@@ -399,7 +399,8 @@ private fun ProxyGroupPage(
       val item =
         if (useRawStates) {
           val state = rawStates[itemIndex]
-          var uiState by remember(state.proxy.name) { mutableStateOf(state.toUiState()) }
+          var uiState by
+            remember(refreshVersion, state.proxy.name) { mutableStateOf(state.toUiState()) }
 
           LaunchedEffect(refreshVersion) {
             state.update(true)
