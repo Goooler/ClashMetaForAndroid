@@ -144,9 +144,7 @@
             android:label="@string/meta_features" />
         <activity
             android:name=".AccessControlActivity"
-            android:configChanges="uiMode"
-            android:exported="false"
-            android:label="@string/access_control_packages" />
+            android:exported="false" />
         <activity
             android:name=".HelpActivity"
             android:exported="false" />
