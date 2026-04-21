@@ -5,7 +5,7 @@ import com.github.kr328.clash.design.R
 import com.github.kr328.clash.design.ui.ToastDuration
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
-suspend fun Design<*>.showExceptionToast(message: CharSequence) {
+fun Design<*>.showExceptionToast(message: CharSequence) {
   showToast(message, ToastDuration.Long) {
     setAction(R.string.detail) {
       MaterialAlertDialogBuilder(it.context)
@@ -18,6 +18,6 @@ suspend fun Design<*>.showExceptionToast(message: CharSequence) {
   }
 }
 
-suspend fun Design<*>.showExceptionToast(exception: Exception) {
+fun Design<*>.showExceptionToast(exception: Exception) {
   showExceptionToast(exception.message ?: "Unknown")
 }

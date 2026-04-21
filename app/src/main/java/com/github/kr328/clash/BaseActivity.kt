@@ -4,6 +4,7 @@ import android.app.ActivityManager
 import android.content.res.Configuration
 import android.os.Bundle
 import android.view.View
+import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContract
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.getSystemService
@@ -49,6 +50,7 @@ abstract class BaseActivity<D : Design<*>> :
   protected var design: D? = null
     set(value) {
       field = value
+      enableEdgeToEdge()
       if (value != null) {
         setContentView(value.root)
       } else {

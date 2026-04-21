@@ -2,14 +2,11 @@ package com.github.kr328.clash.design
 
 import android.content.Context
 import android.view.View
-import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import com.github.kr328.clash.common.store.unsafeLazy
-import com.github.kr328.clash.design.ui.Surface
 import com.github.kr328.clash.design.ui.ToastDuration
-import com.github.kr328.clash.design.util.setOnInsertsChangedListener
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -19,7 +16,6 @@ sealed class Design<R>(val context: Context) :
   CoroutineScope by CoroutineScope(Dispatchers.Unconfined) {
   abstract val root: View
 
-  val surface = Surface()
   val requests: Channel<R> = Channel(Channel.UNLIMITED)
 
   protected fun composeView(content: @Composable () -> Unit): Lazy<ComposeView> = unsafeLazy {
@@ -50,18 +46,6 @@ sealed class Design<R>(val context: Context) :
         )
         .apply(configure)
         .show()
-    }
-  }
-
-  init {
-    when (context) {
-      is AppCompatActivity -> {
-        context.window.decorView.setOnInsertsChangedListener {
-          if (surface.insets != it) {
-            surface.insets = it
-          }
-        }
-      }
     }
   }
 }
