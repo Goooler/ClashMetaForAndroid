@@ -4,8 +4,6 @@ import android.content.Context
 import android.view.View
 import android.widget.ImageView
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.selectable
-import androidx.compose.foundation.toggleable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -19,6 +17,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.selection.selectable
+import androidx.compose.foundation.selection.toggleable
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
@@ -42,12 +42,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
@@ -527,7 +527,7 @@ private fun AccessControlScreenPreview() = MihomoTheme {
     selected = setOf("com.example.alpha"),
     initialSort = AppInfoSort.Label,
     initialReverse = false,
-    initialHideSystemApps = false,
+    initialShowSystemApps = true,
     onToggleApp = {},
     onSelectAll = {},
     onSelectNone = {},
@@ -536,7 +536,7 @@ private fun AccessControlScreenPreview() = MihomoTheme {
     onExport = {},
     onUpdateSort = {},
     onUpdateReverse = {},
-    onUpdateHideSystemApps = {},
+    onUpdateShowSystemApps = {},
   )
 }
 
@@ -546,7 +546,7 @@ private fun AccessControlMenuSheetPreview() = MihomoTheme {
   AccessControlMenuContent(
     sort = AppInfoSort.Label,
     reverse = false,
-    hideSystemApps = false,
+    showSystemApps = true,
     onSelectAll = {},
     onSelectNone = {},
     onSelectInvert = {},
@@ -554,7 +554,7 @@ private fun AccessControlMenuSheetPreview() = MihomoTheme {
     onExport = {},
     onUpdateSort = {},
     onUpdateReverse = {},
-    onUpdateHideSystemApps = {},
+    onUpdateShowSystemApps = {},
   )
 }
 
