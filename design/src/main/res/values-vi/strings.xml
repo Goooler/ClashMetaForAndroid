@@ -207,6 +207,7 @@
     <string name="sideload_geoip">Sideload GEOIP</string>
     <string name="sideload_geoip_summary">Cơ sở dữ liệu GEOIP bên ngoài</string>
     <string name="silent">Im lặng</string>
+    <string name="unknown">Không xác định</string>
     <string name="single">Đơn</string>
     <string name="socks_port">Cổng Socks</string>
     <string name="sort">Sắp xếp theo</string>

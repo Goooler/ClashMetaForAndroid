@@ -23,11 +23,8 @@ class OverrideSettingsActivity : BaseActivity<OverrideSettingsDesign>() {
         design.requests.onReceive {
           when (it) {
             OverrideSettingsDesign.Request.ResetOverride -> {
-              if (design.requestResetConfirm()) {
-                defer { withClash { clearOverride(Clash.OverrideSlot.Persist) } }
-
-                finish()
-              }
+              defer { withClash { clearOverride(Clash.OverrideSlot.Persist) } }
+              finish()
             }
           }
         }

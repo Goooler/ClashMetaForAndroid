@@ -171,6 +171,7 @@
     <string name="error">Ошибка</string>
     <string name="debug">Отладка</string>
     <string name="silent">Тихий</string>
+    <string name="unknown">Неизвестно</string>
 
     <string name="force_enable">Включить принудительно</string>
 

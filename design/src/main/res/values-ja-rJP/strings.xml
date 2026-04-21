@@ -142,6 +142,7 @@
     <string name="error">エラー</string>
     <string name="debug">デバッグ</string>
     <string name="silent">無効にする</string>
+    <string name="unknown">不明</string>
     <string name="force_enable">強制的に有効</string>
     <string name="mapping">Real-IPをドメインマッピング</string>
     <string name="fakeip">Fake-IPをドメインマッピング</string>

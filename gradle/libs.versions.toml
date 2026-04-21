@@ -40,6 +40,8 @@ quickie-bundled = "io.github.g00fy2.quickie:quickie-bundled:1.11.0"
 okhttp-client = { module = "com.squareup.okhttp3:okhttp", version.ref = "okhttp" }
 okhttp-interceptor = { module = "com.squareup.okhttp3:logging-interceptor", version.ref = "okhttp" }
 
+composePreference = "me.zhanghai.compose.preference:preference:2.2.0"
+
 # Dummy to get renovate updates, the version is used in rootProject build.gradle with spotless.
 ktfmt = "com.facebook:ktfmt:0.62"
 

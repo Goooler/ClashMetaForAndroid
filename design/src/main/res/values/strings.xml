@@ -185,6 +185,7 @@
     <string name="error">Error</string>
     <string name="debug">Debug</string>
     <string name="silent">Silent</string>
+    <string name="unknown">Unknown</string>
 
     <string name="force_enable">Force Enable</string>
 

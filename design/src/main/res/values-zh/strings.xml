@@ -123,6 +123,7 @@
     <string name="error">错误</string>
     <string name="debug">调试</string>
     <string name="silent">停用</string>
+    <string name="unknown">未知</string>
     <string name="format_elements">%d 个条目</string>
     <string name="strategy">策略</string>
     <string name="enhanced_mode">增强模式</string>
