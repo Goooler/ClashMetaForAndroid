@@ -906,12 +906,16 @@ private fun MapEntryInputDialog(
         OutlinedTextField(
           value = keyText,
           onValueChange = { keyText = it },
+          label = { Text(stringResource(R.string.key)) },
+          placeholder = { Text(stringResource(R.string.key)) },
           singleLine = true,
           modifier = Modifier.fillMaxWidth().focusRequester(focusRequester),
         )
         OutlinedTextField(
           value = valueText,
           onValueChange = { valueText = it },
+          label = { Text(stringResource(R.string.value)) },
+          placeholder = { Text(stringResource(R.string.value)) },
           singleLine = true,
           modifier = Modifier.fillMaxWidth(),
         )
