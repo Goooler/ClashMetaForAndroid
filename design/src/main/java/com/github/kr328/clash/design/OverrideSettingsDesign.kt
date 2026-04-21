@@ -2,6 +2,7 @@ package com.github.kr328.clash.design
 
 import android.content.Context
 import android.view.View
+import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -133,132 +134,132 @@ private fun LazyListScope.generalPreferenceItems(configuration: ConfigurationOve
   preferenceCategory(key = "cat_general", title = { Text(stringResource(R.string.general)) })
   item(key = "httpPort", contentType = "EditTextPreference") {
     OverrideEditTextPreferenceItem(
-      title = stringResource(R.string.http_port),
+      title = R.string.http_port,
+      placeholder = R.string.dont_modify,
+      emptyLabel = R.string.disabled,
       state =
         rememberWriteThroughState(portText(configuration.httpPort)) {
           configuration.httpPort = parsePort(it)
         },
-      placeholder = stringResource(R.string.dont_modify),
-      emptyLabel = stringResource(R.string.disabled),
     )
   }
   item(key = "socksPort", contentType = "EditTextPreference") {
     OverrideEditTextPreferenceItem(
-      title = stringResource(R.string.socks_port),
+      title = R.string.socks_port,
+      placeholder = R.string.dont_modify,
+      emptyLabel = R.string.disabled,
       state =
         rememberWriteThroughState(portText(configuration.socksPort)) {
           configuration.socksPort = parsePort(it)
         },
-      placeholder = stringResource(R.string.dont_modify),
-      emptyLabel = stringResource(R.string.disabled),
     )
   }
   item(key = "redirectPort", contentType = "EditTextPreference") {
     OverrideEditTextPreferenceItem(
-      title = stringResource(R.string.redirect_port),
+      title = R.string.redirect_port,
+      placeholder = R.string.dont_modify,
+      emptyLabel = R.string.disabled,
       state =
         rememberWriteThroughState(portText(configuration.redirectPort)) {
           configuration.redirectPort = parsePort(it)
         },
-      placeholder = stringResource(R.string.dont_modify),
-      emptyLabel = stringResource(R.string.disabled),
     )
   }
   item(key = "tproxyPort", contentType = "EditTextPreference") {
     OverrideEditTextPreferenceItem(
-      title = stringResource(R.string.tproxy_port),
+      title = R.string.tproxy_port,
+      placeholder = R.string.dont_modify,
+      emptyLabel = R.string.disabled,
       state =
         rememberWriteThroughState(portText(configuration.tproxyPort)) {
           configuration.tproxyPort = parsePort(it)
         },
-      placeholder = stringResource(R.string.dont_modify),
-      emptyLabel = stringResource(R.string.disabled),
     )
   }
   item(key = "mixedPort", contentType = "EditTextPreference") {
     OverrideEditTextPreferenceItem(
-      title = stringResource(R.string.mixed_port),
+      title = R.string.mixed_port,
+      placeholder = R.string.dont_modify,
+      emptyLabel = R.string.disabled,
       state =
         rememberWriteThroughState(portText(configuration.mixedPort)) {
           configuration.mixedPort = parsePort(it)
         },
-      placeholder = stringResource(R.string.dont_modify),
-      emptyLabel = stringResource(R.string.disabled),
     )
   }
   item(key = "authentication", contentType = "EditTextListPreference") {
     OverrideEditTextListPreferenceItem(
-      title = stringResource(R.string.authentication),
+      title = R.string.authentication,
+      placeholder = R.string.dont_modify,
       state =
         rememberWriteThroughState(configuration.authentication) {
           configuration.authentication = it
         },
-      placeholder = stringResource(R.string.dont_modify),
     )
   }
   item(key = "allowLan", contentType = "ListPreference") {
     val state = rememberWriteThroughState(configuration.allowLan) { configuration.allowLan = it }
     val value by state
-    ListPreference(
+    OverrideListPreferenceItem(
       state = state,
       values = booleanOptions,
       modifier = Modifier.fillMaxWidth(),
-      title = { Text(stringResource(R.string.allow_lan)) },
-      summary = { Text(value.text) },
-      valueToText = { v: Boolean? -> AnnotatedString(v.text) },
+      title = R.string.allow_lan,
+      summary = value.textRes,
+      valueToText = { it.textRes },
     )
   }
   item(key = "ipv6", contentType = "ListPreference") {
     val state = rememberWriteThroughState(configuration.ipv6) { configuration.ipv6 = it }
     val value by state
-    ListPreference(
+    OverrideListPreferenceItem(
       state = state,
       values = booleanOptions,
       modifier = Modifier.fillMaxWidth(),
-      title = { Text(stringResource(R.string.ipv6)) },
-      summary = { Text(value.text) },
-      valueToText = { v: Boolean? -> AnnotatedString(v.text) },
+      title = R.string.ipv6,
+      summary = value.textRes,
+      valueToText = { it.textRes },
     )
   }
   item(key = "bindAddress", contentType = "EditTextPreference") {
     OverrideEditTextPreferenceItem(
-      title = stringResource(R.string.bind_address),
+      title = R.string.bind_address,
+      placeholder = R.string.dont_modify,
+      emptyLabel = R.string.default_,
       state =
         rememberWriteThroughState(configuration.bindAddress) { configuration.bindAddress = it },
-      placeholder = stringResource(R.string.dont_modify),
-      emptyLabel = stringResource(R.string.default_),
     )
   }
   item(key = "externalController", contentType = "EditTextPreference") {
     OverrideEditTextPreferenceItem(
-      title = stringResource(R.string.external_controller),
+      title = R.string.external_controller,
+      placeholder = R.string.dont_modify,
+      emptyLabel = R.string.default_,
       state =
         rememberWriteThroughState(configuration.externalController) {
           configuration.externalController = it
         },
-      placeholder = stringResource(R.string.dont_modify),
-      emptyLabel = stringResource(R.string.default_),
     )
   }
   item(key = "externalControllerTls", contentType = "EditTextPreference") {
     OverrideEditTextPreferenceItem(
-      title = stringResource(R.string.external_controller_tls),
+      title = R.string.external_controller_tls,
+      placeholder = R.string.dont_modify,
+      emptyLabel = R.string.default_,
       state =
         rememberWriteThroughState(configuration.externalControllerTLS) {
           configuration.externalControllerTLS = it
         },
-      placeholder = stringResource(R.string.dont_modify),
-      emptyLabel = stringResource(R.string.default_),
     )
   }
   item(key = "allowOrigins", contentType = "EditTextListPreference") {
     OverrideEditTextListPreferenceItem(
-      title = stringResource(R.string.allow_origins),
+      title = R.string.allow_origins,
+      placeholder = R.string.dont_modify,
       state =
         rememberWriteThroughState(configuration.externalControllerCors.allowOrigins) {
           configuration.externalControllerCors.allowOrigins = it
         },
-      placeholder = stringResource(R.string.dont_modify),
     )
   }
   item(key = "allowPrivateNetwork", contentType = "ListPreference") {
@@ -267,52 +268,52 @@ private fun LazyListScope.generalPreferenceItems(configuration: ConfigurationOve
         configuration.externalControllerCors.allowPrivateNetwork = it
       }
     val value by state
-    ListPreference(
+    OverrideListPreferenceItem(
       state = state,
       values = booleanOptions,
       modifier = Modifier.fillMaxWidth(),
-      title = { Text(stringResource(R.string.allow_private_network)) },
-      summary = { Text(value.text) },
-      valueToText = { v: Boolean? -> AnnotatedString(v.text) },
+      title = R.string.allow_private_network,
+      summary = value.textRes,
+      valueToText = { it.textRes },
     )
   }
   item(key = "secret", contentType = "EditTextPreference") {
     OverrideEditTextPreferenceItem(
-      title = stringResource(R.string.secret),
+      title = R.string.secret,
+      placeholder = R.string.dont_modify,
+      emptyLabel = R.string.default_,
       state = rememberWriteThroughState(configuration.secret) { configuration.secret = it },
-      placeholder = stringResource(R.string.dont_modify),
-      emptyLabel = stringResource(R.string.default_),
     )
   }
   item(key = "mode", contentType = "ListPreference") {
     val state = rememberWriteThroughState(configuration.mode) { configuration.mode = it }
     val value by state
-    ListPreference(
+    OverrideListPreferenceItem(
       state = state,
       values = TunnelState.Mode.entries,
       modifier = Modifier.fillMaxWidth(),
-      title = { Text(stringResource(R.string.mode)) },
-      summary = { Text(value.text) },
-      valueToText = { v: TunnelState.Mode? -> AnnotatedString(v.text) },
+      title = R.string.mode,
+      summary = value.textRes,
+      valueToText = { it.textRes },
     )
   }
   item(key = "logLevel", contentType = "ListPreference") {
     val state = rememberWriteThroughState(configuration.logLevel) { configuration.logLevel = it }
     val value by state
-    ListPreference(
+    OverrideListPreferenceItem(
       state = state,
       values = LogMessage.Level.entries,
       modifier = Modifier.fillMaxWidth(),
-      title = { Text(stringResource(R.string.log_level)) },
-      summary = { Text(value.text) },
-      valueToText = { v: LogMessage.Level? -> AnnotatedString(v.text) },
+      title = R.string.log_level,
+      summary = value.textRes,
+      valueToText = { it.textRes },
     )
   }
   item(key = "hosts", contentType = "EditTextMapPreference") {
     OverrideEditTextMapPreferenceItem(
-      title = stringResource(R.string.hosts),
+      title = R.string.hosts,
+      placeholder = R.string.dont_modify,
       state = rememberWriteThroughState(configuration.hosts) { configuration.hosts = it },
-      placeholder = stringResource(R.string.dont_modify),
     )
   }
 }
@@ -324,55 +325,35 @@ private fun LazyListScope.dnsPreferenceItems(
 ) {
   preferenceCategory(key = "cat_dns", title = { Text(stringResource(R.string.dns)) })
   item(key = "dnsStrategy", contentType = "ListPreference") {
-    ListPreference(
+    OverrideListPreferenceItem(
       state = dnsEnableState,
       values = booleanOptions,
       modifier = Modifier.fillMaxWidth(),
-      title = { Text(stringResource(R.string.strategy)) },
-      summary = {
-        Text(
-          stringResource(
-            when (dnsEnabled) {
-              true -> R.string.force_enable
-              false -> R.string.use_built_in
-              else -> R.string.dont_modify
-            }
-          )
-        )
-      },
-      valueToText = { v: Boolean? ->
-        AnnotatedString(
-          stringResource(
-            when (v) {
-              true -> R.string.force_enable
-              false -> R.string.use_built_in
-              else -> R.string.dont_modify
-            }
-          )
-        )
-      },
+      title = R.string.strategy,
+      summary = dnsEnabled.dnsStrategyTextRes,
+      valueToText = { it.dnsStrategyTextRes },
     )
   }
   item(key = "dnsPreferH3", contentType = "ListPreference") {
     val state =
       rememberWriteThroughState(configuration.dns.preferH3) { configuration.dns.preferH3 = it }
     val value by state
-    ListPreference(
+    OverrideListPreferenceItem(
       state = state,
       values = booleanOptions,
       modifier = Modifier.fillMaxWidth(),
       enabled = dnsEnabled != false,
-      title = { Text(stringResource(R.string.prefer_h3)) },
-      summary = { Text(value.text) },
-      valueToText = { v: Boolean? -> AnnotatedString(v.text) },
+      title = R.string.prefer_h3,
+      summary = value.textRes,
+      valueToText = { it.textRes },
     )
   }
   item(key = "dnsListen", contentType = "EditTextPreference") {
     OverrideEditTextPreferenceItem(
-      title = stringResource(R.string.listen),
+      title = R.string.listen,
+      placeholder = R.string.dont_modify,
+      emptyLabel = R.string.disabled,
       state = rememberWriteThroughState(configuration.dns.listen) { configuration.dns.listen = it },
-      placeholder = stringResource(R.string.dont_modify),
-      emptyLabel = stringResource(R.string.disabled),
       enabled = dnsEnabled != false,
     )
   }
@@ -382,41 +363,41 @@ private fun LazyListScope.dnsPreferenceItems(
         configuration.app.appendSystemDns = it
       }
     val value by state
-    ListPreference(
+    OverrideListPreferenceItem(
       state = state,
       values = booleanOptions,
       modifier = Modifier.fillMaxWidth(),
       enabled = dnsEnabled != false,
-      title = { Text(stringResource(R.string.append_system_dns)) },
-      summary = { Text(value.text) },
-      valueToText = { v: Boolean? -> AnnotatedString(v.text) },
+      title = R.string.append_system_dns,
+      summary = value.textRes,
+      valueToText = { it.textRes },
     )
   }
   item(key = "dnsIpv6", contentType = "ListPreference") {
     val state = rememberWriteThroughState(configuration.dns.ipv6) { configuration.dns.ipv6 = it }
     val value by state
-    ListPreference(
+    OverrideListPreferenceItem(
       state = state,
       values = booleanOptions,
       modifier = Modifier.fillMaxWidth(),
       enabled = dnsEnabled != false,
-      title = { Text(stringResource(R.string.ipv6)) },
-      summary = { Text(value.text) },
-      valueToText = { v: Boolean? -> AnnotatedString(v.text) },
+      title = R.string.ipv6,
+      summary = value.textRes,
+      valueToText = { it.textRes },
     )
   }
   item(key = "dnsUseHosts", contentType = "ListPreference") {
     val state =
       rememberWriteThroughState(configuration.dns.useHosts) { configuration.dns.useHosts = it }
     val value by state
-    ListPreference(
+    OverrideListPreferenceItem(
       state = state,
       values = booleanOptions,
       modifier = Modifier.fillMaxWidth(),
       enabled = dnsEnabled != false,
-      title = { Text(stringResource(R.string.use_hosts)) },
-      summary = { Text(value.text) },
-      valueToText = { v: Boolean? -> AnnotatedString(v.text) },
+      title = R.string.use_hosts,
+      summary = value.textRes,
+      valueToText = { it.textRes },
     )
   }
   item(key = "dnsEnhancedMode", contentType = "ListPreference") {
@@ -425,55 +406,55 @@ private fun LazyListScope.dnsPreferenceItems(
         configuration.dns.enhancedMode = it
       }
     val value by state
-    ListPreference(
+    OverrideListPreferenceItem(
       state = state,
       values = ConfigurationOverride.DnsEnhancedMode.entries,
       modifier = Modifier.fillMaxWidth(),
       enabled = dnsEnabled != false,
-      title = { Text(stringResource(R.string.enhanced_mode)) },
-      summary = { Text(value.text) },
-      valueToText = { v: ConfigurationOverride.DnsEnhancedMode? -> AnnotatedString(v.text) },
+      title = R.string.enhanced_mode,
+      summary = value.textRes,
+      valueToText = { it.textRes },
     )
   }
   item(key = "dnsNameServer", contentType = "EditTextListPreference") {
     OverrideEditTextListPreferenceItem(
-      title = stringResource(R.string.name_server),
+      title = R.string.name_server,
+      placeholder = R.string.dont_modify,
       state =
         rememberWriteThroughState(configuration.dns.nameServer) {
           configuration.dns.nameServer = it
         },
-      placeholder = stringResource(R.string.dont_modify),
       enabled = dnsEnabled != false,
     )
   }
   item(key = "dnsFallback", contentType = "EditTextListPreference") {
     OverrideEditTextListPreferenceItem(
-      title = stringResource(R.string.fallback),
+      title = R.string.fallback,
+      placeholder = R.string.dont_modify,
       state =
         rememberWriteThroughState(configuration.dns.fallback) { configuration.dns.fallback = it },
-      placeholder = stringResource(R.string.dont_modify),
       enabled = dnsEnabled != false,
     )
   }
   item(key = "dnsDefaultServer", contentType = "EditTextListPreference") {
     OverrideEditTextListPreferenceItem(
-      title = stringResource(R.string.default_name_server),
+      title = R.string.default_name_server,
+      placeholder = R.string.dont_modify,
       state =
         rememberWriteThroughState(configuration.dns.defaultServer) {
           configuration.dns.defaultServer = it
         },
-      placeholder = stringResource(R.string.dont_modify),
       enabled = dnsEnabled != false,
     )
   }
   item(key = "dnsFakeIpFilter", contentType = "EditTextListPreference") {
     OverrideEditTextListPreferenceItem(
-      title = stringResource(R.string.fakeip_filter),
+      title = R.string.fakeip_filter,
+      placeholder = R.string.dont_modify,
       state =
         rememberWriteThroughState(configuration.dns.fakeIpFilter) {
           configuration.dns.fakeIpFilter = it
         },
-      placeholder = stringResource(R.string.dont_modify),
       enabled = dnsEnabled != false,
     )
   }
@@ -483,14 +464,14 @@ private fun LazyListScope.dnsPreferenceItems(
         configuration.dns.fakeIPFilterMode = it
       }
     val value by state
-    ListPreference(
+    OverrideListPreferenceItem(
       state = state,
       values = ConfigurationOverride.FilterMode.entries,
       modifier = Modifier.fillMaxWidth(),
       enabled = dnsEnabled != false,
-      title = { Text(stringResource(R.string.fakeip_filter_mode)) },
-      summary = { Text(value.text) },
-      valueToText = { v: ConfigurationOverride.FilterMode? -> AnnotatedString(v.text) },
+      title = R.string.fakeip_filter_mode,
+      summary = value.textRes,
+      valueToText = { it.textRes },
     )
   }
   item(key = "dnsGeoIpFallback", contentType = "ListPreference") {
@@ -499,58 +480,58 @@ private fun LazyListScope.dnsPreferenceItems(
         configuration.dns.fallbackFilter.geoIp = it
       }
     val value by state
-    ListPreference(
+    OverrideListPreferenceItem(
       state = state,
       values = booleanOptions,
       modifier = Modifier.fillMaxWidth(),
       enabled = dnsEnabled != false,
-      title = { Text(stringResource(R.string.geoip_fallback)) },
-      summary = { Text(value.text) },
-      valueToText = { v: Boolean? -> AnnotatedString(v.text) },
+      title = R.string.geoip_fallback,
+      summary = value.textRes,
+      valueToText = { it.textRes },
     )
   }
   item(key = "dnsGeoIpCode", contentType = "EditTextPreference") {
     OverrideEditTextPreferenceItem(
-      title = stringResource(R.string.geoip_fallback_code),
+      title = R.string.geoip_fallback_code,
+      placeholder = R.string.dont_modify,
+      emptyLabel = R.string.raw_cn,
       state =
         rememberWriteThroughState(configuration.dns.fallbackFilter.geoIpCode) {
           configuration.dns.fallbackFilter.geoIpCode = it
         },
-      placeholder = stringResource(R.string.dont_modify),
-      emptyLabel = stringResource(R.string.raw_cn),
       enabled = dnsEnabled != false,
     )
   }
   item(key = "dnsDomainFallback", contentType = "EditTextListPreference") {
     OverrideEditTextListPreferenceItem(
-      title = stringResource(R.string.domain_fallback),
+      title = R.string.domain_fallback,
+      placeholder = R.string.dont_modify,
       state =
         rememberWriteThroughState(configuration.dns.fallbackFilter.domain) {
           configuration.dns.fallbackFilter.domain = it
         },
-      placeholder = stringResource(R.string.dont_modify),
       enabled = dnsEnabled != false,
     )
   }
   item(key = "dnsIpcidrFallback", contentType = "EditTextListPreference") {
     OverrideEditTextListPreferenceItem(
-      title = stringResource(R.string.ipcidr_fallback),
+      title = R.string.ipcidr_fallback,
+      placeholder = R.string.dont_modify,
       state =
         rememberWriteThroughState(configuration.dns.fallbackFilter.ipcidr) {
           configuration.dns.fallbackFilter.ipcidr = it
         },
-      placeholder = stringResource(R.string.dont_modify),
       enabled = dnsEnabled != false,
     )
   }
   item(key = "dnsNameserverPolicy", contentType = "EditTextMapPreference") {
     OverrideEditTextMapPreferenceItem(
-      title = stringResource(R.string.name_server_policy),
+      title = R.string.name_server_policy,
+      placeholder = R.string.dont_modify,
       state =
         rememberWriteThroughState(configuration.dns.nameserverPolicy) {
           configuration.dns.nameserverPolicy = it
         },
-      placeholder = stringResource(R.string.dont_modify),
       enabled = dnsEnabled != false,
     )
   }
@@ -558,18 +539,23 @@ private fun LazyListScope.dnsPreferenceItems(
 
 @Composable
 private fun OverrideEditTextPreferenceItem(
-  title: String,
+  @StringRes title: Int,
+  @StringRes placeholder: Int,
+  @StringRes emptyLabel: Int,
   state: MutableState<String?>,
-  placeholder: String,
-  emptyLabel: String,
   enabled: Boolean = true,
 ) {
   var text by state
   var showDialog by remember { mutableStateOf(false) }
-  val summary = text?.let { it.ifEmpty { emptyLabel } } ?: placeholder
+  val summary =
+    when {
+      text == null -> stringResource(placeholder)
+      text.isNullOrEmpty() -> stringResource(emptyLabel)
+      else -> text.orEmpty()
+    }
   Preference(
     modifier = Modifier.fillMaxWidth(),
-    title = { Text(title) },
+    title = { Text(stringResource(title)) },
     summary = { Text(summary) },
     enabled = enabled,
     onClick = { showDialog = true },
@@ -588,7 +574,7 @@ private fun OverrideEditTextPreferenceItem(
     }
     AlertDialog(
       onDismissRequest = { showDialog = false },
-      title = { Text(title) },
+      title = { Text(stringResource(title)) },
       text = {
         OutlinedTextField(
           value = inputText,
@@ -625,17 +611,38 @@ private fun OverrideEditTextPreferenceItem(
 }
 
 @Composable
+private fun <T> OverrideListPreferenceItem(
+  state: MutableState<T>,
+  values: List<T>,
+  @StringRes title: Int,
+  @StringRes summary: Int,
+  modifier: Modifier = Modifier,
+  enabled: Boolean = true,
+  valueToText: @Composable (T) -> Int,
+) {
+  ListPreference(
+    state = state,
+    values = values,
+    modifier = modifier,
+    enabled = enabled,
+    title = { Text(stringResource(title)) },
+    summary = { Text(stringResource(summary)) },
+    valueToText = { AnnotatedString(stringResource(valueToText(it))) },
+  )
+}
+
+@Composable
 private fun OverrideEditTextListPreferenceItem(
-  title: String,
+  @StringRes title: Int,
+  @StringRes placeholder: Int,
   state: MutableState<List<String>?>,
-  placeholder: String,
   enabled: Boolean = true,
 ) {
   var values by state
   var showDialog by remember { mutableStateOf(false) }
   Preference(
     modifier = Modifier.fillMaxWidth(),
-    title = { Text(title) },
+    title = { Text(stringResource(title)) },
     summary = { Text(values.summary(placeholder)) },
     enabled = enabled,
     onClick = { showDialog = true },
@@ -655,16 +662,16 @@ private fun OverrideEditTextListPreferenceItem(
 
 @Composable
 private fun OverrideEditTextMapPreferenceItem(
-  title: String,
+  @StringRes title: Int,
+  @StringRes placeholder: Int,
   state: MutableState<Map<String, String>?>,
-  placeholder: String,
   enabled: Boolean = true,
 ) {
   var values by state
   var showDialog by remember { mutableStateOf(false) }
   Preference(
     modifier = Modifier.fillMaxWidth(),
-    title = { Text(title) },
+    title = { Text(stringResource(title)) },
     summary = { Text(values.summary(placeholder)) },
     enabled = enabled,
     onClick = { showDialog = true },
@@ -684,7 +691,7 @@ private fun OverrideEditTextMapPreferenceItem(
 
 @Composable
 private fun EditableTextListDialog(
-  title: String,
+  @StringRes title: Int,
   initialValues: List<String>?,
   onDismiss: () -> Unit,
   onApply: (List<String>?) -> Unit,
@@ -738,7 +745,7 @@ private fun EditableTextListDialog(
 
 @Composable
 private fun EditableTextMapDialog(
-  title: String,
+  @StringRes title: Int,
   initialValues: Map<String, String>?,
   onDismiss: () -> Unit,
   onApply: (Map<String, String>?) -> Unit,
@@ -794,7 +801,7 @@ private fun EditableTextMapDialog(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun FullScreenPreferenceDialog(
-  title: String,
+  @StringRes title: Int,
   onDismiss: () -> Unit,
   onAdd: () -> Unit,
   onReset: () -> Unit,
@@ -807,7 +814,7 @@ private fun FullScreenPreferenceDialog(
   ) {
     MihomoScaffold(
       modifier = Modifier.fillMaxSize(),
-      title = title,
+      title = stringResource(title),
       onBack = onDismiss,
       actions = {
         IconButton(onClick = onAdd) {
@@ -842,7 +849,7 @@ private fun EmptyEditorContent(modifier: Modifier = Modifier) {
 
 @Composable
 private fun SingleTextInputDialog(
-  title: String,
+  @StringRes title: Int,
   initialValue: String,
   onDismiss: () -> Unit,
   onConfirm: (String) -> Unit,
@@ -858,7 +865,7 @@ private fun SingleTextInputDialog(
 
   AlertDialog(
     onDismissRequest = onDismiss,
-    title = { Text(title) },
+    title = { Text(stringResource(title)) },
     text = {
       OutlinedTextField(
         value = inputText,
@@ -876,7 +883,7 @@ private fun SingleTextInputDialog(
 
 @Composable
 private fun MapEntryInputDialog(
-  title: String,
+  @StringRes title: Int,
   onDismiss: () -> Unit,
   onConfirm: (String, String) -> Unit,
 ) {
@@ -893,7 +900,7 @@ private fun MapEntryInputDialog(
 
   AlertDialog(
     onDismissRequest = onDismiss,
-    title = { Text(title) },
+    title = { Text(stringResource(title)) },
     text = {
       Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
         OutlinedTextField(
@@ -945,81 +952,80 @@ private fun initialTextFieldValue(text: String) =
   TextFieldValue(text = text, selection = TextRange(text.length))
 
 @Composable
-private fun List<String>?.summary(placeholder: String) =
+private fun List<String>?.summary(@StringRes placeholder: Int) =
   when {
-    this == null -> placeholder
+    this == null -> stringResource(placeholder)
     isEmpty() -> stringResource(R.string.empty)
     else -> stringResource(R.string.format_elements, size)
   }
 
 @Composable
-private fun Map<String, String>?.summary(placeholder: String) =
+private fun Map<String, String>?.summary(@StringRes placeholder: Int) =
   when {
-    this == null -> placeholder
+    this == null -> stringResource(placeholder)
     isEmpty() -> stringResource(R.string.empty)
     else -> stringResource(R.string.format_elements, size)
   }
 
-private val Boolean?.text: String
-  @Composable
+private val Boolean?.textRes: Int
+  @StringRes
   get() =
-    stringResource(
-      when (this) {
-        true -> R.string.enabled
-        false -> R.string.disabled
-        null -> R.string.dont_modify
-      }
-    )
+    when (this) {
+      true -> R.string.enabled
+      false -> R.string.disabled
+      null -> R.string.dont_modify
+    }
 
-private val TunnelState.Mode?.text: String
-  @Composable
+private val Boolean?.dnsStrategyTextRes: Int
+  @StringRes
   get() =
-    stringResource(
-      when (this) {
-        TunnelState.Mode.Direct -> R.string.direct_mode
-        TunnelState.Mode.Global -> R.string.global_mode
-        TunnelState.Mode.Rule -> R.string.rule_mode
-        null -> R.string.dont_modify
-      }
-    )
+    when (this) {
+      true -> R.string.force_enable
+      false -> R.string.use_built_in
+      null -> R.string.dont_modify
+    }
 
-private val LogMessage.Level?.text: String
-  @Composable
+private val TunnelState.Mode?.textRes: Int
+  @StringRes
   get() =
-    stringResource(
-      when (this) {
-        LogMessage.Level.Info -> R.string.info
-        LogMessage.Level.Warning -> R.string.warning
-        LogMessage.Level.Error -> R.string.error
-        LogMessage.Level.Debug -> R.string.debug
-        LogMessage.Level.Silent -> R.string.silent
-        LogMessage.Level.Unknown -> R.string.unknown
-        null -> R.string.dont_modify
-      }
-    )
+    when (this) {
+      TunnelState.Mode.Direct -> R.string.direct_mode
+      TunnelState.Mode.Global -> R.string.global_mode
+      TunnelState.Mode.Rule -> R.string.rule_mode
+      null -> R.string.dont_modify
+    }
 
-private val ConfigurationOverride.DnsEnhancedMode?.text: String
-  @Composable
+private val LogMessage.Level?.textRes: Int
+  @StringRes
   get() =
-    stringResource(
-      when (this) {
-        ConfigurationOverride.DnsEnhancedMode.None -> R.string.disabled
-        ConfigurationOverride.DnsEnhancedMode.FakeIp -> R.string.fakeip
-        ConfigurationOverride.DnsEnhancedMode.Mapping -> R.string.mapping
-        null -> R.string.dont_modify
-      }
-    )
+    when (this) {
+      LogMessage.Level.Info -> R.string.info
+      LogMessage.Level.Warning -> R.string.warning
+      LogMessage.Level.Error -> R.string.error
+      LogMessage.Level.Debug -> R.string.debug
+      LogMessage.Level.Silent -> R.string.silent
+      LogMessage.Level.Unknown -> R.string.unknown
+      null -> R.string.dont_modify
+    }
 
-private val ConfigurationOverride.FilterMode?.text: String
-  @Composable
+private val ConfigurationOverride.DnsEnhancedMode?.textRes: Int
+  @StringRes
   get() =
-    stringResource(
-      when (this) {
-        ConfigurationOverride.FilterMode.BlackList -> R.string.blacklist
-        ConfigurationOverride.FilterMode.WhiteList -> R.string.whitelist
-        null -> R.string.dont_modify
-      }
-    )
+    when (this) {
+      ConfigurationOverride.DnsEnhancedMode.None -> R.string.disabled
+      ConfigurationOverride.DnsEnhancedMode.FakeIp -> R.string.fakeip
+      ConfigurationOverride.DnsEnhancedMode.Mapping -> R.string.mapping
+      null -> R.string.dont_modify
+    }
+
+private val ConfigurationOverride.FilterMode?.textRes: Int
+  @StringRes
+  get() =
+    when (this) {
+      ConfigurationOverride.FilterMode.BlackList -> R.string.blacklist
+      ConfigurationOverride.FilterMode.WhiteList -> R.string.whitelist
+      null -> R.string.dont_modify
+    }
 
 private val booleanOptions: List<Boolean?> = listOf(null, true, false)
 
