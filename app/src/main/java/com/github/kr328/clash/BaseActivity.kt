@@ -4,9 +4,9 @@ import android.app.ActivityManager
 import android.content.res.Configuration
 import android.os.Bundle
 import android.view.View
+import androidx.activity.ComponentActivity
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContract
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.getSystemService
 import com.github.kr328.clash.common.compat.isAllowForceDarkCompat
 import com.github.kr328.clash.common.compat.isLightNavigationBarCompat
@@ -39,7 +39,7 @@ import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
 
 abstract class BaseActivity<D : Design<*>> :
-  AppCompatActivity(), CoroutineScope by MainScope(), Broadcasts.Observer {
+  ComponentActivity(), CoroutineScope by MainScope(), Broadcasts.Observer {
 
   protected val uiStore by lazy { UiStore(this) }
   protected val events = Channel<Event>(Channel.UNLIMITED)
@@ -143,11 +143,6 @@ abstract class BaseActivity<D : Design<*>> :
     if (queryDayNight(newConfig) != dayNight) {
       ApplicationObserver.createdActivities.forEach { it.recreate() }
     }
-  }
-
-  override fun onSupportNavigateUp(): Boolean {
-    this.onBackPressed()
-    return true
   }
 
   override fun onProfileChanged() {
