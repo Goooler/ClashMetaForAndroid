@@ -50,7 +50,6 @@ abstract class BaseActivity<D : Design<*>> :
   protected var design: D? = null
     set(value) {
       field = value
-      enableEdgeToEdge()
       if (value != null) {
         setContentView(value.root)
       } else {
@@ -94,6 +93,7 @@ abstract class BaseActivity<D : Design<*>> :
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
+    enableEdgeToEdge()
     applyDayNight()
 
     // Apply excludeFromRecents setting to all app tasks.
