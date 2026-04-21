@@ -22,9 +22,6 @@ allprojects {
       compileSdk = 37
       defaultConfig.apply { minSdk = 28 }
       ndkVersion = "29.0.14206865"
-      sourceSets {
-        getByName("main") { java.directories.add("src/foss/java") }
-      }
       compileOptions.apply {
         sourceCompatibility(libs.versions.jvmTarget.get())
         targetCompatibility(libs.versions.jvmTarget.get())
