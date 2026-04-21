@@ -71,9 +71,7 @@ android {
     debug { versionNameSuffix = ".debug" }
   }
 
-  buildFeatures {
-    resValues = true
-  }
+  buildFeatures { resValues = true }
 
   packaging {
     jniLibs { useLegacyPackaging = true }
@@ -116,7 +114,6 @@ dependencies {
   implementation(libs.androidx.core)
   implementation(libs.androidx.activity)
   implementation(libs.androidx.fragment)
-  implementation(libs.androidx.appcompat)
   implementation(libs.androidx.coordinator)
   implementation(libs.androidx.recyclerview)
   implementation(libs.google.material)
