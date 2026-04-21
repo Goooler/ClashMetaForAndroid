@@ -156,7 +156,6 @@ class ProxyDesign(
       withContext(Dispatchers.Default) {
         proxies.map { proxy ->
           ProxyViewState(config, proxy, parent, if (proxy.type.group) links[proxy.name] else null)
-            .apply { update(true) }
         }
       }
 
