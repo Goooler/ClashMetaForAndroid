@@ -8,18 +8,11 @@ import androidx.activity.ComponentActivity
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContract
 import androidx.core.content.getSystemService
-import com.github.kr328.clash.common.compat.isAllowForceDarkCompat
-import com.github.kr328.clash.common.compat.isLightNavigationBarCompat
-import com.github.kr328.clash.common.compat.isLightStatusBarsCompat
-import com.github.kr328.clash.common.compat.isSystemBarsTranslucentCompat
 import com.github.kr328.clash.core.bridge.ClashException
 import com.github.kr328.clash.design.Design
-import com.github.kr328.clash.design.R
 import com.github.kr328.clash.design.model.DarkMode
 import com.github.kr328.clash.design.store.UiStore
 import com.github.kr328.clash.design.ui.DayNight
-import com.github.kr328.clash.design.util.resolveThemedBoolean
-import com.github.kr328.clash.design.util.resolveThemedColor
 import com.github.kr328.clash.design.util.showExceptionToast
 import com.github.kr328.clash.remote.Broadcasts
 import com.github.kr328.clash.remote.Remote
@@ -94,7 +87,6 @@ abstract class BaseActivity<D : Design<*>> :
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     enableEdgeToEdge()
-    applyDayNight()
 
     // Apply excludeFromRecents setting to all app tasks.
     checkNotNull(getSystemService<ActivityManager>()).appTasks.forEach { task ->
@@ -186,26 +178,6 @@ abstract class BaseActivity<D : Design<*>> :
       DarkMode.ForceLight -> DayNight.Day
       DarkMode.ForceDark -> DayNight.Night
     }
-  }
-
-  private fun applyDayNight(config: Configuration = resources.configuration) {
-    val dayNight = queryDayNight(config)
-    when (dayNight) {
-      DayNight.Night -> theme.applyStyle(R.style.AppThemeDark, true)
-      DayNight.Day -> theme.applyStyle(R.style.AppThemeLight, true)
-    }
-
-    window.isAllowForceDarkCompat = false
-    window.isSystemBarsTranslucentCompat = true
-
-    window.statusBarColor = resolveThemedColor(android.R.attr.statusBarColor)
-    window.navigationBarColor = resolveThemedColor(android.R.attr.navigationBarColor)
-
-    window.isLightStatusBarsCompat = resolveThemedBoolean(android.R.attr.windowLightStatusBar)
-    window.isLightNavigationBarCompat =
-      resolveThemedBoolean(android.R.attr.windowLightNavigationBar)
-
-    this.dayNight = dayNight
   }
 
   enum class Event {
