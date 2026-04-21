@@ -72,7 +72,6 @@ android {
   }
 
   buildFeatures {
-    dataBinding = true
     resValues = true
   }
 
