@@ -32,9 +32,6 @@ import com.github.kr328.clash.core.model.TunnelState
 import com.github.kr328.clash.design.component.MihomoScaffold
 import com.github.kr328.clash.design.ui.theme.MihomoTheme
 import com.github.kr328.clash.design.ui.theme.PreviewMihomo
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import kotlin.coroutines.resume
-import kotlinx.coroutines.suspendCancellableCoroutine
 import me.zhanghai.compose.preference.ListPreference
 import me.zhanghai.compose.preference.Preference
 import me.zhanghai.compose.preference.ProvidePreferenceLocals
@@ -50,24 +47,8 @@ class OverrideSettingsDesign(context: Context, configuration: ConfigurationOverr
     MihomoTheme {
       OverrideSettingsScreen(
         configuration = configuration,
-        onReset = { requests.trySend(Request.ResetOverride) },
+        onResetConfirmed = { requests.trySend(Request.ResetOverride) },
       )
-    }
-  }
-
-  suspend fun requestResetConfirm(): Boolean {
-    return suspendCancellableCoroutine { ctx ->
-      val dialog =
-        MaterialAlertDialogBuilder(context)
-          .setTitle(R.string.reset_override_settings)
-          .setMessage(R.string.reset_override_settings_message)
-          .setPositiveButton(R.string.ok) { _, _ -> ctx.resume(true) }
-          .setNegativeButton(R.string.cancel) { _, _ -> }
-          .show()
-
-      dialog.setOnDismissListener { if (!ctx.isCompleted) ctx.resume(false) }
-
-      ctx.invokeOnCancellation { dialog.dismiss() }
     }
   }
 }
@@ -76,16 +57,18 @@ class OverrideSettingsDesign(context: Context, configuration: ConfigurationOverr
 @OptIn(ExperimentalMaterial3Api::class)
 private fun OverrideSettingsScreen(
   configuration: ConfigurationOverride,
-  onReset: () -> Unit,
+  onResetConfirmed: () -> Unit,
   modifier: Modifier = Modifier,
 ) {
+  var showResetConfirmDialog by remember { mutableStateOf(false) }
+
   val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
   MihomoScaffold(
     title = stringResource(R.string.override),
     modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
     scrollBehavior = scrollBehavior,
     actions = {
-      IconButton(onClick = onReset) {
+      IconButton(onClick = { showResetConfirmDialog = true }) {
         Icon(
           painter = painterResource(R.drawable.ic_baseline_replay),
           contentDescription = stringResource(R.string.reset),
@@ -101,6 +84,29 @@ private fun OverrideSettingsScreen(
       LazyColumn(modifier = Modifier.fillMaxSize(), contentPadding = innerPadding) {
         generalPreferenceItems(configuration)
         dnsPreferenceItems(configuration, dnsEnableState, dnsEnabled)
+      }
+
+      if (showResetConfirmDialog) {
+        AlertDialog(
+          onDismissRequest = { showResetConfirmDialog = false },
+          title = { Text(stringResource(R.string.reset_override_settings)) },
+          text = { Text(stringResource(R.string.reset_override_settings_message)) },
+          confirmButton = {
+            TextButton(
+              onClick = {
+                showResetConfirmDialog = false
+                onResetConfirmed()
+              }
+            ) {
+              Text(stringResource(R.string.ok))
+            }
+          },
+          dismissButton = {
+            TextButton(onClick = { showResetConfirmDialog = false }) {
+              Text(stringResource(R.string.cancel))
+            }
+          },
+        )
       }
     }
   }
@@ -811,5 +817,5 @@ private fun parsePort(text: String?): Int? =
 @PreviewMihomo
 @Composable
 private fun OverrideSettingsScreenPreview() = MihomoTheme {
-  OverrideSettingsScreen(configuration = ConfigurationOverride(), onReset = {})
+  OverrideSettingsScreen(configuration = ConfigurationOverride(), onResetConfirmed = {})
 }
