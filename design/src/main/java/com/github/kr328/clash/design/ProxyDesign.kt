@@ -132,6 +132,7 @@ class ProxyDesign(
           proxyLine = line
           uiStore.proxyLine = line
           config.proxyLine = line
+          groups.forEach { it.refresh() }
           requests.trySend(Request.ReloadAll)
         },
         onProxySortChanged = { sort ->
@@ -173,7 +174,7 @@ class ProxyDesign(
   }
 
   suspend fun requestRedrawVisible() =
-    withContext(Dispatchers.Main) { groups.forEach(ProxyGroupUiState::refresh) }
+    withContext(Dispatchers.Main) { groups.getOrNull(currentPage)?.refresh() }
 
   suspend fun showModeSwitchTips() =
     withContext(Dispatchers.Main) {
@@ -251,10 +252,22 @@ private fun ProxyScreen(
         excludeNotSelectable = excludeNotSelectable,
         proxyLine = proxyLine,
         proxySort = proxySort,
-        onExcludeNotSelectableChanged = onExcludeNotSelectableChanged,
-        onProxyLineChanged = onProxyLineChanged,
-        onProxySortChanged = onProxySortChanged,
-        onOverrideModeSelected = onOverrideModeSelected,
+        onExcludeNotSelectableChanged = {
+          menuVisible = false
+          onExcludeNotSelectableChanged(it)
+        },
+        onProxyLineChanged = {
+          menuVisible = false
+          onProxyLineChanged(it)
+        },
+        onProxySortChanged = {
+          menuVisible = false
+          onProxySortChanged(it)
+        },
+        onOverrideModeSelected = {
+          menuVisible = false
+          onOverrideModeSelected(it)
+        },
       )
     }
   }

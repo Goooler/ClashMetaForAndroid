@@ -189,14 +189,17 @@ private fun AccessControlScreen(
           onExport()
         },
         onUpdateSort = {
+          sort = it
           showMenu = false
           onUpdateSort(it)
         },
         onUpdateReverse = {
+          reverse = it
           showMenu = false
           onUpdateReverse(it)
         },
         onUpdateShowSystemApps = {
+          showSystemApps = it
           showMenu = false
           onUpdateShowSystemApps(it)
         },
