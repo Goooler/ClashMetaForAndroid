@@ -200,7 +200,6 @@ private data class ProxyItemUiState(
 private class ProxyGroupUiState {
   var items by mutableStateOf<List<ProxyItemUiState>>(emptyList())
   var selectable by mutableStateOf(false)
-  var bottom by mutableStateOf(false)
   var urlTesting by mutableStateOf(false)
   var rawStates: List<ProxyViewState> = emptyList()
 
