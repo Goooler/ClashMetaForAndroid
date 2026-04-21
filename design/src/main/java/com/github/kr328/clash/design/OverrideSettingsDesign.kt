@@ -2,15 +2,22 @@ package com.github.kr328.clash.design
 
 import android.content.Context
 import android.view.View
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.ListItem
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -22,6 +29,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
@@ -32,6 +40,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
 import com.github.kr328.clash.core.model.ConfigurationOverride
 import com.github.kr328.clash.core.model.LogMessage
 import com.github.kr328.clash.core.model.TunnelState
@@ -622,59 +633,21 @@ private fun OverrideEditTextListPreferenceItem(
 ) {
   var values by state
   var showDialog by remember { mutableStateOf(false) }
-  val summary = values?.firstOrNull() ?: placeholder
   Preference(
     modifier = Modifier.fillMaxWidth(),
     title = { Text(title) },
-    summary = { Text(summary) },
+    summary = { Text(values.summary(placeholder)) },
     enabled = enabled,
     onClick = { showDialog = true },
   )
   if (showDialog) {
-    var inputText by remember {
-      val content = values?.joinToString("\n").orEmpty()
-      mutableStateOf(TextFieldValue(text = content, selection = TextRange(content.length)))
-    }
-    val focusRequester = remember { FocusRequester() }
-    val keyboardController = LocalSoftwareKeyboardController.current
-    LaunchedEffect(Unit) {
-      focusRequester.requestFocus()
-      keyboardController?.show()
-    }
-    AlertDialog(
-      onDismissRequest = { showDialog = false },
-      title = { Text(title) },
-      text = {
-        OutlinedTextField(
-          value = inputText,
-          onValueChange = { inputText = it },
-          minLines = 4,
-          modifier = Modifier.fillMaxWidth().focusRequester(focusRequester),
-        )
-      },
-      confirmButton = {
-        TextButton(
-          onClick = {
-            val items = inputText.text.lines().filter { it.isNotBlank() }
-            values = items.takeIf { it.isNotEmpty() }
-            showDialog = false
-          }
-        ) {
-          Text(stringResource(R.string.ok))
-        }
-      },
-      dismissButton = {
-        Row {
-          TextButton(
-            onClick = {
-              values = null
-              showDialog = false
-            }
-          ) {
-            Text(stringResource(R.string.reset))
-          }
-          TextButton(onClick = { showDialog = false }) { Text(stringResource(R.string.cancel)) }
-        }
+    EditableTextListDialog(
+      title = title,
+      initialValues = values,
+      onDismiss = { showDialog = false },
+      onApply = {
+        values = it
+        showDialog = false
       },
     )
   }
@@ -689,70 +662,264 @@ private fun OverrideEditTextMapPreferenceItem(
 ) {
   var values by state
   var showDialog by remember { mutableStateOf(false) }
-  val summary = values?.entries?.firstOrNull()?.let { "${it.key}=${it.value}" } ?: placeholder
   Preference(
     modifier = Modifier.fillMaxWidth(),
     title = { Text(title) },
-    summary = { Text(summary) },
+    summary = { Text(values.summary(placeholder)) },
     enabled = enabled,
     onClick = { showDialog = true },
   )
   if (showDialog) {
-    var inputText by remember {
-      val content = values?.entries?.joinToString("\n") { "${it.key}=${it.value}" }.orEmpty()
-      mutableStateOf(TextFieldValue(text = content, selection = TextRange(content.length)))
-    }
-    val focusRequester = remember { FocusRequester() }
-    val keyboardController = LocalSoftwareKeyboardController.current
-    LaunchedEffect(Unit) {
-      focusRequester.requestFocus()
-      keyboardController?.show()
-    }
-    AlertDialog(
-      onDismissRequest = { showDialog = false },
-      title = { Text(title) },
-      text = {
-        OutlinedTextField(
-          value = inputText,
-          onValueChange = { inputText = it },
-          minLines = 4,
-          modifier = Modifier.fillMaxWidth().focusRequester(focusRequester),
-        )
-      },
-      confirmButton = {
-        TextButton(
-          onClick = {
-            val map =
-              inputText.text
-                .lines()
-                .filter { it.isNotBlank() }
-                .mapNotNull { line ->
-                  val idx = line.indexOf('=')
-                  if (idx > 0) line.substring(0, idx) to line.substring(idx + 1) else null
-                }
-                .toMap()
-            values = map.takeIf { it.isNotEmpty() }
-            showDialog = false
-          }
-        ) {
-          Text(stringResource(R.string.ok))
-        }
-      },
-      dismissButton = {
-        Row {
-          TextButton(
-            onClick = {
-              values = null
-              showDialog = false
-            }
-          ) {
-            Text(stringResource(R.string.reset))
-          }
-          TextButton(onClick = { showDialog = false }) { Text(stringResource(R.string.cancel)) }
-        }
+    EditableTextMapDialog(
+      title = title,
+      initialValues = values,
+      onDismiss = { showDialog = false },
+      onApply = {
+        values = it
+        showDialog = false
       },
     )
   }
+}
+
+@Composable
+private fun EditableTextListDialog(
+  title: String,
+  initialValues: List<String>?,
+  onDismiss: () -> Unit,
+  onApply: (List<String>?) -> Unit,
+) {
+  var values by remember(initialValues) { mutableStateOf(initialValues.orEmpty()) }
+  var showAddDialog by remember { mutableStateOf(false) }
+
+  FullScreenPreferenceDialog(
+    title = title,
+    onDismiss = onDismiss,
+    onAdd = { showAddDialog = true },
+    onReset = { onApply(null) },
+    onConfirm = { onApply(values) },
+  ) { modifier ->
+    if (values.isEmpty()) {
+      EmptyEditorContent(modifier)
+    } else {
+      LazyColumn(modifier = modifier) {
+        itemsIndexed(values) { index, value ->
+          ListItem(
+            headlineContent = { Text(value) },
+            trailingContent = {
+              IconButton(onClick = { values = values.toMutableList().apply { removeAt(index) } }) {
+                Icon(
+                  painter = painterResource(R.drawable.ic_outline_delete),
+                  contentDescription = stringResource(R.string.delete),
+                )
+              }
+            },
+          )
+          HorizontalDivider()
+        }
+      }
+    }
+  }
+
+  if (showAddDialog) {
+    SingleTextInputDialog(
+      title = title,
+      initialValue = "",
+      onDismiss = { showAddDialog = false },
+      onConfirm = { newValue ->
+        if (newValue.isNotBlank()) {
+          values = values + newValue
+        }
+        showAddDialog = false
+      },
+    )
+  }
+}
+
+@Composable
+private fun EditableTextMapDialog(
+  title: String,
+  initialValues: Map<String, String>?,
+  onDismiss: () -> Unit,
+  onApply: (Map<String, String>?) -> Unit,
+) {
+  var values by
+    remember(initialValues) {
+      mutableStateOf(initialValues?.entries?.map { it.toPair() }.orEmpty())
+    }
+  var showAddDialog by remember { mutableStateOf(false) }
+
+  FullScreenPreferenceDialog(
+    title = title,
+    onDismiss = onDismiss,
+    onAdd = { showAddDialog = true },
+    onReset = { onApply(null) },
+    onConfirm = { onApply(values.toMap()) },
+  ) { modifier ->
+    if (values.isEmpty()) {
+      EmptyEditorContent(modifier)
+    } else {
+      LazyColumn(modifier = modifier) {
+        itemsIndexed(values) { index, entry ->
+          ListItem(
+            headlineContent = { Text(entry.first) },
+            supportingContent = { Text(entry.second) },
+            trailingContent = {
+              IconButton(onClick = { values = values.toMutableList().apply { removeAt(index) } }) {
+                Icon(
+                  painter = painterResource(R.drawable.ic_outline_delete),
+                  contentDescription = stringResource(R.string.delete),
+                )
+              }
+            },
+          )
+          HorizontalDivider()
+        }
+      }
+    }
+  }
+
+  if (showAddDialog) {
+    MapEntryInputDialog(
+      title = title,
+      onDismiss = { showAddDialog = false },
+      onConfirm = { key, value ->
+        values = values + (key to value)
+        showAddDialog = false
+      },
+    )
+  }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun FullScreenPreferenceDialog(
+  title: String,
+  onDismiss: () -> Unit,
+  onAdd: () -> Unit,
+  onReset: () -> Unit,
+  onConfirm: () -> Unit,
+  content: @Composable (Modifier) -> Unit,
+) {
+  Dialog(
+    onDismissRequest = onDismiss,
+    properties = DialogProperties(usePlatformDefaultWidth = false),
+  ) {
+    MihomoScaffold(
+      modifier = Modifier.fillMaxSize(),
+      title = title,
+      onBack = onDismiss,
+      actions = {
+        IconButton(onClick = onAdd) {
+          Icon(
+            painter = painterResource(R.drawable.ic_baseline_add),
+            contentDescription = stringResource(R.string._new),
+          )
+        }
+      },
+    ) { innerPadding ->
+      Column(modifier = Modifier.fillMaxSize().padding(innerPadding)) {
+        content(Modifier.weight(1f))
+        Row(
+          modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 8.dp),
+          horizontalArrangement = Arrangement.End,
+        ) {
+          TextButton(onClick = onReset) { Text(stringResource(R.string.reset)) }
+          TextButton(onClick = onDismiss) { Text(stringResource(R.string.cancel)) }
+          TextButton(onClick = onConfirm) { Text(stringResource(R.string.ok)) }
+        }
+      }
+    }
+  }
+}
+
+@Composable
+private fun EmptyEditorContent(modifier: Modifier = Modifier) {
+  Box(modifier = modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
+    Text(stringResource(R.string.empty))
+  }
+}
+
+@Composable
+private fun SingleTextInputDialog(
+  title: String,
+  initialValue: String,
+  onDismiss: () -> Unit,
+  onConfirm: (String) -> Unit,
+) {
+  var inputText by remember { mutableStateOf(initialTextFieldValue(initialValue)) }
+  val focusRequester = remember { FocusRequester() }
+  val keyboardController = LocalSoftwareKeyboardController.current
+
+  LaunchedEffect(Unit) {
+    focusRequester.requestFocus()
+    keyboardController?.show()
+  }
+
+  AlertDialog(
+    onDismissRequest = onDismiss,
+    title = { Text(title) },
+    text = {
+      OutlinedTextField(
+        value = inputText,
+        onValueChange = { inputText = it },
+        singleLine = true,
+        modifier = Modifier.fillMaxWidth().focusRequester(focusRequester),
+      )
+    },
+    confirmButton = {
+      TextButton(onClick = { onConfirm(inputText.text) }) { Text(stringResource(R.string.ok)) }
+    },
+    dismissButton = { TextButton(onClick = onDismiss) { Text(stringResource(R.string.cancel)) } },
+  )
+}
+
+@Composable
+private fun MapEntryInputDialog(
+  title: String,
+  onDismiss: () -> Unit,
+  onConfirm: (String, String) -> Unit,
+) {
+  var keyText by remember { mutableStateOf(initialTextFieldValue("")) }
+  var valueText by remember { mutableStateOf(initialTextFieldValue("")) }
+  val focusRequester = remember { FocusRequester() }
+  val keyboardController = LocalSoftwareKeyboardController.current
+  val confirmEnabled = keyText.text.isNotBlank() && valueText.text.isNotBlank()
+
+  LaunchedEffect(Unit) {
+    focusRequester.requestFocus()
+    keyboardController?.show()
+  }
+
+  AlertDialog(
+    onDismissRequest = onDismiss,
+    title = { Text(title) },
+    text = {
+      Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+        OutlinedTextField(
+          value = keyText,
+          onValueChange = { keyText = it },
+          singleLine = true,
+          modifier = Modifier.fillMaxWidth().focusRequester(focusRequester),
+        )
+        OutlinedTextField(
+          value = valueText,
+          onValueChange = { valueText = it },
+          singleLine = true,
+          modifier = Modifier.fillMaxWidth(),
+        )
+      }
+    },
+    confirmButton = {
+      TextButton(
+        onClick = { onConfirm(keyText.text.trim(), valueText.text.trim()) },
+        enabled = confirmEnabled,
+      ) {
+        Text(stringResource(R.string.ok))
+      }
+    },
+    dismissButton = { TextButton(onClick = onDismiss) { Text(stringResource(R.string.cancel)) } },
+  )
 }
 
 @Composable
@@ -772,6 +939,25 @@ private fun <T> rememberWriteThroughState(initial: T, sync: (T) -> Unit): Mutabl
 
       override fun component2(): (T) -> Unit = { value = it }
     }
+  }
+
+private fun initialTextFieldValue(text: String) =
+  TextFieldValue(text = text, selection = TextRange(text.length))
+
+@Composable
+private fun List<String>?.summary(placeholder: String) =
+  when {
+    this == null -> placeholder
+    isEmpty() -> stringResource(R.string.empty)
+    else -> stringResource(R.string.format_elements, size)
+  }
+
+@Composable
+private fun Map<String, String>?.summary(placeholder: String) =
+  when {
+    this == null -> placeholder
+    isEmpty() -> stringResource(R.string.empty)
+    else -> stringResource(R.string.format_elements, size)
   }
 
 private val Boolean?.text: String
