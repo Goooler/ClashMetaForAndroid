@@ -365,7 +365,9 @@ private fun ProxyGroupPage(
   onProxySelected: (Int, String) -> Unit,
 ) {
   val refreshVersion = group.refreshVersion
-  val useRawStates = group.rawStates.isNotEmpty()
+  val rawStates = group.rawStates
+  val previewItems = group.items
+  val useRawStates = rawStates.isNotEmpty()
 
   LazyVerticalGrid(
     columns = GridCells.Fixed(columnsForProxyLine(proxyLine)),
@@ -376,19 +378,19 @@ private fun ProxyGroupPage(
     verticalArrangement = Arrangement.spacedBy(12.dp),
   ) {
     items(
-      count = if (useRawStates) group.rawStates.size else group.items.size,
+      count = if (useRawStates) rawStates.size else previewItems.size,
       key = { itemIndex ->
         if (useRawStates) {
-          group.rawStates[itemIndex].proxy.name
+          rawStates[itemIndex].proxy.name
         } else {
-          group.items[itemIndex].key
+          previewItems[itemIndex].key
         }
       },
     ) { itemIndex ->
       val item =
         if (useRawStates) {
           remember(refreshVersion, itemIndex) {
-            group.rawStates[itemIndex].apply { update(true) }.run {
+            rawStates[itemIndex].apply { update(true) }.run {
               ProxyItemUiState(
                 key = proxy.name,
                 title = title,
@@ -400,7 +402,7 @@ private fun ProxyGroupPage(
             }
           }
         } else {
-          group.items[itemIndex]
+          previewItems[itemIndex]
         }
 
       ProxyItemCard(
