@@ -16,34 +16,9 @@ android {
     versionName = "2.12.1"
     resValue("integer", "release_code", versionCode.toString())
     resValue("string", "release_name", "v$versionName")
+    resValue("string", "launch_name", "@string/launch_name_meta")
+    resValue("string", "application_name", "@string/application_name_meta")
     ndk.abiFilters += listOf("arm64-v8a", "armeabi-v7a", "x86", "x86_64")
-  }
-
-  val localProperties = Properties()
-  val localPropertiesFile = rootProject.file("local.properties")
-  if (localPropertiesFile.exists()) {
-    localPropertiesFile.inputStream().use(localProperties::load)
-  }
-  val removeSuffix = localProperties.getProperty("remove.suffix")?.toBoolean() == true
-
-  productFlavors {
-    named("alpha") {
-      resValue("string", "launch_name", "@string/launch_name_alpha")
-      resValue("string", "application_name", "@string/application_name_alpha")
-      if (!removeSuffix) {
-        applicationIdSuffix = ".alpha"
-        versionNameSuffix = ".Alpha"
-      }
-    }
-    named("meta") {
-      isDefault = true
-      resValue("string", "launch_name", "@string/launch_name_meta")
-      resValue("string", "application_name", "@string/application_name_meta")
-      if (!removeSuffix) {
-        applicationIdSuffix = ".meta"
-        versionNameSuffix = ".Meta"
-      }
-    }
   }
 
   val keystore = rootProject.file("signing.properties")
@@ -97,7 +72,7 @@ androidComponents {
         val abiName =
           output.filters.find { it.filterType == FilterConfiguration.FilterType.ABI }?.identifier
             ?: "universal"
-        val newApkName = "cmfa-${versionName.get()}-meta-$abiName-${variant.buildType}.apk"
+        val newApkName = "cmfa-${versionName.get()}-$abiName-${variant.buildType}.apk"
         outputFileName = newApkName
       }
     }
