@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
@@ -40,6 +41,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextRange
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
@@ -141,6 +143,7 @@ private fun LazyListScope.generalPreferenceItems(configuration: ConfigurationOve
         rememberWriteThroughState(portText(configuration.httpPort)) {
           configuration.httpPort = parsePort(it)
         },
+      numericOnly = true,
     )
   }
   item(key = "socksPort", contentType = "EditTextPreference") {
@@ -152,6 +155,7 @@ private fun LazyListScope.generalPreferenceItems(configuration: ConfigurationOve
         rememberWriteThroughState(portText(configuration.socksPort)) {
           configuration.socksPort = parsePort(it)
         },
+      numericOnly = true,
     )
   }
   item(key = "redirectPort", contentType = "EditTextPreference") {
@@ -163,6 +167,7 @@ private fun LazyListScope.generalPreferenceItems(configuration: ConfigurationOve
         rememberWriteThroughState(portText(configuration.redirectPort)) {
           configuration.redirectPort = parsePort(it)
         },
+      numericOnly = true,
     )
   }
   item(key = "tproxyPort", contentType = "EditTextPreference") {
@@ -174,6 +179,7 @@ private fun LazyListScope.generalPreferenceItems(configuration: ConfigurationOve
         rememberWriteThroughState(portText(configuration.tproxyPort)) {
           configuration.tproxyPort = parsePort(it)
         },
+      numericOnly = true,
     )
   }
   item(key = "mixedPort", contentType = "EditTextPreference") {
@@ -185,6 +191,7 @@ private fun LazyListScope.generalPreferenceItems(configuration: ConfigurationOve
         rememberWriteThroughState(portText(configuration.mixedPort)) {
           configuration.mixedPort = parsePort(it)
         },
+      numericOnly = true,
     )
   }
   item(key = "authentication", contentType = "EditTextListPreference") {
@@ -544,6 +551,7 @@ private fun OverrideEditTextPreferenceItem(
   @StringRes emptyLabel: Int,
   state: MutableState<String?>,
   enabled: Boolean = true,
+  numericOnly: Boolean = false,
 ) {
   var text by state
   var showDialog by remember { mutableStateOf(false) }
@@ -578,7 +586,13 @@ private fun OverrideEditTextPreferenceItem(
       text = {
         OutlinedTextField(
           value = inputText,
-          onValueChange = { inputText = it },
+          onValueChange = { inputText = if (numericOnly) it.filterDigits() else it },
+          keyboardOptions =
+            if (numericOnly) {
+              KeyboardOptions(keyboardType = KeyboardType.Number)
+            } else {
+              KeyboardOptions.Default
+            },
           singleLine = true,
           modifier = Modifier.fillMaxWidth().focusRequester(focusRequester),
         )
@@ -954,6 +968,14 @@ private fun <T> rememberWriteThroughState(initial: T, sync: (T) -> Unit): Mutabl
 
 private fun initialTextFieldValue(text: String) =
   TextFieldValue(text = text, selection = TextRange(text.length))
+
+private fun TextFieldValue.filterDigits(): TextFieldValue {
+  val filtered = text.filter(Char::isDigit)
+  if (filtered == text) return this
+  val start = text.take(selection.start).count(Char::isDigit)
+  val end = text.take(selection.end).count(Char::isDigit)
+  return copy(text = filtered, selection = TextRange(start, end))
+}
 
 @Composable
 private fun List<String>?.summary(@StringRes placeholder: Int) =
