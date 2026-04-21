@@ -41,10 +41,12 @@ import androidx.compose.ui.text.fromHtml
 import androidx.compose.ui.unit.Dp
 import com.github.kr328.clash.core.model.FetchStatus
 import com.github.kr328.clash.design.component.MihomoScaffold
+import com.github.kr328.clash.design.component.ModelProgressBarConfigure
+import com.github.kr328.clash.design.component.ModelProgressBarDialog
+import com.github.kr328.clash.design.component.ModelProgressBarState
 import com.github.kr328.clash.design.component.ModelTextInputDialog
 import com.github.kr328.clash.design.component.SettingsTipsItem
-import com.github.kr328.clash.design.dialog.ModelProgressBarConfigure
-import com.github.kr328.clash.design.dialog.withModelProgressBar
+import com.github.kr328.clash.design.component.withModelProgressBar
 import com.github.kr328.clash.design.ui.theme.MihomoTheme
 import com.github.kr328.clash.design.ui.theme.PreviewMihomo
 import com.github.kr328.clash.design.util.ValidatorAutoUpdateInterval
@@ -67,6 +69,7 @@ class PropertiesDesign(context: Context) : Design<PropertiesDesign.Request>(cont
   private var profileState by mutableStateOf<Profile?>(null)
   private var originalProfileState by mutableStateOf<Profile?>(null)
   private var processingState by mutableStateOf(false)
+  private val progressBarState = ModelProgressBarState()
 
   override val root: View by composeView {
     MihomoTheme {
@@ -74,6 +77,7 @@ class PropertiesDesign(context: Context) : Design<PropertiesDesign.Request>(cont
         PropertiesScreen(
           profile = profile,
           processing = processingState,
+          progressBarState = progressBarState,
           hasUnsavedChanges =
             originalProfileState?.let { original -> hasUnsavedChanges(profile, original) } == true,
           onBrowseFiles = { requests.trySend(Request.BrowseFiles) },
@@ -102,7 +106,7 @@ class PropertiesDesign(context: Context) : Design<PropertiesDesign.Request>(cont
     withContext(Dispatchers.Main) {
       try {
         processingState = true
-        context.withModelProgressBar {
+        progressBarState.withModelProgressBar {
           configure {
             isIndeterminate = true
             text = context.getString(R.string.initializing)
@@ -147,6 +151,7 @@ class PropertiesDesign(context: Context) : Design<PropertiesDesign.Request>(cont
 private fun PropertiesScreen(
   profile: Profile,
   processing: Boolean,
+  progressBarState: ModelProgressBarState,
   hasUnsavedChanges: Boolean,
   onBrowseFiles: () -> Unit,
   onCommit: () -> Unit,
@@ -306,6 +311,8 @@ private fun PropertiesScreen(
       },
     )
   }
+
+  ModelProgressBarDialog(progressBarState)
 }
 
 @Composable
@@ -386,6 +393,7 @@ private fun PropertiesScreenPreview() = MihomoTheme {
         pending = false,
       ),
     processing = false,
+    progressBarState = ModelProgressBarState(),
     hasUnsavedChanges = false,
     onBrowseFiles = {},
     onCommit = {},

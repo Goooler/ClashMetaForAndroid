@@ -35,6 +35,10 @@ import androidx.compose.ui.unit.dp
 import androidx.core.content.getSystemService
 import com.github.kr328.clash.core.model.LogMessage
 import com.github.kr328.clash.design.component.MihomoScaffold
+import com.github.kr328.clash.design.component.ModelProgressBarDialog
+import com.github.kr328.clash.design.component.ModelProgressBarScope
+import com.github.kr328.clash.design.component.ModelProgressBarState
+import com.github.kr328.clash.design.component.withModelProgressBar
 import com.github.kr328.clash.design.ui.ToastDuration
 import com.github.kr328.clash.design.ui.theme.MihomoTheme
 import com.github.kr328.clash.design.ui.theme.PreviewMihomo
@@ -54,6 +58,7 @@ class LogcatDesign(context: Context, private val streaming: Boolean) :
 
   private var messages by mutableStateOf<List<LogMessage>>(emptyList())
   private val listState = LazyListState()
+  private val exportProgressState = ModelProgressBarState()
 
   private val onCopyMessage: (LogMessage) -> Unit = {
     launch {
@@ -70,6 +75,7 @@ class LogcatDesign(context: Context, private val streaming: Boolean) :
         streaming = streaming,
         messages = messages,
         listState = listState,
+        progressBarState = exportProgressState,
         onClose = { requests.trySend(Request.Close) },
         onDelete = { requests.trySend(Request.Delete) },
         onExport = { requests.trySend(Request.Export) },
@@ -87,6 +93,10 @@ class LogcatDesign(context: Context, private val streaming: Boolean) :
         listState.scrollToItem(messages.lastIndex)
       }
     }
+
+  suspend fun withExportProgressBar(block: suspend ModelProgressBarScope.() -> Unit) {
+    exportProgressState.withModelProgressBar(block)
+  }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -96,6 +106,7 @@ private fun LogcatScreen(
   streaming: Boolean,
   messages: List<LogMessage>,
   listState: LazyListState,
+  progressBarState: ModelProgressBarState,
   onClose: () -> Unit,
   onDelete: () -> Unit,
   onExport: () -> Unit,
@@ -131,6 +142,8 @@ private fun LogcatScreen(
       items(items = messages) { LogcatMessageItem(message = it, onCopyMessage = onCopyMessage) }
     }
   }
+
+  ModelProgressBarDialog(progressBarState)
 }
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -188,6 +201,7 @@ private fun LogcatScreenPreview() = MihomoTheme {
         LogMessage(LogMessage.Level.Error, "Connection timeout to upstream", Date(1710000010000)),
       ),
     listState = rememberLazyListState(),
+    progressBarState = ModelProgressBarState(),
     onClose = {},
     onDelete = {},
     onExport = {},
