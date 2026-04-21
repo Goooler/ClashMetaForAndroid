@@ -66,18 +66,14 @@ class FilesActivity : BaseActivity<FilesDesign>() {
                 client.deleteDocument(it.file.id)
               }
               is FilesDesign.Request.RenameFile -> {
-                val newName = design.requestFileName(it.file.name)
-
-                client.renameDocument(it.file.id, newName)
+                client.renameDocument(it.file.id, it.newName)
               }
               is FilesDesign.Request.ImportFile -> {
                 val uri: Uri? = startActivityForResult(ActivityResultContracts.GetContent(), "*/*")
 
                 if (uri != null) {
                   if (it.file == null) {
-                    val name = design.requestFileName(uri.fileName ?: "File")
-
-                    client.importDocument(stack.last(), uri, name)
+                    client.importDocument(stack.last(), uri, uri.fileName ?: "File")
                   } else {
                     client.copyDocument(it.file!!.id, uri)
                   }

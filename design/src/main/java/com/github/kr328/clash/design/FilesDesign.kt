@@ -36,7 +36,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.github.kr328.clash.design.component.MihomoScaffold
-import com.github.kr328.clash.design.dialog.requestModelTextInput
+import com.github.kr328.clash.design.component.ModelTextInputDialog
 import com.github.kr328.clash.design.model.File
 import com.github.kr328.clash.design.ui.theme.MihomoTheme
 import com.github.kr328.clash.design.ui.theme.PreviewMihomo
@@ -54,7 +54,7 @@ class FilesDesign(context: Context) : Design<FilesDesign.Request>(context) {
 
     data class OpenDirectory(val file: File) : Request()
 
-    data class RenameFile(val file: File) : Request()
+    data class RenameFile(val file: File, val newName: String) : Request()
 
     data class DeleteFile(val file: File) : Request()
 
@@ -86,7 +86,7 @@ class FilesDesign(context: Context) : Design<FilesDesign.Request>(context) {
         onNew = { requests.trySend(Request.ImportFile(null)) },
         onImport = { requests.trySend(Request.ImportFile(it)) },
         onExport = { requests.trySend(Request.ExportFile(it)) },
-        onRename = { requests.trySend(Request.RenameFile(it)) },
+        onRename = { file, newName -> requests.trySend(Request.RenameFile(file, newName)) },
         onDelete = { requests.trySend(Request.DeleteFile(it)) },
       )
     }
@@ -101,16 +101,6 @@ class FilesDesign(context: Context) : Design<FilesDesign.Request>(context) {
   fun updateConfigurationEditable(editable: Boolean) {
     configurationEditable = editable
   }
-
-  suspend fun requestFileName(name: String): String {
-    return context.requestModelTextInput(
-      initial = name,
-      title = context.getText(R.string.file_name),
-      hint = context.getText(R.string.file_name),
-      error = context.getText(R.string.invalid_file_name),
-      validator = ValidatorFileName,
-    )
-  }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -124,10 +114,11 @@ private fun FilesScreen(
   onNew: () -> Unit,
   onImport: (File) -> Unit,
   onExport: (File) -> Unit,
-  onRename: (File) -> Unit,
+  onRename: (File, String) -> Unit,
   onDelete: (File) -> Unit,
 ) {
   var menuFile by remember { mutableStateOf<File?>(null) }
+  var renameFile by remember { mutableStateOf<File?>(null) }
   val sheetState = rememberModalBottomSheetState()
 
   if (menuFile != null) {
@@ -159,7 +150,7 @@ private fun FilesScreen(
           text = stringResource(R.string.rename),
           onClick = {
             menuFile = null
-            onRename(file)
+            renameFile = file
           },
         )
         FilesMenuAction(
@@ -212,6 +203,21 @@ private fun FilesScreen(
         HorizontalDivider()
       }
     }
+  }
+
+  if (renameFile != null) {
+    ModelTextInputDialog(
+      title = stringResource(R.string.file_name),
+      initialValue = renameFile!!.name,
+      hint = stringResource(R.string.file_name),
+      error = stringResource(R.string.invalid_file_name),
+      validator = ValidatorFileName,
+      onDismiss = { renameFile = null },
+      onConfirm = { newName ->
+        onRename(renameFile!!, newName)
+        renameFile = null
+      },
+    )
   }
 }
 
@@ -313,7 +319,7 @@ private fun FilesScreenPreview() = MihomoTheme {
     onNew = {},
     onImport = {},
     onExport = {},
-    onRename = {},
+    onRename = { _, _ -> },
     onDelete = {},
   )
 }
