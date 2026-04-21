@@ -40,7 +40,7 @@ message(STATUS "version info = ${GIT_VERSION}")
 string(REGEX REPLACE "[ ]+" "" GIT_VERSION "${GIT_VERSION}")
 
 # 保存变量到文件
-configure_file(${CMAKE_CURRENT_SOURCE_DIR}/version.h.in ${CMAKE_CURRENT_SOURCE_DIR}/version.h @ONLY)
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/version.h.in ${CMAKE_CURRENT_BINARY_DIR}/version.h @ONLY)
 
 project(clash-bridge C)
 
@@ -62,6 +62,7 @@ endif ()
 
 include_directories("${GO_OUTPUT_BASE}/${CMAKE_ANDROID_ARCH_ABI}")
 include_directories("${GO_SOURCE}")
+include_directories("${CMAKE_CURRENT_BINARY_DIR}")
 
 link_directories("${GO_OUTPUT_BASE}/${CMAKE_ANDROID_ARCH_ABI}")
 
