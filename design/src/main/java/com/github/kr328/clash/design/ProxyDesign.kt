@@ -200,6 +200,16 @@ private data class ProxyItemUiState(
   val controls: Int,
 )
 
+private fun ProxyViewState.toUiState() =
+  ProxyItemUiState(
+    key = proxy.name,
+    title = title,
+    subtitle = subtitle,
+    delayText = delayText,
+    background = background,
+    controls = controls,
+  )
+
 private class ProxyGroupUiState {
   var items by mutableStateOf<List<ProxyItemUiState>>(emptyList())
   var selectable by mutableStateOf(false)
@@ -389,18 +399,14 @@ private fun ProxyGroupPage(
       val item =
         if (useRawStates) {
           val state = rawStates[itemIndex]
-          remember(refreshVersion, state.proxy.name) {
-            state.apply { update(true) }.run {
-              ProxyItemUiState(
-                key = proxy.name,
-                title = title,
-                subtitle = subtitle,
-                delayText = delayText,
-                background = background,
-                controls = controls,
-              )
-            }
+          var uiState by remember(state.proxy.name) { mutableStateOf(state.toUiState()) }
+
+          LaunchedEffect(refreshVersion) {
+            state.update(true)
+            uiState = state.toUiState()
           }
+
+          uiState
         } else {
           previewItems[itemIndex]
         }
