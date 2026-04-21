@@ -181,7 +181,7 @@ class ProxyDesign(
       Toast.makeText(context, R.string.mode_switch_tips, Toast.LENGTH_LONG).show()
     }
 
-  fun requestUrlTesting() {
+  private fun requestUrlTesting() {
     if (groups.isEmpty()) return
 
     val page = currentPage.coerceIn(groups.indices)
