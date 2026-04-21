@@ -993,7 +993,7 @@ private val LogMessage.Level?.text: String
         LogMessage.Level.Error -> R.string.error
         LogMessage.Level.Debug -> R.string.debug
         LogMessage.Level.Silent -> R.string.silent
-        LogMessage.Level.Unknown -> R.string.dont_modify
+        LogMessage.Level.Unknown -> R.string.unknown
         null -> R.string.dont_modify
       }
     )
