@@ -1,22 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
-    <LinearLayout
+<LinearLayout android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_vertical"
+    android:minHeight="@dimen/item_min_height"
+    android:orientation="vertical"
+    android:padding="@dimen/dialog_padding"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <com.google.android.material.progressindicator.LinearProgressIndicator
+        android:id="@+id/progress_indicator"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center_vertical"
-        android:minHeight="@dimen/item_min_height"
-        android:orientation="vertical"
-        android:padding="@dimen/dialog_padding">
+        android:layout_height="wrap_content" />
 
-        <com.google.android.material.progressindicator.LinearProgressIndicator
-            android:id="@+id/progress_indicator"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
-        <TextView
-            android:id="@+id/text"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/item_text_margin" />
-    </LinearLayout>
-</layout>
+    <TextView
+        android:id="@+id/text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/item_text_margin" />
+</LinearLayout>

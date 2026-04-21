@@ -1,7 +1,7 @@
 package com.github.kr328.clash.design.dialog
 
 import android.content.Context
-import androidx.appcompat.app.AlertDialog
+import android.content.DialogInterface
 import androidx.core.widget.doOnTextChanged
 import com.github.kr328.clash.design.R
 import com.github.kr328.clash.design.databinding.DialogTextFieldBinding
@@ -66,11 +66,11 @@ suspend fun Context.requestModelTextInput(
           if (!validator(text?.toString() ?: "")) {
             if (error != null) binding.textLayout.error = error
 
-            dialog.getButton(AlertDialog.BUTTON_POSITIVE).isEnabled = false
+            dialog.getButton(DialogInterface.BUTTON_POSITIVE).isEnabled = false
           } else {
             if (error != null) binding.textLayout.error = null
 
-            dialog.getButton(AlertDialog.BUTTON_POSITIVE).isEnabled = true
+            dialog.getButton(DialogInterface.BUTTON_POSITIVE).isEnabled = true
           }
         }
 

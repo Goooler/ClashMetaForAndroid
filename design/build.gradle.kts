@@ -1,10 +1,9 @@
 plugins {
   alias(libs.plugins.android.library)
-  alias(libs.plugins.android.legacyKapt)
   alias(libs.plugins.kotlin.compose)
 }
 
-android { buildFeatures { dataBinding = true } }
+android { buildFeatures { viewBinding = true } }
 
 dependencies {
   implementation(projects.common)
@@ -24,7 +23,6 @@ dependencies {
   implementation(libs.androidx.lifecycle.viewmodel.compose)
 
   implementation(libs.androidx.core)
-  implementation(libs.androidx.appcompat)
   implementation(libs.androidx.activity)
   implementation(libs.androidx.coordinator)
   implementation(libs.androidx.recyclerview)
