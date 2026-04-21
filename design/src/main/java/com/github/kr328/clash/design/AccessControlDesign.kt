@@ -154,8 +154,8 @@ private fun AccessControlScreen(
   var sort by rememberSaveable { mutableStateOf(initialSort) }
   var reverse by rememberSaveable { mutableStateOf(initialReverse) }
   var showSystemApps by rememberSaveable { mutableStateOf(initialShowSystemApps) }
-  var showSearch by rememberSaveable { mutableStateOf(false) }
-  var showMenu by rememberSaveable { mutableStateOf(false) }
+  var showSearch by remember { mutableStateOf(false) }
+  var showMenu by remember { mutableStateOf(false) }
 
   if (showMenu) {
     AccessControlMenuSheet(
