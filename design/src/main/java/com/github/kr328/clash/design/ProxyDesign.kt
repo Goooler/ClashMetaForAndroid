@@ -25,6 +25,8 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.selection.selectable
+import androidx.compose.foundation.selection.toggleable
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CircularProgressIndicator
@@ -56,6 +58,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -526,7 +529,10 @@ private fun ProxyMenuSection(title: String, content: @Composable () -> Unit) {
 @Composable
 private fun ProxyMenuCheckboxRow(title: String, checked: Boolean, onClick: () -> Unit) {
   Row(
-    modifier = Modifier.fillMaxWidth().clickable(onClick = onClick).padding(vertical = 6.dp),
+    modifier =
+      Modifier.fillMaxWidth()
+        .toggleable(value = checked, onValueChange = { onClick() }, role = Role.Checkbox)
+        .padding(vertical = 6.dp),
     verticalAlignment = Alignment.CenterVertically,
   ) {
     Checkbox(checked = checked, onCheckedChange = null)
@@ -538,7 +544,10 @@ private fun ProxyMenuCheckboxRow(title: String, checked: Boolean, onClick: () ->
 @Composable
 private fun ProxyMenuRadioRow(title: String, selected: Boolean, onClick: () -> Unit) {
   Row(
-    modifier = Modifier.fillMaxWidth().clickable(onClick = onClick).padding(vertical = 6.dp),
+    modifier =
+      Modifier.fillMaxWidth()
+        .selectable(selected = selected, onClick = onClick, role = Role.RadioButton)
+        .padding(vertical = 6.dp),
     verticalAlignment = Alignment.CenterVertically,
   ) {
     RadioButton(selected = selected, onClick = null)
