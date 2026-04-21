@@ -5,5 +5,5 @@ import androidx.databinding.BindingAdapter
 
 @BindingAdapter("android:minHeight")
 fun bindMinHeight(view: View, value: Float) {
-    view.minimumHeight = value.toInt()
+  view.minimumHeight = value.toInt()
 }

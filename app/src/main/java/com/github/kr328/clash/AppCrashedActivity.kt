@@ -1,6 +1,5 @@
 package com.github.kr328.clash
 
-import com.github.kr328.clash.common.compat.versionCodeCompat
 import com.github.kr328.clash.common.log.Log
 import com.github.kr328.clash.design.AppCrashedDesign
 import com.github.kr328.clash.log.SystemLogcat
@@ -9,25 +8,23 @@ import kotlinx.coroutines.isActive
 import kotlinx.coroutines.withContext
 
 class AppCrashedActivity : BaseActivity<AppCrashedDesign>() {
-    override suspend fun main() {
-        val design = AppCrashedDesign(this)
+  override suspend fun main() {
+    val design = AppCrashedDesign(this)
 
-        setContentDesign(design)
+    setContentDesign(design)
 
-        val packageInfo = withContext(Dispatchers.IO) {
-            packageManager.getPackageInfo(packageName, 0)
-        }
+    val packageInfo = withContext(Dispatchers.IO) { packageManager.getPackageInfo(packageName, 0) }
 
-        Log.i("App version: versionName = ${packageInfo.versionName} versionCode = ${packageInfo.versionCodeCompat}")
+    Log.i(
+      "App version: versionName = ${packageInfo.versionName} versionCode = ${packageInfo.longVersionCode}"
+    )
 
-        val logs = withContext(Dispatchers.IO) {
-            SystemLogcat.dumpCrash()
-        }
+    val logs = withContext(Dispatchers.IO) { SystemLogcat.dumpCrash() }
 
-        design.setAppLogs(logs)
+    design.updateLogs(logs)
 
-        while (isActive) {
-            events.receive()
-        }
+    while (isActive) {
+      events.receive()
     }
+  }
 }

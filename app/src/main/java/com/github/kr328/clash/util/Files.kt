@@ -4,7 +4,7 @@ import android.content.Context
 import java.io.File
 
 val Context.logsDir: File
-    get() = cacheDir.resolve("logs")
+  get() = cacheDir.resolve("logs")
 
 val Context.clashDir: File
-    get() = filesDir.resolve("clash")
+  get() = filesDir.resolve("clash")

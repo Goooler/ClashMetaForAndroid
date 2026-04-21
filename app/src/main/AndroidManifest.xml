@@ -95,30 +95,20 @@
         </activity>
         <activity
             android:name=".ApkBrokenActivity"
-            android:configChanges="uiMode"
-            android:exported="false"
-            android:label="@string/application_broken" />
+            android:exported="false" />
         <activity
             android:name=".AppCrashedActivity"
-            android:configChanges="uiMode"
             android:exported="false"
-            android:label="@string/application_crashed"
             android:launchMode="singleTask" />
         <activity
             android:name=".ProfilesActivity"
-            android:configChanges="uiMode"
-            android:exported="false"
-            android:label="@string/profiles" />
+            android:configChanges="uiMode" />
         <activity
             android:name=".NewProfileActivity"
-            android:configChanges="uiMode"
-            android:exported="false"
-            android:label="@string/create_profile" />
+            android:exported="false" />
         <activity
             android:name=".PropertiesActivity"
-            android:configChanges="uiMode"
-            android:exported="false"
-            android:label="@string/profile" />
+            android:exported="false" />
         <activity
             android:name=".ProxyActivity"
             android:configChanges="uiMode"
@@ -126,34 +116,22 @@
             android:label="@string/proxy" />
         <activity
             android:name=".ProvidersActivity"
-            android:configChanges="uiMode"
-            android:exported="false"
-            android:label="@string/providers" />
+            android:exported="false" />
         <activity
             android:name=".LogsActivity"
-            android:configChanges="uiMode"
-            android:exported="false"
-            android:label="@string/logs" />
+            android:exported="false" />
         <activity
             android:name=".LogcatActivity"
-            android:configChanges="uiMode"
-            android:exported="false"
-            android:label="@string/logcat" />
+            android:exported="false" />
         <activity
             android:name=".SettingsActivity"
-            android:configChanges="uiMode"
-            android:exported="false"
-            android:label="@string/settings" />
+            android:exported="false" />
         <activity
             android:name=".NetworkSettingsActivity"
-            android:configChanges="uiMode"
-            android:exported="false"
-            android:label="@string/network" />
+            android:exported="false" />
         <activity
             android:name=".AppSettingsActivity"
-            android:configChanges="uiMode"
-            android:exported="false"
-            android:label="@string/app" />
+            android:exported="false" />
         <activity
             android:name=".OverrideSettingsActivity"
             android:configChanges="uiMode"
@@ -166,19 +144,13 @@
             android:label="@string/meta_features" />
         <activity
             android:name=".AccessControlActivity"
-            android:configChanges="uiMode"
-            android:exported="false"
-            android:label="@string/access_control_packages" />
+            android:exported="false" />
         <activity
             android:name=".HelpActivity"
-            android:configChanges="uiMode"
-            android:exported="false"
-            android:label="@string/help" />
+            android:exported="false" />
         <activity
             android:name=".FilesActivity"
-            android:configChanges="uiMode"
-            android:exported="false"
-            android:label="@string/files" />
+            android:exported="false" />
 
         <service
             android:name=".LogcatService"

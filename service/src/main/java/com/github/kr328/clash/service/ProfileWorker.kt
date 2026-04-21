@@ -18,195 +18,201 @@ import com.github.kr328.clash.common.util.uuid
 import com.github.kr328.clash.service.data.ImportedDao
 import com.github.kr328.clash.service.util.sendProfileUpdateCompleted
 import com.github.kr328.clash.service.util.sendProfileUpdateFailed
-import kotlinx.coroutines.*
-import java.util.*
+import java.util.UUID
 import java.util.concurrent.TimeUnit
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.NonCancellable
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class ProfileWorker : BaseService() {
-    private val service: ProfileWorker
-        get() = this
+  private val service: ProfileWorker
+    get() = this
 
-    private val jobs = mutableListOf<Job>()
+  private val jobs = mutableListOf<Job>()
 
-    override fun onCreate() {
-        super.onCreate()
+  override fun onCreate() {
+    super.onCreate()
 
-        createChannels()
+    createChannels()
 
-        foreground()
+    foreground()
 
-        launch {
-            delay(TimeUnit.SECONDS.toMillis(10))
+    launch {
+      delay(TimeUnit.SECONDS.toMillis(10))
 
-            while (true) {
-                jobs.removeFirstOrNull()?.join() ?: break
-            }
+      while (true) {
+        jobs.removeFirstOrNull()?.join() ?: break
+      }
 
-            stopSelf()
+      stopSelf()
+    }
+  }
+
+  override fun onDestroy() {
+    stopForeground(true)
+
+    super.onDestroy()
+  }
+
+  override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+    super.onStartCommand(intent, flags, startId)
+
+    when (intent?.action) {
+      Intents.ACTION_PROFILE_REQUEST_UPDATE -> {
+        intent.uuid?.also {
+          val job = launch { run(it) }
+
+          jobs.add(job)
         }
-    }
+      }
+      Intents.ACTION_PROFILE_SCHEDULE_UPDATES -> {
+        val job = launch {
+          ProfileReceiver.rescheduleAll(service)
 
-    override fun onDestroy() {
-        stopForeground(true)
-
-        super.onDestroy()
-    }
-
-    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        super.onStartCommand(intent, flags, startId)
-
-        when (intent?.action) {
-            Intents.ACTION_PROFILE_REQUEST_UPDATE -> {
-                intent.uuid?.also {
-                    val job = launch {
-                        run(it)
-                    }
-
-                    jobs.add(job)
-                }
-            }
-            Intents.ACTION_PROFILE_SCHEDULE_UPDATES -> {
-                val job = launch {
-                    ProfileReceiver.rescheduleAll(service)
-
-                    delay(TimeUnit.SECONDS.toMillis(30))
-                }
-
-                jobs.add(job)
-            }
+          delay(TimeUnit.SECONDS.toMillis(30))
         }
 
-        return START_NOT_STICKY
+        jobs.add(job)
+      }
     }
 
-    private suspend fun run(uuid: UUID) {
-        val imported = ImportedDao().queryByUUID(uuid) ?: return
+    return START_NOT_STICKY
+  }
 
-        try {
-            processing(imported.name) {
-                ProfileProcessor.update(this, imported.uuid, null)
-            }
+  private suspend fun run(uuid: UUID) {
+    val imported = ImportedDao().queryByUUID(uuid) ?: return
 
-            completed(imported.uuid, imported.name)
+    try {
+      processing(imported.name) { ProfileProcessor.update(this, imported.uuid, null) }
 
-            ProfileReceiver.scheduleNext(this, imported)
-        } catch (e: Exception) {
-            failed(imported.uuid, imported.name, e.message ?: "Unknown")
-        }
+      completed(imported.uuid, imported.name)
+
+      ProfileReceiver.scheduleNext(this, imported)
+    } catch (e: Exception) {
+      failed(imported.uuid, imported.name, e.message ?: "Unknown")
     }
+  }
 
-    private fun createChannels() {
-        NotificationManagerCompat.from(this).createNotificationChannelsCompat(
-            listOf(
-                NotificationChannelCompat.Builder(
-                    SERVICE_CHANNEL,
-                    NotificationManagerCompat.IMPORTANCE_LOW
-                ).setName(getString(R.string.profile_service_status)).build(),
-                NotificationChannelCompat.Builder(
-                    STATUS_CHANNEL,
-                    NotificationManagerCompat.IMPORTANCE_LOW
-                ).setName(getString(R.string.profile_process_status)).build(),
-                NotificationChannelCompat.Builder(
-                    RESULT_CHANNEL,
-                    NotificationManagerCompat.IMPORTANCE_DEFAULT
-                ).setName(getString(R.string.profile_process_result)).build()
+  private fun createChannels() {
+    NotificationManagerCompat.from(this)
+      .createNotificationChannelsCompat(
+        listOf(
+          NotificationChannelCompat.Builder(
+              SERVICE_CHANNEL,
+              NotificationManagerCompat.IMPORTANCE_LOW,
             )
+            .setName(getString(R.string.profile_service_status))
+            .build(),
+          NotificationChannelCompat.Builder(
+              STATUS_CHANNEL,
+              NotificationManagerCompat.IMPORTANCE_LOW,
+            )
+            .setName(getString(R.string.profile_process_status))
+            .build(),
+          NotificationChannelCompat.Builder(
+              RESULT_CHANNEL,
+              NotificationManagerCompat.IMPORTANCE_DEFAULT,
+            )
+            .setName(getString(R.string.profile_process_result))
+            .build(),
         )
+      )
+  }
+
+  private fun foreground() {
+    val notification =
+      NotificationCompat.Builder(this, SERVICE_CHANNEL)
+        .setContentTitle(getString(R.string.profile_updater))
+        .setContentText(getString(R.string.running))
+        .setColor(getColorCompat(R.color.color_clash))
+        .setSmallIcon(R.drawable.ic_logo_service)
+        .setOngoing(true)
+        .setOnlyAlertOnce(true)
+        .build()
+
+    startForegroundCompat(R.id.nf_profile_worker, notification)
+  }
+
+  private suspend inline fun processing(name: String, block: () -> Unit) {
+    val id = UndefinedIds.next()
+
+    val notification =
+      NotificationCompat.Builder(this, STATUS_CHANNEL)
+        .setContentTitle(getString(R.string.profile_updating))
+        .setContentText(name)
+        .setColor(getColorCompat(R.color.color_clash))
+        .setSmallIcon(R.drawable.ic_logo_service)
+        .setOngoing(true)
+        .setOnlyAlertOnce(true)
+        .setGroup(STATUS_CHANNEL)
+        .build()
+
+    NotificationManagerCompat.from(applicationContext).notify(id, notification)
+    try {
+      block()
+    } finally {
+      withContext(NonCancellable) { NotificationManagerCompat.from(applicationContext).cancel(id) }
     }
+  }
 
-    private fun foreground() {
-        val notification = NotificationCompat.Builder(this, SERVICE_CHANNEL)
-            .setContentTitle(getString(R.string.profile_updater))
-            .setContentText(getString(R.string.running))
-            .setColor(getColorCompat(R.color.color_clash))
-            .setSmallIcon(R.drawable.ic_logo_service)
-            .setOngoing(true)
-            .setOnlyAlertOnce(true)
-            .build()
+  private fun resultBuilder(id: Int, uuid: UUID): NotificationCompat.Builder {
+    val intent =
+      PendingIntent.getActivity(
+        this,
+        id,
+        Intent().setComponent(Components.PROPERTIES_ACTIVITY).setUUID(uuid),
+        pendingIntentFlags(PendingIntent.FLAG_UPDATE_CURRENT),
+      )
 
-        startForegroundCompat(R.id.nf_profile_worker, notification)
-    }
+    return NotificationCompat.Builder(this, RESULT_CHANNEL)
+      .setColor(getColorCompat(R.color.color_clash))
+      .setSmallIcon(R.drawable.ic_logo_service)
+      .setOnlyAlertOnce(true)
+      .setContentIntent(intent)
+      .setAutoCancel(true)
+      .setGroup(RESULT_CHANNEL)
+  }
 
-    private suspend inline fun processing(name: String, block: () -> Unit) {
-        val id = UndefinedIds.next()
+  private fun completed(uuid: UUID, name: String) {
+    val id = UndefinedIds.next()
 
-        val notification = NotificationCompat.Builder(this, STATUS_CHANNEL)
-            .setContentTitle(getString(R.string.profile_updating))
-            .setContentText(name)
-            .setColor(getColorCompat(R.color.color_clash))
-            .setSmallIcon(R.drawable.ic_logo_service)
-            .setOngoing(true)
-            .setOnlyAlertOnce(true)
-            .setGroup(STATUS_CHANNEL)
-            .build()
+    val notification =
+      resultBuilder(id, uuid)
+        .setContentTitle(getString(R.string.update_successfully))
+        .setContentText(getString(R.string.format_update_complete, name))
+        .build()
 
-        NotificationManagerCompat.from(applicationContext)
-            .notify(id, notification)
-        try {
-            block()
-        } finally {
-            withContext(NonCancellable) {
-                NotificationManagerCompat.from(applicationContext)
-                    .cancel(id)
-            }
-        }
-    }
+    NotificationManagerCompat.from(this).notify(id, notification)
 
-    private fun resultBuilder(id: Int, uuid: UUID): NotificationCompat.Builder {
-        val intent = PendingIntent.getActivity(
-            this,
-            id,
-            Intent().setComponent(Components.PROPERTIES_ACTIVITY).setUUID(uuid),
-            pendingIntentFlags(PendingIntent.FLAG_UPDATE_CURRENT)
-        )
+    sendProfileUpdateCompleted(uuid)
+  }
 
-        return NotificationCompat.Builder(this, RESULT_CHANNEL)
-            .setColor(getColorCompat(R.color.color_clash))
-            .setSmallIcon(R.drawable.ic_logo_service)
-            .setOnlyAlertOnce(true)
-            .setContentIntent(intent)
-            .setAutoCancel(true)
-            .setGroup(RESULT_CHANNEL)
-    }
+  private fun failed(uuid: UUID, name: String, reason: String) {
+    val id = UndefinedIds.next()
 
-    private fun completed(uuid: UUID, name: String) {
-        val id = UndefinedIds.next()
+    val content = getString(R.string.format_update_failure, name, reason)
 
-        val notification = resultBuilder(id, uuid)
-            .setContentTitle(getString(R.string.update_successfully))
-            .setContentText(getString(R.string.format_update_complete, name))
-            .build()
+    val notification =
+      resultBuilder(id, uuid)
+        .setContentTitle(getString(R.string.update_failure))
+        .setContentText(content)
+        .setStyle(NotificationCompat.BigTextStyle().bigText(content))
+        .build()
 
-        NotificationManagerCompat.from(this)
-            .notify(id, notification)
+    NotificationManagerCompat.from(this).notify(id, notification)
 
-        sendProfileUpdateCompleted(uuid)
-    }
+    sendProfileUpdateFailed(uuid, reason)
+  }
 
-    private fun failed(uuid: UUID, name: String, reason: String) {
-        val id = UndefinedIds.next()
+  companion object {
+    private const val SERVICE_CHANNEL = "profile_service_channel"
+    private const val STATUS_CHANNEL = "profile_status_channel"
+    private const val RESULT_CHANNEL = "profile_result_channel"
+  }
 
-        val content = getString(R.string.format_update_failure, name, reason)
-
-        val notification = resultBuilder(id, uuid)
-            .setContentTitle(getString(R.string.update_failure))
-            .setContentText(content)
-            .setStyle(NotificationCompat.BigTextStyle().bigText(content))
-            .build()
-
-        NotificationManagerCompat.from(this)
-            .notify(id, notification)
-
-        sendProfileUpdateFailed(uuid, reason)
-    }
-
-    companion object {
-        private const val SERVICE_CHANNEL = "profile_service_channel"
-        private const val STATUS_CHANNEL = "profile_status_channel"
-        private const val RESULT_CHANNEL = "profile_result_channel"
-    }
-
-    override fun onBind(intent: Intent?): IBinder {
-        return Binder()
-    }
+  override fun onBind(intent: Intent?): IBinder {
+    return Binder()
+  }
 }

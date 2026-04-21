@@ -4,15 +4,15 @@ import android.content.Context
 import java.io.File
 
 val Context.importedDir: File
-    get() = filesDir.resolve("imported")
+  get() = filesDir.resolve("imported")
 
 val Context.pendingDir: File
-    get() = filesDir.resolve("pending")
+  get() = filesDir.resolve("pending")
 
 val Context.processingDir: File
-    get() = filesDir.resolve("processing")
+  get() = filesDir.resolve("processing")
 
 val File.directoryLastModified: Long?
-    get() {
-        return walk().map { it.lastModified() }.maxOrNull()
-    }
+  get() {
+    return walk().maxOfOrNull { it.lastModified() }
+  }

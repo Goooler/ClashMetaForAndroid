@@ -1,10 +1,6 @@
-plugins {
-    alias(libs.plugins.android.library)
-}
+plugins { alias(libs.plugins.android.library) }
 
 dependencies {
-    compileOnly(projects.hideapi)
-
-    implementation(libs.kotlin.coroutine)
-    implementation(libs.androidx.core)
+  implementation(libs.kotlin.coroutine)
+  implementation(libs.androidx.core)
 }

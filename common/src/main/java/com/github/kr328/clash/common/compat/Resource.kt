@@ -3,14 +3,7 @@
 package com.github.kr328.clash.common.compat
 
 import android.content.res.Configuration
-import android.os.Build
-import java.util.*
+import java.util.Locale
 
 val Configuration.preferredLocale: Locale
-    get() {
-        return if (Build.VERSION.SDK_INT >= 24) {
-            locales[0]
-        } else {
-            locale
-        }
-    }
+  get() = locales[0]

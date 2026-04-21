@@ -5,64 +5,41 @@ import com.github.kr328.clash.common.store.Store
 import com.github.kr328.clash.common.store.asStoreProvider
 import com.github.kr328.clash.service.PreferenceProvider
 import com.github.kr328.clash.service.model.AccessControlMode
-import java.util.*
+import java.util.UUID
 
 class ServiceStore(context: Context) {
-    private val store = Store(
-        PreferenceProvider
-            .createSharedPreferencesFromContext(context)
-            .asStoreProvider()
+  private val store =
+    Store(PreferenceProvider.createSharedPreferencesFromContext(context).asStoreProvider())
+
+  var activeProfile: UUID? by
+    store.typedString(
+      key = "active_profile",
+      from = { if (it.isBlank()) null else UUID.fromString(it) },
+      to = { it?.toString() ?: "" },
     )
 
-    var activeProfile: UUID? by store.typedString(
-        key = "active_profile",
-        from = { if (it.isBlank()) null else UUID.fromString(it) },
-        to = { it?.toString() ?: "" }
+  var bypassPrivateNetwork: Boolean by
+    store.boolean(key = "bypass_private_network", defaultValue = true)
+
+  var accessControlMode: AccessControlMode by
+    store.enum(
+      key = "access_control_mode",
+      defaultValue = AccessControlMode.AcceptAll,
+      values = AccessControlMode.entries.toTypedArray(),
     )
 
-    var bypassPrivateNetwork: Boolean by store.boolean(
-        key = "bypass_private_network",
-        defaultValue = true
-    )
+  var accessControlPackages by
+    store.stringSet(key = "access_control_packages", defaultValue = emptySet())
 
-    var accessControlMode: AccessControlMode by store.enum(
-        key = "access_control_mode",
-        defaultValue = AccessControlMode.AcceptAll,
-        values = AccessControlMode.values()
-    )
+  var dnsHijacking by store.boolean(key = "dns_hijacking", defaultValue = true)
 
-    var accessControlPackages by store.stringSet(
-        key = "access_control_packages",
-        defaultValue = emptySet()
-    )
+  var systemProxy by store.boolean(key = "system_proxy", defaultValue = true)
 
-    var dnsHijacking by store.boolean(
-        key = "dns_hijacking",
-        defaultValue = true
-    )
+  var allowBypass by store.boolean(key = "allow_bypass", defaultValue = true)
 
-    var systemProxy by store.boolean(
-        key = "system_proxy",
-        defaultValue = true
-    )
+  var allowIpv6 by store.boolean(key = "allow_ipv6", defaultValue = false)
 
-    var allowBypass by store.boolean(
-        key = "allow_bypass",
-        defaultValue = true
-    )
+  var tunStackMode by store.string(key = "tun_stack_mode", defaultValue = "system")
 
-    var allowIpv6 by store.boolean(
-        key = "allow_ipv6",
-        defaultValue = false
-    )
-
-    var tunStackMode by store.string(
-        key = "tun_stack_mode",
-        defaultValue = "system"
-    )
-
-    var dynamicNotification by store.boolean(
-        key = "dynamic_notification",
-        defaultValue = true
-    )
+  var dynamicNotification by store.boolean(key = "dynamic_notification", defaultValue = true)
 }

@@ -1,123 +1,319 @@
 package com.github.kr328.clash.design
 
-import android.app.Dialog
 import android.content.Context
 import android.view.View
-import com.github.kr328.clash.design.adapter.FileAdapter
-import com.github.kr328.clash.design.databinding.DesignFilesBinding
-import com.github.kr328.clash.design.databinding.DialogFilesMenuBinding
-import com.github.kr328.clash.design.dialog.AppBottomSheetDialog
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.Text
+import androidx.compose.material3.rememberModalBottomSheetState
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableLongStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
+import com.github.kr328.clash.design.component.MihomoScaffold
 import com.github.kr328.clash.design.dialog.requestModelTextInput
 import com.github.kr328.clash.design.model.File
-import com.github.kr328.clash.design.util.*
+import com.github.kr328.clash.design.ui.theme.MihomoTheme
+import com.github.kr328.clash.design.ui.theme.PreviewMihomo
+import com.github.kr328.clash.design.util.ValidatorFileName
+import com.github.kr328.clash.design.util.elapsedIntervalString
+import com.github.kr328.clash.design.util.toBytesString
+import kotlin.time.Duration.Companion.minutes
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
 
 class FilesDesign(context: Context) : Design<FilesDesign.Request>(context) {
-    sealed class Request {
-        data class OpenFile(val file: File) : Request()
-        data class OpenDirectory(val file: File) : Request()
-        data class RenameFile(val file: File) : Request()
-        data class DeleteFile(val file: File) : Request()
-        data class ImportFile(val file: File?) : Request()
-        data class ExportFile(val file: File) : Request()
+  sealed class Request {
+    data class OpenFile(val file: File) : Request()
 
-        object PopStack : Request()
-    }
+    data class OpenDirectory(val file: File) : Request()
 
-    private val binding = DesignFilesBinding
-        .inflate(context.layoutInflater, context.root, false)
-    private val adapter: FileAdapter = FileAdapter(context, this::requestOpen, this::requestMore)
+    data class RenameFile(val file: File) : Request()
 
-    override val root: View
-        get() = binding.root
+    data class DeleteFile(val file: File) : Request()
 
-    var configurationEditable: Boolean
-        get() = binding.configurationEditable
-        set(value) {
-            binding.configurationEditable = value
-        }
+    data class ImportFile(val file: File?) : Request()
 
-    suspend fun swapFiles(files: List<File>, currentInBaseDir: Boolean) {
-        withContext(Dispatchers.Main) {
-            adapter.swapDataSet(adapter::files, files)
-            binding.currentInBaseDir = currentInBaseDir
-        }
-    }
+    data class ExportFile(val file: File) : Request()
 
-    fun updateElapsed() {
-        adapter.updateElapsed()
-    }
+    object PopStack : Request()
+  }
 
-    suspend fun requestFileName(name: String): String {
-        return context.requestModelTextInput(
-            initial = name,
-            title = context.getText(R.string.file_name),
-            hint = context.getText(R.string.file_name),
-            error = context.getText(R.string.invalid_file_name),
-            validator = ValidatorFileName,
-        )
-    }
+  private var files by mutableStateOf<List<File>>(emptyList())
+  private var currentInBaseDir by mutableStateOf(false)
+  private var configurationEditable by mutableStateOf(false)
 
-    init {
-        binding.self = this
-
-        binding.activityBarLayout.applyFrom(context)
-
-        binding.mainList.recyclerList.also {
-            it.applyLinearAdapter(context, adapter)
-            it.bindAppBarElevation(binding.activityBarLayout)
-        }
-    }
-
-    private fun requestOpen(file: File) {
-        if (file.isDirectory) {
+  override val root: View by composeView {
+    MihomoTheme {
+      FilesScreen(
+        files = files,
+        currentInBaseDir = currentInBaseDir,
+        configurationEditable = configurationEditable,
+        onBack = { requests.trySend(Request.PopStack) },
+        onOpen = { file ->
+          if (file.isDirectory) {
             requests.trySend(Request.OpenDirectory(file))
-        } else {
+          } else {
             requests.trySend(Request.OpenFile(file))
+          }
+        },
+        onNew = { requests.trySend(Request.ImportFile(null)) },
+        onImport = { requests.trySend(Request.ImportFile(it)) },
+        onExport = { requests.trySend(Request.ExportFile(it)) },
+        onRename = { requests.trySend(Request.RenameFile(it)) },
+        onDelete = { requests.trySend(Request.DeleteFile(it)) },
+      )
+    }
+  }
+
+  suspend fun swapFiles(files: List<File>, currentInBaseDir: Boolean) =
+    withContext(Dispatchers.Main) {
+      this@FilesDesign.files = files
+      this@FilesDesign.currentInBaseDir = currentInBaseDir
+    }
+
+  fun updateConfigurationEditable(editable: Boolean) {
+    configurationEditable = editable
+  }
+
+  suspend fun requestFileName(name: String): String {
+    return context.requestModelTextInput(
+      initial = name,
+      title = context.getText(R.string.file_name),
+      hint = context.getText(R.string.file_name),
+      error = context.getText(R.string.invalid_file_name),
+      validator = ValidatorFileName,
+    )
+  }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun FilesScreen(
+  files: List<File>,
+  currentInBaseDir: Boolean,
+  configurationEditable: Boolean,
+  onBack: () -> Unit,
+  onOpen: (File) -> Unit,
+  onNew: () -> Unit,
+  onImport: (File) -> Unit,
+  onExport: (File) -> Unit,
+  onRename: (File) -> Unit,
+  onDelete: (File) -> Unit,
+) {
+  var menuFile by remember { mutableStateOf<File?>(null) }
+  val sheetState = rememberModalBottomSheetState()
+
+  if (menuFile != null) {
+    ModalBottomSheet(onDismissRequest = { menuFile = null }, sheetState = sheetState) {
+      val file = menuFile!!
+      if (!file.isDirectory && (!currentInBaseDir || configurationEditable)) {
+        FilesMenuAction(
+          icon = R.drawable.ic_baseline_get_app,
+          text = stringResource(R.string.import_),
+          onClick = {
+            menuFile = null
+            onImport(file)
+          },
+        )
+      }
+      if (!file.isDirectory && file.size > 0) {
+        FilesMenuAction(
+          icon = R.drawable.ic_baseline_publish,
+          text = stringResource(R.string.export),
+          onClick = {
+            menuFile = null
+            onExport(file)
+          },
+        )
+      }
+      if (!currentInBaseDir) {
+        FilesMenuAction(
+          icon = R.drawable.ic_baseline_edit,
+          text = stringResource(R.string.rename),
+          onClick = {
+            menuFile = null
+            onRename(file)
+          },
+        )
+        FilesMenuAction(
+          icon = R.drawable.ic_outline_delete,
+          text = stringResource(R.string.delete),
+          tint = MaterialTheme.colorScheme.error,
+          onClick = {
+            menuFile = null
+            onDelete(file)
+          },
+        )
+      }
+      Spacer(modifier = Modifier.size(16.dp))
+    }
+  }
+
+  MihomoScaffold(
+    title = stringResource(R.string.files),
+    onBack = onBack,
+    actions = {
+      if (!currentInBaseDir) {
+        IconButton(onClick = onNew) {
+          Icon(
+            painter = painterResource(R.drawable.ic_baseline_add),
+            contentDescription = stringResource(R.string._new),
+          )
         }
+      }
+    },
+  ) { innerPadding ->
+    val context = LocalContext.current
+    var currentTime by remember { mutableLongStateOf(System.currentTimeMillis()) }
+
+    LaunchedEffect(Unit) {
+      while (true) {
+        delay(1.minutes)
+        currentTime = System.currentTimeMillis()
+      }
     }
 
-    fun requestRename(dialog: Dialog, file: File) {
-        requests.trySend(Request.RenameFile(file))
+    LazyColumn(modifier = Modifier.fillMaxSize().padding(innerPadding)) {
+      items(items = files, key = File::id) { file ->
+        FileItem(
+          file = file,
+          currentTime = currentTime,
+          context = context,
+          onClick = { onOpen(file) },
+          onMore = { menuFile = file },
+        )
+        HorizontalDivider()
+      }
+    }
+  }
+}
 
-        dialog.dismiss()
+@Composable
+private fun FileItem(
+  file: File,
+  currentTime: Long,
+  context: Context,
+  onClick: () -> Unit,
+  onMore: () -> Unit,
+) {
+  Row(
+    modifier =
+      Modifier.fillMaxWidth()
+        .heightIn(min = 56.dp)
+        .clickable(onClick = onClick)
+        .padding(end = 0.dp),
+    verticalAlignment = Alignment.CenterVertically,
+  ) {
+    Box(
+      modifier = Modifier.size(width = 65.dp, height = 56.dp),
+      contentAlignment = Alignment.Center,
+    ) {
+      Icon(
+        painter =
+          painterResource(
+            if (file.isDirectory) R.drawable.ic_outline_folder else R.drawable.ic_outline_article
+          ),
+        contentDescription = null,
+        modifier = Modifier.size(28.dp),
+      )
     }
 
-    fun requestImport(dialog: Dialog, file: File) {
-        requests.trySend(Request.ImportFile(file))
-
-        dialog.dismiss()
+    Column(modifier = Modifier.weight(1f).padding(vertical = 8.dp)) {
+      Text(text = file.name)
+      if (!file.isDirectory) {
+        Spacer(modifier = Modifier.size(3.dp))
+        Text(text = file.size.toBytesString(), style = MaterialTheme.typography.bodyMedium)
+      }
     }
 
-    fun requestExport(dialog: Dialog, file: File) {
-        requests.trySend(Request.ExportFile(file))
-
-        dialog.dismiss()
+    if (!file.isDirectory) {
+      Text(
+        text = (currentTime - file.lastModified).elapsedIntervalString(context),
+        style = MaterialTheme.typography.labelSmall,
+        modifier = Modifier.padding(horizontal = 8.dp),
+      )
     }
 
-    fun requestDelete(dialog: Dialog, file: File) {
-        requests.trySend(Request.DeleteFile(file))
-
-        dialog.dismiss()
+    IconButton(onClick = onMore) {
+      Icon(
+        painter = painterResource(R.drawable.ic_baseline_more_vert),
+        contentDescription = stringResource(R.string.more),
+      )
     }
+  }
+}
 
-    fun requestNew() {
-        requests.trySend(Request.ImportFile(null))
-    }
+@Composable
+private fun FilesMenuAction(
+  icon: Int,
+  text: String,
+  onClick: () -> Unit,
+  modifier: Modifier = Modifier,
+  tint: androidx.compose.ui.graphics.Color = MaterialTheme.colorScheme.onSurface,
+) {
+  Row(
+    modifier =
+      modifier
+        .fillMaxWidth()
+        .clickable(onClick = onClick)
+        .padding(horizontal = 20.dp, vertical = 16.dp),
+    verticalAlignment = Alignment.CenterVertically,
+  ) {
+    Icon(
+      painter = painterResource(icon),
+      contentDescription = null,
+      tint = tint,
+      modifier = Modifier.size(24.dp),
+    )
+    Spacer(modifier = Modifier.size(16.dp))
+    Text(text = text, color = tint)
+  }
+}
 
-    private fun requestMore(file: File) {
-        val dialog = AppBottomSheetDialog(context)
-
-        val binding = DialogFilesMenuBinding.inflate(context.layoutInflater)
-
-        binding.master = this
-        binding.self = dialog
-        binding.file = file
-        binding.currentInBase = this.binding.currentInBaseDir
-        binding.configurationEditable = this.binding.configurationEditable
-
-        dialog.setContentView(binding.root)
-        dialog.show()
-    }
+@PreviewMihomo
+@Composable
+private fun FilesScreenPreview() = MihomoTheme {
+  FilesScreen(
+    files =
+      listOf(
+        File("1", "config.yaml", 1024, System.currentTimeMillis() - 60_000, false),
+        File("2", "scripts", 0, System.currentTimeMillis() - 3_600_000, true),
+      ),
+    currentInBaseDir = true,
+    configurationEditable = false,
+    onBack = {},
+    onOpen = {},
+    onNew = {},
+    onImport = {},
+    onExport = {},
+    onRename = {},
+    onDelete = {},
+  )
 }

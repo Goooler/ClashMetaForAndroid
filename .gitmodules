@@ -1,4 +1,4 @@
-[submodule "clash-foss"]
+[submodule "mihomo"]
 	path = core/src/foss/golang/clash
 	url = https://github.com/MetaCubeX/mihomo
-	branch = Meta
+  branch = v1.19.24

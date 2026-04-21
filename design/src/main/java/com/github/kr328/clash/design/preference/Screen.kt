@@ -9,30 +9,30 @@ import android.widget.LinearLayout.LayoutParams.WRAP_CONTENT
 import kotlinx.coroutines.CoroutineScope
 
 interface PreferenceScreen : CoroutineScope {
-    val context: Context
-    val root: ViewGroup
+  val context: Context
+  val root: ViewGroup
 }
 
 fun CoroutineScope.preferenceScreen(
-    context: Context,
-    configure: PreferenceScreen.() -> Unit
+  context: Context,
+  configure: PreferenceScreen.() -> Unit,
 ): PreferenceScreen {
-    val root = LinearLayout(context).apply {
-        orientation = LinearLayout.VERTICAL
+  val root = LinearLayout(context).apply { orientation = LinearLayout.VERTICAL }
+
+  val impl =
+    object : PreferenceScreen, CoroutineScope by this {
+      override val context: Context
+        get() = context
+
+      override val root: ViewGroup
+        get() = root
     }
 
-    val impl = object : PreferenceScreen, CoroutineScope by this {
-        override val context: Context
-            get() = context
-        override val root: ViewGroup
-            get() = root
-    }
+  impl.configure()
 
-    impl.configure()
-
-    return impl
+  return impl
 }
 
 fun PreferenceScreen.addElement(preference: Preference) {
-    root.addView(preference.view, LayoutParams(MATCH_PARENT, WRAP_CONTENT))
+  root.addView(preference.view, LayoutParams(MATCH_PARENT, WRAP_CONTENT))
 }

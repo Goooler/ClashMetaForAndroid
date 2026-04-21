@@ -15,65 +15,66 @@ import kotlinx.coroutines.selects.SelectClause1
 import kotlinx.coroutines.withContext
 
 abstract class Module<E>(val service: Service) {
-    private val events: Channel<E> = Channel(Channel.UNLIMITED)
-    private val receivers: MutableList<BroadcastReceiver> = mutableListOf()
+  private val events: Channel<E> = Channel(Channel.UNLIMITED)
+  private val receivers: MutableList<BroadcastReceiver> = mutableListOf()
 
-    val onEvent: SelectClause1<E>
-        get() = events.onReceive
+  val onEvent: SelectClause1<E>
+    get() = events.onReceive
 
-    protected suspend fun enqueueEvent(event: E) {
-        events.send(event)
+  protected suspend fun enqueueEvent(event: E) {
+    events.send(event)
+  }
+
+  protected fun receiveBroadcast(
+    requireSelf: Boolean = true,
+    capacity: Int = Channel.UNLIMITED,
+    configure: IntentFilter.() -> Unit,
+  ): ReceiveChannel<Intent> {
+    val filter = IntentFilter().apply(configure)
+    val channel = Channel<Intent>(capacity)
+    val receiver =
+      object : BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+          if (context == null || intent == null) {
+            channel.close()
+
+            return
+          }
+
+          channel.trySend(intent)
+        }
+      }
+
+    if (requireSelf) {
+      service.registerReceiverCompat(receiver, filter, Permissions.RECEIVE_SELF_BROADCASTS, null)
+    } else {
+      service.registerReceiverCompat(receiver, filter)
     }
 
-    protected fun receiveBroadcast(
-        requireSelf: Boolean = true,
-        capacity: Int = Channel.UNLIMITED,
-        configure: IntentFilter.() -> Unit
-    ): ReceiveChannel<Intent> {
-        val filter = IntentFilter().apply(configure)
-        val channel = Channel<Intent>(capacity)
-        val receiver = object : BroadcastReceiver() {
-            override fun onReceive(context: Context?, intent: Intent?) {
-                if (context == null || intent == null) {
-                    channel.close()
+    receivers.add(receiver)
 
-                    return
-                }
+    return channel
+  }
 
-                channel.trySend(intent)
-            }
+  suspend fun execute() {
+    val moduleName = this.javaClass.simpleName
+
+    try {
+      Log.d("$moduleName: initialize")
+
+      run()
+    } finally {
+      withContext(NonCancellable) {
+        receivers.forEach {
+          it.onReceive(null, null)
+
+          service.unregisterReceiver(it)
         }
 
-        if (requireSelf) {
-            service.registerReceiverCompat(receiver, filter, Permissions.RECEIVE_SELF_BROADCASTS, null)
-        } else {
-            service.registerReceiverCompat(receiver, filter)
-        }
-
-        receivers.add(receiver)
-
-        return channel
+        Log.d("$moduleName: destroyed")
+      }
     }
+  }
 
-    suspend fun execute() {
-        val moduleName = this.javaClass.simpleName
-
-        try {
-            Log.d("$moduleName: initialize")
-
-            run()
-        } finally {
-            withContext(NonCancellable) {
-                receivers.forEach {
-                    it.onReceive(null, null)
-
-                    service.unregisterReceiver(it)
-                }
-
-                Log.d("$moduleName: destroyed")
-            }
-        }
-    }
-
-    protected abstract suspend fun run()
+  protected abstract suspend fun run()
 }

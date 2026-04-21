@@ -4,19 +4,19 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.TypeConverters
 import com.github.kr328.clash.service.model.Profile
-import java.util.*
+import java.util.UUID
 
 @Entity(tableName = "imported", primaryKeys = ["uuid"])
 @TypeConverters(Converters::class)
 data class Imported(
-    @ColumnInfo(name = "uuid") val uuid: UUID,
-    @ColumnInfo(name = "name") val name: String,
-    @ColumnInfo(name = "type") val type: Profile.Type,
-    @ColumnInfo(name = "source") val source: String,
-    @ColumnInfo(name = "interval") val interval: Long,
-    @ColumnInfo(name = "upload") val upload: Long,
-    @ColumnInfo(name = "download") val download: Long,
-    @ColumnInfo(name = "total") val total: Long,
-    @ColumnInfo(name = "expire") val expire: Long,
-    @ColumnInfo(name = "createdAt") val createdAt: Long,
+  @ColumnInfo(name = "uuid") val uuid: UUID,
+  @ColumnInfo(name = "name") val name: String,
+  @ColumnInfo(name = "type") val type: Profile.Type,
+  @ColumnInfo(name = "source") val source: String,
+  @ColumnInfo(name = "interval") val interval: Long,
+  @ColumnInfo(name = "upload") val upload: Long,
+  @ColumnInfo(name = "download") val download: Long,
+  @ColumnInfo(name = "total") val total: Long,
+  @ColumnInfo(name = "expire") val expire: Long,
+  @ColumnInfo(name = "createdAt") val createdAt: Long,
 )

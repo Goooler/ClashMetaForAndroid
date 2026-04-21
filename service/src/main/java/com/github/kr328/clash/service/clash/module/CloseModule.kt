@@ -5,17 +5,15 @@ import com.github.kr328.clash.common.constants.Intents
 import com.github.kr328.clash.common.log.Log
 
 class CloseModule(service: Service) : Module<CloseModule.RequestClose>(service) {
-    object RequestClose
+  object RequestClose
 
-    override suspend fun run() {
-        val broadcasts = receiveBroadcast {
-            addAction(Intents.ACTION_CLASH_REQUEST_STOP)
-        }
+  override suspend fun run() {
+    val broadcasts = receiveBroadcast { addAction(Intents.ACTION_CLASH_REQUEST_STOP) }
 
-        broadcasts.receive()
+    broadcasts.receive()
 
-        Log.d("User request close")
+    Log.d("User request close")
 
-        return enqueueEvent(RequestClose)
-    }
+    return enqueueEvent(RequestClose)
+  }
 }

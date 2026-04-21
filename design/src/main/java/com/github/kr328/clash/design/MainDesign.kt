@@ -14,78 +14,67 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 class MainDesign(context: Context) : Design<MainDesign.Request>(context) {
-    enum class Request {
-        ToggleStatus,
-        OpenProxy,
-        OpenProfiles,
-        OpenProviders,
-        OpenLogs,
-        OpenSettings,
-        OpenHelp,
-        OpenAbout,
-    }
+  enum class Request {
+    ToggleStatus,
+    OpenProxy,
+    OpenProfiles,
+    OpenProviders,
+    OpenLogs,
+    OpenSettings,
+    OpenHelp,
+    OpenAbout,
+  }
 
-    private val binding = DesignMainBinding
-        .inflate(context.layoutInflater, context.root, false)
+  private val binding = DesignMainBinding.inflate(context.layoutInflater, context.root, false)
 
-    override val root: View
-        get() = binding.root
+  override val root: View
+    get() = binding.root
 
-    suspend fun setProfileName(name: String?) {
-        withContext(Dispatchers.Main) {
-            binding.profileName = name
+  suspend fun setProfileName(name: String?) {
+    withContext(Dispatchers.Main) { binding.profileName = name }
+  }
+
+  suspend fun setClashRunning(running: Boolean) {
+    withContext(Dispatchers.Main) { binding.clashRunning = running }
+  }
+
+  suspend fun setForwarded(value: Long) {
+    withContext(Dispatchers.Main) { binding.forwarded = value.trafficTotal() }
+  }
+
+  suspend fun setMode(mode: TunnelState.Mode) {
+    withContext(Dispatchers.Main) {
+      binding.mode =
+        when (mode) {
+          TunnelState.Mode.Direct -> context.getString(R.string.direct_mode)
+          TunnelState.Mode.Global -> context.getString(R.string.global_mode)
+          TunnelState.Mode.Rule -> context.getString(R.string.rule_mode)
+          else -> context.getString(R.string.rule_mode)
         }
     }
+  }
 
-    suspend fun setClashRunning(running: Boolean) {
-        withContext(Dispatchers.Main) {
-            binding.clashRunning = running
-        }
+  suspend fun setHasProviders(has: Boolean) {
+    withContext(Dispatchers.Main) { binding.hasProviders = has }
+  }
+
+  suspend fun showAbout(versionName: String) {
+    withContext(Dispatchers.Main) {
+      val binding =
+        DesignAboutBinding.inflate(context.layoutInflater).apply { this.versionName = versionName }
+
+      AlertDialog.Builder(context).setView(binding.root).show()
     }
+  }
 
-    suspend fun setForwarded(value: Long) {
-        withContext(Dispatchers.Main) {
-            binding.forwarded = value.trafficTotal()
-        }
-    }
+  init {
+    binding.self = this
 
-    suspend fun setMode(mode: TunnelState.Mode) {
-        withContext(Dispatchers.Main) {
-            binding.mode = when (mode) {
-                TunnelState.Mode.Direct -> context.getString(R.string.direct_mode)
-                TunnelState.Mode.Global -> context.getString(R.string.global_mode)
-                TunnelState.Mode.Rule -> context.getString(R.string.rule_mode)
-                else -> context.getString(R.string.rule_mode)
-            }
-        }
-    }
+    binding.colorClashStarted = context.resolveThemedColor(android.R.attr.colorPrimary)
+    binding.colorClashStopped = context.resolveThemedColor(R.attr.colorClashStopped)
+  }
 
-    suspend fun setHasProviders(has: Boolean) {
-        withContext(Dispatchers.Main) {
-            binding.hasProviders = has
-        }
-    }
-
-    suspend fun showAbout(versionName: String) {
-        withContext(Dispatchers.Main) {
-            val binding = DesignAboutBinding.inflate(context.layoutInflater).apply {
-                this.versionName = versionName
-            }
-
-            AlertDialog.Builder(context)
-                .setView(binding.root)
-                .show()
-        }
-    }
-
-    init {
-        binding.self = this
-
-        binding.colorClashStarted = context.resolveThemedColor(android.R.attr.colorPrimary)
-        binding.colorClashStopped = context.resolveThemedColor(R.attr.colorClashStopped)
-    }
-
-    fun request(request: Request) {
-        requests.trySend(request)
-    }
+  fun request(request: Request) {
+    requests.trySend(request)
+  }
 }
