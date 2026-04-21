@@ -4,6 +4,8 @@ import android.content.Context
 import android.view.View
 import android.widget.ImageView
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.selectable
+import androidx.compose.foundation.toggleable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -40,6 +42,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.res.dimensionResource
@@ -88,7 +91,7 @@ class AccessControlDesign(
         selected = selectedState,
         initialSort = uiStore.accessControlSort,
         initialReverse = uiStore.accessControlReverse,
-        initialHideSystemApps = !uiStore.accessControlSystemApp,
+        initialShowSystemApps = uiStore.accessControlSystemApp,
         onToggleApp = ::toggleApp,
         onSelectAll = { requests.trySend(Request.SelectAll) },
         onSelectNone = { requests.trySend(Request.SelectNone) },
@@ -103,8 +106,8 @@ class AccessControlDesign(
           uiStore.accessControlReverse = it
           requests.trySend(Request.ReloadApps)
         },
-        onUpdateHideSystemApps = {
-          uiStore.accessControlSystemApp = !it
+        onUpdateShowSystemApps = {
+          uiStore.accessControlSystemApp = it
           requests.trySend(Request.ReloadApps)
         },
       )
@@ -137,7 +140,7 @@ private fun AccessControlScreen(
   selected: Set<String>,
   initialSort: AppInfoSort,
   initialReverse: Boolean,
-  initialHideSystemApps: Boolean,
+  initialShowSystemApps: Boolean,
   onToggleApp: (String) -> Unit,
   onSelectAll: () -> Unit,
   onSelectNone: () -> Unit,
@@ -146,11 +149,11 @@ private fun AccessControlScreen(
   onExport: () -> Unit,
   onUpdateSort: (AppInfoSort) -> Unit,
   onUpdateReverse: (Boolean) -> Unit,
-  onUpdateHideSystemApps: (Boolean) -> Unit,
+  onUpdateShowSystemApps: (Boolean) -> Unit,
 ) {
   var sort by rememberSaveable { mutableStateOf(initialSort) }
   var reverse by rememberSaveable { mutableStateOf(initialReverse) }
-  var hideSystemApps by rememberSaveable { mutableStateOf(initialHideSystemApps) }
+  var showSystemApps by rememberSaveable { mutableStateOf(initialShowSystemApps) }
   var showSearch by rememberSaveable { mutableStateOf(false) }
   var showMenu by rememberSaveable { mutableStateOf(false) }
 
@@ -158,7 +161,7 @@ private fun AccessControlScreen(
     AccessControlMenuSheet(
       sort = sort,
       reverse = reverse,
-      hideSystemApps = hideSystemApps,
+      showSystemApps = showSystemApps,
       onDismiss = { showMenu = false },
       onSelectAll = {
         showMenu = false
@@ -188,9 +191,9 @@ private fun AccessControlScreen(
         reverse = it
         onUpdateReverse(it)
       },
-      onUpdateHideSystemApps = {
-        hideSystemApps = it
-        onUpdateHideSystemApps(it)
+      onUpdateShowSystemApps = {
+        showSystemApps = it
+        onUpdateShowSystemApps(it)
       },
     )
   }
@@ -239,7 +242,7 @@ private fun AccessControlScreen(
 private fun AccessControlMenuSheet(
   sort: AppInfoSort,
   reverse: Boolean,
-  hideSystemApps: Boolean,
+  showSystemApps: Boolean,
   modifier: Modifier = Modifier,
   onDismiss: () -> Unit,
   onSelectAll: () -> Unit,
@@ -249,7 +252,7 @@ private fun AccessControlMenuSheet(
   onExport: () -> Unit,
   onUpdateSort: (AppInfoSort) -> Unit,
   onUpdateReverse: (Boolean) -> Unit,
-  onUpdateHideSystemApps: (Boolean) -> Unit,
+  onUpdateShowSystemApps: (Boolean) -> Unit,
 ) {
   ModalBottomSheet(
     modifier = modifier,
@@ -259,7 +262,7 @@ private fun AccessControlMenuSheet(
     AccessControlMenuContent(
       sort = sort,
       reverse = reverse,
-      hideSystemApps = hideSystemApps,
+      showSystemApps = showSystemApps,
       onSelectAll = onSelectAll,
       onSelectNone = onSelectNone,
       onSelectInvert = onSelectInvert,
@@ -267,7 +270,7 @@ private fun AccessControlMenuSheet(
       onExport = onExport,
       onUpdateSort = onUpdateSort,
       onUpdateReverse = onUpdateReverse,
-      onUpdateHideSystemApps = onUpdateHideSystemApps,
+      onUpdateShowSystemApps = onUpdateShowSystemApps,
     )
     Spacer(modifier = Modifier.height(16.dp))
   }
@@ -346,7 +349,7 @@ private fun AccessControlSearchContent(
 private fun AccessControlMenuContent(
   sort: AppInfoSort,
   reverse: Boolean,
-  hideSystemApps: Boolean,
+  showSystemApps: Boolean,
   onSelectAll: () -> Unit,
   onSelectNone: () -> Unit,
   onSelectInvert: () -> Unit,
@@ -354,7 +357,7 @@ private fun AccessControlMenuContent(
   onExport: () -> Unit,
   onUpdateSort: (AppInfoSort) -> Unit,
   onUpdateReverse: (Boolean) -> Unit,
-  onUpdateHideSystemApps: (Boolean) -> Unit,
+  onUpdateShowSystemApps: (Boolean) -> Unit,
 ) {
   Column(modifier = Modifier.fillMaxWidth()) {
     AccessControlMenuAction(text = stringResource(R.string.select_all), onClick = onSelectAll)
@@ -364,8 +367,8 @@ private fun AccessControlMenuContent(
     AccessControlMenuSectionTitle(text = stringResource(R.string.filter))
     AccessControlMenuCheckAction(
       text = stringResource(R.string.system_apps),
-      checked = hideSystemApps,
-      onCheckedChange = onUpdateHideSystemApps,
+      checked = showSystemApps,
+      onCheckedChange = onUpdateShowSystemApps,
     )
 
     AccessControlMenuSectionTitle(text = stringResource(R.string.sort))
@@ -432,7 +435,7 @@ private fun AccessControlMenuSortAction(text: String, checked: Boolean, onClick:
   Row(
     modifier =
       Modifier.fillMaxWidth()
-        .clickable(onClick = onClick)
+        .selectable(selected = checked, onClick = onClick, role = Role.RadioButton)
         .padding(horizontal = 8.dp, vertical = 6.dp),
     verticalAlignment = Alignment.CenterVertically,
   ) {
@@ -450,7 +453,7 @@ private fun AccessControlMenuCheckAction(
   Row(
     modifier =
       Modifier.fillMaxWidth()
-        .clickable(onClick = { onCheckedChange(!checked) })
+        .toggleable(value = checked, onValueChange = onCheckedChange, role = Role.Checkbox)
         .padding(horizontal = 8.dp, vertical = 6.dp),
     verticalAlignment = Alignment.CenterVertically,
   ) {
