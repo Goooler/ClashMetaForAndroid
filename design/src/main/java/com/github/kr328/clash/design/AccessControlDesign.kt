@@ -168,14 +168,38 @@ private fun AccessControlScreen(
         sort = sort,
         reverse = reverse,
         showSystemApps = showSystemApps,
-        onSelectAll = onSelectAll,
-        onSelectNone = onSelectNone,
-        onSelectInvert = onSelectInvert,
-        onImport = onImport,
-        onExport = onExport,
-        onUpdateSort = onUpdateSort,
-        onUpdateReverse = onUpdateReverse,
-        onUpdateShowSystemApps = onUpdateShowSystemApps,
+        onSelectAll = {
+          showMenu = false
+          onSelectAll()
+        },
+        onSelectNone = {
+          showMenu = false
+          onSelectNone()
+        },
+        onSelectInvert = {
+          showMenu = false
+          onSelectInvert()
+        },
+        onImport = {
+          showMenu = false
+          onImport()
+        },
+        onExport = {
+          showMenu = false
+          onExport()
+        },
+        onUpdateSort = {
+          showMenu = false
+          onUpdateSort(it)
+        },
+        onUpdateReverse = {
+          showMenu = false
+          onUpdateReverse(it)
+        },
+        onUpdateShowSystemApps = {
+          showMenu = false
+          onUpdateShowSystemApps(it)
+        },
       )
       Spacer(modifier = Modifier.height(16.dp))
     }
