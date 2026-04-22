@@ -39,6 +39,5 @@ androidComponents.onVariants { variant ->
     ?.addAll(
       "-DGO_SOURCE:STRING=$golangSource",
       "-DGO_OUTPUT:STRING=${goBaseOutputDir.get().asFile}",
-      "-DFLAVOR_NAME:STRING=${variant.flavorName.orEmpty()}",
     )
 }

@@ -4,8 +4,8 @@ cmake_minimum_required(VERSION 4.0)
 
 message(STATUS "CMAKE_CURRENT_SOURCE_DIR= ${CMAKE_CURRENT_SOURCE_DIR}")
 execute_process(
-  COMMAND git submodule foreach git log -1 --format=%H   
-  WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} 
+  COMMAND git submodule foreach git log -1 --format=%H
+  WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
   OUTPUT_VARIABLE COMMIT_HASH
 )
 string(REPLACE "\n" ";" COMMIT_HASH "${COMMIT_HASH}")
@@ -17,7 +17,7 @@ message(STATUS "git hash= ${COMMIT_HASH}")
 # 获取分支名称
 execute_process(
   COMMAND git submodule foreach git branch -r --contains ${COMMIT_HASH}
-  WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} 
+  WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
   OUTPUT_VARIABLE CURRENT_BRANCH
 )
 string(REPLACE "\n" ";" CURRENT_BRANCH "${CURRENT_BRANCH}")
@@ -48,14 +48,14 @@ project(clash-bridge C)
 set(CMAKE_POSITION_INDEPENDENT_CODE on)
 set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} -O3")
 
-set(GO_OUTPUT_BASE ${GO_OUTPUT}/${FLAVOR_NAME})
+set(GO_OUTPUT_BASE ${GO_OUTPUT}/)
 
 if ("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
-    set(GO_OUTPUT_BASE "${GO_OUTPUT_BASE}Debug")
+    set(GO_OUTPUT_BASE "${GO_OUTPUT_BASE}debug")
 elseif ("${CMAKE_BUILD_TYPE}" STREQUAL "Release")
-    set(GO_OUTPUT_BASE "${GO_OUTPUT_BASE}Release")
+    set(GO_OUTPUT_BASE "${GO_OUTPUT_BASE}release")
 elseif ("${CMAKE_BUILD_TYPE}" STREQUAL "RelWithDebInfo")
-    set(GO_OUTPUT_BASE "${GO_OUTPUT_BASE}Release")
+    set(GO_OUTPUT_BASE "${GO_OUTPUT_BASE}release")
 else ()
     message(FATAL_ERROR "Unknown build type ${CMAKE_BUILD_TYPE}")
 endif ()
