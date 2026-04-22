@@ -9,7 +9,6 @@ import androidx.core.graphics.drawable.IconCompat
 import com.github.kr328.clash.common.Global
 import com.github.kr328.clash.common.constants.Intents
 import com.github.kr328.clash.common.log.Log
-import com.github.kr328.clash.design.R as DesignR
 import com.github.kr328.clash.design.store.UiStore
 import com.github.kr328.clash.remote.Remote
 import com.github.kr328.clash.service.util.sendServiceRecreated
@@ -57,8 +56,8 @@ class MainApplication : Application() {
 
     val toggle =
       ShortcutInfoCompat.Builder(this, "toggle_clash")
-        .setShortLabel(getString(DesignR.string.shortcut_toggle_short))
-        .setLongLabel(getString(DesignR.string.shortcut_toggle_long))
+        .setShortLabel(getString(R.string.shortcut_toggle_short))
+        .setLongLabel(getString(R.string.shortcut_toggle_long))
         .setIcon(icon)
         .setIntent(
           Intent(Intents.ACTION_TOGGLE_CLASH)
@@ -70,8 +69,8 @@ class MainApplication : Application() {
 
     val start =
       ShortcutInfoCompat.Builder(this, "start_clash")
-        .setShortLabel(getString(DesignR.string.shortcut_start_short))
-        .setLongLabel(getString(DesignR.string.shortcut_start_long))
+        .setShortLabel(getString(R.string.shortcut_start_short))
+        .setLongLabel(getString(R.string.shortcut_start_long))
         .setIcon(icon)
         .setIntent(
           Intent(Intents.ACTION_START_CLASH)
@@ -83,8 +82,8 @@ class MainApplication : Application() {
 
     val stop =
       ShortcutInfoCompat.Builder(this, "stop_clash")
-        .setShortLabel(getString(DesignR.string.shortcut_stop_short))
-        .setLongLabel(getString(DesignR.string.shortcut_stop_long))
+        .setShortLabel(getString(R.string.shortcut_stop_short))
+        .setLongLabel(getString(R.string.shortcut_stop_long))
         .setIcon(icon)
         .setIntent(
           Intent(Intents.ACTION_STOP_CLASH)
