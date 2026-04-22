@@ -1,5 +1,6 @@
 package com.github.kr328.clash.design.component
 
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -67,7 +68,7 @@ fun ModelTextInputDialog(
         isError = inputError != null,
         supportingText = inputError?.let { { Text(it) } },
         singleLine = true,
-        modifier = Modifier.focusRequester(focusRequester),
+        modifier = Modifier.fillMaxWidth().focusRequester(focusRequester),
       )
     },
     confirmButton = {
