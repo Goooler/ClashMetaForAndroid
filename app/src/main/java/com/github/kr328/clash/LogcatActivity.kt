@@ -165,14 +165,12 @@ class LogcatActivity : BaseActivity<LogcatDesign>() {
           design.startExportProgress(messages.size)
 
           try {
-            withContext(Dispatchers.IO) {
-              it.writeHeader(file.date)
+            it.writeHeader(file.date)
 
-              messages.forEachIndexed { idx, msg ->
-                design.updateExportProgress(idx + 1)
+            messages.forEachIndexed { idx, msg ->
+              design.updateExportProgress(idx + 1)
 
-                it.writeMessage(msg)
-              }
+              it.writeMessage(msg)
             }
           } finally {
             design.finishExportProgress()
