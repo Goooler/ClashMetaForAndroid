@@ -1,7 +1,6 @@
 package com.github.kr328.clash.design
 
 import android.content.Context
-import android.view.View
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -76,7 +75,8 @@ class MainDesign(context: Context) : Design<MainDesign.Request>(context) {
   private var hasProviders by mutableStateOf(false)
   private var aboutVersionName by mutableStateOf<String?>(null)
 
-  override val root: View by composeView {
+  @Composable
+  override fun Content() {
     MihomoTheme {
       MainScreen(
         clashRunning = clashRunning,

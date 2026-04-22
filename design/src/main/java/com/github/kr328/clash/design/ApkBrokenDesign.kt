@@ -1,7 +1,6 @@
 package com.github.kr328.clash.design
 
 import android.content.Context
-import android.view.View
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -13,7 +12,10 @@ import com.github.kr328.clash.design.ui.theme.MihomoTheme
 import com.github.kr328.clash.design.ui.theme.PreviewMihomo
 
 class ApkBrokenDesign(context: Context) : Design<Unit>(context) {
-  override val root: View by composeView { MihomoTheme { ApkBrokenScreen() } }
+  @Composable
+  override fun Content() {
+    MihomoTheme { ApkBrokenScreen() }
+  }
 }
 
 @Composable

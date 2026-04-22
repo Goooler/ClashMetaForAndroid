@@ -2,7 +2,6 @@ package com.github.kr328.clash.design
 
 import android.content.Context
 import android.content.Intent
-import android.view.View
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Column
@@ -53,7 +52,8 @@ class NewProfileDesign(context: Context) : Design<NewProfileDesign.Request>(cont
 
   private var providers by mutableStateOf<List<ProfileProvider>>(emptyList())
 
-  override val root: View by composeView {
+  @Composable
+  override fun Content() {
     MihomoTheme {
       NewProfileScreen(
         providers = providers,

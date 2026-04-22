@@ -1,7 +1,6 @@
 package com.github.kr328.clash.design
 
 import android.content.Context
-import android.view.View
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -69,7 +68,8 @@ class FilesDesign(context: Context) : Design<FilesDesign.Request>(context) {
   private var currentInBaseDir by mutableStateOf(false)
   private var configurationEditable by mutableStateOf(false)
 
-  override val root: View by composeView {
+  @Composable
+  override fun Content() {
     MihomoTheme {
       FilesScreen(
         files = files,

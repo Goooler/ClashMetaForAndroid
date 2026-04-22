@@ -2,7 +2,6 @@ package com.github.kr328.clash.design
 
 import android.content.Context
 import android.os.Build
-import android.view.View
 import androidx.annotation.StringRes
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -34,19 +33,19 @@ import com.github.kr328.clash.design.ui.theme.MihomoTheme
 import com.github.kr328.clash.design.ui.theme.PreviewMihomo
 import com.github.kr328.clash.service.model.AccessControlMode
 import com.github.kr328.clash.service.store.ServiceStore
-import kotlinx.coroutines.launch
 
 class NetworkSettingsDesign(
   context: Context,
-  uiStore: UiStore,
-  serviceStore: ServiceStore,
-  running: Boolean,
+  private val uiStore: UiStore,
+  private val serviceStore: ServiceStore,
+  private val running: Boolean,
 ) : Design<NetworkSettingsDesign.Request>(context) {
   sealed interface Request {
     data object StartAccessControlList : Request
   }
 
-  override val root: View by composeView {
+  @Composable
+  override fun Content() {
     MihomoTheme {
       NetworkSettingsScreen(
         running = running,
@@ -74,7 +73,7 @@ class NetworkSettingsDesign(
 
   init {
     if (running) {
-      launch { showToast(R.string.options_unavailable, ToastDuration.Indefinite) }
+      showToast(R.string.options_unavailable, ToastDuration.Indefinite)
     }
   }
 }

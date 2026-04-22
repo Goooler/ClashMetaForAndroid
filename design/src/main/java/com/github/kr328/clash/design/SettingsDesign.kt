@@ -1,7 +1,6 @@
 package com.github.kr328.clash.design
 
 import android.content.Context
-import android.view.View
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.foundation.clickable
@@ -37,7 +36,8 @@ class SettingsDesign(context: Context) : Design<SettingsDesign.Request>(context)
     data object StartMetaFeature : Request
   }
 
-  override val root: View by composeView {
+  @Composable
+  override fun Content() {
     MihomoTheme { SettingsScreen(onRequest = { requests.trySend(it) }) }
   }
 }

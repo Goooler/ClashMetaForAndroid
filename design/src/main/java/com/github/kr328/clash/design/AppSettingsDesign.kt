@@ -1,7 +1,6 @@
 package com.github.kr328.clash.design
 
 import android.content.Context
-import android.view.View
 import androidx.annotation.StringRes
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -36,17 +35,18 @@ import com.github.kr328.clash.service.store.ServiceStore
 
 class AppSettingsDesign(
   context: Context,
-  uiStore: UiStore,
-  serviceStore: ServiceStore,
-  behavior: Behavior,
-  running: Boolean,
-  onHideIconChange: (hide: Boolean) -> Unit,
+  private val uiStore: UiStore,
+  private val serviceStore: ServiceStore,
+  private val behavior: Behavior,
+  private val running: Boolean,
+  private val onHideIconChange: (hide: Boolean) -> Unit,
 ) : Design<AppSettingsDesign.Request>(context) {
   sealed interface Request {
     data object ReCreateAllActivities : Request
   }
 
-  override val root: View by composeView {
+  @Composable
+  override fun Content() {
     MihomoTheme {
       AppSettingsScreen(
         running = running,

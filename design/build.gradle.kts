@@ -21,10 +21,8 @@ dependencies {
   implementation(libs.androidx.lifecycle.viewmodel.compose)
 
   implementation(libs.androidx.core)
-  implementation(libs.androidx.activity)
   implementation(libs.androidx.coordinator)
   implementation(libs.androidx.recyclerview)
-  implementation(libs.androidx.fragment)
   implementation(libs.androidx.viewpager)
   implementation(libs.google.material)
   implementation(libs.composePreference)

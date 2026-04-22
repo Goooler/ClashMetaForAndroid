@@ -1,7 +1,6 @@
 package com.github.kr328.clash.design
 
 import android.content.Context
-import android.view.View
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -34,8 +33,10 @@ import com.github.kr328.clash.design.ui.theme.PreviewMihomo
 import me.zhanghai.compose.preference.ProvidePreferenceLocals
 import me.zhanghai.compose.preference.preferenceCategory
 
-class MetaFeatureSettingsDesign(context: Context, configuration: ConfigurationOverride) :
-  Design<MetaFeatureSettingsDesign.Request>(context) {
+class MetaFeatureSettingsDesign(
+  context: Context,
+  private val configuration: ConfigurationOverride,
+) : Design<MetaFeatureSettingsDesign.Request>(context) {
   sealed interface Request {
     data object ResetOverride : Request
 
@@ -48,7 +49,8 @@ class MetaFeatureSettingsDesign(context: Context, configuration: ConfigurationOv
     data object ImportASN : Request
   }
 
-  override val root: View by composeView {
+  @Composable
+  override fun Content() {
     MihomoTheme {
       MetaFeatureSettingsScreen(
         configuration = configuration,
