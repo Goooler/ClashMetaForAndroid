@@ -30,15 +30,14 @@ fun ModelTextInputDialog(
   onDismiss: () -> Unit,
   onConfirm: (String) -> Unit,
 ) {
+  val initialText = initialValue.orEmpty()
+
   var inputText by remember {
     mutableStateOf(
-      TextFieldValue(
-        text = initialValue.orEmpty(),
-        selection = TextRange(initialValue?.length ?: 0),
-      )
+      TextFieldValue(text = initialText, selection = TextRange(initialValue?.length ?: 0))
     )
   }
-  var inputError by remember { mutableStateOf<CharSequence?>(null) }
+  var inputError by remember { mutableStateOf(if (!validator(initialText)) error else null) }
   val focusRequester = remember { FocusRequester() }
   val keyboardController = LocalSoftwareKeyboardController.current
 
