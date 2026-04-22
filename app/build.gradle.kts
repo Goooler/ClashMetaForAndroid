@@ -68,7 +68,7 @@ androidComponents {
     variant.outputs.forEach { output ->
       with(output) {
         val abiName =
-          output.filters.find { it.filterType == FilterConfiguration.FilterType.ABI }?.identifier
+          filters.find { it.filterType == FilterConfiguration.FilterType.ABI }?.identifier
             ?: "universal"
         val newApkName = "cmfa-${versionName.get()}-$abiName-${variant.buildType}.apk"
         outputFileName = newApkName
