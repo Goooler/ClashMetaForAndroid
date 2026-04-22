@@ -1,6 +1,5 @@
 -verbose
 -allowaccessmodification
--repackageclasses
 
 -keepattributes SourceFile,
                 LineNumberTable
