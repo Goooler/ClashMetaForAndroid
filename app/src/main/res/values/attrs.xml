@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <attr name="fullScreenDialogTheme" format="reference" />
-
     <attr name="colorClashStopped" format="color" />
     <attr name="colorControlDisabled" format="color" />
     <attr name="colorLogo" format="color" />
