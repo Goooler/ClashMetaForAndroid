@@ -22,10 +22,10 @@ import com.github.kr328.clash.design.util.Validator
 
 @Composable
 fun ModelTextInputDialog(
-  title: CharSequence,
+  title: String,
   initialValue: String? = null,
-  hint: CharSequence? = null,
-  error: CharSequence? = null,
+  hint: String? = null,
+  error: String? = null,
   validator: Validator = { true },
   onDismiss: () -> Unit,
   onConfirm: (String) -> Unit,
@@ -50,7 +50,7 @@ fun ModelTextInputDialog(
 
   AlertDialog(
     onDismissRequest = onDismiss,
-    title = { Text(title.toString()) },
+    title = { Text(title) },
     text = {
       OutlinedTextField(
         value = inputText,
@@ -63,9 +63,9 @@ fun ModelTextInputDialog(
               null
             }
         },
-        label = hint?.let { { Text(it.toString()) } },
+        label = hint?.let { { Text(it) } },
         isError = inputError != null,
-        supportingText = inputError?.let { { Text(it.toString()) } },
+        supportingText = inputError?.let { { Text(it) } },
         singleLine = true,
         modifier = Modifier.focusRequester(focusRequester),
       )
