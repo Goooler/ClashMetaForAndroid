@@ -280,10 +280,10 @@
     <string name="http">HTTP</string>
     <string name="inline">Inline</string>
     <string name="compatible">Compatible</string>
-    <string name="format_update_complete">Update %s complete</string>
+    <string name="format_update_complete">Update %s completed</string>
     <string name="format_update_failure">Update %1$s: %2$s</string>
     <string name="format_update_provider_failure">Update %1$s: %2$s</string>
-    <string name="update_successfully">Update successfully</string>
+    <string name="update_successfully">Update successful</string>
     <string name="update_failure">Update failure</string>
     <string name="update_all">Update All</string>
 
