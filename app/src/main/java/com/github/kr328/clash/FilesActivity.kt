@@ -2,7 +2,9 @@ package com.github.kr328.clash
 
 import android.content.Intent
 import android.net.Uri
+import android.provider.OpenableColumns
 import androidx.activity.result.contract.ActivityResultContracts
+import com.github.kr328.clash.common.util.PatternFileName
 import com.github.kr328.clash.common.util.grantPermissions
 import com.github.kr328.clash.common.util.uuid
 import com.github.kr328.clash.design.FilesDesign
@@ -73,7 +75,7 @@ class FilesActivity : BaseActivity<FilesDesign>() {
 
                 if (uri != null) {
                   if (it.file == null) {
-                    client.importDocument(stack.last(), uri, uri.fileName ?: "File")
+                    client.importDocument(stack.last(), uri, sanitizeImportName(uri))
                   } else {
                     client.copyDocument(it.file!!.id, uri)
                   }
@@ -118,5 +120,29 @@ class FilesActivity : BaseActivity<FilesDesign>() {
       }
 
     swapFiles(files, stack.empty())
+  }
+
+  private fun sanitizeImportName(uri: Uri): String {
+    val rawName = queryDisplayName(uri) ?: uri.fileName ?: ""
+    val normalized =
+      rawName
+        .substringBefore('?')
+        .substringBefore('#')
+        .substringAfterLast('/')
+        .substringAfterLast(':')
+        .trim()
+    val sanitized = normalized.replace(':', '_')
+
+    return sanitized.takeIf { it.isNotBlank() && PatternFileName.matches(it) } ?: "File"
+  }
+
+  private fun queryDisplayName(uri: Uri): String? {
+    return contentResolver
+      .query(uri, arrayOf(OpenableColumns.DISPLAY_NAME), null, null, null)
+      ?.use {
+        if (!it.moveToFirst()) return@use null
+
+        it.getString(0)
+      }
   }
 }
