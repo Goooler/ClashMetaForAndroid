@@ -134,7 +134,7 @@ class LogcatService : Service(), CoroutineScope by CoroutineScope(Dispatchers.De
     NotificationManagerCompat.from(this)
       .createNotificationChannel(
         NotificationChannelCompat.Builder(CHANNEL_ID, NotificationManagerCompat.IMPORTANCE_DEFAULT)
-          .setName(getString(com.github.kr328.clash.design.R.string.clash_logcat))
+          .setName(getString(com.github.kr328.clash.R.string.clash_logcat))
           .build()
       )
   }
@@ -143,9 +143,9 @@ class LogcatService : Service(), CoroutineScope by CoroutineScope(Dispatchers.De
     val notification =
       NotificationCompat.Builder(this, CHANNEL_ID)
         .setSmallIcon(com.github.kr328.clash.service.R.drawable.ic_logo_service)
-        .setColor(getColorCompat(com.github.kr328.clash.design.R.color.color_clash_light))
-        .setContentTitle(getString(com.github.kr328.clash.design.R.string.clash_logcat))
-        .setContentText(getString(com.github.kr328.clash.design.R.string.running))
+        .setColor(getColorCompat(com.github.kr328.clash.R.color.color_clash_light))
+        .setContentTitle(getString(com.github.kr328.clash.R.string.clash_logcat))
+        .setContentText(getString(com.github.kr328.clash.R.string.running))
         .setContentIntent(
           PendingIntent.getActivity(
             this,

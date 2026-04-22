@@ -43,4 +43,4 @@ enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
 enableFeaturePreview("STABLE_CONFIGURATION_CACHE")
 
-include(":app", ":core", ":service", ":design", ":common")
+include(":app", ":core", ":service", ":common")

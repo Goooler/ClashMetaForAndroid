@@ -2,7 +2,6 @@ package com.github.kr328.clash
 
 import com.github.kr328.clash.common.util.intent
 import com.github.kr328.clash.design.ProvidersDesign
-import com.github.kr328.clash.design.R
 import com.github.kr328.clash.design.util.showExceptionToast
 import com.github.kr328.clash.util.withClash
 import kotlinx.coroutines.isActive
