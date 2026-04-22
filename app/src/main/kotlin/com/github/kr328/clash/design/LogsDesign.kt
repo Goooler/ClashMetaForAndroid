@@ -134,8 +134,8 @@ private fun LogsScreen(
           modifier =
             Modifier.fillMaxWidth()
               .padding(
-                start = 65.dp,
-                end = 20.dp,
+                start = dimens.itemHeaderComponentSize + dimens.itemHeaderMargin * 2,
+                end = dimens.settingsItemEndPadding,
                 top = dimens.itemPaddingVertical,
                 bottom = dimens.itemPaddingVertical,
               ),

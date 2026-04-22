@@ -374,7 +374,7 @@ private fun PropertiesActionItem(
       )
     }
   }
-  Spacer(modifier = Modifier.height(mihomoDimens.propertiesElementMarginVertical))
+  Spacer(modifier = Modifier.height(dimens.propertiesElementMarginVertical))
 }
 
 @PreviewMihomo
