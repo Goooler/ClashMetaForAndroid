@@ -1,7 +1,6 @@
 package com.github.kr328.clash.design
 
 import android.content.Context
-import android.view.View
 import android.widget.ImageView
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -68,7 +67,7 @@ import kotlinx.coroutines.withContext
 
 class AccessControlDesign(
   context: Context,
-  uiStore: UiStore,
+  private val uiStore: UiStore,
   private val selected: MutableSet<String>,
 ) : Design<AccessControlDesign.Request>(context) {
   sealed interface Request {
@@ -91,7 +90,8 @@ class AccessControlDesign(
   val apps: List<AppInfo>
     get() = appsState
 
-  override val root: View by composeView {
+  @Composable
+  override fun Content() {
     MihomoTheme {
       AccessControlScreen(
         apps = appsState,

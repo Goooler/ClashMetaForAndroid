@@ -1,29 +1,18 @@
 package com.github.kr328.clash.design
 
+import android.app.Activity
 import android.content.Context
 import android.view.View
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.platform.ComposeView
-import androidx.compose.ui.platform.ViewCompositionStrategy
-import com.github.kr328.clash.common.store.unsafeLazy
 import com.github.kr328.clash.design.ui.ToastDuration
 import com.google.android.material.snackbar.Snackbar
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 
-sealed class Design<R>(val context: Context) :
-  CoroutineScope by CoroutineScope(Dispatchers.Unconfined) {
-  abstract val root: View
+sealed class Design<R>(val context: Context) {
 
   val requests: Channel<R> = Channel(Channel.UNLIMITED)
 
-  protected fun composeView(content: @Composable () -> Unit): Lazy<ComposeView> = unsafeLazy {
-    ComposeView(context = context).apply {
-      setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
-      setContent(content = content)
-    }
-  }
+  @Composable abstract fun Content()
 
   fun showToast(resId: Int, duration: ToastDuration, configure: Snackbar.() -> Unit = {}) {
     return showToast(context.getString(resId), duration, configure)
@@ -34,7 +23,7 @@ sealed class Design<R>(val context: Context) :
     duration: ToastDuration,
     configure: Snackbar.() -> Unit = {},
   ) {
-    root.post {
+    (context as Activity).findViewById<View>(android.R.id.content)?.let { root ->
       Snackbar.make(
           root,
           message,

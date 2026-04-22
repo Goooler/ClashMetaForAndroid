@@ -1,7 +1,6 @@
 package com.github.kr328.clash.design
 
 import android.content.Context
-import android.view.View
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -56,13 +55,14 @@ import me.zhanghai.compose.preference.Preference
 import me.zhanghai.compose.preference.ProvidePreferenceLocals
 import me.zhanghai.compose.preference.preferenceCategory
 
-class OverrideSettingsDesign(context: Context, configuration: ConfigurationOverride) :
+class OverrideSettingsDesign(context: Context, private val configuration: ConfigurationOverride) :
   Design<OverrideSettingsDesign.Request>(context) {
   sealed interface Request {
     data object ResetOverride : Request
   }
 
-  override val root: View by composeView {
+  @Composable
+  override fun Content() {
     MihomoTheme {
       OverrideSettingsScreen(
         configuration = configuration,

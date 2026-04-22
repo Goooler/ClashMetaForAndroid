@@ -1,7 +1,6 @@
 package com.github.kr328.clash.design
 
 import android.content.Context
-import android.view.View
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -54,7 +53,8 @@ class LogsDesign(context: Context) : Design<LogsDesign.Request>(context) {
 
   private var logs by mutableStateOf<List<LogFile>>(emptyList())
 
-  override val root: View by composeView {
+  @Composable
+  override fun Content() {
     MihomoTheme {
       LogsScreen(
         logs = logs,

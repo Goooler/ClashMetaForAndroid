@@ -3,8 +3,8 @@ package com.github.kr328.clash
 import android.app.ActivityManager
 import android.content.res.Configuration
 import android.os.Bundle
-import android.view.View
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContract
 import androidx.core.content.getSystemService
@@ -41,14 +41,6 @@ abstract class BaseActivity<D : Design<*>> :
     get() = Remote.broadcasts.clashRunning
 
   protected var design: D? = null
-    set(value) {
-      field = value
-      if (value != null) {
-        setContentView(value.root)
-      } else {
-        setContentView(View(this))
-      }
-    }
 
   private var defer: suspend () -> Unit = {}
   private var deferRunning = false
@@ -75,14 +67,11 @@ abstract class BaseActivity<D : Design<*>> :
       }
     }
 
-  suspend fun setContentDesign(design: D) {
-    suspendCancellableCoroutine {
-      window.decorView.post {
-        this.design = design
-        it.resume(Unit)
-      }
+  suspend fun setContentDesign(design: D) =
+    withContext(Dispatchers.Main) {
+      this@BaseActivity.design = design
+      setContent(content = design::Content)
     }
-  }
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -111,7 +100,6 @@ abstract class BaseActivity<D : Design<*>> :
   }
 
   override fun onDestroy() {
-    design?.cancel()
     cancel()
     super.onDestroy()
   }

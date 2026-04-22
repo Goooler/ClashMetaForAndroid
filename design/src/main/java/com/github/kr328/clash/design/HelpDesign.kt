@@ -2,7 +2,6 @@ package com.github.kr328.clash.design
 
 import android.content.Context
 import android.content.Intent
-import android.view.View
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -19,7 +18,8 @@ import com.github.kr328.clash.design.ui.theme.MihomoTheme
 import com.github.kr328.clash.design.ui.theme.PreviewMihomo
 
 class HelpDesign(context: Context) : Design<Unit>(context) {
-  override val root: View by composeView {
+  @Composable
+  override fun Content() {
     MihomoTheme { HelpScreen(modifier = Modifier.fillMaxSize()) }
   }
 }

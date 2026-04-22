@@ -2,7 +2,6 @@ package com.github.kr328.clash.design
 
 import android.app.Activity
 import android.content.Context
-import android.view.View
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -69,7 +68,8 @@ class PropertiesDesign(context: Context) : Design<PropertiesDesign.Request>(cont
   private var processingState by mutableStateOf(false)
   private val progressBarState = ModelProgressBarState()
 
-  override val root: View by composeView {
+  @Composable
+  override fun Content() {
     MihomoTheme {
       profileState?.let { profile ->
         PropertiesScreen(

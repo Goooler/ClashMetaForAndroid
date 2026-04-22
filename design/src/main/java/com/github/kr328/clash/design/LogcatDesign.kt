@@ -3,7 +3,6 @@ package com.github.kr328.clash.design
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
-import android.view.View
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
@@ -43,7 +42,6 @@ import com.github.kr328.clash.design.ui.theme.PreviewMihomo
 import com.github.kr328.clash.design.util.format
 import java.util.Date
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class LogcatDesign(context: Context, private val streaming: Boolean) :
@@ -61,14 +59,13 @@ class LogcatDesign(context: Context, private val streaming: Boolean) :
   private val exportProgressState = ModelProgressBarState()
 
   private val onCopyMessage: (LogMessage) -> Unit = {
-    launch {
-      val data = ClipData.newPlainText("log_message", it.message)
-      context.getSystemService<ClipboardManager>()?.setPrimaryClip(data)
-      showToast(R.string.copied, ToastDuration.Short)
-    }
+    val data = ClipData.newPlainText("log_message", it.message)
+    context.getSystemService<ClipboardManager>()?.setPrimaryClip(data)
+    showToast(R.string.copied, ToastDuration.Short)
   }
 
-  override val root: View by composeView {
+  @Composable
+  override fun Content() {
     MihomoTheme {
       LogcatScreen(
         title = stringResource(R.string.clash_logcat),

@@ -4,6 +4,7 @@ import java.util.Properties
 
 plugins {
   alias(libs.plugins.android.application)
+  alias(libs.plugins.kotlin.compose)
   alias(libs.plugins.download)
 }
 
@@ -85,8 +86,7 @@ dependencies {
 
   implementation(libs.kotlin.coroutine)
   implementation(libs.androidx.core)
-  implementation(libs.androidx.activity)
-  implementation(libs.androidx.fragment)
+  implementation(libs.androidx.activity.compose)
   implementation(libs.androidx.coordinator)
   implementation(libs.androidx.recyclerview)
   implementation(libs.google.material)

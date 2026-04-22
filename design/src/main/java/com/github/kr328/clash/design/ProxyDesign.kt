@@ -1,7 +1,6 @@
 package com.github.kr328.clash.design
 
 import android.content.Context
-import android.view.View
 import android.widget.Toast
 import androidx.annotation.ColorInt
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -107,7 +106,8 @@ class ProxyDesign(
   private var proxySort by mutableStateOf(uiStore.proxySort)
   private var selectedMode by mutableStateOf(overrideMode)
 
-  override val root: View by composeView {
+  @Composable
+  override fun Content() {
     MihomoTheme {
       ProxyScreen(
         groupNames = groupNames,

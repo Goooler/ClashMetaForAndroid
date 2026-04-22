@@ -1,7 +1,6 @@
 package com.github.kr328.clash.design
 
 import android.content.Context
-import android.view.View
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -62,7 +61,8 @@ class ProvidersDesign(context: Context, providers: List<Provider>) :
       )
     }
 
-  override val root: View by composeView {
+  @Composable
+  override fun Content() {
     MihomoTheme {
       ProvidersScreen(
         states = states,

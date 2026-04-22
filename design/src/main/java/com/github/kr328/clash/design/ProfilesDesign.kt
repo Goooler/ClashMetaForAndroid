@@ -1,7 +1,6 @@
 package com.github.kr328.clash.design
 
 import android.content.Context
-import android.view.View
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -79,7 +78,8 @@ class ProfilesDesign(context: Context) : Design<ProfilesDesign.Request>(context)
   private var hasUpdatableProfile by mutableStateOf(false)
   private var currentTime by mutableLongStateOf(System.currentTimeMillis())
 
-  override val root: View by composeView {
+  @Composable
+  override fun Content() {
     MihomoTheme {
       ProfilesScreen(
         profiles = profiles,
