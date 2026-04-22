@@ -167,7 +167,7 @@ class LogcatActivity : BaseActivity<LogcatDesign>() {
           it.writeHeader(file.date)
 
           messages.forEachIndexed { idx, msg ->
-            design.updateExportProgress(idx)
+            design.updateExportProgress(idx + 1)
 
             it.writeMessage(msg)
           }

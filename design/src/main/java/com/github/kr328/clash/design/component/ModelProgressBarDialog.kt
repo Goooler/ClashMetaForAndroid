@@ -42,8 +42,9 @@ fun ModelProgressBarDialog(state: ModelProgressBarState) {
           CircularProgressIndicator()
         } else {
           val coercedMax = state.max.coerceAtLeast(1)
+          val coercedProgress = state.progress.coerceIn(0, coercedMax)
           LinearProgressIndicator(
-            progress = { state.progress.toFloat() / coercedMax.toFloat() },
+            progress = { coercedProgress.toFloat() / coercedMax.toFloat() },
             modifier = Modifier.fillMaxWidth(),
           )
         }
