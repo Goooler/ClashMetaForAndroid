@@ -39,6 +39,7 @@ import com.github.kr328.clash.design.component.MihomoScaffold
 import com.github.kr328.clash.design.model.LogFile
 import com.github.kr328.clash.design.ui.theme.MihomoTheme
 import com.github.kr328.clash.design.ui.theme.PreviewMihomo
+import com.github.kr328.clash.design.ui.theme.mihomoDimens
 import com.github.kr328.clash.design.util.format
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -78,6 +79,7 @@ private fun LogsScreen(
   onStartLogcat: () -> Unit,
   onOpenFile: (LogFile) -> Unit,
 ) {
+  val dimens = mihomoDimens
   var showDeleteAllDialog by remember { mutableStateOf(false) }
 
   if (showDeleteAllDialog) {
@@ -130,7 +132,13 @@ private fun LogsScreen(
           text = stringResource(R.string.history),
           color = MaterialTheme.colorScheme.primary,
           modifier =
-            Modifier.fillMaxWidth().padding(start = 65.dp, end = 20.dp, top = 16.dp, bottom = 16.dp),
+            Modifier.fillMaxWidth()
+              .padding(
+                start = 65.dp,
+                end = 20.dp,
+                top = dimens.itemPaddingVertical,
+                bottom = dimens.itemPaddingVertical,
+              ),
         )
       }
       items(items = logs, key = LogFile::fileName) { file ->
@@ -152,26 +160,30 @@ private fun LogsActionItem(
   modifier: Modifier = Modifier,
   @DrawableRes icon: Int? = null,
 ) {
+  val dimens = mihomoDimens
   Row(
     modifier = modifier.fillMaxWidth().clickable(onClick = onClick).padding(end = 20.dp),
     verticalAlignment = Alignment.CenterVertically,
   ) {
     Box(
-      modifier = Modifier.size(width = 65.dp, height = 75.dp),
+      modifier = Modifier.size(width = 65.dp, height = dimens.itemMinHeight),
       contentAlignment = Alignment.Center,
     ) {
       if (icon != null) {
         Icon(
           painter = painterResource(icon),
           contentDescription = null,
-          modifier = Modifier.size(30.dp),
+          modifier = Modifier.size(dimens.itemHeaderComponentSize),
         )
       }
     }
 
-    Column(modifier = Modifier.heightIn(min = 75.dp), verticalArrangement = Arrangement.Center) {
+    Column(
+      modifier = Modifier.heightIn(min = dimens.itemMinHeight),
+      verticalArrangement = Arrangement.Center,
+    ) {
       Text(text = title)
-      Spacer(modifier = Modifier.size(5.dp))
+      Spacer(modifier = Modifier.size(dimens.itemTextMargin))
       Text(text = summary, style = MaterialTheme.typography.bodyMedium)
     }
   }

@@ -45,7 +45,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
-import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
@@ -60,6 +59,7 @@ import com.github.kr328.clash.design.model.AppInfoSort
 import com.github.kr328.clash.design.store.UiStore
 import com.github.kr328.clash.design.ui.theme.MihomoTheme
 import com.github.kr328.clash.design.ui.theme.PreviewMihomo
+import com.github.kr328.clash.design.ui.theme.mihomoDimens
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -425,8 +425,9 @@ private fun AccessControlMenuCheckAction(
 
 @Composable
 private fun AccessControlAppItem(app: AppInfo, selected: Boolean, onClick: () -> Unit) {
-  val itemMinHeight = dimensionResource(R.dimen.item_min_height)
-  val itemTextMargin = dimensionResource(R.dimen.item_text_margin)
+  val dimens = mihomoDimens
+  val itemMinHeight = dimens.itemMinHeight
+  val itemTextMargin = dimens.itemTextMargin
 
   Row(
     modifier = Modifier.fillMaxWidth().clickable(onClick = onClick).padding(end = 8.dp),
@@ -441,13 +442,12 @@ private fun AccessControlAppItem(app: AppInfo, selected: Boolean, onClick: () ->
           ImageView(viewContext).apply { scaleType = ImageView.ScaleType.CENTER_CROP }
         },
         update = { it.setImageDrawable(app.icon) },
-        modifier = Modifier.size(dimensionResource(R.dimen.item_header_component_size)),
+        modifier = Modifier.size(dimens.itemHeaderComponentSize),
       )
     }
 
     Column(
-      modifier =
-        Modifier.weight(1f).padding(vertical = dimensionResource(R.dimen.item_padding_vertical)),
+      modifier = Modifier.weight(1f).padding(vertical = dimens.itemPaddingVertical),
       verticalArrangement = Arrangement.Center,
     ) {
       Text(text = app.label, maxLines = 1, overflow = TextOverflow.Ellipsis)

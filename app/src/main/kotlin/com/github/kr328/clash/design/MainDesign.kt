@@ -47,6 +47,7 @@ import com.github.kr328.clash.design.ui.theme.MihomoLightStopped
 import com.github.kr328.clash.design.ui.theme.MihomoOnPrimary
 import com.github.kr328.clash.design.ui.theme.MihomoTheme
 import com.github.kr328.clash.design.ui.theme.PreviewMihomo
+import com.github.kr328.clash.design.ui.theme.mihomoDimens
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -129,23 +130,24 @@ private fun MainScreen(
 ) {
   Surface(modifier = Modifier.fillMaxSize()) {
     val darkTheme = isSystemInDarkTheme()
+    val dimens = mihomoDimens
     val stoppedColor = if (darkTheme) MihomoDarkSurface else MihomoLightStopped
 
     Column(
       modifier =
         Modifier.fillMaxSize()
           .windowInsetsPadding(WindowInsets.safeDrawing)
-          .padding(horizontal = 30.dp)
+          .padding(horizontal = dimens.mainPaddingHorizontal)
           .verticalScroll(rememberScrollState())
     ) {
       Row(
-        modifier = Modifier.fillMaxWidth().height(90.dp),
+        modifier = Modifier.fillMaxWidth().height(dimens.mainTopBannerHeight),
         verticalAlignment = Alignment.CenterVertically,
       ) {
         Image(
           painter = painterResource(R.drawable.ic_clash),
           contentDescription = null,
-          modifier = Modifier.size(50.dp),
+          modifier = Modifier.size(dimens.mainLogoSize),
         )
         Spacer(modifier = Modifier.width(4.dp))
         Text(
@@ -155,7 +157,7 @@ private fun MainScreen(
       }
 
       MainActionCard(
-        modifier = Modifier.padding(vertical = 5.dp),
+        modifier = Modifier.padding(vertical = dimens.mainCardMarginVertical),
         iconRes =
           if (clashRunning) R.drawable.ic_outline_check_circle
           else R.drawable.ic_outline_not_interested,
@@ -171,7 +173,7 @@ private fun MainScreen(
 
       AnimatedVisibility(visible = clashRunning) {
         MainActionCard(
-          modifier = Modifier.padding(vertical = 5.dp),
+          modifier = Modifier.padding(vertical = dimens.mainCardMarginVertical),
           iconRes = R.drawable.ic_baseline_apps,
           text = stringResource(R.string.proxy),
           subtext = mode,
@@ -182,7 +184,7 @@ private fun MainScreen(
       }
 
       MainActionCard(
-        modifier = Modifier.padding(vertical = 5.dp),
+        modifier = Modifier.padding(vertical = dimens.mainCardMarginVertical),
         iconRes = R.drawable.ic_baseline_view_list,
         text = stringResource(R.string.profile),
         subtext =
@@ -195,7 +197,7 @@ private fun MainScreen(
 
       AnimatedVisibility(visible = clashRunning && hasProviders) {
         MainActionLabel(
-          modifier = Modifier.padding(vertical = 2.dp),
+          modifier = Modifier.padding(vertical = dimens.mainLabelMarginVertical),
           iconRes = R.drawable.ic_baseline_swap_vertical_circle,
           text = stringResource(R.string.providers),
           onClick = { onRequest(MainDesign.Request.OpenProviders) },
@@ -203,25 +205,25 @@ private fun MainScreen(
       }
 
       MainActionLabel(
-        modifier = Modifier.padding(vertical = 2.dp),
+        modifier = Modifier.padding(vertical = dimens.mainLabelMarginVertical),
         iconRes = R.drawable.ic_baseline_assignment,
         text = stringResource(R.string.logs),
         onClick = { onRequest(MainDesign.Request.OpenLogs) },
       )
       MainActionLabel(
-        modifier = Modifier.padding(vertical = 2.dp),
+        modifier = Modifier.padding(vertical = dimens.mainLabelMarginVertical),
         iconRes = R.drawable.ic_baseline_settings,
         text = stringResource(R.string.settings),
         onClick = { onRequest(MainDesign.Request.OpenSettings) },
       )
       MainActionLabel(
-        modifier = Modifier.padding(vertical = 2.dp),
+        modifier = Modifier.padding(vertical = dimens.mainLabelMarginVertical),
         iconRes = R.drawable.ic_baseline_help_center,
         text = stringResource(R.string.help),
         onClick = { onRequest(MainDesign.Request.OpenHelp) },
       )
       MainActionLabel(
-        modifier = Modifier.padding(vertical = 2.dp),
+        modifier = Modifier.padding(vertical = dimens.mainLabelMarginVertical),
         iconRes = R.drawable.ic_baseline_info,
         text = stringResource(R.string.about),
         onClick = { onRequest(MainDesign.Request.OpenAbout) },
@@ -242,27 +244,33 @@ private fun MainActionCard(
   onClick: () -> Unit,
   modifier: Modifier = Modifier,
 ) {
+  val dimens = mihomoDimens
   Card(
-    modifier = modifier.fillMaxWidth().heightIn(min = 85.dp),
+    modifier = modifier.fillMaxWidth().heightIn(min = dimens.largeActionCardMinHeight),
     onClick = onClick,
     colors = CardDefaults.cardColors(containerColor = backgroundColor, contentColor = contentColor),
-    elevation = CardDefaults.cardElevation(defaultElevation = 5.dp),
+    elevation = CardDefaults.cardElevation(defaultElevation = dimens.largeActionCardElevation),
   ) {
     Row(
-      modifier = Modifier.fillMaxWidth().padding(horizontal = 20.dp, vertical = 15.dp),
+      modifier =
+        Modifier.fillMaxWidth()
+          .padding(
+            horizontal = dimens.largeItemTrailingMarginHorizontal,
+            vertical = dimens.largeItemPaddingVertical,
+          ),
       verticalAlignment = Alignment.CenterVertically,
     ) {
       Icon(
         painter = painterResource(iconRes),
         contentDescription = null,
-        modifier = Modifier.size(30.dp),
+        modifier = Modifier.size(dimens.largeItemHeaderComponentSize),
         tint = contentColor,
       )
-      Spacer(modifier = Modifier.width(20.dp))
+      Spacer(modifier = Modifier.width(dimens.largeItemTrailingMarginHorizontal))
       Column {
         Text(text = text, style = MaterialTheme.typography.bodyLarge, color = contentColor)
         if (subtext != null) {
-          Spacer(modifier = Modifier.height(5.dp))
+          Spacer(modifier = Modifier.height(dimens.largeItemTextMargin))
           Text(text = subtext, style = MaterialTheme.typography.bodyMedium, color = contentColor)
         }
       }
@@ -277,28 +285,30 @@ private fun MainActionLabel(
   onClick: () -> Unit,
   modifier: Modifier = Modifier,
 ) {
+  val dimens = mihomoDimens
   Row(
     modifier =
       modifier
         .fillMaxWidth()
         .heightIn(min = 60.dp)
         .clickable(onClick = onClick)
-        .padding(vertical = 15.dp),
+        .padding(vertical = dimens.largeItemPaddingVertical),
     verticalAlignment = Alignment.CenterVertically,
   ) {
-    Spacer(modifier = Modifier.width(20.dp))
+    Spacer(modifier = Modifier.width(dimens.largeItemTrailingMarginHorizontal))
     Icon(
       painter = painterResource(iconRes),
       contentDescription = null,
-      modifier = Modifier.size(30.dp),
+      modifier = Modifier.size(dimens.largeItemHeaderComponentSize),
     )
-    Spacer(modifier = Modifier.width(20.dp))
+    Spacer(modifier = Modifier.width(dimens.largeItemTrailingMarginHorizontal))
     Text(text = text, style = MaterialTheme.typography.bodyLarge)
   }
 }
 
 @Composable
 private fun AboutDialog(versionName: String, onDismiss: () -> Unit) {
+  val dimens = mihomoDimens
   AlertDialog(
     onDismissRequest = onDismiss,
     confirmButton = {
@@ -308,7 +318,7 @@ private fun AboutDialog(versionName: String, onDismiss: () -> Unit) {
       Image(
         painter = painterResource(R.drawable.ic_clash),
         contentDescription = null,
-        modifier = Modifier.size(50.dp),
+        modifier = Modifier.size(dimens.aboutIconSize),
       )
     },
     title = {

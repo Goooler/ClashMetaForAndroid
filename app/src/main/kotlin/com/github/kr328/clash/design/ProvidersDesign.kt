@@ -30,7 +30,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
@@ -40,6 +39,7 @@ import com.github.kr328.clash.core.model.Provider
 import com.github.kr328.clash.design.component.MihomoScaffold
 import com.github.kr328.clash.design.ui.theme.MihomoTheme
 import com.github.kr328.clash.design.ui.theme.PreviewMihomo
+import com.github.kr328.clash.design.ui.theme.mihomoDimens
 import com.github.kr328.clash.design.util.elapsedIntervalString
 import com.github.kr328.clash.design.util.type
 import kotlin.time.Duration.Companion.minutes
@@ -147,10 +147,11 @@ private fun ProvidersScreen(
 @Composable
 private fun ProviderItem(state: ProviderItemState, currentTime: Long, onUpdate: () -> Unit) {
   val context = LocalContext.current
-  val itemMinHeight = dimensionResource(R.dimen.item_min_height)
-  val itemHeaderMargin = dimensionResource(R.dimen.item_header_margin)
-  val itemTextMargin = dimensionResource(R.dimen.item_text_margin)
-  val itemMiddleMargin = dimensionResource(R.dimen.item_midden_margin)
+  val dimens = mihomoDimens
+  val itemMinHeight = dimens.itemMinHeight
+  val itemHeaderMargin = dimens.itemHeaderMargin
+  val itemTextMargin = dimens.itemTextMargin
+  val itemMiddleMargin = dimens.itemMiddleMargin
 
   val canUpdate = state.provider.vehicleType != Provider.VehicleType.Inline
 
@@ -172,7 +173,7 @@ private fun ProviderItem(state: ProviderItemState, currentTime: Long, onUpdate: 
       )
       Box(
         modifier =
-          Modifier.size(width = dimensionResource(R.dimen.divider_size), height = itemMinHeight)
+          Modifier.size(width = dimens.dividerSize, height = itemMinHeight)
             .background(MaterialTheme.colorScheme.outline)
       )
       IconButton(
@@ -182,7 +183,7 @@ private fun ProviderItem(state: ProviderItemState, currentTime: Long, onUpdate: 
       ) {
         if (state.updating) {
           CircularProgressIndicator(
-            modifier = Modifier.size(dimensionResource(R.dimen.item_tailing_component_size)),
+            modifier = Modifier.size(dimens.itemTrailingComponentSize),
             strokeWidth = 2.dp,
           )
         } else {

@@ -25,6 +25,7 @@ import com.github.kr328.clash.R
 import com.github.kr328.clash.design.component.SettingsCommonScreen
 import com.github.kr328.clash.design.ui.theme.MihomoTheme
 import com.github.kr328.clash.design.ui.theme.PreviewMihomo
+import com.github.kr328.clash.design.ui.theme.mihomoDimens
 
 class SettingsDesign(context: Context) : Design<SettingsDesign.Request>(context) {
   sealed interface Request {
@@ -85,22 +86,27 @@ private fun SettingsEntryItem(
   onClick: () -> Unit,
   modifier: Modifier = Modifier,
 ) {
+  val dimens = mihomoDimens
   Row(
     modifier =
       modifier
         .fillMaxWidth()
-        .heightIn(min = 75.dp)
+        .heightIn(min = dimens.itemMinHeight)
         .clickable(onClick = onClick)
-        .padding(top = 16.dp, bottom = 16.dp, end = 20.dp),
+        .padding(
+          top = dimens.itemPaddingVertical,
+          bottom = dimens.itemPaddingVertical,
+          end = 20.dp,
+        ),
     verticalAlignment = Alignment.CenterVertically,
   ) {
-    Spacer(modifier = Modifier.width(17.5.dp))
+    Spacer(modifier = Modifier.width(dimens.itemHeaderMargin))
     Icon(
       painter = painterResource(iconRes),
       contentDescription = null,
-      modifier = Modifier.size(30.dp),
+      modifier = Modifier.size(dimens.itemHeaderComponentSize),
     )
-    Spacer(modifier = Modifier.width(17.5.dp))
+    Spacer(modifier = Modifier.width(dimens.itemHeaderMargin))
     Text(text = stringResource(titleRes), style = MaterialTheme.typography.bodyLarge)
   }
 }

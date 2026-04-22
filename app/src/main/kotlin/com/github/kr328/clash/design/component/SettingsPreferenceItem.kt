@@ -20,7 +20,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
+import com.github.kr328.clash.design.ui.theme.mihomoDimens
 
 @Composable
 fun SettingsPreferenceClickableItem(
@@ -31,27 +31,34 @@ fun SettingsPreferenceClickableItem(
   enabled: Boolean = true,
   @DrawableRes iconRes: Int? = null,
 ) {
+  val dimens = mihomoDimens
+  val headerLayoutWidth = dimens.itemHeaderComponentSize + dimens.itemHeaderMargin * 2
+
   Row(
     modifier =
       modifier
         .fillMaxWidth()
-        .heightIn(min = 75.dp)
+        .heightIn(min = dimens.itemMinHeight)
         .clickable(enabled = enabled, onClick = onClick)
-        .padding(top = 16.dp, bottom = 16.dp, end = 20.dp),
+        .padding(
+          top = dimens.itemPaddingVertical,
+          bottom = dimens.itemPaddingVertical,
+          end = dimens.settingsItemEndPadding,
+        ),
     verticalAlignment = Alignment.CenterVertically,
   ) {
     if (iconRes == null) {
-      Spacer(modifier = Modifier.width(65.dp))
+      Spacer(modifier = Modifier.width(headerLayoutWidth))
     } else {
-      Spacer(modifier = Modifier.width(17.5.dp))
+      Spacer(modifier = Modifier.width(dimens.itemHeaderMargin))
       Icon(
         painter = painterResource(iconRes),
         contentDescription = null,
-        modifier = Modifier.size(30.dp),
+        modifier = Modifier.size(dimens.itemHeaderComponentSize),
         tint =
           if (enabled) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.outline,
       )
-      Spacer(modifier = Modifier.width(17.5.dp))
+      Spacer(modifier = Modifier.width(dimens.itemHeaderMargin))
     }
 
     Column {
@@ -67,7 +74,7 @@ fun SettingsPreferenceClickableItem(
         color =
           if (enabled) MaterialTheme.colorScheme.onSurfaceVariant
           else MaterialTheme.colorScheme.outline,
-        modifier = Modifier.padding(top = 5.dp),
+        modifier = Modifier.padding(top = dimens.itemTextMargin),
       )
     }
   }
@@ -83,25 +90,32 @@ fun SettingsPreferenceSwitchItem(
   enabled: Boolean = true,
   @DrawableRes iconRes: Int? = null,
 ) {
+  val dimens = mihomoDimens
+  val headerLayoutWidth = dimens.itemHeaderComponentSize + dimens.itemHeaderMargin * 2
+
   Row(
-    modifier = modifier.fillMaxWidth().heightIn(min = 75.dp).padding(top = 16.dp, bottom = 16.dp),
+    modifier =
+      modifier
+        .fillMaxWidth()
+        .heightIn(min = dimens.itemMinHeight)
+        .padding(top = dimens.itemPaddingVertical, bottom = dimens.itemPaddingVertical),
     verticalAlignment = Alignment.CenterVertically,
   ) {
     if (iconRes == null) {
-      Spacer(modifier = Modifier.width(65.dp))
+      Spacer(modifier = Modifier.width(headerLayoutWidth))
     } else {
-      Spacer(modifier = Modifier.width(17.5.dp))
+      Spacer(modifier = Modifier.width(dimens.itemHeaderMargin))
       Icon(
         painter = painterResource(iconRes),
         contentDescription = null,
-        modifier = Modifier.size(30.dp),
+        modifier = Modifier.size(dimens.itemHeaderComponentSize),
         tint =
           if (enabled) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.outline,
       )
-      Spacer(modifier = Modifier.width(17.5.dp))
+      Spacer(modifier = Modifier.width(dimens.itemHeaderMargin))
     }
 
-    Column(modifier = Modifier.weight(1f).padding(end = 12.dp)) {
+    Column(modifier = Modifier.weight(1f).padding(end = dimens.settingsSwitchContentEndPadding)) {
       Text(
         text = stringResource(titleRes),
         style = MaterialTheme.typography.bodyLarge,
@@ -114,7 +128,7 @@ fun SettingsPreferenceSwitchItem(
         color =
           if (enabled) MaterialTheme.colorScheme.onSurfaceVariant
           else MaterialTheme.colorScheme.outline,
-        modifier = Modifier.padding(top = 5.dp),
+        modifier = Modifier.padding(top = dimens.itemTextMargin),
       )
     }
 
@@ -122,7 +136,7 @@ fun SettingsPreferenceSwitchItem(
       checked = checked,
       onCheckedChange = onCheckedChange,
       enabled = enabled,
-      modifier = Modifier.padding(end = 20.dp),
+      modifier = Modifier.padding(end = dimens.settingsItemEndPadding),
     )
   }
 }

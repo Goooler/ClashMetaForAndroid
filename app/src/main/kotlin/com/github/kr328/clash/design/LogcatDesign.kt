@@ -30,7 +30,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
 import androidx.core.content.getSystemService
 import com.github.kr328.clash.R
 import com.github.kr328.clash.core.model.LogMessage
@@ -40,6 +39,7 @@ import com.github.kr328.clash.design.component.ModelProgressBarState
 import com.github.kr328.clash.design.ui.ToastDuration
 import com.github.kr328.clash.design.ui.theme.MihomoTheme
 import com.github.kr328.clash.design.ui.theme.PreviewMihomo
+import com.github.kr328.clash.design.ui.theme.mihomoDimens
 import com.github.kr328.clash.design.util.format
 import java.util.Date
 import kotlinx.coroutines.Dispatchers
@@ -165,11 +165,15 @@ private fun LogcatScreen(
 @Composable
 private fun LogcatMessageItem(message: LogMessage, onCopyMessage: (LogMessage) -> Unit) {
   val context = LocalContext.current
+  val dimens = mihomoDimens
   Column(
     modifier =
       Modifier.fillMaxWidth()
         .combinedClickable(onClick = {}, onLongClick = { onCopyMessage(message) })
-        .padding(12.dp),
+        .padding(
+          horizontal = dimens.logcatPaddingHorizontal,
+          vertical = dimens.logcatPaddingVertical,
+        ),
     verticalArrangement = Arrangement.Center,
   ) {
     Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
@@ -189,7 +193,7 @@ private fun LogcatMessageItem(message: LogMessage, onCopyMessage: (LogMessage) -
     Text(
       text = message.message,
       style = MaterialTheme.typography.bodyMedium,
-      modifier = Modifier.fillMaxWidth().padding(top = 5.dp),
+      modifier = Modifier.fillMaxWidth().padding(top = dimens.itemTextMargin),
     )
   }
 }
