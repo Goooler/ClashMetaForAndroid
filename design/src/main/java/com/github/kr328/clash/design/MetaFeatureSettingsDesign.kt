@@ -36,12 +36,16 @@ import me.zhanghai.compose.preference.preferenceCategory
 
 class MetaFeatureSettingsDesign(context: Context, configuration: ConfigurationOverride) :
   Design<MetaFeatureSettingsDesign.Request>(context) {
-  enum class Request {
-    ResetOverride,
-    ImportGeoIp,
-    ImportGeoSite,
-    ImportCountry,
-    ImportASN,
+  sealed interface Request {
+    data object ResetOverride : Request
+
+    data object ImportGeoIp : Request
+
+    data object ImportGeoSite : Request
+
+    data object ImportCountry : Request
+
+    data object ImportASN : Request
   }
 
   override val root: View by composeView {

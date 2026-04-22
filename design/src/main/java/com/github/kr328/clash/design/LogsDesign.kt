@@ -44,12 +44,12 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 class LogsDesign(context: Context) : Design<LogsDesign.Request>(context) {
-  sealed class Request {
-    object StartLogcat : Request()
+  sealed interface Request {
+    data object StartLogcat : Request
 
-    object DeleteAll : Request()
+    data object DeleteAll : Request
 
-    data class OpenFile(val file: LogFile) : Request()
+    data class OpenFile(val file: LogFile) : Request
   }
 
   private var logs by mutableStateOf<List<LogFile>>(emptyList())

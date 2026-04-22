@@ -42,8 +42,8 @@ class NetworkSettingsDesign(
   serviceStore: ServiceStore,
   running: Boolean,
 ) : Design<NetworkSettingsDesign.Request>(context) {
-  enum class Request {
-    StartAccessControlList
+  sealed interface Request {
+    data object StartAccessControlList : Request
   }
 
   override val root: View by composeView {

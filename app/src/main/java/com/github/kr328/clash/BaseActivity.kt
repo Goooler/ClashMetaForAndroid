@@ -180,15 +180,23 @@ abstract class BaseActivity<D : Design<*>> :
     }
   }
 
-  enum class Event {
-    ServiceRecreated,
-    ActivityStart,
-    ActivityStop,
-    ClashStop,
-    ClashStart,
-    ProfileLoaded,
-    ProfileChanged,
-    ProfileUpdateCompleted,
-    ProfileUpdateFailed,
+  sealed interface Event {
+    data object ServiceRecreated : Event
+
+    data object ActivityStart : Event
+
+    data object ActivityStop : Event
+
+    data object ClashStop : Event
+
+    data object ClashStart : Event
+
+    data object ProfileLoaded : Event
+
+    data object ProfileChanged : Event
+
+    data object ProfileUpdateCompleted : Event
+
+    data object ProfileUpdateFailed : Event
   }
 }

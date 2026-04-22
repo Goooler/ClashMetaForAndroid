@@ -51,15 +51,22 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 class MainDesign(context: Context) : Design<MainDesign.Request>(context) {
-  enum class Request {
-    ToggleStatus,
-    OpenProxy,
-    OpenProfiles,
-    OpenProviders,
-    OpenLogs,
-    OpenSettings,
-    OpenHelp,
-    OpenAbout,
+  sealed interface Request {
+    data object ToggleStatus : Request
+
+    data object OpenProxy : Request
+
+    data object OpenProfiles : Request
+
+    data object OpenProviders : Request
+
+    data object OpenLogs : Request
+
+    data object OpenSettings : Request
+
+    data object OpenHelp : Request
+
+    data object OpenAbout : Request
   }
 
   private var clashRunning by mutableStateOf(false)

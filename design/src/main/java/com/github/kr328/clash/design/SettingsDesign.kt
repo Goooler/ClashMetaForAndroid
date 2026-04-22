@@ -27,11 +27,14 @@ import com.github.kr328.clash.design.ui.theme.MihomoTheme
 import com.github.kr328.clash.design.ui.theme.PreviewMihomo
 
 class SettingsDesign(context: Context) : Design<SettingsDesign.Request>(context) {
-  enum class Request {
-    StartApp,
-    StartNetwork,
-    StartOverride,
-    StartMetaFeature,
+  sealed interface Request {
+    data object StartApp : Request
+
+    data object StartNetwork : Request
+
+    data object StartOverride : Request
+
+    data object StartMetaFeature : Request
   }
 
   override val root: View by composeView {

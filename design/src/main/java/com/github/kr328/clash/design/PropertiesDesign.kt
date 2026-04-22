@@ -58,10 +58,10 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 class PropertiesDesign(context: Context) : Design<PropertiesDesign.Request>(context) {
-  sealed class Request {
-    object Commit : Request()
+  sealed interface Request {
+    data object Commit : Request
 
-    object BrowseFiles : Request()
+    data object BrowseFiles : Request
   }
 
   private var profileState by mutableStateOf<Profile?>(null)

@@ -42,8 +42,8 @@ class AppSettingsDesign(
   running: Boolean,
   onHideIconChange: (hide: Boolean) -> Unit,
 ) : Design<AppSettingsDesign.Request>(context) {
-  enum class Request {
-    ReCreateAllActivities
+  sealed interface Request {
+    data object ReCreateAllActivities : Request
   }
 
   override val root: View by composeView {

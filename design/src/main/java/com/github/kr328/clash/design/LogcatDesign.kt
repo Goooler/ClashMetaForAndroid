@@ -48,10 +48,12 @@ import kotlinx.coroutines.withContext
 
 class LogcatDesign(context: Context, private val streaming: Boolean) :
   Design<LogcatDesign.Request>(context) {
-  enum class Request {
-    Close,
-    Delete,
-    Export,
+  sealed interface Request {
+    data object Close : Request
+
+    data object Delete : Request
+
+    data object Export : Request
   }
 
   private var messages by mutableStateOf<List<LogMessage>>(emptyList())

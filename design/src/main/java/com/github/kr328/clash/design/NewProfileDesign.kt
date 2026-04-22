@@ -43,12 +43,12 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 class NewProfileDesign(context: Context) : Design<NewProfileDesign.Request>(context) {
-  sealed class Request {
-    data class Create(val provider: ProfileProvider) : Request()
+  sealed interface Request {
+    data class Create(val provider: ProfileProvider) : Request
 
-    data class OpenDetail(val provider: ProfileProvider.External) : Request()
+    data class OpenDetail(val provider: ProfileProvider.External) : Request
 
-    data class LaunchScanner(val provider: ProfileProvider.QR) : Request()
+    data class LaunchScanner(val provider: ProfileProvider.QR) : Request
   }
 
   private var providers by mutableStateOf<List<ProfileProvider>>(emptyList())
