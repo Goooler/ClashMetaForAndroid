@@ -25,7 +25,7 @@ jobs:
             core/src/foss/golang/clash/go.sum
       - uses: actions/setup-java@v5
         with:
-          distribution: "temurin"
+          distribution: zulu
           java-version: 25
       - uses: gradle/actions/setup-gradle@v6
       - name: Build
