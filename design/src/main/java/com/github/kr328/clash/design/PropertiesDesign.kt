@@ -41,10 +41,10 @@ import androidx.compose.ui.text.fromHtml
 import androidx.compose.ui.unit.Dp
 import com.github.kr328.clash.core.model.FetchStatus
 import com.github.kr328.clash.design.component.MihomoScaffold
+import com.github.kr328.clash.design.component.ModelProgressBarDialog
+import com.github.kr328.clash.design.component.ModelProgressBarState
+import com.github.kr328.clash.design.component.ModelTextInputDialog
 import com.github.kr328.clash.design.component.SettingsTipsItem
-import com.github.kr328.clash.design.dialog.ModelProgressBarConfigure
-import com.github.kr328.clash.design.dialog.requestModelTextInput
-import com.github.kr328.clash.design.dialog.withModelProgressBar
 import com.github.kr328.clash.design.ui.theme.MihomoTheme
 import com.github.kr328.clash.design.ui.theme.PreviewMihomo
 import com.github.kr328.clash.design.util.ValidatorAutoUpdateInterval
@@ -55,7 +55,6 @@ import java.util.UUID
 import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.minutes
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class PropertiesDesign(context: Context) : Design<PropertiesDesign.Request>(context) {
@@ -68,6 +67,7 @@ class PropertiesDesign(context: Context) : Design<PropertiesDesign.Request>(cont
   private var profileState by mutableStateOf<Profile?>(null)
   private var originalProfileState by mutableStateOf<Profile?>(null)
   private var processingState by mutableStateOf(false)
+  private val progressBarState = ModelProgressBarState()
 
   override val root: View by composeView {
     MihomoTheme {
@@ -75,14 +75,17 @@ class PropertiesDesign(context: Context) : Design<PropertiesDesign.Request>(cont
         PropertiesScreen(
           profile = profile,
           processing = processingState,
+          progressBarState = progressBarState,
           hasUnsavedChanges =
             originalProfileState?.let { original -> hasUnsavedChanges(profile, original) } == true,
-          onInputName = ::inputName,
-          onInputUrl = ::inputUrl,
-          onInputInterval = ::inputInterval,
           onBrowseFiles = { requests.trySend(Request.BrowseFiles) },
           onCommit = { requests.trySend(Request.Commit) },
           onRequestClose = { (context as? Activity)?.finish() },
+          onNameChanged = { name -> this@PropertiesDesign.profile = profile.copy(name = name) },
+          onUrlChanged = { url -> this@PropertiesDesign.profile = profile.copy(source = url) },
+          onIntervalChanged = { interval ->
+            this@PropertiesDesign.profile = profile.copy(interval = interval)
+          },
         )
       }
     }
@@ -98,73 +101,24 @@ class PropertiesDesign(context: Context) : Design<PropertiesDesign.Request>(cont
     }
 
   suspend fun withProcessing(executeTask: suspend (suspend (FetchStatus) -> Unit) -> Unit) =
-    withContext(Dispatchers.Main) {
-      try {
+    try {
+      withContext(Dispatchers.Main) {
         processingState = true
-        context.withModelProgressBar {
-          configure {
-            isIndeterminate = true
-            text = context.getString(R.string.initializing)
-          }
-          executeTask { configure { applyFrom(it) } }
-        }
-      } finally {
+        progressBarState.visible = true
+        progressBarState.isIndeterminate = true
+        progressBarState.text = context.getString(R.string.initializing)
+        progressBarState.progress = 0
+        progressBarState.max = 0
+      }
+
+      executeTask { status -> withContext(Dispatchers.Main) { progressBarState.applyFrom(status) } }
+    } finally {
+      withContext(Dispatchers.Main) {
+        progressBarState.visible = false
+        progressBarState.text = null
         processingState = false
       }
     }
-
-  private fun inputName() = launch {
-    val name =
-      context.requestModelTextInput(
-        initial = profile.name,
-        title = context.getText(R.string.name),
-        hint = context.getText(R.string.properties),
-        error = context.getText(R.string.should_not_be_blank),
-        validator = ValidatorNotBlank,
-      )
-
-    if (name != profile.name) {
-      profile = profile.copy(name = name)
-    }
-  }
-
-  private fun inputUrl() {
-    if (profile.type == Profile.Type.External) return
-    launch {
-      val url =
-        context.requestModelTextInput(
-          initial = profile.source,
-          title = context.getText(R.string.url),
-          hint = context.getText(R.string.profile_url),
-          error = context.getText(R.string.accept_http_content),
-          validator = ValidatorHttpUrl,
-        )
-
-      if (url != profile.source) {
-        profile = profile.copy(source = url)
-      }
-    }
-  }
-
-  private fun inputInterval() = launch {
-    var minutes = profile.interval.milliseconds.inWholeMinutes
-    minutes =
-      context
-        .requestModelTextInput(
-          initial = if (minutes == 0L) "" else minutes.toString(),
-          title = context.getText(R.string.auto_update),
-          hint = context.getText(R.string.auto_update_minutes),
-          error = context.getText(R.string.at_least_15_minutes),
-          validator = ValidatorAutoUpdateInterval,
-        )
-        .toLongOrNull() ?: 0
-
-    val interval = minutes.minutes.inWholeMilliseconds
-
-    if (interval != profile.interval) {
-      profile = profile.copy(interval = interval)
-    }
-  }
 
   private fun hasUnsavedChanges(profile: Profile, original: Profile): Boolean {
     return profile.name != original.name ||
@@ -172,7 +126,7 @@ class PropertiesDesign(context: Context) : Design<PropertiesDesign.Request>(cont
       profile.interval != original.interval
   }
 
-  private fun ModelProgressBarConfigure.applyFrom(status: FetchStatus) {
+  private fun ModelProgressBarState.applyFrom(status: FetchStatus) {
     when (status.action) {
       FetchStatus.Action.FetchConfiguration -> {
         text = context.getString(R.string.format_fetching_configuration, status.args[0])
@@ -199,17 +153,21 @@ class PropertiesDesign(context: Context) : Design<PropertiesDesign.Request>(cont
 private fun PropertiesScreen(
   profile: Profile,
   processing: Boolean,
+  progressBarState: ModelProgressBarState,
   hasUnsavedChanges: Boolean,
-  onInputName: () -> Unit,
-  onInputUrl: () -> Unit,
-  onInputInterval: () -> Unit,
   onBrowseFiles: () -> Unit,
   onCommit: () -> Unit,
   onRequestClose: () -> Unit,
+  onNameChanged: (String) -> Unit,
+  onUrlChanged: (String) -> Unit,
+  onIntervalChanged: (Long) -> Unit,
 ) {
   val contentPaddingHorizontal = dimensionResource(R.dimen.item_tailing_margin)
   val itemPaddingVertical = dimensionResource(R.dimen.item_padding_vertical)
   var showExitWithoutSavingDialog by rememberSaveable { mutableStateOf(false) }
+  var showInputNameDialog by rememberSaveable { mutableStateOf(false) }
+  var showInputUrlDialog by rememberSaveable { mutableStateOf(false) }
+  var showInputIntervalDialog by rememberSaveable { mutableStateOf(false) }
 
   val onBack = {
     when {
@@ -256,7 +214,7 @@ private fun PropertiesScreen(
         placeholder = stringResource(R.string.profile_name),
         iconRes = R.drawable.ic_outline_label,
         enabled = true,
-        onClick = onInputName,
+        onClick = { showInputNameDialog = true },
         itemPaddingVertical = itemPaddingVertical,
       )
       PropertiesActionItem(
@@ -265,7 +223,7 @@ private fun PropertiesScreen(
         placeholder = stringResource(R.string.accept_http_content),
         iconRes = R.drawable.ic_outline_inbox,
         enabled = profile.type != Profile.Type.File && profile.type != Profile.Type.External,
-        onClick = onInputUrl,
+        onClick = { showInputUrlDialog = true },
         itemPaddingVertical = itemPaddingVertical,
       )
       PropertiesActionItem(
@@ -279,7 +237,7 @@ private fun PropertiesScreen(
         placeholder = stringResource(R.string.at_least_15_minutes),
         iconRes = R.drawable.ic_outline_update,
         enabled = profile.type != Profile.Type.File,
-        onClick = onInputInterval,
+        onClick = { showInputIntervalDialog = true },
         itemPaddingVertical = itemPaddingVertical,
       )
       PropertiesActionItem(
@@ -300,6 +258,63 @@ private fun PropertiesScreen(
       onDismiss = { showExitWithoutSavingDialog = false },
     )
   }
+
+  if (showInputNameDialog) {
+    ModelTextInputDialog(
+      title = stringResource(R.string.name),
+      initialValue = profile.name,
+      hint = stringResource(R.string.properties),
+      error = stringResource(R.string.should_not_be_blank),
+      validator = ValidatorNotBlank,
+      onDismiss = { showInputNameDialog = false },
+      onConfirm = { newName ->
+        if (newName != profile.name) {
+          onNameChanged(newName)
+        }
+        showInputNameDialog = false
+      },
+    )
+  }
+
+  if (showInputUrlDialog) {
+    ModelTextInputDialog(
+      title = stringResource(R.string.url),
+      initialValue = profile.source,
+      hint = stringResource(R.string.profile_url),
+      error = stringResource(R.string.accept_http_content),
+      validator = ValidatorHttpUrl,
+      onDismiss = { showInputUrlDialog = false },
+      onConfirm = { newUrl ->
+        if (newUrl != profile.source) {
+          onUrlChanged(newUrl)
+        }
+        showInputUrlDialog = false
+      },
+    )
+  }
+
+  if (showInputIntervalDialog) {
+    val currentMinutes =
+      if (profile.interval == 0L) "" else profile.interval.milliseconds.inWholeMinutes.toString()
+    ModelTextInputDialog(
+      title = stringResource(R.string.auto_update),
+      initialValue = currentMinutes,
+      hint = stringResource(R.string.auto_update_minutes),
+      error = stringResource(R.string.at_least_15_minutes),
+      validator = ValidatorAutoUpdateInterval,
+      onDismiss = { showInputIntervalDialog = false },
+      onConfirm = { newInterval ->
+        val minutes = newInterval.toLongOrNull() ?: 0
+        val interval = minutes.minutes.inWholeMilliseconds
+        if (interval != profile.interval) {
+          onIntervalChanged(interval)
+        }
+        showInputIntervalDialog = false
+      },
+    )
+  }
+
+  ModelProgressBarDialog(progressBarState)
 }
 
 @Composable
@@ -380,12 +395,13 @@ private fun PropertiesScreenPreview() = MihomoTheme {
         pending = false,
       ),
     processing = false,
+    progressBarState = ModelProgressBarState(),
     hasUnsavedChanges = false,
-    onInputName = {},
-    onInputUrl = {},
-    onInputInterval = {},
     onBrowseFiles = {},
     onCommit = {},
     onRequestClose = {},
+    onNameChanged = {},
+    onUrlChanged = {},
+    onIntervalChanged = {},
   )
 }

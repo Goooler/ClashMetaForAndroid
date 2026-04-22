@@ -13,7 +13,6 @@ import com.github.kr328.clash.common.util.ticker
 import com.github.kr328.clash.core.model.LogMessage
 import com.github.kr328.clash.design.LogcatDesign
 import com.github.kr328.clash.design.R
-import com.github.kr328.clash.design.dialog.withModelProgressBar
 import com.github.kr328.clash.design.model.LogFile
 import com.github.kr328.clash.design.ui.ToastDuration
 import com.github.kr328.clash.design.util.showExceptionToast
@@ -74,7 +73,7 @@ class LogcatActivity : BaseActivity<LogcatDesign>() {
 
           if (output != null) {
             try {
-              withContext(Dispatchers.IO) { writeLogTo(messages, file, output) }
+              writeLogTo(design, messages, file, output)
 
               design.showToast(R.string.file_exported, ToastDuration.Long)
             } catch (e: Exception) {
@@ -154,31 +153,30 @@ class LogcatActivity : BaseActivity<LogcatDesign>() {
     }
   }
 
-  private suspend fun writeLogTo(messages: List<LogMessage>, file: LogFile, uri: Uri) {
-    LogcatFilter(OutputStreamWriter(contentResolver.openOutputStream(uri)), this).use {
-      withContext(Dispatchers.Main) {
-        withModelProgressBar {
-          configure {
-            isIndeterminate = true
-            max = messages.size
-          }
+  private suspend fun writeLogTo(
+    design: LogcatDesign,
+    messages: List<LogMessage>,
+    file: LogFile,
+    uri: Uri,
+  ) =
+    withContext(Dispatchers.IO) {
+      LogcatFilter(OutputStreamWriter(contentResolver.openOutputStream(uri)), this@LogcatActivity)
+        .use {
+          design.startExportProgress(messages.size)
 
-          withContext(Dispatchers.IO) {
+          try {
             it.writeHeader(file.date)
 
             messages.forEachIndexed { idx, msg ->
-              configure {
-                isIndeterminate = false
-                progress = idx
-              }
+              design.updateExportProgress(idx + 1)
 
               it.writeMessage(msg)
             }
+          } finally {
+            design.finishExportProgress()
           }
         }
-      }
     }
-  }
 
   private fun showInvalid() {
     Toast.makeText(this, R.string.invalid_log_file, Toast.LENGTH_LONG).show()

@@ -3,8 +3,6 @@ plugins {
   alias(libs.plugins.kotlin.compose)
 }
 
-android { buildFeatures { viewBinding = true } }
-
 dependencies {
   implementation(projects.common)
   implementation(projects.core)
