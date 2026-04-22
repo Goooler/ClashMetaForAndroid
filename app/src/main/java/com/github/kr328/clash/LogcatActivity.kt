@@ -158,25 +158,27 @@ class LogcatActivity : BaseActivity<LogcatDesign>() {
     messages: List<LogMessage>,
     file: LogFile,
     uri: Uri,
-  ) {
-    LogcatFilter(OutputStreamWriter(contentResolver.openOutputStream(uri)), this).use {
-      design.startExportProgress(messages.size)
+  ) =
+    withContext(Dispatchers.IO) {
+      LogcatFilter(OutputStreamWriter(contentResolver.openOutputStream(uri)), this@LogcatActivity)
+        .use {
+          design.startExportProgress(messages.size)
 
-      try {
-        withContext(Dispatchers.IO) {
-          it.writeHeader(file.date)
+          try {
+            withContext(Dispatchers.IO) {
+              it.writeHeader(file.date)
 
-          messages.forEachIndexed { idx, msg ->
-            design.updateExportProgress(idx + 1)
+              messages.forEachIndexed { idx, msg ->
+                design.updateExportProgress(idx + 1)
 
-            it.writeMessage(msg)
+                it.writeMessage(msg)
+              }
+            }
+          } finally {
+            design.finishExportProgress()
           }
         }
-      } finally {
-        design.finishExportProgress()
-      }
     }
-  }
 
   private fun showInvalid() {
     Toast.makeText(this, R.string.invalid_log_file, Toast.LENGTH_LONG).show()
