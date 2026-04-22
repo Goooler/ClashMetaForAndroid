@@ -8,6 +8,17 @@ on:
       - trunk
 
 jobs:
+  check-style:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-java@v5
+        with:
+          distribution: "temurin"
+          java-version: 25
+      - uses: gradle/actions/setup-gradle@v6
+      - run: ./gradlew spotlessCheck
+
   build:
     permissions:
       contents: write
@@ -30,10 +41,7 @@ jobs:
           distribution: "temurin"
           java-version: 25
       - uses: gradle/actions/setup-gradle@v6
-      - run: ./gradlew spotlessCheck
-      - name: Build
-        run: |
-          ./gradlew app:assembleRelease
+      - run: ./gradlew app:assembleRelease
       - name: Delete release if exist then create release
         if: github.repository == 'Goooler/MihomoForAndroid' && github.event_name == 'push'
         env:
@@ -41,3 +49,20 @@ jobs:
         run: |
           gh release view nightly && gh release delete nightly -y --cleanup-tag
           gh release create nightly "./app/build/outputs/apk/release/"*.apk --prerelease --generate-notes
+
+  # Status check that is required in branch protection rules.
+  final-status:
+    needs:
+      - check-style
+      - build
+    runs-on: ubuntu-slim
+    if: always()
+    steps:
+      - name: Check
+        run: |
+          results=$(tr -d '\n' <<< '${{ toJSON(needs.*.result) }}')
+          if ! grep -q -v -E '(failure|cancelled)' <<< "$results"; then
+            echo "One or more required jobs failed"
+            exit 1
+          fi
+          echo "All required jobs completed successfully."
