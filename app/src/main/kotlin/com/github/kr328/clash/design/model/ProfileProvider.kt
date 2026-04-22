@@ -37,7 +37,7 @@ sealed class ProfileProvider {
       get() = context.getString(R.string.import_from_qr)
 
     override val icon: Drawable?
-      get() = context.getDrawableCompat(R.drawable.baseline_qr_code_scanner)
+      get() = context.getDrawableCompat(R.drawable.ic_baseline_qr_code_scanner)
   }
 
   class External(
