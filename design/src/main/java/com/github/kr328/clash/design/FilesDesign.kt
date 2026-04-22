@@ -49,20 +49,20 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
 
 class FilesDesign(context: Context) : Design<FilesDesign.Request>(context) {
-  sealed class Request {
-    data class OpenFile(val file: File) : Request()
+  sealed interface Request {
+    data class OpenFile(val file: File) : Request
 
-    data class OpenDirectory(val file: File) : Request()
+    data class OpenDirectory(val file: File) : Request
 
-    data class RenameFile(val file: File, val newName: String) : Request()
+    data class RenameFile(val file: File, val newName: String) : Request
 
-    data class DeleteFile(val file: File) : Request()
+    data class DeleteFile(val file: File) : Request
 
-    data class ImportFile(val file: File?) : Request()
+    data class ImportFile(val file: File?) : Request
 
-    data class ExportFile(val file: File) : Request()
+    data class ExportFile(val file: File) : Request
 
-    object PopStack : Request()
+    data object PopStack : Request
   }
 
   private var files by mutableStateOf<List<File>>(emptyList())

@@ -58,20 +58,20 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 class ProfilesDesign(context: Context) : Design<ProfilesDesign.Request>(context) {
-  sealed class Request {
-    object UpdateAll : Request()
+  sealed interface Request {
+    data object UpdateAll : Request
 
-    object Create : Request()
+    data object Create : Request
 
-    data class Active(val profile: Profile) : Request()
+    data class Active(val profile: Profile) : Request
 
-    data class Update(val profile: Profile) : Request()
+    data class Update(val profile: Profile) : Request
 
-    data class Edit(val profile: Profile) : Request()
+    data class Edit(val profile: Profile) : Request
 
-    data class Duplicate(val profile: Profile) : Request()
+    data class Duplicate(val profile: Profile) : Request
 
-    data class Delete(val profile: Profile) : Request()
+    data class Delete(val profile: Profile) : Request
   }
 
   private var profiles by mutableStateOf<List<Profile>>(emptyList())

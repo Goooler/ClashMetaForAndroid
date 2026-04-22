@@ -49,8 +49,8 @@ import kotlinx.coroutines.withContext
 
 class ProvidersDesign(context: Context, providers: List<Provider>) :
   Design<ProvidersDesign.Request>(context) {
-  sealed class Request {
-    data class Update(val index: Int, val provider: Provider) : Request()
+  sealed interface Request {
+    data class Update(val index: Int, val provider: Provider) : Request
   }
 
   private val states =

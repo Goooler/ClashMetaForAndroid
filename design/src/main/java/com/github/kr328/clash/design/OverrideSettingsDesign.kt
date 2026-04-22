@@ -58,8 +58,8 @@ import me.zhanghai.compose.preference.preferenceCategory
 
 class OverrideSettingsDesign(context: Context, configuration: ConfigurationOverride) :
   Design<OverrideSettingsDesign.Request>(context) {
-  enum class Request {
-    ResetOverride
+  sealed interface Request {
+    data object ResetOverride : Request
   }
 
   override val root: View by composeView {

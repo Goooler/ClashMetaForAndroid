@@ -82,18 +82,18 @@ class ProxyDesign(
   private val groupNames: List<String>,
   private val uiStore: UiStore,
 ) : Design<ProxyDesign.Request>(context) {
-  sealed class Request {
-    object ReloadAll : Request()
+  sealed interface Request {
+    data object ReloadAll : Request
 
-    object ReLaunch : Request()
+    data object ReLaunch : Request
 
-    data class PatchMode(val mode: TunnelState.Mode?) : Request()
+    data class PatchMode(val mode: TunnelState.Mode?) : Request
 
-    data class Reload(val index: Int) : Request()
+    data class Reload(val index: Int) : Request
 
-    data class Select(val index: Int, val name: String) : Request()
+    data class Select(val index: Int, val name: String) : Request
 
-    data class UrlTest(val index: Int) : Request()
+    data class UrlTest(val index: Int) : Request
   }
 
   private val config = ProxyViewConfig(context, uiStore.proxyLine)

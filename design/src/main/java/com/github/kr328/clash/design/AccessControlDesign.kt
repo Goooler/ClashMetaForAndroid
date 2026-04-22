@@ -71,13 +71,18 @@ class AccessControlDesign(
   uiStore: UiStore,
   private val selected: MutableSet<String>,
 ) : Design<AccessControlDesign.Request>(context) {
-  enum class Request {
-    ReloadApps,
-    SelectAll,
-    SelectNone,
-    SelectInvert,
-    Import,
-    Export,
+  sealed interface Request {
+    data object ReloadApps : Request
+
+    data object SelectAll : Request
+
+    data object SelectNone : Request
+
+    data object SelectInvert : Request
+
+    data object Import : Request
+
+    data object Export : Request
   }
 
   private var appsState by mutableStateOf<List<AppInfo>>(emptyList())
