@@ -159,24 +159,34 @@ class LogcatActivity : BaseActivity<LogcatDesign>() {
     file: LogFile,
     uri: Uri,
   ) {
-    LogcatFilter(OutputStreamWriter(contentResolver.openOutputStream(uri)), this).use {
-      design.withExportProgressBar {
-        configure {
-          isIndeterminate = true
-          max = messages.size
-        }
+    val progressState = design.exportProgressState
 
+    LogcatFilter(OutputStreamWriter(contentResolver.openOutputStream(uri)), this).use {
+      withContext(Dispatchers.Main) {
+        progressState.visible = true
+        progressState.isIndeterminate = true
+        progressState.text = null
+        progressState.progress = 0
+        progressState.max = messages.size
+      }
+
+      try {
         withContext(Dispatchers.IO) {
           it.writeHeader(file.date)
 
           messages.forEachIndexed { idx, msg ->
-            configure {
-              isIndeterminate = false
-              progress = idx
+            withContext(Dispatchers.Main) {
+              progressState.isIndeterminate = false
+              progressState.progress = idx
             }
 
             it.writeMessage(msg)
           }
+        }
+      } finally {
+        withContext(Dispatchers.Main) {
+          progressState.visible = false
+          progressState.text = null
         }
       }
     }

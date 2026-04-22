@@ -41,12 +41,10 @@ import androidx.compose.ui.text.fromHtml
 import androidx.compose.ui.unit.Dp
 import com.github.kr328.clash.core.model.FetchStatus
 import com.github.kr328.clash.design.component.MihomoScaffold
-import com.github.kr328.clash.design.component.ModelProgressBarConfigure
 import com.github.kr328.clash.design.component.ModelProgressBarDialog
 import com.github.kr328.clash.design.component.ModelProgressBarState
 import com.github.kr328.clash.design.component.ModelTextInputDialog
 import com.github.kr328.clash.design.component.SettingsTipsItem
-import com.github.kr328.clash.design.component.withModelProgressBar
 import com.github.kr328.clash.design.ui.theme.MihomoTheme
 import com.github.kr328.clash.design.ui.theme.PreviewMihomo
 import com.github.kr328.clash.design.util.ValidatorAutoUpdateInterval
@@ -103,17 +101,21 @@ class PropertiesDesign(context: Context) : Design<PropertiesDesign.Request>(cont
     }
 
   suspend fun withProcessing(executeTask: suspend (suspend (FetchStatus) -> Unit) -> Unit) =
-    withContext(Dispatchers.Main) {
-      try {
+    try {
+      withContext(Dispatchers.Main) {
         processingState = true
-        progressBarState.withModelProgressBar {
-          configure {
-            isIndeterminate = true
-            text = context.getString(R.string.initializing)
-          }
-          executeTask { configure { applyFrom(it) } }
-        }
-      } finally {
+        progressBarState.visible = true
+        progressBarState.isIndeterminate = true
+        progressBarState.text = context.getString(R.string.initializing)
+        progressBarState.progress = 0
+        progressBarState.max = 0
+      }
+
+      executeTask { status -> withContext(Dispatchers.Main) { progressBarState.applyFrom(status) } }
+    } finally {
+      withContext(Dispatchers.Main) {
+        progressBarState.visible = false
+        progressBarState.text = null
         processingState = false
       }
     }
@@ -124,7 +126,7 @@ class PropertiesDesign(context: Context) : Design<PropertiesDesign.Request>(cont
       profile.interval != original.interval
   }
 
-  private fun ModelProgressBarConfigure.applyFrom(status: FetchStatus) {
+  private fun ModelProgressBarState.applyFrom(status: FetchStatus) {
     when (status.action) {
       FetchStatus.Action.FetchConfiguration -> {
         text = context.getString(R.string.format_fetching_configuration, status.args[0])

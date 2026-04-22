@@ -36,9 +36,7 @@ import androidx.core.content.getSystemService
 import com.github.kr328.clash.core.model.LogMessage
 import com.github.kr328.clash.design.component.MihomoScaffold
 import com.github.kr328.clash.design.component.ModelProgressBarDialog
-import com.github.kr328.clash.design.component.ModelProgressBarScope
 import com.github.kr328.clash.design.component.ModelProgressBarState
-import com.github.kr328.clash.design.component.withModelProgressBar
 import com.github.kr328.clash.design.ui.ToastDuration
 import com.github.kr328.clash.design.ui.theme.MihomoTheme
 import com.github.kr328.clash.design.ui.theme.PreviewMihomo
@@ -58,7 +56,7 @@ class LogcatDesign(context: Context, private val streaming: Boolean) :
 
   private var messages by mutableStateOf<List<LogMessage>>(emptyList())
   private val listState = LazyListState()
-  private val exportProgressState = ModelProgressBarState()
+  val exportProgressState = ModelProgressBarState()
 
   private val onCopyMessage: (LogMessage) -> Unit = {
     launch {
@@ -93,10 +91,6 @@ class LogcatDesign(context: Context, private val streaming: Boolean) :
         listState.scrollToItem(messages.lastIndex)
       }
     }
-
-  suspend fun withExportProgressBar(block: suspend ModelProgressBarScope.() -> Unit) {
-    exportProgressState.withModelProgressBar(block)
-  }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
