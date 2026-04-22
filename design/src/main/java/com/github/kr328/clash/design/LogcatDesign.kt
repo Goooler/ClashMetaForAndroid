@@ -56,7 +56,7 @@ class LogcatDesign(context: Context, private val streaming: Boolean) :
 
   private var messages by mutableStateOf<List<LogMessage>>(emptyList())
   private val listState = LazyListState()
-  val exportProgressState = ModelProgressBarState()
+  private val exportProgressState = ModelProgressBarState()
 
   private val onCopyMessage: (LogMessage) -> Unit = {
     launch {
@@ -90,6 +90,27 @@ class LogcatDesign(context: Context, private val streaming: Boolean) :
       if (shouldAutoFollow && messages.isNotEmpty()) {
         listState.scrollToItem(messages.lastIndex)
       }
+    }
+
+  suspend fun startExportProgress(max: Int) =
+    withContext(Dispatchers.Main) {
+      exportProgressState.visible = true
+      exportProgressState.isIndeterminate = true
+      exportProgressState.text = null
+      exportProgressState.progress = 0
+      exportProgressState.max = max
+    }
+
+  suspend fun updateExportProgress(progress: Int) =
+    withContext(Dispatchers.Main) {
+      exportProgressState.isIndeterminate = false
+      exportProgressState.progress = progress
+    }
+
+  suspend fun finishExportProgress() =
+    withContext(Dispatchers.Main) {
+      exportProgressState.visible = false
+      exportProgressState.text = null
     }
 }
 
