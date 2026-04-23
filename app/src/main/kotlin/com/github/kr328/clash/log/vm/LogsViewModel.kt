@@ -22,8 +22,8 @@ class LogsViewModel(app: Application) : AndroidViewModel(app) {
 
   fun deleteAll() {
     viewModelScope.launch {
-      _logFiles.value = emptyList()
       deleteAllLogs()
+      _logFiles.value = loadFiles()
     }
   }
 
