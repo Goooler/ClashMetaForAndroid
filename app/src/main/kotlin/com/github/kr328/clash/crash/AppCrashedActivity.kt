@@ -1,31 +1,16 @@
 package com.github.kr328.clash.crash
 
-import com.github.kr328.clash.common.log.Log
-import com.github.kr328.clash.crash.ui.AppCrashedDesign
-import com.github.kr328.clash.log.util.SystemLogcat
-import com.github.kr328.clash.ui.DesignActivity
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.isActive
-import kotlinx.coroutines.withContext
+import android.os.Bundle
+import androidx.activity.compose.setContent
+import com.github.kr328.clash.crash.ui.AppCrashedScreen
+import com.github.kr328.clash.ui.BaseActivity
+import com.github.kr328.clash.ui.theme.MihomoTheme
 
-class AppCrashedActivity : DesignActivity<AppCrashedDesign>() {
-  override suspend fun main() {
-    val design = AppCrashedDesign(this)
+class AppCrashedActivity : BaseActivity() {
 
-    setContentDesign(design)
+  override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
 
-    val packageInfo = withContext(Dispatchers.IO) { packageManager.getPackageInfo(packageName, 0) }
-
-    Log.i(
-      "App version: versionName = ${packageInfo.versionName} versionCode = ${packageInfo.longVersionCode}"
-    )
-
-    val logs = withContext(Dispatchers.IO) { SystemLogcat.dumpCrash() }
-
-    design.updateLogs(logs)
-
-    while (isActive) {
-      events.receive()
-    }
+    setContent { MihomoTheme { AppCrashedScreen() } }
   }
 }
