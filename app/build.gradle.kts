@@ -121,18 +121,14 @@ val downloadGeoFiles by
       }
     }
 
-    val skipDownloadGeoFiles =
-      providers.provider {
-        val propertiesFile =
-          rootProject.file("local.properties").takeIf { it.exists() }
-            ?: rootProject.file("gradle.properties")
-        val properties = Properties()
-        if (propertiesFile.exists()) {
-          propertiesFile.inputStream().use { properties.load(it) }
-        }
-        properties.getProperty("skip.downloadGeoFiles").toBoolean()
-      }
-    // Skip running the task when the flag is set.
+    val skipDownloadGeoFiles = providers.provider {
+      val propsFile =
+        rootProject.file("local.properties").takeIf { it.exists() }
+          ?: rootProject.file("gradle.properties")
+      val properties = Properties().apply { propsFile.inputStream().use { load(it) } }
+      properties.getProperty("skip.downloadGeoFiles").toBoolean()
+    }
+    // Skip the task when the flag is set.
     onlyIf { !skipDownloadGeoFiles.get() }
   }
 
