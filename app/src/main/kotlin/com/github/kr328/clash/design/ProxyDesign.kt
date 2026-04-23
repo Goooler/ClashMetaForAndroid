@@ -2,7 +2,6 @@ package com.github.kr328.clash.design
 
 import android.content.Context
 import android.widget.Toast
-import androidx.annotation.ColorInt
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -54,7 +53,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
@@ -66,8 +64,6 @@ import com.github.kr328.clash.core.model.Proxy
 import com.github.kr328.clash.core.model.ProxySort
 import com.github.kr328.clash.core.model.TunnelState
 import com.github.kr328.clash.design.component.MihomoScaffold
-import com.github.kr328.clash.design.component.ProxyViewConfig
-import com.github.kr328.clash.design.component.ProxyViewState
 import com.github.kr328.clash.design.model.ProxyState
 import com.github.kr328.clash.design.store.UiStore
 import com.github.kr328.clash.design.ui.theme.MihomoTheme
@@ -79,7 +75,7 @@ import kotlinx.coroutines.withContext
 
 class ProxyDesign(
   context: Context,
-  private val overrideMode: TunnelState.Mode?,
+  overrideMode: TunnelState.Mode?,
   private val groupNames: List<String>,
   private val uiStore: UiStore,
 ) : Design<ProxyDesign.Request>(context) {
@@ -97,7 +93,6 @@ class ProxyDesign(
     data class UrlTest(val index: Int) : Request
   }
 
-  private val config = ProxyViewConfig(context, uiStore.proxyLine)
   private val groups = List(groupNames.size) { ProxyGroupUiState() }
   private val initialPage = groupNames.indexOf(uiStore.proxyLastGroup).coerceAtLeast(0)
 
@@ -132,7 +127,6 @@ class ProxyDesign(
       onProxyLineChanged = { line ->
         proxyLine = line
         uiStore.proxyLine = line
-        config.proxyLine = line
         groups.forEach { it.refresh() }
         requests.trySend(Request.ReloadAll)
       },
@@ -156,16 +150,20 @@ class ProxyDesign(
     parent: ProxyState,
     links: Map<String, ProxyState>,
   ) {
-    val states =
+    val sources =
       withContext(Dispatchers.Default) {
         proxies.map { proxy ->
-          ProxyViewState(config, proxy, parent, if (proxy.type.group) links[proxy.name] else null)
+          ProxyItemSource(
+            proxy = proxy,
+            parent = parent,
+            link = if (proxy.type.group) links[proxy.name] else null,
+          )
         }
       }
 
     withContext(Dispatchers.Main) {
       groups[position].apply {
-        rawStates = states
+        this.sources = sources
         this.selectable = selectable
         urlTesting = false
         refresh()
@@ -191,30 +189,60 @@ class ProxyDesign(
   }
 }
 
+private data class ProxyItemSource(val proxy: Proxy, val parent: ProxyState, val link: ProxyState?)
+
 private data class ProxyItemUiState(
   val key: String,
   val title: String,
   val subtitle: String,
   val delayText: String,
-  @get:ColorInt val background: Int,
-  val controls: Int,
+  val background: Color,
+  val controls: Color,
 )
 
-private fun ProxyViewState.toUiState() =
-  ProxyItemUiState(
+private fun ProxyItemSource.toUiState(
+  proxyLine: Int,
+  selectedControl: Color,
+  selectedBackground: Color,
+  unselectedControl: Color,
+  unselectedBackground: Color,
+): ProxyItemUiState {
+  val selected = proxy.name == parent.now
+  val background =
+    if (selected) {
+      selectedBackground
+    } else if (proxyLine == 1) {
+      Color.Transparent
+    } else {
+      unselectedBackground
+    }
+  val controls = if (selected) selectedControl else unselectedControl
+  val title = if (proxy.type.group) proxy.name else proxy.title
+  val subtitle =
+    if (proxy.type.group) {
+      if (link == null) {
+        proxy.type.name
+      } else {
+        "%s(%s)".format(proxy.type.name, link.now.ifEmpty { "*" })
+      }
+    } else {
+      proxy.subtitle
+    }
+
+  return ProxyItemUiState(
     key = proxy.name,
     title = title,
     subtitle = subtitle,
-    delayText = delayText,
+    delayText = if (proxy.delay in 0..Short.MAX_VALUE) proxy.delay.toString() else "",
     background = background,
     controls = controls,
   )
+}
 
 private class ProxyGroupUiState {
-  var items by mutableStateOf<List<ProxyItemUiState>>(emptyList())
   var selectable by mutableStateOf(false)
   var urlTesting by mutableStateOf(false)
-  var rawStates: List<ProxyViewState> = emptyList()
+  var sources: List<ProxyItemSource> = emptyList()
   var refreshVersion by mutableIntStateOf(0)
 
   fun refresh() {
@@ -374,10 +402,12 @@ private fun ProxyGroupPage(
   onProxySelected: (Int, String) -> Unit,
 ) {
   val dimens = mihomoDimens
+  val sources = group.sources
   val refreshVersion = group.refreshVersion
-  val rawStates = group.rawStates
-  val previewItems = group.items
-  val useRawStates = rawStates.isNotEmpty()
+  val selectedControl = MaterialTheme.colorScheme.onPrimary
+  val selectedBackground = MaterialTheme.colorScheme.primary
+  val unselectedControl = MaterialTheme.colorScheme.onSurface
+  val unselectedBackground = MaterialTheme.colorScheme.surface
 
   LazyVerticalGrid(
     columns = GridCells.Fixed(columnsForProxyLine(proxyLine)),
@@ -387,30 +417,17 @@ private fun ProxyGroupPage(
     horizontalArrangement = Arrangement.spacedBy(12.dp),
     verticalArrangement = Arrangement.spacedBy(12.dp),
   ) {
-    items(
-      count = if (useRawStates) rawStates.size else previewItems.size,
-      key = { itemIndex ->
-        if (useRawStates) {
-          rawStates[itemIndex].proxy.name
-        } else {
-          previewItems[itemIndex].key
-        }
-      },
-    ) { itemIndex ->
+    items(count = sources.size, key = { itemIndex -> sources[itemIndex].proxy.name }) { itemIndex ->
+      val source = sources[itemIndex]
       val item =
-        if (useRawStates) {
-          val state = rawStates[itemIndex]
-          var uiState by
-            remember(state.proxy.name) { mutableStateOf(state.apply { update(true) }.toUiState()) }
-
-          LaunchedEffect(refreshVersion) {
-            state.update(true)
-            uiState = state.toUiState()
-          }
-
-          uiState
-        } else {
-          previewItems[itemIndex]
+        remember(source, refreshVersion, proxyLine) {
+          source.toUiState(
+            proxyLine = proxyLine,
+            selectedControl = selectedControl,
+            selectedBackground = selectedBackground,
+            unselectedControl = unselectedControl,
+            unselectedBackground = unselectedBackground,
+          )
         }
 
       ProxyItemCard(
@@ -437,7 +454,7 @@ private fun ProxyItemCard(
     Modifier.fillMaxWidth()
       .then(if (proxyLine == 1) Modifier else Modifier.shadow(elevation = 2.dp, shape = shape))
       .clip(shape)
-      .background(Color(item.background))
+      .background(item.background)
       .clickable(enabled = selectable, onClick = onClick)
       .padding(
         horizontal =
@@ -453,7 +470,7 @@ private fun ProxyItemCard(
     Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(4.dp)) {
       Text(
         text = item.title,
-        color = Color(item.controls),
+        color = item.controls,
         style = MaterialTheme.typography.bodyMedium,
         fontWeight = FontWeight.Medium,
         maxLines = 1,
@@ -461,7 +478,7 @@ private fun ProxyItemCard(
       )
       Text(
         text = item.subtitle,
-        color = Color(item.controls),
+        color = item.controls,
         style = MaterialTheme.typography.bodySmall,
         maxLines = 1,
         overflow = TextOverflow.Ellipsis,
@@ -471,7 +488,7 @@ private fun ProxyItemCard(
     if (item.delayText.isNotEmpty()) {
       Text(
         text = item.delayText,
-        color = Color(item.controls),
+        color = item.controls,
         style = MaterialTheme.typography.bodyMedium,
         maxLines = 1,
       )
@@ -614,76 +631,95 @@ private fun columnsForProxyLine(proxyLine: Int): Int =
 @PreviewMihomo
 @Composable
 private fun ProxyScreenPreview() = MihomoTheme {
-  val selectedBackground = MaterialTheme.colorScheme.primary.toArgb()
-  val selectedControls = MaterialTheme.colorScheme.onPrimary.toArgb()
-  val unselectedBackground = MaterialTheme.colorScheme.surface.toArgb()
-  val unselectedControls = MaterialTheme.colorScheme.onSurface.toArgb()
-  val groups =
-    remember(selectedBackground, selectedControls, unselectedBackground, unselectedControls) {
-      listOf(
-        ProxyGroupUiState().apply {
-          selectable = true
-          items =
-            listOf(
-              ProxyItemUiState(
-                key = "auto",
-                title = "Auto",
-                subtitle = "URLTest(HK-01)",
-                delayText = "48",
-                background = selectedBackground,
-                controls = selectedControls,
-              ),
-              ProxyItemUiState(
-                key = "hk-01",
-                title = "Hong Kong 01",
-                subtitle = "BGP | 1.2x",
-                delayText = "62",
-                background = unselectedBackground,
-                controls = unselectedControls,
-              ),
-              ProxyItemUiState(
-                key = "jp-01",
-                title = "Japan 01",
-                subtitle = "Tokyo | IPLC",
-                delayText = "89",
-                background = unselectedBackground,
-                controls = unselectedControls,
-              ),
-              ProxyItemUiState(
-                key = "sg-01",
-                title = "Singapore 01",
-                subtitle = "Premium",
-                delayText = "74",
-                background = unselectedBackground,
-                controls = unselectedControls,
-              ),
-            )
-        },
-        ProxyGroupUiState().apply {
-          selectable = true
-          urlTesting = true
-          items =
-            listOf(
-              ProxyItemUiState(
-                key = "fallback-a",
-                title = "Fallback A",
-                subtitle = "Selector(Node-2)",
-                delayText = "128",
-                background = unselectedBackground,
-                controls = unselectedControls,
-              ),
-              ProxyItemUiState(
-                key = "fallback-b",
-                title = "Fallback B",
-                subtitle = "Selector(Node-4)",
-                delayText = "156",
-                background = unselectedBackground,
-                controls = unselectedControls,
-              ),
-            )
-        },
-      )
-    }
+  val groups = remember {
+    listOf(
+      ProxyGroupUiState().apply {
+        selectable = true
+        sources =
+          listOf(
+            ProxyItemSource(
+              proxy =
+                Proxy(
+                  name = "auto",
+                  title = "Auto",
+                  subtitle = "",
+                  type = Proxy.Type.URLTest,
+                  delay = 48,
+                ),
+              parent = ProxyState("auto"),
+              link = ProxyState("HK-01"),
+            ),
+            ProxyItemSource(
+              proxy =
+                Proxy(
+                  name = "hk-01",
+                  title = "Hong Kong 01",
+                  subtitle = "BGP | 1.2x",
+                  type = Proxy.Type.Shadowsocks,
+                  delay = 62,
+                ),
+              parent = ProxyState("auto"),
+              link = null,
+            ),
+            ProxyItemSource(
+              proxy =
+                Proxy(
+                  name = "jp-01",
+                  title = "Japan 01",
+                  subtitle = "Tokyo | IPLC",
+                  type = Proxy.Type.Shadowsocks,
+                  delay = 89,
+                ),
+              parent = ProxyState("auto"),
+              link = null,
+            ),
+            ProxyItemSource(
+              proxy =
+                Proxy(
+                  name = "sg-01",
+                  title = "Singapore 01",
+                  subtitle = "Premium",
+                  type = Proxy.Type.Shadowsocks,
+                  delay = 74,
+                ),
+              parent = ProxyState("auto"),
+              link = null,
+            ),
+          )
+      },
+      ProxyGroupUiState().apply {
+        selectable = true
+        urlTesting = true
+        sources =
+          listOf(
+            ProxyItemSource(
+              proxy =
+                Proxy(
+                  name = "fallback-a",
+                  title = "Fallback A",
+                  subtitle = "",
+                  type = Proxy.Type.Selector,
+                  delay = 128,
+                ),
+              parent = ProxyState("elsewhere"),
+              link = ProxyState("Node-2"),
+            ),
+            ProxyItemSource(
+              proxy =
+                Proxy(
+                  name = "fallback-b",
+                  title = "Fallback B",
+                  subtitle = "",
+                  type = Proxy.Type.Selector,
+                  delay = 156,
+                ),
+              parent = ProxyState("elsewhere"),
+              link = ProxyState("Node-4"),
+            ),
+          )
+      },
+    )
+  }
 
   ProxyScreen(
     groupNames = listOf("Auto", "Fallback"),
