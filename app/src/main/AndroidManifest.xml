@@ -38,7 +38,7 @@
             android:value="@integer/release_code" />
 
         <activity
-            android:name=".MainActivity"
+            android:name=".main.MainActivity"
             android:exported="true"
             android:launchMode="singleTask">
             <intent-filter>
@@ -52,7 +52,7 @@
         <activity-alias
             android:name=".MainActivityAlias"
             android:exported="true"
-            android:targetActivity=".MainActivity">
+            android:targetActivity=".main.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -62,7 +62,7 @@
         </activity-alias>
 
         <activity
-            android:name=".ExternalControlActivity"
+            android:name=".main.ExternalControlActivity"
             android:excludeFromRecents="true"
             android:exported="true"
             android:label="@string/external_control_activity"
@@ -92,60 +92,60 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ApkBrokenActivity"
+            android:name=".crash.ApkBrokenActivity"
             android:exported="false" />
         <activity
-            android:name=".AppCrashedActivity"
+            android:name=".crash.AppCrashedActivity"
             android:exported="false"
             android:launchMode="singleTask" />
         <activity
-            android:name=".ProfilesActivity"
+            android:name=".profile.ProfilesActivity"
             android:configChanges="uiMode" />
         <activity
-            android:name=".NewProfileActivity"
+            android:name=".profile.NewProfileActivity"
             android:exported="false" />
         <activity
-            android:name=".PropertiesActivity"
+            android:name=".profile.PropertiesActivity"
             android:exported="false" />
         <activity
-            android:name=".ProxyActivity"
+            android:name=".proxy.ProxyActivity"
             android:exported="false" />
         <activity
-            android:name=".ProvidersActivity"
+            android:name=".profile.ProvidersActivity"
             android:exported="false" />
         <activity
-            android:name=".LogsActivity"
+            android:name=".log.LogsActivity"
             android:exported="false" />
         <activity
-            android:name=".LogcatActivity"
+            android:name=".log.LogcatActivity"
             android:exported="false" />
         <activity
-            android:name=".SettingsActivity"
+            android:name=".settings.SettingsActivity"
             android:exported="false" />
         <activity
-            android:name=".NetworkSettingsActivity"
+            android:name=".settings.NetworkSettingsActivity"
             android:exported="false" />
         <activity
-            android:name=".AppSettingsActivity"
+            android:name=".settings.AppSettingsActivity"
             android:exported="false" />
         <activity
-            android:name=".OverrideSettingsActivity"
+            android:name=".settings.OverrideSettingsActivity"
             android:exported="false" />
         <activity
-            android:name=".MetaFeatureSettingsActivity"
+            android:name=".settings.MetaFeatureSettingsActivity"
             android:exported="false" />
         <activity
-            android:name=".AccessControlActivity"
+            android:name=".settings.AccessControlActivity"
             android:exported="false" />
         <activity
-            android:name=".HelpActivity"
+            android:name=".main.HelpActivity"
             android:exported="false" />
         <activity
-            android:name=".FilesActivity"
+            android:name=".files.FilesActivity"
             android:exported="false" />
 
         <service
-            android:name=".LogcatService"
+            android:name=".log.LogcatService"
             android:exported="false"
             android:label="@string/clash_logcat"
             android:foregroundServiceType="specialUse">
