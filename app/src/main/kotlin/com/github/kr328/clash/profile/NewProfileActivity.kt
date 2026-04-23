@@ -96,16 +96,14 @@ class NewProfileActivity : DesignActivity<NewProfileDesign>() {
 
   private suspend fun launchProperties(uuid: UUID) {
     val r =
-      startActivityForResult(
-        ActivityResultContracts.StartActivityForResult(),
-        PropertiesActivity::class.intent.setUUID(uuid),
-      )
+      ActivityResultContracts.StartActivityForResult()
+        .startForResult(PropertiesActivity::class.intent.setUUID(uuid))
 
     if (r.resultCode == RESULT_OK) finish()
   }
 
   private suspend fun ProfileProvider.External.get(): Pair<Uri, String?>? {
-    val result = startActivityForResult(ActivityResultContracts.StartActivityForResult(), intent)
+    val result = ActivityResultContracts.StartActivityForResult().startForResult(intent)
 
     if (result.resultCode != RESULT_OK) return null
 

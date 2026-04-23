@@ -59,12 +59,12 @@ class FilesActivity : DesignActivity<FilesDesign>() {
               }
 
               is FilesDesign.Request.OpenFile -> {
-                startActivityForResult(
-                  ActivityResultContracts.StartActivityForResult(),
-                  Intent(Intent.ACTION_VIEW)
-                    .setDataAndType(client.buildDocumentUri(it.file.id), "text/plain")
-                    .grantPermissions(),
-                )
+                ActivityResultContracts.StartActivityForResult()
+                  .startForResult(
+                    Intent(Intent.ACTION_VIEW)
+                      .setDataAndType(client.buildDocumentUri(it.file.id), "text/plain")
+                      .grantPermissions()
+                  )
               }
 
               is FilesDesign.Request.DeleteFile -> {
@@ -76,7 +76,7 @@ class FilesActivity : DesignActivity<FilesDesign>() {
               }
 
               is FilesDesign.Request.ImportFile -> {
-                val uri: Uri? = startActivityForResult(ActivityResultContracts.GetContent(), "*/*")
+                val uri: Uri? = ActivityResultContracts.GetContent().startForResult("*/*")
 
                 if (uri != null) {
                   if (it.file == null) {
@@ -89,10 +89,7 @@ class FilesActivity : DesignActivity<FilesDesign>() {
 
               is FilesDesign.Request.ExportFile -> {
                 val uri: Uri? =
-                  startActivityForResult(
-                    ActivityResultContracts.CreateDocument("text/plain"),
-                    it.file.name,
-                  )
+                  ActivityResultContracts.CreateDocument("text/plain").startForResult(it.file.name)
 
                 if (uri != null) {
                   client.copyDocument(uri, it.file.id)

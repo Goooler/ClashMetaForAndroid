@@ -13,11 +13,9 @@ import com.github.kr328.clash.model.DarkMode
 import com.github.kr328.clash.remote.Broadcasts
 import com.github.kr328.clash.remote.Remote
 import com.github.kr328.clash.store.UiStore
-import com.github.kr328.clash.util.ActivityResultLifecycle
 import com.github.kr328.clash.util.ApplicationObserver
 import com.github.kr328.clash.util.showExceptionSnackbar
 import java.util.UUID
-import java.util.concurrent.atomic.AtomicInteger
 import kotlin.coroutines.resume
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -30,7 +28,6 @@ import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
 
 abstract class BaseActivity : ComponentActivity(), Broadcasts.Observer {
-  private val nextRequestKey = AtomicInteger(0)
   protected var activityStarted: Boolean = false
   protected val uiStore by lazy { UiStore(this) }
 
@@ -56,17 +53,11 @@ abstract class BaseActivity : ComponentActivity(), Broadcasts.Observer {
     Remote.broadcasts.removeObserver(this)
   }
 
-  suspend fun <I, O> startActivityForResult(contracts: ActivityResultContract<I, O>, input: I): O =
+  suspend fun <I, O> ActivityResultContract<I, O>.startForResult(input: I): O =
     withContext(Dispatchers.Main) {
-      val requestKey = nextRequestKey.getAndIncrement().toString()
-
-      ActivityResultLifecycle().use { lifecycle, start ->
-        suspendCancellableCoroutine { c ->
-          activityResultRegistry
-            .register(requestKey, lifecycle, contracts) { c.resume(it) }
-            .apply { start() }
-            .launch(input)
-        }
+      suspendCancellableCoroutine { c ->
+        registerForActivityResult(contract = this@startForResult, callback = c::resume)
+          .launch(input = input)
       }
     }
 }

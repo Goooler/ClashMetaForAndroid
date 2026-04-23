@@ -113,8 +113,7 @@ class MainActivity : DesignActivity<MainDesign>() {
 
     try {
       if (vpnRequest != null) {
-        val result =
-          startActivityForResult(ActivityResultContracts.StartActivityForResult(), vpnRequest)
+        val result = ActivityResultContracts.StartActivityForResult().startForResult(vpnRequest)
 
         if (result.resultCode == RESULT_OK) startClashService()
       }
