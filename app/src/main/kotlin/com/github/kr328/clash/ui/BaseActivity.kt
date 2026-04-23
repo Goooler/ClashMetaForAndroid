@@ -45,7 +45,7 @@ abstract class BaseActivity<D : Design<*>> :
   private val nextRequestKey = AtomicInteger(0)
   private var dayNight: DayNight = DayNight.Day
 
-  protected abstract suspend fun main()
+  protected open suspend fun main() = Unit
 
   fun defer(operation: suspend () -> Unit) {
     this.defer = operation
