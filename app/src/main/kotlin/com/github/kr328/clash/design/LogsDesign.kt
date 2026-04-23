@@ -33,7 +33,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import com.github.kr328.clash.R
 import com.github.kr328.clash.design.component.MihomoScaffold
 import com.github.kr328.clash.design.model.LogFile
@@ -161,12 +160,17 @@ private fun LogsActionItem(
   @DrawableRes icon: Int? = null,
 ) {
   val dimens = mihomoDimens
+  val headerLayoutWidth = dimens.itemHeaderComponentSize + dimens.itemHeaderMargin * 2
   Row(
-    modifier = modifier.fillMaxWidth().clickable(onClick = onClick).padding(end = 20.dp),
+    modifier =
+      modifier
+        .fillMaxWidth()
+        .clickable(onClick = onClick)
+        .padding(end = dimens.settingsItemEndPadding),
     verticalAlignment = Alignment.CenterVertically,
   ) {
     Box(
-      modifier = Modifier.size(width = 65.dp, height = dimens.itemMinHeight),
+      modifier = Modifier.size(width = headerLayoutWidth, height = dimens.itemMinHeight),
       contentAlignment = Alignment.Center,
     ) {
       if (icon != null) {
