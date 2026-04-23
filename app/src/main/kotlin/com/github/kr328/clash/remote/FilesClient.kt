@@ -4,7 +4,7 @@ import android.content.Context
 import android.net.Uri
 import android.provider.DocumentsContract as DC
 import com.github.kr328.clash.common.constants.Authorities
-import com.github.kr328.clash.design.model.File
+import com.github.kr328.clash.model.File
 import com.github.kr328.clash.util.copyContentTo
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
