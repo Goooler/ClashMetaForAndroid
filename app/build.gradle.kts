@@ -80,8 +80,6 @@ androidComponents {
 
 composeCompiler { stabilityConfigurationFiles.add(layout.projectDirectory.file("stability.conf")) }
 
-kotlin { compilerOptions { freeCompilerArgs.addAll("-Xcontext-parameters") } }
-
 dependencies {
   implementation(projects.core)
   implementation(projects.service)
