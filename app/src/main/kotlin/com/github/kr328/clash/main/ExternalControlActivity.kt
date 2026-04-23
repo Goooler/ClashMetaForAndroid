@@ -3,7 +3,6 @@ package com.github.kr328.clash.main
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import android.widget.Toast
 import com.github.kr328.clash.R
 import com.github.kr328.clash.common.constants.Intents
 import com.github.kr328.clash.common.util.intent
@@ -13,6 +12,7 @@ import com.github.kr328.clash.remote.Remote
 import com.github.kr328.clash.service.model.Profile
 import com.github.kr328.clash.util.startClashService
 import com.github.kr328.clash.util.stopClashService
+import com.github.kr328.clash.util.toast
 import com.github.kr328.clash.util.withProfile
 import java.util.Locale
 import kotlinx.coroutines.CoroutineScope
@@ -57,35 +57,31 @@ class ExternalControlActivity : Activity(), CoroutineScope by MainScope() {
         if (!Remote.broadcasts.clashRunning) {
           startClash()
         } else {
-          Toast.makeText(this, R.string.external_control_started, Toast.LENGTH_LONG).show()
+          toast(R.string.external_control_started)
         }
 
       Intents.ACTION_STOP_CLASH ->
         if (Remote.broadcasts.clashRunning) {
           stopClash()
         } else {
-          Toast.makeText(this, R.string.external_control_stopped, Toast.LENGTH_LONG).show()
+          toast(R.string.external_control_stopped)
         }
     }
     return finish()
   }
 
   private fun startClash() {
-    //        if (currentProfile == null) {
-    //            Toast.makeText(this, R.string.no_profile_selected, Toast.LENGTH_LONG).show()
-    //            return
-    //        }
     val vpnRequest = startClashService()
     if (vpnRequest != null) {
-      Toast.makeText(this, R.string.unable_to_start_vpn, Toast.LENGTH_LONG).show()
+      toast(R.string.unable_to_start_vpn)
       return
     }
-    Toast.makeText(this, R.string.external_control_started, Toast.LENGTH_LONG).show()
+    toast(R.string.external_control_started)
   }
 
   private fun stopClash() {
     stopClashService()
-    Toast.makeText(this, R.string.external_control_stopped, Toast.LENGTH_LONG).show()
+    toast(R.string.external_control_stopped)
   }
 
   override fun finish() {

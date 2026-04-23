@@ -3,13 +3,13 @@ package com.github.kr328.clash.settings
 import android.database.Cursor
 import android.net.Uri
 import android.provider.OpenableColumns
-import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import com.github.kr328.clash.R
 import com.github.kr328.clash.core.Clash
 import com.github.kr328.clash.settings.ui.MetaFeatureSettingsDesign
 import com.github.kr328.clash.ui.BaseActivity
 import com.github.kr328.clash.util.clashDir
+import com.github.kr328.clash.util.toast
 import com.github.kr328.clash.util.withClash
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import java.io.File
@@ -103,11 +103,10 @@ class MetaFeatureSettingsActivity : BaseActivity<MetaFeatureSettingsDesign>() {
             FileOutputStream(outputFile).use { outs -> ins?.copyTo(outs) }
           }
         }
-        Toast.makeText(this, getString(R.string.geofile_imported, displayName), Toast.LENGTH_LONG)
-          .show()
+        toast(getString(R.string.geofile_imported, displayName))
         return
       }
     }
-    Toast.makeText(this, R.string.geofile_import_failed, Toast.LENGTH_LONG).show()
+    toast(R.string.geofile_import_failed)
   }
 }

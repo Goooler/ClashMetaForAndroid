@@ -1,5 +1,8 @@
 package com.github.kr328.clash.util
 
+import android.content.Context
+import android.widget.Toast
+import androidx.annotation.StringRes
 import com.github.kr328.clash.R
 import com.github.kr328.clash.ui.Design
 import com.github.kr328.clash.ui.SnackbarDuration
@@ -20,4 +23,12 @@ fun Design<*>.showExceptionSnackbar(message: CharSequence) {
 
 fun Design<*>.showExceptionSnackbar(exception: Exception) {
   showExceptionSnackbar(exception.message ?: "Unknown")
+}
+
+fun Context.toast(@StringRes resId: Int, duration: Int = Toast.LENGTH_LONG) {
+  toast(getString(resId), duration)
+}
+
+fun Context.toast(text: String, duration: Int = Toast.LENGTH_LONG) {
+  Toast.makeText(this, text, duration).show()
 }
