@@ -1,0 +1,214 @@
+package com.github.kr328.clash.settings.vm
+
+import android.app.Application
+import android.database.Cursor
+import android.net.Uri
+import android.provider.OpenableColumns
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.viewModelScope
+import com.github.kr328.clash.core.Clash
+import com.github.kr328.clash.core.model.ConfigurationOverride as UiState
+import com.github.kr328.clash.settings.ui.MetaFeatureSettingsActions
+import com.github.kr328.clash.util.clashDir
+import com.github.kr328.clash.util.withClash
+import java.io.File
+import java.io.FileOutputStream
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
+
+class MetaFeatureSettingsViewModel(app: Application) :
+  AndroidViewModel(app), MetaFeatureSettingsActions {
+  private val appContext = app
+  private val validDatabaseExtensions = listOf(".metadb", ".db", ".dat", ".mmdb")
+  private var skipPersist = false
+
+  val uiState: StateFlow<UiState>
+    field = MutableStateFlow(UiState())
+
+  val importResult: StateFlow<ImportResult>
+    field = MutableStateFlow<ImportResult>(ImportResult.NotStart)
+
+  init {
+    viewModelScope.launch {
+      uiState.value = withClash { queryOverride(Clash.OverrideSlot.Persist) }
+    }
+  }
+
+  fun importGeoFile(uri: Uri?, importType: ImportType) {
+    viewModelScope.launch(Dispatchers.IO) {
+      val resolver = appContext.contentResolver
+      val cursor: Cursor =
+        uri?.let { resolver.query(it, null, null, null, null, null) }
+          ?: run {
+            importResult.value = ImportResult.Failed
+            return@launch
+          }
+
+      importResult.value = cursor.use {
+        if (!it.moveToFirst()) return@use ImportResult.Failed
+
+        val columnIndex = it.getColumnIndex(OpenableColumns.DISPLAY_NAME)
+        val displayName = if (columnIndex != -1) it.getString(columnIndex) else ""
+        val ext = "." + displayName.substringAfterLast(".")
+
+        if (!validDatabaseExtensions.contains(ext)) {
+          return@use ImportResult.UnsupportedFormat(validDatabaseExtensions.joinToString("/"))
+        }
+
+        val outputFileName =
+          when (importType) {
+            ImportType.GeoIp -> "geoip$ext"
+            ImportType.GeoSite -> "geosite$ext"
+            ImportType.Country -> "country$ext"
+            ImportType.ASN -> "ASN$ext"
+          }
+
+        val outputFile = File(appContext.clashDir, outputFileName)
+        outputFile.parentFile?.mkdirs()
+        resolver.openInputStream(uri).use { ins ->
+          FileOutputStream(outputFile).use { outs ->
+            if (ins == null) return@use ImportResult.Failed
+            ins.copyTo(outs)
+          }
+        }
+        return@use ImportResult.Success(displayName)
+      }
+    }
+  }
+
+  override fun updateUnifiedDelay(value: Boolean?) = updateState { it.copy(unifiedDelay = value) }
+
+  override fun updateGeodataMode(value: Boolean?) = updateState { it.copy(geodataMode = value) }
+
+  override fun updateTcpConcurrent(value: Boolean?) = updateState { it.copy(tcpConcurrent = value) }
+
+  override fun updateFindProcessMode(value: UiState.FindProcessMode?) = updateState {
+    it.copy(findProcessMode = value)
+  }
+
+  override fun updateSnifferEnable(value: Boolean?) = updateState {
+    it.copy(sniffer = it.sniffer.copy(enable = value))
+  }
+
+  override fun updateSniffHttpPorts(value: List<String>?) = updateState {
+    it.copy(
+      sniffer =
+        it.sniffer.copy(
+          sniff = it.sniffer.sniff.copy(http = it.sniffer.sniff.http.copy(ports = value))
+        )
+    )
+  }
+
+  override fun updateSniffHttpOverrideDestination(value: Boolean?) = updateState {
+    it.copy(
+      sniffer =
+        it.sniffer.copy(
+          sniff =
+            it.sniffer.sniff.copy(http = it.sniffer.sniff.http.copy(overrideDestination = value))
+        )
+    )
+  }
+
+  override fun updateSniffTlsPorts(value: List<String>?) = updateState {
+    it.copy(
+      sniffer =
+        it.sniffer.copy(
+          sniff = it.sniffer.sniff.copy(tls = it.sniffer.sniff.tls.copy(ports = value))
+        )
+    )
+  }
+
+  override fun updateSniffTlsOverrideDestination(value: Boolean?) = updateState {
+    it.copy(
+      sniffer =
+        it.sniffer.copy(
+          sniff =
+            it.sniffer.sniff.copy(tls = it.sniffer.sniff.tls.copy(overrideDestination = value))
+        )
+    )
+  }
+
+  override fun updateSniffQuicPorts(value: List<String>?) = updateState {
+    it.copy(
+      sniffer =
+        it.sniffer.copy(
+          sniff = it.sniffer.sniff.copy(quic = it.sniffer.sniff.quic.copy(ports = value))
+        )
+    )
+  }
+
+  override fun updateSniffQuicOverrideDestination(value: Boolean?) = updateState {
+    it.copy(
+      sniffer =
+        it.sniffer.copy(
+          sniff =
+            it.sniffer.sniff.copy(quic = it.sniffer.sniff.quic.copy(overrideDestination = value))
+        )
+    )
+  }
+
+  override fun updateForceDnsMapping(value: Boolean?) = updateState {
+    it.copy(sniffer = it.sniffer.copy(forceDnsMapping = value))
+  }
+
+  override fun updateParsePureIp(value: Boolean?) = updateState {
+    it.copy(sniffer = it.sniffer.copy(parsePureIp = value))
+  }
+
+  override fun updateOverrideDestination(value: Boolean?) = updateState {
+    it.copy(sniffer = it.sniffer.copy(overrideDestination = value))
+  }
+
+  override fun updateForceDomain(value: List<String>?) = updateState {
+    it.copy(sniffer = it.sniffer.copy(forceDomain = value))
+  }
+
+  override fun updateSkipDomain(value: List<String>?) = updateState {
+    it.copy(sniffer = it.sniffer.copy(skipDomain = value))
+  }
+
+  override fun updateSkipSrcAddress(value: List<String>?) = updateState {
+    it.copy(sniffer = it.sniffer.copy(skipSrcAddress = value))
+  }
+
+  override fun updateSkipDstAddress(value: List<String>?) = updateState {
+    it.copy(sniffer = it.sniffer.copy(skipDstAddress = value))
+  }
+
+  fun persistOverride() {
+    viewModelScope.launch(Dispatchers.IO) {
+      if (skipPersist) return@launch
+      withClash { patchOverride(Clash.OverrideSlot.Persist, uiState.value) }
+    }
+  }
+
+  fun resetOverride() {
+    viewModelScope.launch(Dispatchers.IO) {
+      skipPersist = true
+      withClash { clearOverride(Clash.OverrideSlot.Persist) }
+    }
+  }
+
+  private inline fun updateState(transform: (UiState) -> UiState) {
+    uiState.value = transform(uiState.value)
+  }
+
+  enum class ImportType {
+    GeoIp,
+    GeoSite,
+    Country,
+    ASN,
+  }
+
+  sealed interface ImportResult {
+    data object NotStart : ImportResult
+
+    data class Success(val displayName: String) : ImportResult
+
+    data class UnsupportedFormat(val summary: String) : ImportResult
+
+    data object Failed : ImportResult
+  }
+}
