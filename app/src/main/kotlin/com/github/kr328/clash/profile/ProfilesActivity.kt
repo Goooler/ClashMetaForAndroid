@@ -81,10 +81,7 @@ class ProfilesActivity : BaseActivity<ProfilesDesign>() {
     launch {
       var name: String? = null
       withProfile { name = queryByUUID(uuid)?.name }
-      design?.showToast(
-        getString(R.string.toast_profile_updated_complete, name),
-        ToastDuration.Long,
-      )
+      design?.snackbar(getString(R.string.toast_profile_updated_complete, name), ToastDuration.Long)
     }
   }
 
@@ -93,7 +90,7 @@ class ProfilesActivity : BaseActivity<ProfilesDesign>() {
     launch {
       var name: String? = null
       withProfile { name = queryByUUID(uuid)?.name }
-      design?.showToast(
+      design?.snackbar(
         getString(R.string.toast_profile_updated_failed, name, reason),
         ToastDuration.Long,
       ) {

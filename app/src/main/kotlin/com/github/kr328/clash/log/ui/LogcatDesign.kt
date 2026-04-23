@@ -63,7 +63,7 @@ class LogcatDesign(context: Context, private val streaming: Boolean) :
   private val onCopyMessage: (LogMessage) -> Unit = {
     val data = ClipData.newPlainText("log_message", it.message)
     context.getSystemService<ClipboardManager>()?.setPrimaryClip(data)
-    showToast(R.string.copied, ToastDuration.Short)
+    snackbar(R.string.copied, ToastDuration.Short)
   }
 
   @Composable

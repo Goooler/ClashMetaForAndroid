@@ -72,10 +72,10 @@ class PropertiesActivity : BaseActivity<PropertiesDesign>() {
   private suspend fun PropertiesDesign.verifyAndCommit() {
     when {
       profile.name.isBlank() -> {
-        showToast(R.string.empty_name, ToastDuration.Long)
+        snackbar(R.string.empty_name, ToastDuration.Long)
       }
       profile.type != Profile.Type.File && profile.source.isBlank() -> {
-        showToast(R.string.invalid_url, ToastDuration.Long)
+        snackbar(R.string.invalid_url, ToastDuration.Long)
       }
       else -> {
         try {

@@ -13,11 +13,11 @@ abstract class Design<R>(val context: Context) {
 
   @Composable abstract fun Content()
 
-  fun showToast(resId: Int, duration: ToastDuration, configure: Snackbar.() -> Unit = {}) {
-    return showToast(context.getString(resId), duration, configure)
+  fun snackbar(resId: Int, duration: ToastDuration, configure: Snackbar.() -> Unit = {}) {
+    return snackbar(context.getString(resId), duration, configure)
   }
 
-  fun showToast(
+  fun snackbar(
     message: CharSequence,
     duration: ToastDuration,
     configure: Snackbar.() -> Unit = {},

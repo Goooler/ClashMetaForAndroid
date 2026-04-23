@@ -6,7 +6,7 @@ import com.github.kr328.clash.ui.ToastDuration
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 fun Design<*>.showExceptionSnackbar(message: CharSequence) {
-  showToast(message, ToastDuration.Long) {
+  snackbar(message, ToastDuration.Long) {
     setAction(R.string.detail) {
       MaterialAlertDialogBuilder(it.context)
         .setTitle(R.string.error)

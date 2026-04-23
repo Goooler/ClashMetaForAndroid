@@ -73,7 +73,7 @@ class NetworkSettingsDesign(
 
   init {
     if (running) {
-      showToast(R.string.options_unavailable, ToastDuration.Indefinite)
+      snackbar(R.string.options_unavailable, ToastDuration.Indefinite)
     }
   }
 }

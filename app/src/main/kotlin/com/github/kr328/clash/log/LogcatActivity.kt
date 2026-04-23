@@ -76,7 +76,7 @@ class LogcatActivity : BaseActivity<LogcatDesign>() {
             try {
               writeLogTo(design, messages, file, output)
 
-              design.showToast(R.string.file_exported, ToastDuration.Long)
+              design.snackbar(R.string.file_exported, ToastDuration.Long)
             } catch (e: Exception) {
               design.showExceptionSnackbar(e)
             }
