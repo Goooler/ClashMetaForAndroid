@@ -97,7 +97,7 @@ class ProxyDesign(
     data class UrlTest(val index: Int) : Request
   }
 
-  private val config = ProxyViewConfig(context, uiStore.proxyLine)
+  private val config = ProxyViewConfig(uiStore.proxyLine)
   private val groups = List(groupNames.size) { ProxyGroupUiState() }
   private val initialPage = groupNames.indexOf(uiStore.proxyLastGroup).coerceAtLeast(0)
 
@@ -110,6 +110,11 @@ class ProxyDesign(
 
   @Composable
   override fun Content() = MihomoTheme {
+    config.selectedControl = MaterialTheme.colorScheme.onPrimary.toArgb()
+    config.selectedBackground = MaterialTheme.colorScheme.primary.toArgb()
+    config.unselectedControl = MaterialTheme.colorScheme.onSurface.toArgb()
+    config.unselectedBackground = MaterialTheme.colorScheme.surface.toArgb()
+
     ProxyScreen(
       groupNames = groupNames,
       groups = groups,

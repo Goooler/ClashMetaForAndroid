@@ -22,7 +22,7 @@ class ProxyViewState(
   var title: String = ""
   var subtitle: String = ""
   var delayText: String = ""
-  var background: Int = config.unselectedBackground
+  var background: Int = config.currentUnselectedBackground()
   var controls: Int = config.unselectedControl
 
   private var delay: Int = 0
@@ -66,9 +66,9 @@ class ProxyViewState(
     controls = if (selected) config.selectedControl else config.unselectedControl
 
     if (snap) {
-      background = if (selected) config.selectedBackground else config.unselectedBackground
+      background = if (selected) config.selectedBackground else config.currentUnselectedBackground()
     } else {
-      val target = if (selected) config.selectedBackground else config.unselectedBackground
+      val target = if (selected) config.selectedBackground else config.currentUnselectedBackground()
 
       if (background != target) {
         val sa = Color.alpha(background)
