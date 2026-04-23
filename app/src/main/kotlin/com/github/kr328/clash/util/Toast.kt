@@ -21,7 +21,7 @@ fun Design<*>.showExceptionSnackbar(message: CharSequence) {
 }
 
 fun Design<*>.showExceptionSnackbar(exception: Exception) {
-  showExceptionSnackbar(exception.message ?: "Unknown")
+  showExceptionSnackbar(exception.message ?: context.getString(R.string.unknown))
 }
 
 fun Context.toast(@StringRes resId: Int, duration: Int = Toast.LENGTH_LONG) {
