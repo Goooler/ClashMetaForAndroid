@@ -78,6 +78,8 @@ androidComponents {
   }
 }
 
+composeCompiler { stabilityConfigurationFiles.add(layout.projectDirectory.file("stability.conf")) }
+
 dependencies {
   implementation(projects.core)
   implementation(projects.service)
