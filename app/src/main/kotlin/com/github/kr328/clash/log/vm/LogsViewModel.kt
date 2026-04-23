@@ -29,7 +29,7 @@ class LogsViewModel(app: Application) : AndroidViewModel(app) {
 
   private suspend fun loadFiles(): List<LogFile> =
     withContext(Dispatchers.IO) {
-      application.cacheDir.resolve("logs").listFiles()?.toList().orEmpty().mapNotNull {
+      application.logsDir.listFiles()?.toList().orEmpty().mapNotNull {
         LogFile.parseFromFileName(it.name)
       }
     }
