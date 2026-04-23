@@ -1,15 +1,17 @@
 package com.github.kr328.clash.main
 
-import com.github.kr328.clash.main.ui.HelpDesign
+import android.os.Bundle
+import androidx.activity.compose.setContent
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.ui.Modifier
+import com.github.kr328.clash.main.ui.HelpScreen
 import com.github.kr328.clash.ui.BaseActivity
-import kotlinx.coroutines.isActive
+import com.github.kr328.clash.ui.theme.MihomoTheme
 
-class HelpActivity : BaseActivity<HelpDesign>() {
-  override suspend fun main() {
-    setContentDesign(HelpDesign(this))
+class HelpActivity : BaseActivity() {
+  override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
 
-    while (isActive) {
-      events.receive()
-    }
+    setContent { MihomoTheme { HelpScreen(modifier = Modifier.fillMaxSize()) } }
   }
 }

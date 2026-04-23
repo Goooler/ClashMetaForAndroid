@@ -3,12 +3,12 @@ package com.github.kr328.clash.crash
 import com.github.kr328.clash.common.log.Log
 import com.github.kr328.clash.crash.ui.AppCrashedDesign
 import com.github.kr328.clash.log.util.SystemLogcat
-import com.github.kr328.clash.ui.BaseActivity
+import com.github.kr328.clash.ui.DesignActivity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.withContext
 
-class AppCrashedActivity : BaseActivity<AppCrashedDesign>() {
+class AppCrashedActivity : DesignActivity<AppCrashedDesign>() {
   override suspend fun main() {
     val design = AppCrashedDesign(this)
 

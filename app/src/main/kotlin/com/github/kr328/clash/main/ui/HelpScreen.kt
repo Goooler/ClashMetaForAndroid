@@ -2,7 +2,6 @@ package com.github.kr328.clash.main.ui
 
 import android.content.Context
 import android.content.Intent
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -11,7 +10,6 @@ import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.fromHtml
 import androidx.core.net.toUri
 import com.github.kr328.clash.R
-import com.github.kr328.clash.ui.Design
 import com.github.kr328.clash.ui.component.SettingsCategoryTitle
 import com.github.kr328.clash.ui.component.SettingsClickableItem
 import com.github.kr328.clash.ui.component.SettingsCommonScreen
@@ -19,12 +17,8 @@ import com.github.kr328.clash.ui.component.SettingsTipsItem
 import com.github.kr328.clash.ui.theme.MihomoTheme
 import com.github.kr328.clash.ui.theme.PreviewMihomo
 
-class HelpDesign(context: Context) : Design<Unit>(context) {
-  @Composable override fun Content() = MihomoTheme { HelpScreen(modifier = Modifier.fillMaxSize()) }
-}
-
 @Composable
-private fun HelpScreen(modifier: Modifier = Modifier) {
+fun HelpScreen(modifier: Modifier = Modifier) {
   SettingsCommonScreen(title = stringResource(R.string.help), modifier = modifier) {
     val context = LocalContext.current
     SettingsTipsItem(text = AnnotatedString.fromHtml(stringResource(R.string.tips_help)))

@@ -3,11 +3,11 @@ package com.github.kr328.clash.settings
 import com.github.kr328.clash.common.util.intent
 import com.github.kr328.clash.service.store.ServiceStore
 import com.github.kr328.clash.settings.ui.NetworkSettingsDesign
-import com.github.kr328.clash.ui.BaseActivity
+import com.github.kr328.clash.ui.DesignActivity
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.selects.select
 
-class NetworkSettingsActivity : BaseActivity<NetworkSettingsDesign>() {
+class NetworkSettingsActivity : DesignActivity<NetworkSettingsDesign>() {
   override suspend fun main() {
     val design = NetworkSettingsDesign(this, uiStore, ServiceStore(this), clashRunning)
 

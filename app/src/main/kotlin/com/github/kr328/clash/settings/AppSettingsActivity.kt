@@ -8,12 +8,12 @@ import com.github.kr328.clash.model.Behavior
 import com.github.kr328.clash.service.store.ServiceStore
 import com.github.kr328.clash.settings.ui.AppSettingsDesign
 import com.github.kr328.clash.store.UiStore.Companion.mainActivityAlias
-import com.github.kr328.clash.ui.BaseActivity
+import com.github.kr328.clash.ui.DesignActivity
 import com.github.kr328.clash.util.ApplicationObserver
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.selects.select
 
-class AppSettingsActivity : BaseActivity<AppSettingsDesign>(), Behavior {
+class AppSettingsActivity : DesignActivity<AppSettingsDesign>(), Behavior {
   override suspend fun main() {
     val design =
       AppSettingsDesign(this, uiStore, ServiceStore(this), this, clashRunning, ::onHideIconChange)

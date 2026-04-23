@@ -29,26 +29,31 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
 
-abstract class BaseActivity<D : Design<*>> :
-  ComponentActivity(), CoroutineScope by MainScope(), Broadcasts.Observer {
-
-  protected val uiStore by lazy { UiStore(this) }
-  protected val events = Channel<Event>(Channel.UNLIMITED)
-  protected var activityStarted: Boolean = false
-  protected val clashRunning: Boolean
-    get() = Remote.broadcasts.clashRunning
-
-  protected var design: D? = null
-
-  private var defer: suspend () -> Unit = {}
-  private var deferRunning = false
+abstract class BaseActivity : ComponentActivity(), Broadcasts.Observer {
   private val nextRequestKey = AtomicInteger(0)
-  private var dayNight: DayNight = DayNight.Day
+  protected var activityStarted: Boolean = false
+  protected val uiStore by lazy { UiStore(this) }
 
-  protected abstract suspend fun main()
+  override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
+    enableEdgeToEdge()
 
-  fun defer(operation: suspend () -> Unit) {
-    this.defer = operation
+    // Apply excludeFromRecents setting to all app tasks.
+    checkNotNull(getSystemService<ActivityManager>()).appTasks.forEach { task ->
+      task.setExcludeFromRecents(uiStore.hideFromRecents)
+    }
+  }
+
+  override fun onStart() {
+    super.onStart()
+    activityStarted = true
+    Remote.broadcasts.addObserver(this)
+  }
+
+  override fun onStop() {
+    super.onStop()
+    activityStarted = false
+    Remote.broadcasts.removeObserver(this)
   }
 
   suspend fun <I, O> startActivityForResult(contracts: ActivityResultContract<I, O>, input: I): O =
@@ -64,36 +69,43 @@ abstract class BaseActivity<D : Design<*>> :
         }
       }
     }
+}
+
+abstract class DesignActivity<D : Design<*>> : BaseActivity(), CoroutineScope by MainScope() {
+  protected val events = Channel<Event>(Channel.UNLIMITED)
+  protected val clashRunning: Boolean
+    get() = Remote.broadcasts.clashRunning
+
+  protected var design: D? = null
+
+  private var defer: suspend () -> Unit = {}
+  private var deferRunning = false
+  private var dayNight: DayNight = DayNight.Day
+
+  protected open suspend fun main() = Unit
+
+  fun defer(operation: suspend () -> Unit) {
+    this.defer = operation
+  }
 
   suspend fun setContentDesign(design: D) =
     withContext(Dispatchers.Main) {
-      this@BaseActivity.design = design
+      this@DesignActivity.design = design
       setContent(content = design::Content)
     }
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    enableEdgeToEdge()
-
-    // Apply excludeFromRecents setting to all app tasks.
-    checkNotNull(getSystemService<ActivityManager>()).appTasks.forEach { task ->
-      task.setExcludeFromRecents(uiStore.hideFromRecents)
-    }
-
     launch { main() }
   }
 
   override fun onStart() {
     super.onStart()
-    activityStarted = true
-    Remote.broadcasts.addObserver(this)
     events.trySend(Event.ActivityStart)
   }
 
   override fun onStop() {
     super.onStop()
-    activityStarted = false
-    Remote.broadcasts.removeObserver(this)
     events.trySend(Event.ActivityStop)
   }
 

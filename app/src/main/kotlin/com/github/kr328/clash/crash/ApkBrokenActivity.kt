@@ -1,9 +1,9 @@
 package com.github.kr328.clash.crash
 
 import com.github.kr328.clash.crash.ui.ApkBrokenDesign
-import com.github.kr328.clash.ui.BaseActivity
+import com.github.kr328.clash.ui.DesignActivity
 
-class ApkBrokenActivity : BaseActivity<ApkBrokenDesign>() {
+class ApkBrokenActivity : DesignActivity<ApkBrokenDesign>() {
   override suspend fun main() {
     val design = ApkBrokenDesign(this)
 

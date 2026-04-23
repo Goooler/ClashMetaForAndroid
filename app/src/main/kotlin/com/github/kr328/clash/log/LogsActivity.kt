@@ -4,14 +4,14 @@ import com.github.kr328.clash.common.util.intent
 import com.github.kr328.clash.common.util.setFileName
 import com.github.kr328.clash.log.ui.LogsDesign
 import com.github.kr328.clash.model.LogFile
-import com.github.kr328.clash.ui.BaseActivity
+import com.github.kr328.clash.ui.DesignActivity
 import com.github.kr328.clash.util.logsDir
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.selects.select
 import kotlinx.coroutines.withContext
 
-class LogsActivity : BaseActivity<LogsDesign>() {
+class LogsActivity : DesignActivity<LogsDesign>() {
 
   override suspend fun main() {
     val design = LogsDesign(this)

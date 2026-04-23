@@ -6,7 +6,7 @@ import com.github.kr328.clash.common.util.setUUID
 import com.github.kr328.clash.common.util.ticker
 import com.github.kr328.clash.profile.ui.ProfilesDesign
 import com.github.kr328.clash.service.model.Profile
-import com.github.kr328.clash.ui.BaseActivity
+import com.github.kr328.clash.ui.DesignActivity
 import com.github.kr328.clash.ui.SnackbarDuration
 import com.github.kr328.clash.util.withProfile
 import java.util.UUID
@@ -17,7 +17,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.selects.select
 import kotlinx.coroutines.withContext
 
-class ProfilesActivity : BaseActivity<ProfilesDesign>() {
+class ProfilesActivity : DesignActivity<ProfilesDesign>() {
   override suspend fun main() {
     val design = ProfilesDesign(this)
 

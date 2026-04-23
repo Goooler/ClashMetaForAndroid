@@ -18,7 +18,7 @@ import com.github.kr328.clash.profile.ProfilesActivity
 import com.github.kr328.clash.profile.ProvidersActivity
 import com.github.kr328.clash.proxy.ProxyActivity
 import com.github.kr328.clash.settings.SettingsActivity
-import com.github.kr328.clash.ui.BaseActivity
+import com.github.kr328.clash.ui.DesignActivity
 import com.github.kr328.clash.util.startClashService
 import com.github.kr328.clash.util.stopClashService
 import com.github.kr328.clash.util.withClash
@@ -29,7 +29,7 @@ import kotlinx.coroutines.isActive
 import kotlinx.coroutines.selects.select
 import kotlinx.coroutines.withContext
 
-class MainActivity : BaseActivity<MainDesign>() {
+class MainActivity : DesignActivity<MainDesign>() {
   override suspend fun main() {
     val design = MainDesign(this)
 
