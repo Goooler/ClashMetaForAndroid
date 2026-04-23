@@ -120,6 +120,18 @@ val downloadGeoFiles by
         name = "ASN.mmdb"
       }
     }
+
+    val props =
+      providers
+        .fileContents(
+          objects.fileProperty().convention {
+            val localProps = rootProject.file("local.properties")
+            if (localProps.exists()) localProps else rootProject.file("gradle.properties")
+          }
+        )
+        .asText
+    // Skip the task running if match the flag.
+    onlyIf { !props.get().contains("skip.downloadGeoFiles=true") }
   }
 
 tasks.preBuild { dependsOn(downloadGeoFiles) }
