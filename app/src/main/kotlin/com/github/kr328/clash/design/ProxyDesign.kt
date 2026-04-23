@@ -2,7 +2,6 @@ package com.github.kr328.clash.design
 
 import android.content.Context
 import android.widget.Toast
-import androidx.annotation.ColorInt
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -54,7 +53,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
@@ -198,23 +196,23 @@ private data class ProxyItemUiState(
   val title: String,
   val subtitle: String,
   val delayText: String,
-  @get:ColorInt val background: Int,
-  val controls: Int,
+  val background: Color,
+  val controls: Color,
 )
 
 private fun ProxyItemSource.toUiState(
   proxyLine: Int,
-  selectedControl: Int,
-  selectedBackground: Int,
-  unselectedControl: Int,
-  unselectedBackground: Int,
+  selectedControl: Color,
+  selectedBackground: Color,
+  unselectedControl: Color,
+  unselectedBackground: Color,
 ): ProxyItemUiState {
   val selected = proxy.name == parent.now
   val background =
     if (selected) {
       selectedBackground
     } else if (proxyLine == 1) {
-      Color.Transparent.toArgb()
+      Color.Transparent
     } else {
       unselectedBackground
     }
@@ -404,12 +402,12 @@ private fun ProxyGroupPage(
   onProxySelected: (Int, String) -> Unit,
 ) {
   val dimens = mihomoDimens
-  val selectedControl = MaterialTheme.colorScheme.onPrimary.toArgb()
-  val selectedBackground = MaterialTheme.colorScheme.primary.toArgb()
-  val unselectedControl = MaterialTheme.colorScheme.onSurface.toArgb()
-  val unselectedBackground = MaterialTheme.colorScheme.surface.toArgb()
-  val refreshVersion = group.refreshVersion
   val sources = group.sources
+  val refreshVersion = group.refreshVersion
+  val selectedControl = MaterialTheme.colorScheme.onPrimary
+  val selectedBackground = MaterialTheme.colorScheme.primary
+  val unselectedControl = MaterialTheme.colorScheme.onSurface
+  val unselectedBackground = MaterialTheme.colorScheme.surface
 
   LazyVerticalGrid(
     columns = GridCells.Fixed(columnsForProxyLine(proxyLine)),
@@ -422,15 +420,7 @@ private fun ProxyGroupPage(
     items(count = sources.size, key = { itemIndex -> sources[itemIndex].proxy.name }) { itemIndex ->
       val source = sources[itemIndex]
       val item =
-        remember(
-          source,
-          refreshVersion,
-          proxyLine,
-          selectedControl,
-          selectedBackground,
-          unselectedControl,
-          unselectedBackground,
-        ) {
+        remember(source, refreshVersion, proxyLine) {
           source.toUiState(
             proxyLine = proxyLine,
             selectedControl = selectedControl,
@@ -464,7 +454,7 @@ private fun ProxyItemCard(
     Modifier.fillMaxWidth()
       .then(if (proxyLine == 1) Modifier else Modifier.shadow(elevation = 2.dp, shape = shape))
       .clip(shape)
-      .background(Color(item.background))
+      .background(item.background)
       .clickable(enabled = selectable, onClick = onClick)
       .padding(
         horizontal =
@@ -480,7 +470,7 @@ private fun ProxyItemCard(
     Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(4.dp)) {
       Text(
         text = item.title,
-        color = Color(item.controls),
+        color = item.controls,
         style = MaterialTheme.typography.bodyMedium,
         fontWeight = FontWeight.Medium,
         maxLines = 1,
@@ -488,7 +478,7 @@ private fun ProxyItemCard(
       )
       Text(
         text = item.subtitle,
-        color = Color(item.controls),
+        color = item.controls,
         style = MaterialTheme.typography.bodySmall,
         maxLines = 1,
         overflow = TextOverflow.Ellipsis,
@@ -498,7 +488,7 @@ private fun ProxyItemCard(
     if (item.delayText.isNotEmpty()) {
       Text(
         text = item.delayText,
-        color = Color(item.controls),
+        color = item.controls,
         style = MaterialTheme.typography.bodyMedium,
         maxLines = 1,
       )
