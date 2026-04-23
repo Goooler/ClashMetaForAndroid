@@ -99,8 +99,7 @@
             android:exported="false"
             android:launchMode="singleTask" />
         <activity
-            android:name=".profile.ProfilesActivity"
-            android:configChanges="uiMode" />
+            android:name=".profile.ProfilesActivity" />
         <activity
             android:name=".profile.NewProfileActivity"
             android:exported="false" />
