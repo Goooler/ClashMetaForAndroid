@@ -6,7 +6,7 @@ import androidx.lifecycle.LifecycleRegistry
 import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.withContext
 
-class ActivityResultLifecycle : LifecycleOwner {
+class ActivityResultLifecycleOwner : LifecycleOwner {
   override val lifecycle = LifecycleRegistry(this)
 
   init {
@@ -14,7 +14,7 @@ class ActivityResultLifecycle : LifecycleOwner {
   }
 
   suspend fun <T> use(
-    block: suspend (lifecycle: ActivityResultLifecycle, start: () -> Unit) -> T
+    block: suspend (lifecycle: ActivityResultLifecycleOwner, start: () -> Unit) -> T
   ): T {
     return try {
       markCreated()

@@ -13,11 +13,12 @@ import com.github.kr328.clash.model.DarkMode
 import com.github.kr328.clash.remote.Broadcasts
 import com.github.kr328.clash.remote.Remote
 import com.github.kr328.clash.store.UiStore
-import com.github.kr328.clash.util.ActivityResultLifecycle
+import com.github.kr328.clash.util.ActivityResultLifecycleOwner
 import com.github.kr328.clash.util.ApplicationObserver
 import com.github.kr328.clash.util.showExceptionSnackbar
 import java.util.UUID
 import java.util.concurrent.atomic.AtomicInteger
+import kotlin.coroutines.resume
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
@@ -59,18 +60,17 @@ abstract class BaseActivity : ComponentActivity(), Broadcasts.Observer {
     withContext(Dispatchers.Main) {
       val requestKey = nextRequestKey.getAndIncrement().toString()
 
-      ActivityResultLifecycle().use { lifecycle, start ->
+      ActivityResultLifecycleOwner().use { owner, start ->
         suspendCancellableCoroutine { c ->
-          val launcher =
-            activityResultRegistry.register(requestKey, lifecycle, this@startForResult) {
-              val token = c.tryResume(it) ?: return@register
-              c.completeResume(token)
-            }
-
-          c.invokeOnCancellation { launcher.unregister() }
-
-          start()
-          launcher.launch(input)
+          activityResultRegistry
+            .register(
+              key = requestKey,
+              lifecycleOwner = owner,
+              contract = this@startForResult,
+              callback = c::resume,
+            )
+            .apply { start() }
+            .launch(input)
         }
       }
     }
