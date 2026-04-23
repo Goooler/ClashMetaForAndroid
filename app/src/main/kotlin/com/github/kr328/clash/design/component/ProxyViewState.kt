@@ -13,11 +13,6 @@ class ProxyViewState(
   val proxy: Proxy,
   private val parent: ProxyState,
   private val link: ProxyState?,
-  private var proxyLine: Int,
-  private var selectedControl: Int,
-  private var selectedBackground: Int,
-  private var unselectedControl: Int,
-  private var unselectedBackground: Int,
 ) {
   val paint = Paint()
   val rect = Rect()
@@ -26,8 +21,8 @@ class ProxyViewState(
   var title: String = ""
   var subtitle: String = ""
   var delayText: String = ""
-  var background: Int = currentUnselectedBackground()
-  var controls: Int = unselectedControl
+  var background: Int = Color.TRANSPARENT
+  var controls: Int = Color.BLACK
 
   private var delay: Int = 0
   private var selected: Boolean = false
@@ -36,26 +31,18 @@ class ProxyViewState(
 
   private var lastFrameTime = System.currentTimeMillis()
 
-  fun updateAppearance(
+  fun update(
+    snap: Boolean,
     proxyLine: Int,
     selectedControl: Int,
     selectedBackground: Int,
     unselectedControl: Int,
     unselectedBackground: Int,
-  ) {
-    this.proxyLine = proxyLine
-    this.selectedControl = selectedControl
-    this.selectedBackground = selectedBackground
-    this.unselectedControl = unselectedControl
-    this.unselectedBackground = unselectedBackground
-  }
-
-  private fun currentUnselectedBackground(): Int =
-    if (proxyLine == 1) Color.TRANSPARENT else unselectedBackground
-
-  fun update(snap: Boolean): Boolean {
+  ): Boolean {
     val frameTime = System.currentTimeMillis()
     var invalidate = false
+    val currentUnselectedBackground =
+      if (proxyLine == 1) Color.TRANSPARENT else unselectedBackground
 
     if (proxy.type.group) {
       title = proxy.name
@@ -87,9 +74,9 @@ class ProxyViewState(
     controls = if (selected) selectedControl else unselectedControl
 
     if (snap) {
-      background = if (selected) selectedBackground else currentUnselectedBackground()
+      background = if (selected) selectedBackground else currentUnselectedBackground
     } else {
-      val target = if (selected) selectedBackground else currentUnselectedBackground()
+      val target = if (selected) selectedBackground else currentUnselectedBackground
 
       if (background != target) {
         val sa = Color.alpha(background)

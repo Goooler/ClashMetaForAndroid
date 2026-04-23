@@ -1,7 +1,6 @@
 package com.github.kr328.clash.design
 
 import android.content.Context
-import android.graphics.Color as AndroidColor
 import android.widget.Toast
 import androidx.annotation.ColorInt
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -106,43 +105,9 @@ class ProxyDesign(
   private var excludeNotSelectable by mutableStateOf(uiStore.proxyExcludeNotSelectable)
   private var proxySort by mutableStateOf(uiStore.proxySort)
   private var selectedMode by mutableStateOf(overrideMode)
-  private var selectedControl by mutableIntStateOf(AndroidColor.WHITE)
-  private var selectedBackground by mutableIntStateOf(AndroidColor.BLACK)
-  private var unselectedControl by mutableIntStateOf(AndroidColor.BLACK)
-  private var unselectedBackground by mutableIntStateOf(AndroidColor.WHITE)
 
   @Composable
   override fun Content() = MihomoTheme {
-    val resolvedSelectedControl = MaterialTheme.colorScheme.onPrimary.toArgb()
-    val resolvedSelectedBackground = MaterialTheme.colorScheme.primary.toArgb()
-    val resolvedUnselectedControl = MaterialTheme.colorScheme.onSurface.toArgb()
-    val resolvedUnselectedBackground = MaterialTheme.colorScheme.surface.toArgb()
-
-    LaunchedEffect(
-      proxyLine,
-      resolvedSelectedControl,
-      resolvedSelectedBackground,
-      resolvedUnselectedControl,
-      resolvedUnselectedBackground,
-    ) {
-      selectedControl = resolvedSelectedControl
-      selectedBackground = resolvedSelectedBackground
-      unselectedControl = resolvedUnselectedControl
-      unselectedBackground = resolvedUnselectedBackground
-
-      groups.forEach { group ->
-        group.rawStates.forEach { state ->
-          state.updateAppearance(
-            proxyLine = proxyLine,
-            selectedControl = selectedControl,
-            selectedBackground = selectedBackground,
-            unselectedControl = unselectedControl,
-            unselectedBackground = unselectedBackground,
-          )
-        }
-      }
-    }
-
     ProxyScreen(
       groupNames = groupNames,
       groups = groups,
@@ -195,11 +160,6 @@ class ProxyDesign(
             proxy = proxy,
             parent = parent,
             link = if (proxy.type.group) links[proxy.name] else null,
-            proxyLine = proxyLine,
-            selectedControl = selectedControl,
-            selectedBackground = selectedBackground,
-            unselectedControl = unselectedControl,
-            unselectedBackground = unselectedBackground,
           )
         }
       }
@@ -415,6 +375,10 @@ private fun ProxyGroupPage(
   onProxySelected: (Int, String) -> Unit,
 ) {
   val dimens = mihomoDimens
+  val selectedControl = MaterialTheme.colorScheme.onPrimary.toArgb()
+  val selectedBackground = MaterialTheme.colorScheme.primary.toArgb()
+  val unselectedControl = MaterialTheme.colorScheme.onSurface.toArgb()
+  val unselectedBackground = MaterialTheme.colorScheme.surface.toArgb()
   val refreshVersion = group.refreshVersion
   val rawStates = group.rawStates
   val previewItems = group.items
@@ -442,10 +406,37 @@ private fun ProxyGroupPage(
         if (useRawStates) {
           val state = rawStates[itemIndex]
           var uiState by
-            remember(state.proxy.name) { mutableStateOf(state.apply { update(true) }.toUiState()) }
+            remember(state.proxy.name, proxyLine, selectedControl, selectedBackground, unselectedControl, unselectedBackground) {
+              mutableStateOf(
+                state.apply {
+                  update(
+                    snap = true,
+                    proxyLine = proxyLine,
+                    selectedControl = selectedControl,
+                    selectedBackground = selectedBackground,
+                    unselectedControl = unselectedControl,
+                    unselectedBackground = unselectedBackground,
+                  )
+                }.toUiState()
+              )
+            }
 
-          LaunchedEffect(refreshVersion) {
-            state.update(true)
+          LaunchedEffect(
+            refreshVersion,
+            proxyLine,
+            selectedControl,
+            selectedBackground,
+            unselectedControl,
+            unselectedBackground,
+          ) {
+            state.update(
+              snap = true,
+              proxyLine = proxyLine,
+              selectedControl = selectedControl,
+              selectedBackground = selectedBackground,
+              unselectedControl = unselectedControl,
+              unselectedBackground = unselectedBackground,
+            )
             uiState = state.toUiState()
           }
 
