@@ -13,7 +13,7 @@ import com.github.kr328.clash.common.util.setUUID
 import com.github.kr328.clash.model.ProfileProvider
 import com.github.kr328.clash.profile.ui.NewProfileDesign
 import com.github.kr328.clash.service.model.Profile
-import com.github.kr328.clash.ui.BaseActivity
+import com.github.kr328.clash.ui.DesignActivity
 import com.github.kr328.clash.util.showExceptionSnackbar
 import com.github.kr328.clash.util.withProfile
 import io.github.g00fy2.quickie.QRResult
@@ -25,7 +25,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.selects.select
 import kotlinx.coroutines.withContext
 
-class NewProfileActivity : BaseActivity<NewProfileDesign>() {
+class NewProfileActivity : DesignActivity<NewProfileDesign>() {
   private val self: NewProfileActivity
     get() = this
 

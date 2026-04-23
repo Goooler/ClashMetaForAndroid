@@ -2,12 +2,12 @@ package com.github.kr328.clash.settings
 
 import com.github.kr328.clash.core.Clash
 import com.github.kr328.clash.settings.ui.OverrideSettingsDesign
-import com.github.kr328.clash.ui.BaseActivity
+import com.github.kr328.clash.ui.DesignActivity
 import com.github.kr328.clash.util.withClash
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.selects.select
 
-class OverrideSettingsActivity : BaseActivity<OverrideSettingsDesign>() {
+class OverrideSettingsActivity : DesignActivity<OverrideSettingsDesign>() {
   override suspend fun main() {
     val configuration = withClash { queryOverride(Clash.OverrideSlot.Persist) }
 

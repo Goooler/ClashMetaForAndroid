@@ -15,7 +15,7 @@ import com.github.kr328.clash.log.ui.LogcatDesign
 import com.github.kr328.clash.log.util.LogcatFilter
 import com.github.kr328.clash.log.util.LogcatReader
 import com.github.kr328.clash.model.LogFile
-import com.github.kr328.clash.ui.BaseActivity
+import com.github.kr328.clash.ui.DesignActivity
 import com.github.kr328.clash.util.logsDir
 import com.github.kr328.clash.util.showExceptionSnackbar
 import com.github.kr328.clash.util.toast
@@ -27,7 +27,7 @@ import kotlinx.coroutines.selects.select
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
 
-class LogcatActivity : BaseActivity<LogcatDesign>() {
+class LogcatActivity : DesignActivity<LogcatDesign>() {
   private var conn: ServiceConnection? = null
 
   override suspend fun main() {

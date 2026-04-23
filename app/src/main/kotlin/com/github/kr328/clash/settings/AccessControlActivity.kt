@@ -11,7 +11,7 @@ import androidx.core.content.getSystemService
 import com.github.kr328.clash.model.AppInfo
 import com.github.kr328.clash.service.store.ServiceStore
 import com.github.kr328.clash.settings.ui.AccessControlDesign
-import com.github.kr328.clash.ui.BaseActivity
+import com.github.kr328.clash.ui.DesignActivity
 import com.github.kr328.clash.util.startClashService
 import com.github.kr328.clash.util.stopClashService
 import com.github.kr328.clash.util.toAppInfo
@@ -21,7 +21,7 @@ import kotlinx.coroutines.isActive
 import kotlinx.coroutines.selects.select
 import kotlinx.coroutines.withContext
 
-class AccessControlActivity : BaseActivity<AccessControlDesign>() {
+class AccessControlActivity : DesignActivity<AccessControlDesign>() {
   override suspend fun main() {
     val service = ServiceStore(this)
 

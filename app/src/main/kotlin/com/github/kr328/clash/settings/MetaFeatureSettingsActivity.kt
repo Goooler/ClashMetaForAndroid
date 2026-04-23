@@ -7,7 +7,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import com.github.kr328.clash.R
 import com.github.kr328.clash.core.Clash
 import com.github.kr328.clash.settings.ui.MetaFeatureSettingsDesign
-import com.github.kr328.clash.ui.BaseActivity
+import com.github.kr328.clash.ui.DesignActivity
 import com.github.kr328.clash.util.clashDir
 import com.github.kr328.clash.util.toast
 import com.github.kr328.clash.util.withClash
@@ -19,7 +19,7 @@ import kotlinx.coroutines.isActive
 import kotlinx.coroutines.selects.select
 import kotlinx.coroutines.withContext
 
-class MetaFeatureSettingsActivity : BaseActivity<MetaFeatureSettingsDesign>() {
+class MetaFeatureSettingsActivity : DesignActivity<MetaFeatureSettingsDesign>() {
   override suspend fun main() {
     val configuration = withClash { queryOverride(Clash.OverrideSlot.Persist) }
 

@@ -29,7 +29,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
 
-abstract class BaseActivity<D : Design<*>> :
+abstract class DesignActivity<D : Design<*>> :
   ComponentActivity(), CoroutineScope by MainScope(), Broadcasts.Observer {
 
   protected val uiStore by lazy { UiStore(this) }
@@ -67,7 +67,7 @@ abstract class BaseActivity<D : Design<*>> :
 
   suspend fun setContentDesign(design: D) =
     withContext(Dispatchers.Main) {
-      this@BaseActivity.design = design
+      this@DesignActivity.design = design
       setContent(content = design::Content)
     }
 

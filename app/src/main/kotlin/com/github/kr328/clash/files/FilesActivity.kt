@@ -8,7 +8,7 @@ import com.github.kr328.clash.common.util.uuid
 import com.github.kr328.clash.files.ui.FilesDesign
 import com.github.kr328.clash.remote.FilesClient
 import com.github.kr328.clash.service.model.Profile
-import com.github.kr328.clash.ui.BaseActivity
+import com.github.kr328.clash.ui.DesignActivity
 import com.github.kr328.clash.util.fileName
 import com.github.kr328.clash.util.showExceptionSnackbar
 import com.github.kr328.clash.util.withProfile
@@ -16,7 +16,7 @@ import java.util.Stack
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.selects.select
 
-class FilesActivity : BaseActivity<FilesDesign>() {
+class FilesActivity : DesignActivity<FilesDesign>() {
   override suspend fun main() {
     val uuid = intent.uuid ?: return finish()
     val profile = withProfile { queryByUUID(uuid) } ?: return finish()

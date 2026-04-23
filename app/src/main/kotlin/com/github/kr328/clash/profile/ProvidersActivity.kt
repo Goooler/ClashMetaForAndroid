@@ -3,14 +3,14 @@ package com.github.kr328.clash.profile
 import com.github.kr328.clash.R
 import com.github.kr328.clash.common.util.intent
 import com.github.kr328.clash.profile.ui.ProvidersDesign
-import com.github.kr328.clash.ui.BaseActivity
+import com.github.kr328.clash.ui.DesignActivity
 import com.github.kr328.clash.util.showExceptionSnackbar
 import com.github.kr328.clash.util.withClash
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.selects.select
 
-class ProvidersActivity : BaseActivity<ProvidersDesign>() {
+class ProvidersActivity : DesignActivity<ProvidersDesign>() {
   override suspend fun main() {
     val providers = withClash { queryProviders().sorted() }
     val design = ProvidersDesign(this, providers)
