@@ -7,7 +7,7 @@ import com.github.kr328.clash.common.util.ticker
 import com.github.kr328.clash.profile.ui.ProfilesDesign
 import com.github.kr328.clash.service.model.Profile
 import com.github.kr328.clash.ui.BaseActivity
-import com.github.kr328.clash.ui.ToastDuration
+import com.github.kr328.clash.ui.SnackbarDuration
 import com.github.kr328.clash.util.withProfile
 import java.util.UUID
 import java.util.concurrent.TimeUnit
@@ -81,9 +81,9 @@ class ProfilesActivity : BaseActivity<ProfilesDesign>() {
     launch {
       var name: String? = null
       withProfile { name = queryByUUID(uuid)?.name }
-      design?.showToast(
+      design?.snackbar(
         getString(R.string.toast_profile_updated_complete, name),
-        ToastDuration.Long,
+        SnackbarDuration.Long,
       )
     }
   }
@@ -93,9 +93,9 @@ class ProfilesActivity : BaseActivity<ProfilesDesign>() {
     launch {
       var name: String? = null
       withProfile { name = queryByUUID(uuid)?.name }
-      design?.showToast(
+      design?.snackbar(
         getString(R.string.toast_profile_updated_failed, name, reason),
-        ToastDuration.Long,
+        SnackbarDuration.Long,
       ) {
         setAction(R.string.edit) { startActivity(PropertiesActivity::class.intent.setUUID(uuid)) }
       }

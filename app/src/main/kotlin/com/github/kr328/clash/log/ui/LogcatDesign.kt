@@ -34,7 +34,7 @@ import androidx.core.content.getSystemService
 import com.github.kr328.clash.R
 import com.github.kr328.clash.core.model.LogMessage
 import com.github.kr328.clash.ui.Design
-import com.github.kr328.clash.ui.ToastDuration
+import com.github.kr328.clash.ui.SnackbarDuration
 import com.github.kr328.clash.ui.component.MihomoScaffold
 import com.github.kr328.clash.ui.component.ModelProgressBarDialog
 import com.github.kr328.clash.ui.component.ModelProgressBarState
@@ -63,7 +63,7 @@ class LogcatDesign(context: Context, private val streaming: Boolean) :
   private val onCopyMessage: (LogMessage) -> Unit = {
     val data = ClipData.newPlainText("log_message", it.message)
     context.getSystemService<ClipboardManager>()?.setPrimaryClip(data)
-    showToast(R.string.copied, ToastDuration.Short)
+    snackbar(R.string.copied, SnackbarDuration.Short)
   }
 
   @Composable

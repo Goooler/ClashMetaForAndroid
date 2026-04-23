@@ -1,7 +1,6 @@
 package com.github.kr328.clash.proxy.ui
 
 import android.content.Context
-import android.widget.Toast
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -70,6 +69,7 @@ import com.github.kr328.clash.ui.component.MihomoScaffold
 import com.github.kr328.clash.ui.theme.MihomoTheme
 import com.github.kr328.clash.ui.theme.PreviewMihomo
 import com.github.kr328.clash.ui.theme.mihomoDimens
+import com.github.kr328.clash.util.toast
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -176,9 +176,7 @@ class ProxyDesign(
     withContext(Dispatchers.Main) { groups.getOrNull(currentPage)?.refresh() }
 
   suspend fun showModeSwitchTips() =
-    withContext(Dispatchers.Main) {
-      Toast.makeText(context, R.string.mode_switch_tips, Toast.LENGTH_LONG).show()
-    }
+    withContext(Dispatchers.Main) { context.toast(R.string.mode_switch_tips) }
 
   private fun requestUrlTesting() {
     if (groups.isEmpty()) return

@@ -4,7 +4,6 @@ import android.content.ComponentName
 import android.content.ServiceConnection
 import android.net.Uri
 import android.os.IBinder
-import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import com.github.kr328.clash.R
 import com.github.kr328.clash.common.log.Log
@@ -17,9 +16,9 @@ import com.github.kr328.clash.log.util.LogcatFilter
 import com.github.kr328.clash.log.util.LogcatReader
 import com.github.kr328.clash.model.LogFile
 import com.github.kr328.clash.ui.BaseActivity
-import com.github.kr328.clash.ui.ToastDuration
 import com.github.kr328.clash.util.logsDir
-import com.github.kr328.clash.util.showExceptionToast
+import com.github.kr328.clash.util.showExceptionSnackbar
+import com.github.kr328.clash.util.toast
 import java.io.OutputStreamWriter
 import kotlin.coroutines.resume
 import kotlinx.coroutines.Dispatchers
@@ -76,9 +75,9 @@ class LogcatActivity : BaseActivity<LogcatDesign>() {
             try {
               writeLogTo(design, messages, file, output)
 
-              design.showToast(R.string.file_exported, ToastDuration.Long)
+              design.snackbar(R.string.file_exported)
             } catch (e: Exception) {
-              design.showExceptionToast(e)
+              design.showExceptionSnackbar(e)
             }
           }
         }
@@ -180,6 +179,6 @@ class LogcatActivity : BaseActivity<LogcatDesign>() {
     }
 
   private fun showInvalid() {
-    Toast.makeText(this, R.string.invalid_log_file, Toast.LENGTH_LONG).show()
+    toast(R.string.invalid_log_file)
   }
 }

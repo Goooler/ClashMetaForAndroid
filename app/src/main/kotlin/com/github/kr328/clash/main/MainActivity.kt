@@ -19,7 +19,6 @@ import com.github.kr328.clash.profile.ProvidersActivity
 import com.github.kr328.clash.proxy.ProxyActivity
 import com.github.kr328.clash.settings.SettingsActivity
 import com.github.kr328.clash.ui.BaseActivity
-import com.github.kr328.clash.ui.ToastDuration
 import com.github.kr328.clash.util.startClashService
 import com.github.kr328.clash.util.stopClashService
 import com.github.kr328.clash.util.withClash
@@ -103,7 +102,7 @@ class MainActivity : BaseActivity<MainDesign>() {
     val active = withProfile { queryActive() }
 
     if (active == null || !active.imported) {
-      showToast(R.string.no_profile_selected, ToastDuration.Long) {
+      snackbar(R.string.no_profile_selected) {
         setAction(R.string.profiles) { startActivity(ProfilesActivity::class.intent) }
       }
 
@@ -120,7 +119,7 @@ class MainActivity : BaseActivity<MainDesign>() {
         if (result.resultCode == RESULT_OK) startClashService()
       }
     } catch (e: Exception) {
-      design?.showToast(R.string.unable_to_start_vpn, ToastDuration.Long)
+      design?.snackbar(R.string.unable_to_start_vpn)
     }
   }
 

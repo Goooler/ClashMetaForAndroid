@@ -14,7 +14,7 @@ import com.github.kr328.clash.model.ProfileProvider
 import com.github.kr328.clash.profile.ui.NewProfileDesign
 import com.github.kr328.clash.service.model.Profile
 import com.github.kr328.clash.ui.BaseActivity
-import com.github.kr328.clash.util.showExceptionToast
+import com.github.kr328.clash.util.showExceptionSnackbar
 import com.github.kr328.clash.util.withProfile
 import io.github.g00fy2.quickie.QRResult
 import io.github.g00fy2.quickie.ScanQRCode
@@ -151,9 +151,9 @@ class NewProfileActivity : BaseActivity<NewProfileDesign>() {
 
         QRResult.QRUserCanceled -> {}
         QRResult.QRMissingPermission ->
-          design?.showExceptionToast(getString(R.string.import_from_qr_no_permission))
+          design?.showExceptionSnackbar(getString(R.string.import_from_qr_no_permission))
         is QRResult.QRError ->
-          design?.showExceptionToast(getString(R.string.import_from_qr_exception))
+          design?.showExceptionSnackbar(getString(R.string.import_from_qr_exception))
       }
     }
   }

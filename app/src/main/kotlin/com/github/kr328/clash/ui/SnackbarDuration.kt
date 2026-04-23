@@ -1,6 +1,6 @@
 package com.github.kr328.clash.ui
 
-enum class ToastDuration {
+enum class SnackbarDuration {
   Short,
   Long,
   Indefinite,

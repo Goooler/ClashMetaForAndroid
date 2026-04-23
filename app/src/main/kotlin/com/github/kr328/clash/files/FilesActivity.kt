@@ -10,7 +10,7 @@ import com.github.kr328.clash.remote.FilesClient
 import com.github.kr328.clash.service.model.Profile
 import com.github.kr328.clash.ui.BaseActivity
 import com.github.kr328.clash.util.fileName
-import com.github.kr328.clash.util.showExceptionToast
+import com.github.kr328.clash.util.showExceptionSnackbar
 import com.github.kr328.clash.util.withProfile
 import java.util.Stack
 import kotlinx.coroutines.isActive
@@ -100,7 +100,7 @@ class FilesActivity : BaseActivity<FilesDesign>() {
               }
             }
           } catch (e: Exception) {
-            design.showExceptionToast(e)
+            design.showExceptionSnackbar(e)
           }
 
           design.fetch(client, stack, root)

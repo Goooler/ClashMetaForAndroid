@@ -13,13 +13,17 @@ abstract class Design<R>(val context: Context) {
 
   @Composable abstract fun Content()
 
-  fun showToast(resId: Int, duration: ToastDuration, configure: Snackbar.() -> Unit = {}) {
-    return showToast(context.getString(resId), duration, configure)
+  fun snackbar(
+    resId: Int,
+    duration: SnackbarDuration = SnackbarDuration.Long,
+    configure: Snackbar.() -> Unit = {},
+  ) {
+    return snackbar(context.getString(resId), duration, configure)
   }
 
-  fun showToast(
+  fun snackbar(
     message: CharSequence,
-    duration: ToastDuration,
+    duration: SnackbarDuration = SnackbarDuration.Long,
     configure: Snackbar.() -> Unit = {},
   ) {
     (context as Activity).findViewById<View>(android.R.id.content)?.let { root ->
@@ -27,9 +31,9 @@ abstract class Design<R>(val context: Context) {
           root,
           message,
           when (duration) {
-            ToastDuration.Short -> Snackbar.LENGTH_SHORT
-            ToastDuration.Long -> Snackbar.LENGTH_LONG
-            ToastDuration.Indefinite -> Snackbar.LENGTH_INDEFINITE
+            SnackbarDuration.Short -> Snackbar.LENGTH_SHORT
+            SnackbarDuration.Long -> Snackbar.LENGTH_LONG
+            SnackbarDuration.Indefinite -> Snackbar.LENGTH_INDEFINITE
           },
         )
         .apply(configure)
