@@ -1,6 +1,5 @@
 package com.github.kr328.clash.settings.ui
 
-import android.content.Context
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.foundation.clickable
@@ -21,32 +20,23 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import com.github.kr328.clash.R
-import com.github.kr328.clash.ui.Design
 import com.github.kr328.clash.ui.component.SettingsCommonScreen
 import com.github.kr328.clash.ui.theme.MihomoTheme
 import com.github.kr328.clash.ui.theme.PreviewMihomo
 import com.github.kr328.clash.ui.theme.mihomoDimens
 
-class SettingsDesign(context: Context) : Design<SettingsDesign.Request>(context) {
-  sealed interface Request {
-    data object StartApp : Request
+sealed interface SettingsRoute {
+  data object App : SettingsRoute
 
-    data object StartNetwork : Request
+  data object Network : SettingsRoute
 
-    data object StartOverride : Request
+  data object Override : SettingsRoute
 
-    data object StartMetaFeature : Request
-  }
-
-  @Composable
-  override fun Content() = MihomoTheme { SettingsScreen(onRequest = { requests.trySend(it) }) }
+  data object MetaFeature : SettingsRoute
 }
 
 @Composable
-private fun SettingsScreen(
-  modifier: Modifier = Modifier,
-  onRequest: (SettingsDesign.Request) -> Unit,
-) {
+fun SettingsScreen(modifier: Modifier = Modifier, onRoute: (SettingsRoute) -> Unit) {
   SettingsCommonScreen(
     title = stringResource(R.string.settings),
     modifier = modifier.fillMaxSize(),
@@ -54,25 +44,25 @@ private fun SettingsScreen(
     SettingsEntryItem(
       iconRes = R.drawable.ic_baseline_settings,
       titleRes = R.string.app,
-      onClick = { onRequest(SettingsDesign.Request.StartApp) },
+      onClick = { onRoute(SettingsRoute.App) },
     )
 
     SettingsEntryItem(
       iconRes = R.drawable.ic_baseline_dns,
       titleRes = R.string.network,
-      onClick = { onRequest(SettingsDesign.Request.StartNetwork) },
+      onClick = { onRoute(SettingsRoute.Network) },
     )
 
     SettingsEntryItem(
       iconRes = R.drawable.ic_baseline_extension,
       titleRes = R.string.override,
-      onClick = { onRequest(SettingsDesign.Request.StartOverride) },
+      onClick = { onRoute(SettingsRoute.Override) },
     )
 
     SettingsEntryItem(
       iconRes = R.drawable.ic_baseline_meta,
       titleRes = R.string.meta_features,
-      onClick = { onRequest(SettingsDesign.Request.StartMetaFeature) },
+      onClick = { onRoute(SettingsRoute.MetaFeature) },
     )
   }
 }
@@ -111,4 +101,4 @@ private fun SettingsEntryItem(
 
 @PreviewMihomo
 @Composable
-private fun SettingsScreenPreview() = MihomoTheme { SettingsScreen(onRequest = {}) }
+private fun SettingsScreenPreview() = MihomoTheme { SettingsScreen(onRoute = {}) }
