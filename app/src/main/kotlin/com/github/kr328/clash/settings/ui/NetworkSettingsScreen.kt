@@ -1,7 +1,5 @@
 package com.github.kr328.clash.settings.ui
 
-import android.content.Context
-import android.os.Build
 import androidx.annotation.StringRes
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -12,9 +10,14 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RadioButton
+import androidx.compose.material3.Snackbar
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -23,12 +26,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.github.kr328.clash.R
 import com.github.kr328.clash.service.model.AccessControlMode
-import com.github.kr328.clash.service.store.ServiceStore
-import com.github.kr328.clash.store.UiStore
-import com.github.kr328.clash.ui.Design
-import com.github.kr328.clash.ui.SnackbarDuration
+import com.github.kr328.clash.settings.vm.NetworkSettingsViewModel
 import com.github.kr328.clash.ui.component.SettingsCategoryTitle
 import com.github.kr328.clash.ui.component.SettingsCommonScreen
 import com.github.kr328.clash.ui.component.SettingsPreferenceClickableItem
@@ -36,60 +38,35 @@ import com.github.kr328.clash.ui.component.SettingsPreferenceSwitchItem
 import com.github.kr328.clash.ui.theme.MihomoTheme
 import com.github.kr328.clash.ui.theme.PreviewMihomo
 
-class NetworkSettingsDesign(
-  context: Context,
-  private val uiStore: UiStore,
-  private val serviceStore: ServiceStore,
-  private val running: Boolean,
-) : Design<NetworkSettingsDesign.Request>(context) {
-  sealed interface Request {
-    data object StartAccessControlList : Request
-  }
+@Composable
+fun NetworkSettingsScreen(
+  modifier: Modifier = Modifier,
+  viewModel: NetworkSettingsViewModel = viewModel(),
+  onStartAccessControlList: () -> Unit,
+) {
+  val clashRunning by viewModel.clashRunning.collectAsStateWithLifecycle()
+  val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-  @Composable
-  override fun Content() = MihomoTheme {
-    NetworkSettingsScreen(
-      running = running,
-      hasSystemProxyOption = Build.VERSION.SDK_INT >= 29,
-      enableVpnInitial = uiStore.enableVpn,
-      bypassPrivateNetworkInitial = serviceStore.bypassPrivateNetwork,
-      dnsHijackingInitial = serviceStore.dnsHijacking,
-      allowBypassInitial = serviceStore.allowBypass,
-      allowIpv6Initial = serviceStore.allowIpv6,
-      systemProxyInitial = serviceStore.systemProxy,
-      tunStackModeInitial = serviceStore.tunStackMode,
-      accessControlModeInitial = serviceStore.accessControlMode,
-      onEnableVpnChange = { uiStore.enableVpn = it },
-      onBypassPrivateNetworkChange = { serviceStore.bypassPrivateNetwork = it },
-      onDnsHijackingChange = { serviceStore.dnsHijacking = it },
-      onAllowBypassChange = { serviceStore.allowBypass = it },
-      onAllowIpv6Change = { serviceStore.allowIpv6 = it },
-      onSystemProxyChange = { serviceStore.systemProxy = it },
-      onTunStackModeChange = { serviceStore.tunStackMode = it },
-      onAccessControlModeChange = { serviceStore.accessControlMode = it },
-      onAccessControlPackagesClick = { requests.trySend(Request.StartAccessControlList) },
-    )
-  }
-
-  init {
-    if (running) {
-      snackbar(R.string.options_unavailable, SnackbarDuration.Indefinite)
-    }
-  }
+  NetworkSettingsContent(
+    clashRunning = clashRunning,
+    uiState = uiState,
+    onEnableVpnChange = viewModel::updateEnableVpn,
+    onBypassPrivateNetworkChange = viewModel::updateBypassPrivateNetwork,
+    onDnsHijackingChange = viewModel::updateDnsHijacking,
+    onAllowBypassChange = viewModel::updateAllowBypass,
+    onAllowIpv6Change = viewModel::updateAllowIpv6,
+    onSystemProxyChange = viewModel::updateSystemProxy,
+    onTunStackModeChange = viewModel::updateTunStackMode,
+    onAccessControlModeChange = viewModel::updateAccessControlMode,
+    onAccessControlPackagesClick = onStartAccessControlList,
+    modifier = modifier,
+  )
 }
 
 @Composable
-private fun NetworkSettingsScreen(
-  running: Boolean,
-  hasSystemProxyOption: Boolean,
-  enableVpnInitial: Boolean,
-  bypassPrivateNetworkInitial: Boolean,
-  dnsHijackingInitial: Boolean,
-  allowBypassInitial: Boolean,
-  allowIpv6Initial: Boolean,
-  systemProxyInitial: Boolean,
-  tunStackModeInitial: String,
-  accessControlModeInitial: AccessControlMode,
+private fun NetworkSettingsContent(
+  clashRunning: Boolean,
+  uiState: NetworkSettingsViewModel.UiState,
   onEnableVpnChange: (Boolean) -> Unit,
   onBypassPrivateNetworkChange: (Boolean) -> Unit,
   onDnsHijackingChange: (Boolean) -> Unit,
@@ -101,34 +78,36 @@ private fun NetworkSettingsScreen(
   onAccessControlPackagesClick: () -> Unit,
   modifier: Modifier = Modifier,
 ) {
-  var enableVpn by remember { mutableStateOf(enableVpnInitial) }
-  var bypassPrivateNetwork by remember { mutableStateOf(bypassPrivateNetworkInitial) }
-  var dnsHijacking by remember { mutableStateOf(dnsHijackingInitial) }
-  var allowBypass by remember { mutableStateOf(allowBypassInitial) }
-  var allowIpv6 by remember { mutableStateOf(allowIpv6Initial) }
-  var systemProxy by remember { mutableStateOf(systemProxyInitial) }
-  var tunStackMode by remember { mutableStateOf(TunStackMode.fromValue(tunStackModeInitial)) }
-  var accessControlMode by remember { mutableStateOf(accessControlModeInitial) }
-
   var showTunStackDialog by remember { mutableStateOf(false) }
   var showAccessControlModeDialog by remember { mutableStateOf(false) }
+  val snackbarHostState = remember { SnackbarHostState() }
+  val barMessage = stringResource(R.string.options_unavailable)
 
-  val vpnDependenciesEnabled = !running && enableVpn
+  LaunchedEffect(clashRunning) {
+    if (clashRunning) {
+      snackbarHostState.showSnackbar(
+        message = barMessage,
+        withDismissAction = true,
+        duration = SnackbarDuration.Indefinite,
+      )
+    }
+  }
+
+  val vpnDependenciesEnabled = !clashRunning && uiState.enableVpn
+  val tunStackMode = TunStackMode.fromValue(uiState.tunStackMode)
 
   SettingsCommonScreen(
     title = stringResource(R.string.network),
     modifier = modifier.fillMaxSize(),
+    snackbarHost = { SnackbarHost(hostState = snackbarHostState) { Snackbar(it) } },
   ) {
     SettingsPreferenceSwitchItem(
       iconRes = R.drawable.ic_baseline_vpn_lock,
       titleRes = R.string.route_system_traffic,
       summaryRes = R.string.routing_via_vpn_service,
-      checked = enableVpn,
-      enabled = !running,
-      onCheckedChange = {
-        enableVpn = it
-        onEnableVpnChange(it)
-      },
+      checked = uiState.enableVpn,
+      enabled = !clashRunning,
+      onCheckedChange = onEnableVpnChange,
     )
 
     SettingsCategoryTitle(text = stringResource(R.string.vpn_service_options))
@@ -136,53 +115,38 @@ private fun NetworkSettingsScreen(
     SettingsPreferenceSwitchItem(
       titleRes = R.string.bypass_private_network,
       summaryRes = R.string.bypass_private_network_summary,
-      checked = bypassPrivateNetwork,
+      checked = uiState.bypassPrivateNetwork,
       enabled = vpnDependenciesEnabled,
-      onCheckedChange = {
-        bypassPrivateNetwork = it
-        onBypassPrivateNetworkChange(it)
-      },
+      onCheckedChange = onBypassPrivateNetworkChange,
     )
     SettingsPreferenceSwitchItem(
       titleRes = R.string.dns_hijacking,
       summaryRes = R.string.dns_hijacking_summary,
-      checked = dnsHijacking,
+      checked = uiState.dnsHijacking,
       enabled = vpnDependenciesEnabled,
-      onCheckedChange = {
-        dnsHijacking = it
-        onDnsHijackingChange(it)
-      },
+      onCheckedChange = onDnsHijackingChange,
     )
     SettingsPreferenceSwitchItem(
       titleRes = R.string.allow_bypass,
       summaryRes = R.string.allow_bypass_summary,
-      checked = allowBypass,
+      checked = uiState.allowBypass,
       enabled = vpnDependenciesEnabled,
-      onCheckedChange = {
-        allowBypass = it
-        onAllowBypassChange(it)
-      },
+      onCheckedChange = onAllowBypassChange,
     )
     SettingsPreferenceSwitchItem(
       titleRes = R.string.allow_ipv6,
       summaryRes = R.string.allow_ipv6_summary,
-      checked = allowIpv6,
+      checked = uiState.allowIpv6,
       enabled = vpnDependenciesEnabled,
-      onCheckedChange = {
-        allowIpv6 = it
-        onAllowIpv6Change(it)
-      },
+      onCheckedChange = onAllowIpv6Change,
     )
-    if (hasSystemProxyOption) {
+    if (uiState.hasSystemProxyOption) {
       SettingsPreferenceSwitchItem(
         titleRes = R.string.system_proxy,
         summaryRes = R.string.system_proxy_summary,
-        checked = systemProxy,
+        checked = uiState.systemProxy,
         enabled = vpnDependenciesEnabled,
-        onCheckedChange = {
-          systemProxy = it
-          onSystemProxyChange(it)
-        },
+        onCheckedChange = onSystemProxyChange,
       )
     }
     SettingsPreferenceClickableItem(
@@ -193,7 +157,7 @@ private fun NetworkSettingsScreen(
     )
     SettingsPreferenceClickableItem(
       titleRes = R.string.access_control_mode,
-      summaryRes = accessControlMode.summaryRes,
+      summaryRes = uiState.accessControlMode.summaryRes,
       enabled = vpnDependenciesEnabled,
       onClick = { showAccessControlModeDialog = true },
     )
@@ -214,7 +178,6 @@ private fun NetworkSettingsScreen(
             Row(
               modifier =
                 Modifier.fillMaxWidth().clickable {
-                  tunStackMode = value
                   showTunStackDialog = false
                   onTunStackModeChange(value.persistedValue)
                 },
@@ -255,13 +218,12 @@ private fun NetworkSettingsScreen(
             Row(
               modifier =
                 Modifier.fillMaxWidth().clickable {
-                  accessControlMode = value
                   showAccessControlModeDialog = false
                   onAccessControlModeChange(value)
                 },
               verticalAlignment = Alignment.CenterVertically,
             ) {
-              RadioButton(selected = accessControlMode == value, onClick = null)
+              RadioButton(selected = uiState.accessControlMode == value, onClick = null)
               Text(
                 text = stringResource(textRes),
                 style = MaterialTheme.typography.bodyLarge,
@@ -314,17 +276,20 @@ private val AccessControlMode.summaryRes: Int
 @Composable
 private fun NetworkSettingsScreenPreview() {
   MihomoTheme {
-    NetworkSettingsScreen(
-      running = false,
-      hasSystemProxyOption = true,
-      enableVpnInitial = true,
-      bypassPrivateNetworkInitial = true,
-      dnsHijackingInitial = true,
-      allowBypassInitial = true,
-      allowIpv6Initial = false,
-      systemProxyInitial = true,
-      tunStackModeInitial = "system",
-      accessControlModeInitial = AccessControlMode.AcceptAll,
+    NetworkSettingsContent(
+      clashRunning = false,
+      uiState =
+        NetworkSettingsViewModel.UiState(
+          hasSystemProxyOption = true,
+          enableVpn = true,
+          bypassPrivateNetwork = true,
+          dnsHijacking = true,
+          allowBypass = true,
+          allowIpv6 = false,
+          systemProxy = true,
+          tunStackMode = "system",
+          accessControlMode = AccessControlMode.AcceptAll,
+        ),
       onEnableVpnChange = {},
       onBypassPrivateNetworkChange = {},
       onDnsHijackingChange = {},
@@ -342,17 +307,20 @@ private fun NetworkSettingsScreenPreview() {
 @Composable
 private fun NetworkSettingsScreenRunningPreview() {
   MihomoTheme {
-    NetworkSettingsScreen(
-      running = true,
-      hasSystemProxyOption = true,
-      enableVpnInitial = true,
-      bypassPrivateNetworkInitial = true,
-      dnsHijackingInitial = true,
-      allowBypassInitial = true,
-      allowIpv6Initial = false,
-      systemProxyInitial = true,
-      tunStackModeInitial = "mixed",
-      accessControlModeInitial = AccessControlMode.DenySelected,
+    NetworkSettingsContent(
+      clashRunning = true,
+      uiState =
+        NetworkSettingsViewModel.UiState(
+          hasSystemProxyOption = true,
+          enableVpn = true,
+          bypassPrivateNetwork = true,
+          dnsHijacking = true,
+          allowBypass = true,
+          allowIpv6 = false,
+          systemProxy = true,
+          tunStackMode = "mixed",
+          accessControlMode = AccessControlMode.DenySelected,
+        ),
       onEnableVpnChange = {},
       onBypassPrivateNetworkChange = {},
       onDnsHijackingChange = {},

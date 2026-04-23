@@ -1,35 +1,21 @@
 package com.github.kr328.clash.settings
 
+import android.os.Bundle
+import androidx.activity.compose.setContent
 import com.github.kr328.clash.common.util.intent
-import com.github.kr328.clash.service.store.ServiceStore
-import com.github.kr328.clash.settings.ui.NetworkSettingsDesign
-import com.github.kr328.clash.ui.DesignActivity
-import kotlinx.coroutines.isActive
-import kotlinx.coroutines.selects.select
+import com.github.kr328.clash.settings.ui.NetworkSettingsScreen
+import com.github.kr328.clash.ui.BaseActivity
+import com.github.kr328.clash.ui.theme.MihomoTheme
 
-class NetworkSettingsActivity : DesignActivity<NetworkSettingsDesign>() {
-  override suspend fun main() {
-    val design = NetworkSettingsDesign(this, uiStore, ServiceStore(this), clashRunning)
+class NetworkSettingsActivity : BaseActivity() {
+  override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
 
-    setContentDesign(design)
-
-    while (isActive) {
-      select {
-        events.onReceive {
-          when (it) {
-            Event.ClashStart,
-            Event.ClashStop,
-            Event.ServiceRecreated -> recreate()
-
-            else -> Unit
-          }
-        }
-        design.requests.onReceive {
-          when (it) {
-            NetworkSettingsDesign.Request.StartAccessControlList ->
-              startActivity(AccessControlActivity::class.intent)
-          }
-        }
+    setContent {
+      MihomoTheme {
+        NetworkSettingsScreen(
+          onStartAccessControlList = { startActivity(AccessControlActivity::class.intent) }
+        )
       }
     }
   }

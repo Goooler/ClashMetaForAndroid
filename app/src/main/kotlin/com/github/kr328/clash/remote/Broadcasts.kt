@@ -9,6 +9,8 @@ import com.github.kr328.clash.common.compat.registerReceiverCompat
 import com.github.kr328.clash.common.constants.Intents
 import com.github.kr328.clash.common.log.Log
 import java.util.UUID
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 
 class Broadcasts(private val context: Application) {
   interface Observer {
@@ -27,7 +29,14 @@ class Broadcasts(private val context: Application) {
     fun onProfileLoaded() = Unit
   }
 
-  var clashRunning: Boolean = false
+  val clashRunningFlow: StateFlow<Boolean>
+    field = MutableStateFlow(false)
+
+  var clashRunning: Boolean
+    get() = clashRunningFlow.value
+    private set(value) {
+      clashRunningFlow.value = value
+    }
 
   private var registered = false
   private val receivers = mutableListOf<Observer>()
