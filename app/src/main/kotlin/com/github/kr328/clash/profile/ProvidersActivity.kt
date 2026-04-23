@@ -4,7 +4,7 @@ import com.github.kr328.clash.R
 import com.github.kr328.clash.common.util.intent
 import com.github.kr328.clash.profile.ui.ProvidersDesign
 import com.github.kr328.clash.ui.BaseActivity
-import com.github.kr328.clash.util.showExceptionToast
+import com.github.kr328.clash.util.showExceptionSnackbar
 import com.github.kr328.clash.util.withClash
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
@@ -42,7 +42,7 @@ class ProvidersActivity : BaseActivity<ProvidersDesign>() {
 
                   design.notifyChanged(it.index)
                 } catch (e: Exception) {
-                  design.showExceptionToast(
+                  design.showExceptionSnackbar(
                     getString(R.string.format_update_provider_failure, it.provider.name, e.message)
                   )
 

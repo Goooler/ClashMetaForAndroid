@@ -9,7 +9,7 @@ import com.github.kr328.clash.profile.ui.PropertiesDesign
 import com.github.kr328.clash.service.model.Profile
 import com.github.kr328.clash.ui.BaseActivity
 import com.github.kr328.clash.ui.ToastDuration
-import com.github.kr328.clash.util.showExceptionToast
+import com.github.kr328.clash.util.showExceptionSnackbar
 import com.github.kr328.clash.util.withProfile
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.isActive
@@ -91,7 +91,7 @@ class PropertiesActivity : BaseActivity<PropertiesDesign>() {
 
           finish()
         } catch (e: Exception) {
-          showExceptionToast(e)
+          showExceptionSnackbar(e)
         }
       }
     }

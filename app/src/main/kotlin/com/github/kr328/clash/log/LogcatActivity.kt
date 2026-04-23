@@ -19,7 +19,7 @@ import com.github.kr328.clash.model.LogFile
 import com.github.kr328.clash.ui.BaseActivity
 import com.github.kr328.clash.ui.ToastDuration
 import com.github.kr328.clash.util.logsDir
-import com.github.kr328.clash.util.showExceptionToast
+import com.github.kr328.clash.util.showExceptionSnackbar
 import java.io.OutputStreamWriter
 import kotlin.coroutines.resume
 import kotlinx.coroutines.Dispatchers
@@ -78,7 +78,7 @@ class LogcatActivity : BaseActivity<LogcatDesign>() {
 
               design.showToast(R.string.file_exported, ToastDuration.Long)
             } catch (e: Exception) {
-              design.showExceptionToast(e)
+              design.showExceptionSnackbar(e)
             }
           }
         }

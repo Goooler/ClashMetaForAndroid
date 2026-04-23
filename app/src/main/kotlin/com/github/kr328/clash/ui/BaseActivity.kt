@@ -15,7 +15,7 @@ import com.github.kr328.clash.remote.Remote
 import com.github.kr328.clash.store.UiStore
 import com.github.kr328.clash.util.ActivityResultLifecycle
 import com.github.kr328.clash.util.ApplicationObserver
-import com.github.kr328.clash.util.showExceptionToast
+import com.github.kr328.clash.util.showExceptionSnackbar
 import java.util.UUID
 import java.util.concurrent.atomic.AtomicInteger
 import kotlin.coroutines.resume
@@ -151,7 +151,7 @@ abstract class BaseActivity<D : Design<*>> :
     events.trySend(Event.ClashStop)
 
     if (cause != null && activityStarted) {
-      launch { design?.showExceptionToast(ClashException(cause)) }
+      launch { design?.showExceptionSnackbar(ClashException(cause)) }
     }
   }
 
