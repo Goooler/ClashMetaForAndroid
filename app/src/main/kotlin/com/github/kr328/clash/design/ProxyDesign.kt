@@ -66,7 +66,6 @@ import com.github.kr328.clash.core.model.Proxy
 import com.github.kr328.clash.core.model.ProxySort
 import com.github.kr328.clash.core.model.TunnelState
 import com.github.kr328.clash.design.component.MihomoScaffold
-import com.github.kr328.clash.design.component.ProxyViewState
 import com.github.kr328.clash.design.model.ProxyState
 import com.github.kr328.clash.design.store.UiStore
 import com.github.kr328.clash.design.ui.theme.MihomoTheme
@@ -156,7 +155,7 @@ class ProxyDesign(
     val states =
       withContext(Dispatchers.Default) {
         proxies.map { proxy ->
-          ProxyViewState(
+          ProxyItemSource(
             proxy = proxy,
             parent = parent,
             link = if (proxy.type.group) links[proxy.name] else null,
@@ -166,7 +165,7 @@ class ProxyDesign(
 
     withContext(Dispatchers.Main) {
       groups[position].apply {
-        rawStates = states
+        rawSources = states
         this.selectable = selectable
         urlTesting = false
         refresh()
@@ -192,6 +191,8 @@ class ProxyDesign(
   }
 }
 
+private data class ProxyItemSource(val proxy: Proxy, val parent: ProxyState, val link: ProxyState?)
+
 private data class ProxyItemUiState(
   val key: String,
   val title: String,
@@ -201,21 +202,50 @@ private data class ProxyItemUiState(
   val controls: Int,
 )
 
-private fun ProxyViewState.toUiState() =
-  ProxyItemUiState(
+private fun ProxyItemSource.toUiState(
+  proxyLine: Int,
+  selectedControl: Int,
+  selectedBackground: Int,
+  unselectedControl: Int,
+  unselectedBackground: Int,
+): ProxyItemUiState {
+  val selected = proxy.name == parent.now
+  val background =
+    if (selected) {
+      selectedBackground
+    } else if (proxyLine == 1) {
+      Color.Transparent.toArgb()
+    } else {
+      unselectedBackground
+    }
+  val controls = if (selected) selectedControl else unselectedControl
+  val title = if (proxy.type.group) proxy.name else proxy.title
+  val subtitle =
+    if (proxy.type.group) {
+      if (link == null) {
+        proxy.type.name
+      } else {
+        "%s(%s)".format(proxy.type.name, link.now.ifEmpty { "*" })
+      }
+    } else {
+      proxy.subtitle
+    }
+
+  return ProxyItemUiState(
     key = proxy.name,
     title = title,
     subtitle = subtitle,
-    delayText = delayText,
+    delayText = if (proxy.delay in 0..Short.MAX_VALUE) proxy.delay.toString() else "",
     background = background,
     controls = controls,
   )
+}
 
 private class ProxyGroupUiState {
   var items by mutableStateOf<List<ProxyItemUiState>>(emptyList())
   var selectable by mutableStateOf(false)
   var urlTesting by mutableStateOf(false)
-  var rawStates: List<ProxyViewState> = emptyList()
+  var rawSources: List<ProxyItemSource> = emptyList()
   var refreshVersion by mutableIntStateOf(0)
 
   fun refresh() {
@@ -380,9 +410,9 @@ private fun ProxyGroupPage(
   val unselectedControl = MaterialTheme.colorScheme.onSurface.toArgb()
   val unselectedBackground = MaterialTheme.colorScheme.surface.toArgb()
   val refreshVersion = group.refreshVersion
-  val rawStates = group.rawStates
+  val rawSources = group.rawSources
   val previewItems = group.items
-  val useRawStates = rawStates.isNotEmpty()
+  val useRawSources = rawSources.isNotEmpty()
 
   LazyVerticalGrid(
     columns = GridCells.Fixed(columnsForProxyLine(proxyLine)),
@@ -393,63 +423,26 @@ private fun ProxyGroupPage(
     verticalArrangement = Arrangement.spacedBy(12.dp),
   ) {
     items(
-      count = if (useRawStates) rawStates.size else previewItems.size,
+      count = if (useRawSources) rawSources.size else previewItems.size,
       key = { itemIndex ->
-        if (useRawStates) {
-          rawStates[itemIndex].proxy.name
+        if (useRawSources) {
+          rawSources[itemIndex].proxy.name
         } else {
           previewItems[itemIndex].key
         }
       },
     ) { itemIndex ->
       val item =
-        if (useRawStates) {
-          val state = rawStates[itemIndex]
-          var uiState by
-            remember(
-              state.proxy.name,
-              proxyLine,
-              selectedControl,
-              selectedBackground,
-              unselectedControl,
-              unselectedBackground,
-            ) {
-              mutableStateOf(
-                state
-                  .apply {
-                    update(
-                      snap = true,
-                      proxyLine = proxyLine,
-                      selectedControl = selectedControl,
-                      selectedBackground = selectedBackground,
-                      unselectedControl = unselectedControl,
-                      unselectedBackground = unselectedBackground,
-                    )
-                  }
-                  .toUiState()
-              )
-            }
-
-          LaunchedEffect(
-            refreshVersion,
-            proxyLine,
-            selectedControl,
-            selectedBackground,
-            unselectedControl,
-            unselectedBackground,
-          ) {
-            state.update(
-              snap = true,
-              proxyLine = proxyLine,
-              selectedControl = selectedControl,
-              selectedBackground = selectedBackground,
-              unselectedControl = unselectedControl,
-              unselectedBackground = unselectedBackground,
-            )
-            uiState = state.toUiState()
-          }
-
-          uiState
+        if (useRawSources) {
+          val source = rawSources[itemIndex]
+          refreshVersion
+          source.toUiState(
+            proxyLine = proxyLine,
+            selectedControl = selectedControl,
+            selectedBackground = selectedBackground,
+            unselectedControl = unselectedControl,
+            unselectedBackground = unselectedBackground,
+          )
         } else {
           previewItems[itemIndex]
         }
