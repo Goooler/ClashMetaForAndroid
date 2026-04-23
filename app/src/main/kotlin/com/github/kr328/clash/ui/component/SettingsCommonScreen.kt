@@ -30,11 +30,13 @@ import com.github.kr328.clash.ui.theme.mihomoDimens
 fun SettingsCommonScreen(
   title: String,
   modifier: Modifier = Modifier,
+  snackbarHost: @Composable () -> Unit = {},
   content: @Composable ColumnScope.() -> Unit,
 ) {
   MihomoScaffold(
     title = title,
     modifier = modifier,
+    snackbarHost = snackbarHost,
     scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(),
   ) { innerPadding ->
     Column(

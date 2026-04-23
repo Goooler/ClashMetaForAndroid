@@ -26,6 +26,7 @@ fun MihomoScaffold(
   onBackPressedDispatcher: OnBackPressedDispatcher? =
     LocalOnBackPressedDispatcherOwner.current?.onBackPressedDispatcher,
   onBack: () -> Unit = { onBackPressedDispatcher?.onBackPressed() },
+  snackbarHost: @Composable () -> Unit = {},
   actions: @Composable RowScope.() -> Unit = {},
   scrollBehavior: TopAppBarScrollBehavior? = null,
   content: @Composable (PaddingValues) -> Unit,
@@ -47,6 +48,7 @@ fun MihomoScaffold(
         scrollBehavior = scrollBehavior,
       )
     },
+    snackbarHost = snackbarHost,
     content = content,
   )
 }
