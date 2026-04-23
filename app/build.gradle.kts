@@ -87,6 +87,7 @@ dependencies {
 
   implementation(libs.kotlin.coroutine)
 
+  implementation(libs.androidx.core)
   implementation(libs.androidx.activity.compose)
   implementation(platform(libs.androidx.compose.bom))
   implementation(libs.androidx.compose.ui)
@@ -97,18 +98,8 @@ dependencies {
   implementation(libs.androidx.compose.material3)
   implementation(libs.androidx.lifecycle.viewmodel.compose)
 
-  implementation(libs.androidx.core)
-  implementation(libs.androidx.coordinator)
-  implementation(libs.androidx.recyclerview)
-  implementation(libs.androidx.viewpager)
-  implementation(libs.google.material)
   implementation(libs.composePreference)
 
-  implementation(libs.kotlin.coroutine)
-  implementation(libs.androidx.core)
-  implementation(libs.androidx.activity.compose)
-  implementation(libs.androidx.coordinator)
-  implementation(libs.androidx.recyclerview)
   implementation(libs.google.material)
   implementation(libs.quickie.bundled)
 }
