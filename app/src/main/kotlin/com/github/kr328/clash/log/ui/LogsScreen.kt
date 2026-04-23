@@ -1,6 +1,5 @@
 package com.github.kr328.clash.log.ui
 
-import android.content.Context
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -24,6 +23,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -33,54 +33,27 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.github.kr328.clash.R
+import com.github.kr328.clash.log.vm.LogsViewModel
 import com.github.kr328.clash.model.LogFile
-import com.github.kr328.clash.ui.Design
 import com.github.kr328.clash.ui.component.MihomoScaffold
 import com.github.kr328.clash.ui.theme.MihomoTheme
 import com.github.kr328.clash.ui.theme.PreviewMihomo
 import com.github.kr328.clash.ui.theme.mihomoDimens
 import com.github.kr328.clash.util.format
 import java.util.Date
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
-
-class LogsDesign(context: Context) : Design<LogsDesign.Request>(context) {
-  sealed interface Request {
-    data object StartLogcat : Request
-
-    data object DeleteAll : Request
-
-    data class OpenFile(val file: LogFile) : Request
-  }
-
-  private var logs by mutableStateOf<List<LogFile>>(emptyList())
-
-  @Composable
-  override fun Content() = MihomoTheme {
-    LogsScreen(
-      logs = logs,
-      onDeleteAll = { requests.trySend(Request.DeleteAll) },
-      onStartLogcat = { requests.trySend(Request.StartLogcat) },
-      onOpenFile = { requests.trySend(Request.OpenFile(it)) },
-    )
-  }
-
-  suspend fun patchLogs(logs: List<LogFile>) =
-    withContext(Dispatchers.Main) { this@LogsDesign.logs = logs }
-}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun LogsScreen(
-  logs: List<LogFile>,
-  onDeleteAll: () -> Unit,
+fun LogsScreen(
+  modifier: Modifier = Modifier,
+  viewModel: LogsViewModel = viewModel(),
   onStartLogcat: () -> Unit,
   onOpenFile: (LogFile) -> Unit,
 ) {
-  val dimens = mihomoDimens
   var showDeleteAllDialog by remember { mutableStateOf(false) }
-
   if (showDeleteAllDialog) {
     AlertDialog(
       onDismissRequest = { showDeleteAllDialog = false },
@@ -90,7 +63,7 @@ private fun LogsScreen(
         TextButton(
           onClick = {
             showDeleteAllDialog = false
-            onDeleteAll()
+            viewModel.deleteAll()
           }
         ) {
           Text(text = stringResource(R.string.ok))
@@ -104,10 +77,32 @@ private fun LogsScreen(
     )
   }
 
+  LaunchedEffect(viewModel) { viewModel.init() }
+  val logs by viewModel.logFiles.collectAsStateWithLifecycle()
+
+  LogsContent(
+    modifier = modifier,
+    logs = logs,
+    onDeleteAllConfirm = { showDeleteAllDialog = true },
+    onStartLogcat = onStartLogcat,
+    onOpenFile = onOpenFile,
+  )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun LogsContent(
+  modifier: Modifier = Modifier,
+  logs: List<LogFile>,
+  onDeleteAllConfirm: () -> Unit,
+  onStartLogcat: () -> Unit,
+  onOpenFile: (LogFile) -> Unit,
+) {
   MihomoScaffold(
+    modifier = modifier,
     title = stringResource(R.string.logs),
     actions = {
-      IconButton(onClick = { showDeleteAllDialog = true }) {
+      IconButton(onClick = onDeleteAllConfirm) {
         Icon(
           painter = painterResource(R.drawable.ic_baseline_clear_all),
           contentDescription = stringResource(R.string.delete_all_logs),
@@ -116,6 +111,8 @@ private fun LogsScreen(
     },
   ) { innerPadding ->
     val context = LocalContext.current
+    val dimens = mihomoDimens
+
     LazyColumn(modifier = Modifier.fillMaxSize().padding(innerPadding)) {
       item {
         LogsActionItem(
@@ -196,13 +193,13 @@ private fun LogsActionItem(
 @PreviewMihomo
 @Composable
 private fun LogsScreenPreview() = MihomoTheme {
-  LogsScreen(
+  LogsContent(
     logs =
       listOf(
         LogFile("clash-1710000000000.log", Date(1710000000000)),
         LogFile("clash-1710000000001.log", Date(1710000000001)),
       ),
-    onDeleteAll = {},
+    onDeleteAllConfirm = {},
     onStartLogcat = {},
     onOpenFile = {},
   )
