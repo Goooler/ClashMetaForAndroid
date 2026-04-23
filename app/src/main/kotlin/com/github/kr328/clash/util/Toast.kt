@@ -5,11 +5,10 @@ import android.widget.Toast
 import androidx.annotation.StringRes
 import com.github.kr328.clash.R
 import com.github.kr328.clash.ui.Design
-import com.github.kr328.clash.ui.SnackbarDuration
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 fun Design<*>.showExceptionSnackbar(message: CharSequence) {
-  snackbar(message, SnackbarDuration.Long) {
+  snackbar(message) {
     setAction(R.string.detail) {
       MaterialAlertDialogBuilder(it.context)
         .setTitle(R.string.error)

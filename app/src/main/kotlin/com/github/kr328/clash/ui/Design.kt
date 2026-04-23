@@ -13,13 +13,17 @@ abstract class Design<R>(val context: Context) {
 
   @Composable abstract fun Content()
 
-  fun snackbar(resId: Int, duration: SnackbarDuration, configure: Snackbar.() -> Unit = {}) {
+  fun snackbar(
+    resId: Int,
+    duration: SnackbarDuration = SnackbarDuration.Long,
+    configure: Snackbar.() -> Unit = {},
+  ) {
     return snackbar(context.getString(resId), duration, configure)
   }
 
   fun snackbar(
     message: CharSequence,
-    duration: SnackbarDuration,
+    duration: SnackbarDuration = SnackbarDuration.Long,
     configure: Snackbar.() -> Unit = {},
   ) {
     (context as Activity).findViewById<View>(android.R.id.content)?.let { root ->
