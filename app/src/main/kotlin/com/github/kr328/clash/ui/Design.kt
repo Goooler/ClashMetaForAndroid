@@ -9,11 +9,6 @@ import kotlinx.coroutines.channels.Channel
 
 abstract class Design<R>(val context: Context) {
 
-  @Suppress("StaticFieldLeak", "KotlinUnreachableCode")
-  object NoOp : Design<Unit>(error("We don't have to pass this.")) {
-    @Composable override fun Content() = error("We don't have to implement this.")
-  }
-
   val requests: Channel<R> = Channel(Channel.UNLIMITED)
 
   @Composable abstract fun Content()

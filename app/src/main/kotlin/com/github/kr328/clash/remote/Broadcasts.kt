@@ -12,19 +12,19 @@ import java.util.UUID
 
 class Broadcasts(private val context: Application) {
   interface Observer {
-    fun onServiceRecreated()
+    fun onServiceRecreated() = Unit
 
-    fun onStarted()
+    fun onStarted() = Unit
 
-    fun onStopped(cause: String?)
+    fun onStopped(cause: String?) = Unit
 
-    fun onProfileChanged()
+    fun onProfileChanged() = Unit
 
-    fun onProfileUpdateCompleted(uuid: UUID?)
+    fun onProfileUpdateCompleted(uuid: UUID?) = Unit
 
-    fun onProfileUpdateFailed(uuid: UUID?, reason: String?)
+    fun onProfileUpdateFailed(uuid: UUID?, reason: String?) = Unit
 
-    fun onProfileLoaded()
+    fun onProfileLoaded() = Unit
   }
 
   var clashRunning: Boolean = false
