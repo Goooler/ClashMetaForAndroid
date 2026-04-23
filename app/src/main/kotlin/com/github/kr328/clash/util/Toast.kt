@@ -28,6 +28,6 @@ fun Context.toast(@StringRes resId: Int, duration: Int = Toast.LENGTH_LONG) {
   toast(getString(resId), duration)
 }
 
-fun Context.toast(text: String, duration: Int = Toast.LENGTH_LONG) {
+fun Context.toast(text: CharSequence, duration: Int = Toast.LENGTH_LONG) {
   Toast.makeText(this, text, duration).show()
 }
