@@ -1,6 +1,5 @@
 package com.github.kr328.clash.settings.ui
 
-import android.content.Context
 import androidx.annotation.StringRes
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -22,12 +21,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.github.kr328.clash.R
-import com.github.kr328.clash.model.Behavior
 import com.github.kr328.clash.model.DarkMode
-import com.github.kr328.clash.service.store.ServiceStore
-import com.github.kr328.clash.store.UiStore
-import com.github.kr328.clash.ui.Design
+import com.github.kr328.clash.settings.vm.AppSettingsViewModel
 import com.github.kr328.clash.ui.component.SettingsCategoryTitle
 import com.github.kr328.clash.ui.component.SettingsCommonScreen
 import com.github.kr328.clash.ui.component.SettingsPreferenceClickableItem
@@ -35,53 +33,30 @@ import com.github.kr328.clash.ui.component.SettingsPreferenceSwitchItem
 import com.github.kr328.clash.ui.theme.MihomoTheme
 import com.github.kr328.clash.ui.theme.PreviewMihomo
 
-class AppSettingsDesign(
-  context: Context,
-  private val uiStore: UiStore,
-  private val serviceStore: ServiceStore,
-  private val behavior: Behavior,
-  private val running: Boolean,
-  private val onHideIconChange: (hide: Boolean) -> Unit,
-) : Design<AppSettingsDesign.Request>(context) {
-  sealed interface Request {
-    data object ReCreateAllActivities : Request
-  }
+@Composable
+fun AppSettingsScreen(
+  modifier: Modifier = Modifier,
+  viewModel: AppSettingsViewModel = viewModel(),
+) {
+  val clashRunning by viewModel.clashRunning.collectAsStateWithLifecycle()
+  val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-  @Composable
-  override fun Content() = MihomoTheme {
-    AppSettingsScreen(
-      running = running,
-      autoRestartInitial = behavior.autoRestart,
-      darkModeInitial = uiStore.darkMode,
-      hideAppIconInitial = uiStore.hideAppIcon,
-      hideFromRecentsInitial = uiStore.hideFromRecents,
-      dynamicNotificationInitial = serviceStore.dynamicNotification,
-      onAutoRestartChange = { behavior.autoRestart = it },
-      onDarkModeChange = {
-        uiStore.darkMode = it
-        requests.trySend(Request.ReCreateAllActivities)
-      },
-      onHideAppIconChange = {
-        uiStore.hideAppIcon = it
-        onHideIconChange(it)
-      },
-      onHideFromRecentsChange = {
-        uiStore.hideFromRecents = it
-        requests.trySend(Request.ReCreateAllActivities)
-      },
-      onDynamicNotificationChange = { serviceStore.dynamicNotification = it },
-    )
-  }
+  AppSettingsContent(
+    clashRunning = clashRunning,
+    uiState = uiState,
+    onAutoRestartChange = viewModel::updateAutoRestart,
+    onDarkModeChange = viewModel::updateDarkMode,
+    onHideAppIconChange = viewModel::updateHideAppIcon,
+    onHideFromRecentsChange = viewModel::updateHideFromRecents,
+    onDynamicNotificationChange = viewModel::updateDynamicNotification,
+    modifier = modifier,
+  )
 }
 
 @Composable
-private fun AppSettingsScreen(
-  running: Boolean,
-  autoRestartInitial: Boolean,
-  darkModeInitial: DarkMode,
-  hideAppIconInitial: Boolean,
-  hideFromRecentsInitial: Boolean,
-  dynamicNotificationInitial: Boolean,
+private fun AppSettingsContent(
+  clashRunning: Boolean,
+  uiState: AppSettingsViewModel.UiState,
   onAutoRestartChange: (Boolean) -> Unit,
   onDarkModeChange: (DarkMode) -> Unit,
   onHideAppIconChange: (Boolean) -> Unit,
@@ -89,11 +64,6 @@ private fun AppSettingsScreen(
   onDynamicNotificationChange: (Boolean) -> Unit,
   modifier: Modifier = Modifier,
 ) {
-  var autoRestart by remember { mutableStateOf(autoRestartInitial) }
-  var darkMode by remember { mutableStateOf(darkModeInitial) }
-  var hideAppIcon by remember { mutableStateOf(hideAppIconInitial) }
-  var hideFromRecents by remember { mutableStateOf(hideFromRecentsInitial) }
-  var dynamicNotification by remember { mutableStateOf(dynamicNotificationInitial) }
   var showDarkModeDialog by remember { mutableStateOf(false) }
 
   SettingsCommonScreen(title = stringResource(R.string.app), modifier = modifier.fillMaxSize()) {
@@ -102,39 +72,30 @@ private fun AppSettingsScreen(
       iconRes = R.drawable.ic_baseline_restore,
       titleRes = R.string.auto_restart,
       summaryRes = R.string.allow_clash_auto_restart,
-      checked = autoRestart,
-      onCheckedChange = {
-        autoRestart = it
-        onAutoRestartChange(it)
-      },
+      checked = uiState.autoRestart,
+      onCheckedChange = onAutoRestartChange,
     )
 
     SettingsCategoryTitle(text = stringResource(R.string.interface_))
     SettingsPreferenceClickableItem(
       iconRes = R.drawable.ic_baseline_brightness_4,
       titleRes = R.string.dark_mode,
-      summaryRes = darkMode.summaryRes,
+      summaryRes = uiState.darkMode.summaryRes,
       onClick = { showDarkModeDialog = true },
     )
     SettingsPreferenceSwitchItem(
       iconRes = R.drawable.ic_baseline_hide,
       titleRes = R.string.hide_app_icon_title,
       summaryRes = R.string.hide_app_icon_desc,
-      checked = hideAppIcon,
-      onCheckedChange = {
-        hideAppIcon = it
-        onHideAppIconChange(it)
-      },
+      checked = uiState.hideAppIcon,
+      onCheckedChange = onHideAppIconChange,
     )
     SettingsPreferenceSwitchItem(
       iconRes = R.drawable.ic_baseline_stack,
       titleRes = R.string.hide_from_recents_title,
       summaryRes = R.string.hide_from_recents_desc,
-      checked = hideFromRecents,
-      onCheckedChange = {
-        hideFromRecents = it
-        onHideFromRecentsChange(it)
-      },
+      checked = uiState.hideFromRecents,
+      onCheckedChange = onHideFromRecentsChange,
     )
 
     SettingsCategoryTitle(text = stringResource(R.string.service))
@@ -142,12 +103,9 @@ private fun AppSettingsScreen(
       iconRes = R.drawable.ic_baseline_domain,
       titleRes = R.string.show_traffic,
       summaryRes = R.string.show_traffic_summary,
-      checked = dynamicNotification,
-      enabled = !running,
-      onCheckedChange = {
-        dynamicNotification = it
-        onDynamicNotificationChange(it)
-      },
+      checked = uiState.dynamicNotification,
+      enabled = !clashRunning,
+      onCheckedChange = onDynamicNotificationChange,
     )
   }
 
@@ -168,13 +126,12 @@ private fun AppSettingsScreen(
             Row(
               modifier =
                 Modifier.fillMaxWidth().clickable {
-                  darkMode = value
                   showDarkModeDialog = false
                   onDarkModeChange(value)
                 },
               verticalAlignment = Alignment.CenterVertically,
             ) {
-              RadioButton(selected = darkMode == value, onClick = null)
+              RadioButton(selected = uiState.darkMode == value, onClick = null)
               Text(
                 text = stringResource(textRes),
                 style = MaterialTheme.typography.bodyLarge,
@@ -206,13 +163,16 @@ private val DarkMode.summaryRes: Int
 @Composable
 private fun AppSettingsScreenPreview() {
   MihomoTheme {
-    AppSettingsScreen(
-      running = false,
-      autoRestartInitial = true,
-      darkModeInitial = DarkMode.Auto,
-      hideAppIconInitial = false,
-      hideFromRecentsInitial = false,
-      dynamicNotificationInitial = true,
+    AppSettingsContent(
+      clashRunning = false,
+      uiState =
+        AppSettingsViewModel.UiState(
+          autoRestart = true,
+          darkMode = DarkMode.Auto,
+          hideAppIcon = false,
+          hideFromRecents = false,
+          dynamicNotification = true,
+        ),
       onAutoRestartChange = {},
       onDarkModeChange = {},
       onHideAppIconChange = {},
@@ -226,13 +186,16 @@ private fun AppSettingsScreenPreview() {
 @Composable
 private fun AppSettingsScreenRunningPreview() {
   MihomoTheme {
-    AppSettingsScreen(
-      running = true,
-      autoRestartInitial = true,
-      darkModeInitial = DarkMode.ForceDark,
-      hideAppIconInitial = true,
-      hideFromRecentsInitial = true,
-      dynamicNotificationInitial = true,
+    AppSettingsContent(
+      clashRunning = true,
+      uiState =
+        AppSettingsViewModel.UiState(
+          autoRestart = true,
+          darkMode = DarkMode.ForceDark,
+          hideAppIcon = true,
+          hideFromRecents = true,
+          dynamicNotification = true,
+        ),
       onAutoRestartChange = {},
       onDarkModeChange = {},
       onHideAppIconChange = {},
