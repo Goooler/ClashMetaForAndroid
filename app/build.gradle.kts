@@ -132,7 +132,7 @@ val downloadGeoFiles by
         }
         properties.getProperty("skip.downloadGeoFiles").toBoolean()
       }
-    // Skip the task running if match the flag.
+    // Skip running the task when the flag is set.
     onlyIf { !skipDownloadGeoFiles.get() }
   }
 
