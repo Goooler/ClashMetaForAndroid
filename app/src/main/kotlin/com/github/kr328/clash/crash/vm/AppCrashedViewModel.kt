@@ -11,8 +11,8 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 class AppCrashedViewModel(app: Application) : AndroidViewModel(app) {
-  private val _logs = MutableStateFlow("")
-  val logs: StateFlow<String> = _logs
+  val logs: StateFlow<String>
+    field = MutableStateFlow("")
 
   fun loadLogs() {
     viewModelScope.launch {
@@ -21,11 +21,11 @@ class AppCrashedViewModel(app: Application) : AndroidViewModel(app) {
           Log.i(
             "App version: versionName = ${packageInfo.versionName} versionCode = ${packageInfo.longVersionCode}"
           )
-          _logs.value = dumpCrash()
+          logs.value = dumpCrash()
         }
         .getOrElse { e ->
           Log.e("Failed to load crash logs", e)
-          _logs.value = "Failed to load crash logs: ${e.stackTraceToString()}"
+          logs.value = "Failed to load crash logs: ${e.stackTraceToString()}"
         }
     }
   }

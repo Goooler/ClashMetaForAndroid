@@ -13,17 +13,17 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class LogsViewModel(app: Application) : AndroidViewModel(app) {
-  private val _logFiles = MutableStateFlow(emptyList<LogFile>())
-  val logFiles: StateFlow<List<LogFile>> = _logFiles
+  val logFiles: StateFlow<List<LogFile>>
+    field = MutableStateFlow(emptyList<LogFile>())
 
   fun init() {
-    viewModelScope.launch { _logFiles.value = loadFiles() }
+    viewModelScope.launch { logFiles.value = loadFiles() }
   }
 
   fun deleteAll() {
     viewModelScope.launch {
       deleteAllLogs()
-      _logFiles.value = loadFiles()
+      logFiles.value = loadFiles()
     }
   }
 
