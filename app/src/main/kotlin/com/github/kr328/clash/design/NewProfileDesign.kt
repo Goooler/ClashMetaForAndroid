@@ -54,14 +54,8 @@ class NewProfileDesign(context: Context) : Design<NewProfileDesign.Request>(cont
   private var providers by mutableStateOf<List<ProfileProvider>>(emptyList())
 
   @Composable
-  override fun Content() {
-    MihomoTheme {
-      NewProfileScreen(
-        providers = providers,
-        onCreate = ::requestCreate,
-        onDetail = ::requestDetail,
-      )
-    }
+  override fun Content() = MihomoTheme {
+    NewProfileScreen(providers = providers, onCreate = ::requestCreate, onDetail = ::requestDetail)
   }
 
   suspend fun patchProviders(providers: List<ProfileProvider>) =

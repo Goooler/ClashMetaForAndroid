@@ -78,19 +78,17 @@ class MainDesign(context: Context) : Design<MainDesign.Request>(context) {
   private var aboutVersionName by mutableStateOf<String?>(null)
 
   @Composable
-  override fun Content() {
-    MihomoTheme {
-      MainScreen(
-        clashRunning = clashRunning,
-        forwarded = forwarded,
-        mode = mode,
-        profileName = profileName,
-        hasProviders = hasProviders,
-        aboutVersionName = aboutVersionName,
-        onDismissAbout = { aboutVersionName = null },
-        onRequest = { requests.trySend(it) },
-      )
-    }
+  override fun Content() = MihomoTheme {
+    MainScreen(
+      clashRunning = clashRunning,
+      forwarded = forwarded,
+      mode = mode,
+      profileName = profileName,
+      hasProviders = hasProviders,
+      aboutVersionName = aboutVersionName,
+      onDismissAbout = { aboutVersionName = null },
+      onRequest = { requests.trySend(it) },
+    )
   }
 
   suspend fun setProfileName(name: String?) = withContext(Dispatchers.Main) { profileName = name }

@@ -109,46 +109,44 @@ class ProxyDesign(
   private var selectedMode by mutableStateOf(overrideMode)
 
   @Composable
-  override fun Content() {
-    MihomoTheme {
-      ProxyScreen(
-        groupNames = groupNames,
-        groups = groups,
-        currentPage = currentPage,
-        proxyLine = proxyLine,
-        excludeNotSelectable = excludeNotSelectable,
-        proxySort = proxySort,
-        overrideMode = selectedMode,
-        initialPage = initialPage,
-        onPageChanged = { index ->
-          currentPage = index
-          groupNames.getOrNull(index)?.let { uiStore.proxyLastGroup = it }
-        },
-        onUrlTest = ::requestUrlTesting,
-        onExcludeNotSelectableChanged = { enabled ->
-          excludeNotSelectable = enabled
-          uiStore.proxyExcludeNotSelectable = enabled
-          requests.trySend(Request.ReLaunch)
-        },
-        onProxyLineChanged = { line ->
-          proxyLine = line
-          uiStore.proxyLine = line
-          config.proxyLine = line
-          groups.forEach { it.refresh() }
-          requests.trySend(Request.ReloadAll)
-        },
-        onProxySortChanged = { sort ->
-          proxySort = sort
-          uiStore.proxySort = sort
-          requests.trySend(Request.ReloadAll)
-        },
-        onOverrideModeSelected = { mode ->
-          selectedMode = mode
-          requests.trySend(Request.PatchMode(mode))
-        },
-        onProxySelected = { index, name -> requests.trySend(Request.Select(index, name)) },
-      )
-    }
+  override fun Content() = MihomoTheme {
+    ProxyScreen(
+      groupNames = groupNames,
+      groups = groups,
+      currentPage = currentPage,
+      proxyLine = proxyLine,
+      excludeNotSelectable = excludeNotSelectable,
+      proxySort = proxySort,
+      overrideMode = selectedMode,
+      initialPage = initialPage,
+      onPageChanged = { index ->
+        currentPage = index
+        groupNames.getOrNull(index)?.let { uiStore.proxyLastGroup = it }
+      },
+      onUrlTest = ::requestUrlTesting,
+      onExcludeNotSelectableChanged = { enabled ->
+        excludeNotSelectable = enabled
+        uiStore.proxyExcludeNotSelectable = enabled
+        requests.trySend(Request.ReLaunch)
+      },
+      onProxyLineChanged = { line ->
+        proxyLine = line
+        uiStore.proxyLine = line
+        config.proxyLine = line
+        groups.forEach { it.refresh() }
+        requests.trySend(Request.ReloadAll)
+      },
+      onProxySortChanged = { sort ->
+        proxySort = sort
+        uiStore.proxySort = sort
+        requests.trySend(Request.ReloadAll)
+      },
+      onOverrideModeSelected = { mode ->
+        selectedMode = mode
+        requests.trySend(Request.PatchMode(mode))
+      },
+      onProxySelected = { index, name -> requests.trySend(Request.Select(index, name)) },
+    )
   }
 
   suspend fun updateGroup(

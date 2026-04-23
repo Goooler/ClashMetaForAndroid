@@ -26,10 +26,7 @@ import kotlinx.coroutines.withContext
 class AppCrashedDesign(context: Context) : Design<Unit>(context) {
   private var logs by mutableStateOf("")
 
-  @Composable
-  override fun Content() {
-    MihomoTheme { AppCrashedScreen(logs = logs) }
-  }
+  @Composable override fun Content() = MihomoTheme { AppCrashedScreen(logs = logs) }
 
   suspend fun updateLogs(logs: String) =
     withContext(Dispatchers.Main) { this@AppCrashedDesign.logs = logs }

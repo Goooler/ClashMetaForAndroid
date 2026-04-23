@@ -13,10 +13,7 @@ import com.github.kr328.clash.design.ui.theme.MihomoTheme
 import com.github.kr328.clash.design.ui.theme.PreviewMihomo
 
 class ApkBrokenDesign(context: Context) : Design<Unit>(context) {
-  @Composable
-  override fun Content() {
-    MihomoTheme { ApkBrokenScreen() }
-  }
+  @Composable override fun Content() = MihomoTheme { ApkBrokenScreen() }
 }
 
 @Composable

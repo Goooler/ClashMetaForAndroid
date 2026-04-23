@@ -38,9 +38,7 @@ class SettingsDesign(context: Context) : Design<SettingsDesign.Request>(context)
   }
 
   @Composable
-  override fun Content() {
-    MihomoTheme { SettingsScreen(onRequest = { requests.trySend(it) }) }
-  }
+  override fun Content() = MihomoTheme { SettingsScreen(onRequest = { requests.trySend(it) }) }
 }
 
 @Composable

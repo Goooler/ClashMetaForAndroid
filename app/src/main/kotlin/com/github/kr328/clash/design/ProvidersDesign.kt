@@ -63,17 +63,15 @@ class ProvidersDesign(context: Context, providers: List<Provider>) :
     }
 
   @Composable
-  override fun Content() {
-    MihomoTheme {
-      ProvidersScreen(
-        states = states,
-        onUpdateAll = ::requestUpdateAll,
-        onUpdate = { index, provider ->
-          states[index] = states[index].copy(updating = true)
-          requests.trySend(Request.Update(index, provider))
-        },
-      )
-    }
+  override fun Content() = MihomoTheme {
+    ProvidersScreen(
+      states = states,
+      onUpdateAll = ::requestUpdateAll,
+      onUpdate = { index, provider ->
+        states[index] = states[index].copy(updating = true)
+        requests.trySend(Request.Update(index, provider))
+      },
+    )
   }
 
   suspend fun notifyUpdated(index: Int) =

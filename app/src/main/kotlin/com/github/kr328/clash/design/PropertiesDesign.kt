@@ -70,25 +70,23 @@ class PropertiesDesign(context: Context) : Design<PropertiesDesign.Request>(cont
   private val progressBarState = ModelProgressBarState()
 
   @Composable
-  override fun Content() {
-    MihomoTheme {
-      profileState?.let { profile ->
-        PropertiesScreen(
-          profile = profile,
-          processing = processingState,
-          progressBarState = progressBarState,
-          hasUnsavedChanges =
-            originalProfileState?.let { original -> hasUnsavedChanges(profile, original) } == true,
-          onBrowseFiles = { requests.trySend(Request.BrowseFiles) },
-          onCommit = { requests.trySend(Request.Commit) },
-          onRequestClose = { (context as? Activity)?.finish() },
-          onNameChanged = { name -> this@PropertiesDesign.profile = profile.copy(name = name) },
-          onUrlChanged = { url -> this@PropertiesDesign.profile = profile.copy(source = url) },
-          onIntervalChanged = { interval ->
-            this@PropertiesDesign.profile = profile.copy(interval = interval)
-          },
-        )
-      }
+  override fun Content() = MihomoTheme {
+    profileState?.let { profile ->
+      PropertiesScreen(
+        profile = profile,
+        processing = processingState,
+        progressBarState = progressBarState,
+        hasUnsavedChanges =
+          originalProfileState?.let { original -> hasUnsavedChanges(profile, original) } == true,
+        onBrowseFiles = { requests.trySend(Request.BrowseFiles) },
+        onCommit = { requests.trySend(Request.Commit) },
+        onRequestClose = { (context as? Activity)?.finish() },
+        onNameChanged = { name -> this@PropertiesDesign.profile = profile.copy(name = name) },
+        onUrlChanged = { url -> this@PropertiesDesign.profile = profile.copy(source = url) },
+        onIntervalChanged = { interval ->
+          this@PropertiesDesign.profile = profile.copy(interval = interval)
+        },
+      )
     }
   }
 

@@ -47,31 +47,29 @@ class AppSettingsDesign(
   }
 
   @Composable
-  override fun Content() {
-    MihomoTheme {
-      AppSettingsScreen(
-        running = running,
-        autoRestartInitial = behavior.autoRestart,
-        darkModeInitial = uiStore.darkMode,
-        hideAppIconInitial = uiStore.hideAppIcon,
-        hideFromRecentsInitial = uiStore.hideFromRecents,
-        dynamicNotificationInitial = serviceStore.dynamicNotification,
-        onAutoRestartChange = { behavior.autoRestart = it },
-        onDarkModeChange = {
-          uiStore.darkMode = it
-          requests.trySend(Request.ReCreateAllActivities)
-        },
-        onHideAppIconChange = {
-          uiStore.hideAppIcon = it
-          onHideIconChange(it)
-        },
-        onHideFromRecentsChange = {
-          uiStore.hideFromRecents = it
-          requests.trySend(Request.ReCreateAllActivities)
-        },
-        onDynamicNotificationChange = { serviceStore.dynamicNotification = it },
-      )
-    }
+  override fun Content() = MihomoTheme {
+    AppSettingsScreen(
+      running = running,
+      autoRestartInitial = behavior.autoRestart,
+      darkModeInitial = uiStore.darkMode,
+      hideAppIconInitial = uiStore.hideAppIcon,
+      hideFromRecentsInitial = uiStore.hideFromRecents,
+      dynamicNotificationInitial = serviceStore.dynamicNotification,
+      onAutoRestartChange = { behavior.autoRestart = it },
+      onDarkModeChange = {
+        uiStore.darkMode = it
+        requests.trySend(Request.ReCreateAllActivities)
+      },
+      onHideAppIconChange = {
+        uiStore.hideAppIcon = it
+        onHideIconChange(it)
+      },
+      onHideFromRecentsChange = {
+        uiStore.hideFromRecents = it
+        requests.trySend(Request.ReCreateAllActivities)
+      },
+      onDynamicNotificationChange = { serviceStore.dynamicNotification = it },
+    )
   }
 }
 

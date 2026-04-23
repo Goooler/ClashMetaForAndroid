@@ -70,27 +70,25 @@ class FilesDesign(context: Context) : Design<FilesDesign.Request>(context) {
   private var configurationEditable by mutableStateOf(false)
 
   @Composable
-  override fun Content() {
-    MihomoTheme {
-      FilesScreen(
-        files = files,
-        currentInBaseDir = currentInBaseDir,
-        configurationEditable = configurationEditable,
-        onBack = { requests.trySend(Request.PopStack) },
-        onOpen = { file ->
-          if (file.isDirectory) {
-            requests.trySend(Request.OpenDirectory(file))
-          } else {
-            requests.trySend(Request.OpenFile(file))
-          }
-        },
-        onNew = { requests.trySend(Request.ImportFile(null)) },
-        onImport = { requests.trySend(Request.ImportFile(it)) },
-        onExport = { requests.trySend(Request.ExportFile(it)) },
-        onRename = { file, newName -> requests.trySend(Request.RenameFile(file, newName)) },
-        onDelete = { requests.trySend(Request.DeleteFile(it)) },
-      )
-    }
+  override fun Content() = MihomoTheme {
+    FilesScreen(
+      files = files,
+      currentInBaseDir = currentInBaseDir,
+      configurationEditable = configurationEditable,
+      onBack = { requests.trySend(Request.PopStack) },
+      onOpen = { file ->
+        if (file.isDirectory) {
+          requests.trySend(Request.OpenDirectory(file))
+        } else {
+          requests.trySend(Request.OpenFile(file))
+        }
+      },
+      onNew = { requests.trySend(Request.ImportFile(null)) },
+      onImport = { requests.trySend(Request.ImportFile(it)) },
+      onExport = { requests.trySend(Request.ExportFile(it)) },
+      onRename = { file, newName -> requests.trySend(Request.RenameFile(file, newName)) },
+      onDelete = { requests.trySend(Request.DeleteFile(it)) },
+    )
   }
 
   suspend fun swapFiles(files: List<File>, currentInBaseDir: Boolean) =

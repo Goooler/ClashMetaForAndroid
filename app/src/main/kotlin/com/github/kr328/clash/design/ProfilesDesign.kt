@@ -80,25 +80,23 @@ class ProfilesDesign(context: Context) : Design<ProfilesDesign.Request>(context)
   private var currentTime by mutableLongStateOf(System.currentTimeMillis())
 
   @Composable
-  override fun Content() {
-    MihomoTheme {
-      ProfilesScreen(
-        profiles = profiles,
-        allUpdating = allUpdating,
-        hasUpdatableProfile = hasUpdatableProfile,
-        currentTime = currentTime,
-        onUpdateAll = {
-          allUpdating = true
-          requests.trySend(Request.UpdateAll)
-        },
-        onCreate = { requests.trySend(Request.Create) },
-        onActivate = { requests.trySend(Request.Active(it)) },
-        onUpdate = { requests.trySend(Request.Update(it)) },
-        onEdit = { requests.trySend(Request.Edit(it)) },
-        onDuplicate = { requests.trySend(Request.Duplicate(it)) },
-        onDelete = { requests.trySend(Request.Delete(it)) },
-      )
-    }
+  override fun Content() = MihomoTheme {
+    ProfilesScreen(
+      profiles = profiles,
+      allUpdating = allUpdating,
+      hasUpdatableProfile = hasUpdatableProfile,
+      currentTime = currentTime,
+      onUpdateAll = {
+        allUpdating = true
+        requests.trySend(Request.UpdateAll)
+      },
+      onCreate = { requests.trySend(Request.Create) },
+      onActivate = { requests.trySend(Request.Active(it)) },
+      onUpdate = { requests.trySend(Request.Update(it)) },
+      onEdit = { requests.trySend(Request.Edit(it)) },
+      onDuplicate = { requests.trySend(Request.Duplicate(it)) },
+      onDelete = { requests.trySend(Request.Delete(it)) },
+    )
   }
 
   suspend fun patchProfiles(profiles: List<Profile>) {

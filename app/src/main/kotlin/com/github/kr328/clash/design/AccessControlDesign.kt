@@ -92,34 +92,32 @@ class AccessControlDesign(
     get() = appsState
 
   @Composable
-  override fun Content() {
-    MihomoTheme {
-      AccessControlScreen(
-        apps = appsState,
-        selected = selectedState,
-        initialSort = uiStore.accessControlSort,
-        initialReverse = uiStore.accessControlReverse,
-        initialShowSystemApps = uiStore.accessControlSystemApp,
-        onToggleApp = ::toggleApp,
-        onSelectAll = { requests.trySend(Request.SelectAll) },
-        onSelectNone = { requests.trySend(Request.SelectNone) },
-        onSelectInvert = { requests.trySend(Request.SelectInvert) },
-        onImport = { requests.trySend(Request.Import) },
-        onExport = { requests.trySend(Request.Export) },
-        onUpdateSort = {
-          uiStore.accessControlSort = it
-          requests.trySend(Request.ReloadApps)
-        },
-        onUpdateReverse = {
-          uiStore.accessControlReverse = it
-          requests.trySend(Request.ReloadApps)
-        },
-        onUpdateShowSystemApps = {
-          uiStore.accessControlSystemApp = it
-          requests.trySend(Request.ReloadApps)
-        },
-      )
-    }
+  override fun Content() = MihomoTheme {
+    AccessControlScreen(
+      apps = appsState,
+      selected = selectedState,
+      initialSort = uiStore.accessControlSort,
+      initialReverse = uiStore.accessControlReverse,
+      initialShowSystemApps = uiStore.accessControlSystemApp,
+      onToggleApp = ::toggleApp,
+      onSelectAll = { requests.trySend(Request.SelectAll) },
+      onSelectNone = { requests.trySend(Request.SelectNone) },
+      onSelectInvert = { requests.trySend(Request.SelectInvert) },
+      onImport = { requests.trySend(Request.Import) },
+      onExport = { requests.trySend(Request.Export) },
+      onUpdateSort = {
+        uiStore.accessControlSort = it
+        requests.trySend(Request.ReloadApps)
+      },
+      onUpdateReverse = {
+        uiStore.accessControlReverse = it
+        requests.trySend(Request.ReloadApps)
+      },
+      onUpdateShowSystemApps = {
+        uiStore.accessControlSystemApp = it
+        requests.trySend(Request.ReloadApps)
+      },
+    )
   }
 
   suspend fun patchApps(apps: List<AppInfo>) = withContext(Dispatchers.Main) { appsState = apps }

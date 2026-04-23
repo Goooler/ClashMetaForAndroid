@@ -66,20 +66,18 @@ class LogcatDesign(context: Context, private val streaming: Boolean) :
   }
 
   @Composable
-  override fun Content() {
-    MihomoTheme {
-      LogcatScreen(
-        title = stringResource(R.string.clash_logcat),
-        streaming = streaming,
-        messages = messages,
-        listState = listState,
-        progressBarState = exportProgressState,
-        onClose = { requests.trySend(Request.Close) },
-        onDelete = { requests.trySend(Request.Delete) },
-        onExport = { requests.trySend(Request.Export) },
-        onCopyMessage = onCopyMessage,
-      )
-    }
+  override fun Content() = MihomoTheme {
+    LogcatScreen(
+      title = stringResource(R.string.clash_logcat),
+      streaming = streaming,
+      messages = messages,
+      listState = listState,
+      progressBarState = exportProgressState,
+      onClose = { requests.trySend(Request.Close) },
+      onDelete = { requests.trySend(Request.Delete) },
+      onExport = { requests.trySend(Request.Export) },
+      onCopyMessage = onCopyMessage,
+    )
   }
 
   suspend fun patchMessages(messages: List<LogMessage>) =

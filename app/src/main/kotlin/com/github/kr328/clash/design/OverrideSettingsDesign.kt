@@ -63,13 +63,11 @@ class OverrideSettingsDesign(context: Context, private val configuration: Config
   }
 
   @Composable
-  override fun Content() {
-    MihomoTheme {
-      OverrideSettingsScreen(
-        configuration = configuration,
-        onResetConfirmed = { requests.trySend(Request.ResetOverride) },
-      )
-    }
+  override fun Content() = MihomoTheme {
+    OverrideSettingsScreen(
+      configuration = configuration,
+      onResetConfirmed = { requests.trySend(Request.ResetOverride) },
+    )
   }
 }
 

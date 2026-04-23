@@ -19,10 +19,7 @@ import com.github.kr328.clash.design.ui.theme.MihomoTheme
 import com.github.kr328.clash.design.ui.theme.PreviewMihomo
 
 class HelpDesign(context: Context) : Design<Unit>(context) {
-  @Composable
-  override fun Content() {
-    MihomoTheme { HelpScreen(modifier = Modifier.fillMaxSize()) }
-  }
+  @Composable override fun Content() = MihomoTheme { HelpScreen(modifier = Modifier.fillMaxSize()) }
 }
 
 @Composable

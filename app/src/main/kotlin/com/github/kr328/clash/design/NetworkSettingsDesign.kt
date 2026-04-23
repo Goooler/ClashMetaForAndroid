@@ -46,30 +46,28 @@ class NetworkSettingsDesign(
   }
 
   @Composable
-  override fun Content() {
-    MihomoTheme {
-      NetworkSettingsScreen(
-        running = running,
-        hasSystemProxyOption = Build.VERSION.SDK_INT >= 29,
-        enableVpnInitial = uiStore.enableVpn,
-        bypassPrivateNetworkInitial = serviceStore.bypassPrivateNetwork,
-        dnsHijackingInitial = serviceStore.dnsHijacking,
-        allowBypassInitial = serviceStore.allowBypass,
-        allowIpv6Initial = serviceStore.allowIpv6,
-        systemProxyInitial = serviceStore.systemProxy,
-        tunStackModeInitial = serviceStore.tunStackMode,
-        accessControlModeInitial = serviceStore.accessControlMode,
-        onEnableVpnChange = { uiStore.enableVpn = it },
-        onBypassPrivateNetworkChange = { serviceStore.bypassPrivateNetwork = it },
-        onDnsHijackingChange = { serviceStore.dnsHijacking = it },
-        onAllowBypassChange = { serviceStore.allowBypass = it },
-        onAllowIpv6Change = { serviceStore.allowIpv6 = it },
-        onSystemProxyChange = { serviceStore.systemProxy = it },
-        onTunStackModeChange = { serviceStore.tunStackMode = it },
-        onAccessControlModeChange = { serviceStore.accessControlMode = it },
-        onAccessControlPackagesClick = { requests.trySend(Request.StartAccessControlList) },
-      )
-    }
+  override fun Content() = MihomoTheme {
+    NetworkSettingsScreen(
+      running = running,
+      hasSystemProxyOption = Build.VERSION.SDK_INT >= 29,
+      enableVpnInitial = uiStore.enableVpn,
+      bypassPrivateNetworkInitial = serviceStore.bypassPrivateNetwork,
+      dnsHijackingInitial = serviceStore.dnsHijacking,
+      allowBypassInitial = serviceStore.allowBypass,
+      allowIpv6Initial = serviceStore.allowIpv6,
+      systemProxyInitial = serviceStore.systemProxy,
+      tunStackModeInitial = serviceStore.tunStackMode,
+      accessControlModeInitial = serviceStore.accessControlMode,
+      onEnableVpnChange = { uiStore.enableVpn = it },
+      onBypassPrivateNetworkChange = { serviceStore.bypassPrivateNetwork = it },
+      onDnsHijackingChange = { serviceStore.dnsHijacking = it },
+      onAllowBypassChange = { serviceStore.allowBypass = it },
+      onAllowIpv6Change = { serviceStore.allowIpv6 = it },
+      onSystemProxyChange = { serviceStore.systemProxy = it },
+      onTunStackModeChange = { serviceStore.tunStackMode = it },
+      onAccessControlModeChange = { serviceStore.accessControlMode = it },
+      onAccessControlPackagesClick = { requests.trySend(Request.StartAccessControlList) },
+    )
   }
 
   init {

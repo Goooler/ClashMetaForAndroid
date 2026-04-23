@@ -55,15 +55,13 @@ class LogsDesign(context: Context) : Design<LogsDesign.Request>(context) {
   private var logs by mutableStateOf<List<LogFile>>(emptyList())
 
   @Composable
-  override fun Content() {
-    MihomoTheme {
-      LogsScreen(
-        logs = logs,
-        onDeleteAll = { requests.trySend(Request.DeleteAll) },
-        onStartLogcat = { requests.trySend(Request.StartLogcat) },
-        onOpenFile = { requests.trySend(Request.OpenFile(it)) },
-      )
-    }
+  override fun Content() = MihomoTheme {
+    LogsScreen(
+      logs = logs,
+      onDeleteAll = { requests.trySend(Request.DeleteAll) },
+      onStartLogcat = { requests.trySend(Request.StartLogcat) },
+      onOpenFile = { requests.trySend(Request.OpenFile(it)) },
+    )
   }
 
   suspend fun patchLogs(logs: List<LogFile>) =

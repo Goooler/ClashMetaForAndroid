@@ -51,17 +51,15 @@ class MetaFeatureSettingsDesign(
   }
 
   @Composable
-  override fun Content() {
-    MihomoTheme {
-      MetaFeatureSettingsScreen(
-        configuration = configuration,
-        onResetConfirmed = { requests.trySend(Request.ResetOverride) },
-        onImportGeoIp = { requests.trySend(Request.ImportGeoIp) },
-        onImportGeoSite = { requests.trySend(Request.ImportGeoSite) },
-        onImportCountry = { requests.trySend(Request.ImportCountry) },
-        onImportASN = { requests.trySend(Request.ImportASN) },
-      )
-    }
+  override fun Content() = MihomoTheme {
+    MetaFeatureSettingsScreen(
+      configuration = configuration,
+      onResetConfirmed = { requests.trySend(Request.ResetOverride) },
+      onImportGeoIp = { requests.trySend(Request.ImportGeoIp) },
+      onImportGeoSite = { requests.trySend(Request.ImportGeoSite) },
+      onImportCountry = { requests.trySend(Request.ImportCountry) },
+      onImportASN = { requests.trySend(Request.ImportASN) },
+    )
   }
 }
 
