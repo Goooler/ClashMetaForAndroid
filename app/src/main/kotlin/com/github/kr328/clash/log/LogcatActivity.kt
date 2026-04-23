@@ -66,10 +66,7 @@ class LogcatActivity : DesignActivity<LogcatDesign>() {
         }
         LogcatDesign.Request.Export -> {
           val output =
-            startActivityForResult(
-              ActivityResultContracts.CreateDocument("text/plain"),
-              file.fileName,
-            )
+            ActivityResultContracts.CreateDocument("text/plain").startForResult(file.fileName)
 
           if (output != null) {
             try {

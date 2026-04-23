@@ -13,7 +13,7 @@ import com.github.kr328.clash.model.DarkMode
 import com.github.kr328.clash.remote.Broadcasts
 import com.github.kr328.clash.remote.Remote
 import com.github.kr328.clash.store.UiStore
-import com.github.kr328.clash.util.ActivityResultLifecycle
+import com.github.kr328.clash.util.ActivityResultLifecycleOwner
 import com.github.kr328.clash.util.ApplicationObserver
 import com.github.kr328.clash.util.showExceptionSnackbar
 import java.util.UUID
@@ -56,14 +56,19 @@ abstract class BaseActivity : ComponentActivity(), Broadcasts.Observer {
     Remote.broadcasts.removeObserver(this)
   }
 
-  suspend fun <I, O> startActivityForResult(contracts: ActivityResultContract<I, O>, input: I): O =
+  suspend fun <I, O> ActivityResultContract<I, O>.startForResult(input: I): O =
     withContext(Dispatchers.Main) {
       val requestKey = nextRequestKey.getAndIncrement().toString()
 
-      ActivityResultLifecycle().use { lifecycle, start ->
+      ActivityResultLifecycleOwner().use { owner, start ->
         suspendCancellableCoroutine { c ->
           activityResultRegistry
-            .register(requestKey, lifecycle, contracts) { c.resume(it) }
+            .register(
+              key = requestKey,
+              lifecycleOwner = owner,
+              contract = this@startForResult,
+              callback = c::resume,
+            )
             .apply { start() }
             .launch(input)
         }

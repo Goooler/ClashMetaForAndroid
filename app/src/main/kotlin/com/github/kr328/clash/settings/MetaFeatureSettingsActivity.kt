@@ -41,22 +41,22 @@ class MetaFeatureSettingsActivity : DesignActivity<MetaFeatureSettingsDesign>() 
             }
 
             MetaFeatureSettingsDesign.Request.ImportGeoIp -> {
-              val uri = startActivityForResult(ActivityResultContracts.GetContent(), "*/*")
+              val uri = ActivityResultContracts.GetContent().startForResult("*/*")
               importGeoFile(uri, MetaFeatureSettingsDesign.Request.ImportGeoIp)
             }
 
             MetaFeatureSettingsDesign.Request.ImportGeoSite -> {
-              val uri = startActivityForResult(ActivityResultContracts.GetContent(), "*/*")
+              val uri = ActivityResultContracts.GetContent().startForResult("*/*")
               importGeoFile(uri, MetaFeatureSettingsDesign.Request.ImportGeoSite)
             }
 
             MetaFeatureSettingsDesign.Request.ImportCountry -> {
-              val uri = startActivityForResult(ActivityResultContracts.GetContent(), "*/*")
+              val uri = ActivityResultContracts.GetContent().startForResult("*/*")
               importGeoFile(uri, MetaFeatureSettingsDesign.Request.ImportCountry)
             }
 
             MetaFeatureSettingsDesign.Request.ImportASN -> {
-              val uri = startActivityForResult(ActivityResultContracts.GetContent(), "*/*")
+              val uri = ActivityResultContracts.GetContent().startForResult("*/*")
               importGeoFile(uri, MetaFeatureSettingsDesign.Request.ImportASN)
             }
           }
