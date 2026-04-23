@@ -2,11 +2,11 @@ package com.github.kr328.clash.util
 
 import com.github.kr328.clash.R
 import com.github.kr328.clash.ui.Design
-import com.github.kr328.clash.ui.ToastDuration
+import com.github.kr328.clash.ui.SnackbarDuration
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 fun Design<*>.showExceptionSnackbar(message: CharSequence) {
-  snackbar(message, ToastDuration.Long) {
+  snackbar(message, SnackbarDuration.Long) {
     setAction(R.string.detail) {
       MaterialAlertDialogBuilder(it.context)
         .setTitle(R.string.error)

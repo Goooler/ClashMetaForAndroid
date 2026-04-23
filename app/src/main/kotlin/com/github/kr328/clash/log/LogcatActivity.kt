@@ -17,7 +17,7 @@ import com.github.kr328.clash.log.util.LogcatFilter
 import com.github.kr328.clash.log.util.LogcatReader
 import com.github.kr328.clash.model.LogFile
 import com.github.kr328.clash.ui.BaseActivity
-import com.github.kr328.clash.ui.ToastDuration
+import com.github.kr328.clash.ui.SnackbarDuration
 import com.github.kr328.clash.util.logsDir
 import com.github.kr328.clash.util.showExceptionSnackbar
 import java.io.OutputStreamWriter
@@ -76,7 +76,7 @@ class LogcatActivity : BaseActivity<LogcatDesign>() {
             try {
               writeLogTo(design, messages, file, output)
 
-              design.snackbar(R.string.file_exported, ToastDuration.Long)
+              design.snackbar(R.string.file_exported, SnackbarDuration.Long)
             } catch (e: Exception) {
               design.showExceptionSnackbar(e)
             }

@@ -46,7 +46,7 @@ import androidx.compose.ui.unit.dp
 import com.github.kr328.clash.R
 import com.github.kr328.clash.service.model.Profile
 import com.github.kr328.clash.ui.Design
-import com.github.kr328.clash.ui.ToastDuration
+import com.github.kr328.clash.ui.SnackbarDuration
 import com.github.kr328.clash.ui.component.MihomoScaffold
 import com.github.kr328.clash.ui.theme.MihomoTheme
 import com.github.kr328.clash.ui.theme.PreviewMihomo
@@ -115,7 +115,7 @@ class ProfilesDesign(context: Context) : Design<ProfilesDesign.Request>(context)
   }
 
   suspend fun requestSave(profile: Profile) {
-    snackbar(R.string.active_unsaved_tips, ToastDuration.Long) {
+    snackbar(R.string.active_unsaved_tips, SnackbarDuration.Long) {
       setAction(R.string.edit) { requests.trySend(Request.Edit(profile)) }
     }
   }

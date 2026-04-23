@@ -28,7 +28,7 @@ import com.github.kr328.clash.service.model.AccessControlMode
 import com.github.kr328.clash.service.store.ServiceStore
 import com.github.kr328.clash.store.UiStore
 import com.github.kr328.clash.ui.Design
-import com.github.kr328.clash.ui.ToastDuration
+import com.github.kr328.clash.ui.SnackbarDuration
 import com.github.kr328.clash.ui.component.SettingsCategoryTitle
 import com.github.kr328.clash.ui.component.SettingsCommonScreen
 import com.github.kr328.clash.ui.component.SettingsPreferenceClickableItem
@@ -73,7 +73,7 @@ class NetworkSettingsDesign(
 
   init {
     if (running) {
-      snackbar(R.string.options_unavailable, ToastDuration.Indefinite)
+      snackbar(R.string.options_unavailable, SnackbarDuration.Indefinite)
     }
   }
 }

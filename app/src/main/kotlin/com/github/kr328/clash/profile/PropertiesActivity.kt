@@ -8,7 +8,7 @@ import com.github.kr328.clash.files.FilesActivity
 import com.github.kr328.clash.profile.ui.PropertiesDesign
 import com.github.kr328.clash.service.model.Profile
 import com.github.kr328.clash.ui.BaseActivity
-import com.github.kr328.clash.ui.ToastDuration
+import com.github.kr328.clash.ui.SnackbarDuration
 import com.github.kr328.clash.util.showExceptionSnackbar
 import com.github.kr328.clash.util.withProfile
 import kotlinx.coroutines.coroutineScope
@@ -72,10 +72,10 @@ class PropertiesActivity : BaseActivity<PropertiesDesign>() {
   private suspend fun PropertiesDesign.verifyAndCommit() {
     when {
       profile.name.isBlank() -> {
-        snackbar(R.string.empty_name, ToastDuration.Long)
+        snackbar(R.string.empty_name, SnackbarDuration.Long)
       }
       profile.type != Profile.Type.File && profile.source.isBlank() -> {
-        snackbar(R.string.invalid_url, ToastDuration.Long)
+        snackbar(R.string.invalid_url, SnackbarDuration.Long)
       }
       else -> {
         try {
