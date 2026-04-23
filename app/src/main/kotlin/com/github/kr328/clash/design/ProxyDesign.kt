@@ -406,18 +406,27 @@ private fun ProxyGroupPage(
         if (useRawStates) {
           val state = rawStates[itemIndex]
           var uiState by
-            remember(state.proxy.name, proxyLine, selectedControl, selectedBackground, unselectedControl, unselectedBackground) {
+            remember(
+              state.proxy.name,
+              proxyLine,
+              selectedControl,
+              selectedBackground,
+              unselectedControl,
+              unselectedBackground,
+            ) {
               mutableStateOf(
-                state.apply {
-                  update(
-                    snap = true,
-                    proxyLine = proxyLine,
-                    selectedControl = selectedControl,
-                    selectedBackground = selectedBackground,
-                    unselectedControl = unselectedControl,
-                    unselectedBackground = unselectedBackground,
-                  )
-                }.toUiState()
+                state
+                  .apply {
+                    update(
+                      snap = true,
+                      proxyLine = proxyLine,
+                      selectedControl = selectedControl,
+                      selectedBackground = selectedBackground,
+                      unselectedControl = unselectedControl,
+                      unselectedBackground = unselectedBackground,
+                    )
+                  }
+                  .toUiState()
               )
             }
 
