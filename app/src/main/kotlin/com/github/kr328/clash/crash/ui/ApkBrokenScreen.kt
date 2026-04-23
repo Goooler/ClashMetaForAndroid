@@ -1,13 +1,11 @@
 package com.github.kr328.clash.crash.ui
 
-import android.content.Context
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import com.github.kr328.clash.R
 import com.github.kr328.clash.main.ui.CMFA_GITHUB
 import com.github.kr328.clash.main.ui.openLink
-import com.github.kr328.clash.ui.Design
 import com.github.kr328.clash.ui.component.SettingsCategoryTitle
 import com.github.kr328.clash.ui.component.SettingsClickableItem
 import com.github.kr328.clash.ui.component.SettingsCommonScreen
@@ -15,12 +13,8 @@ import com.github.kr328.clash.ui.component.SettingsTipsItem
 import com.github.kr328.clash.ui.theme.MihomoTheme
 import com.github.kr328.clash.ui.theme.PreviewMihomo
 
-class ApkBrokenDesign(context: Context) : Design<Unit>(context) {
-  @Composable override fun Content() = MihomoTheme { ApkBrokenScreen() }
-}
-
 @Composable
-private fun ApkBrokenScreen() {
+fun ApkBrokenScreen() {
   SettingsCommonScreen(title = stringResource(R.string.application_broken)) {
     val context = LocalContext.current
 
