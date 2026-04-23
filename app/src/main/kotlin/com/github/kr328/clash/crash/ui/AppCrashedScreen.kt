@@ -1,6 +1,5 @@
 package com.github.kr328.clash.crash.ui
 
-import android.content.Context
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
@@ -10,33 +9,33 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.github.kr328.clash.R
-import com.github.kr328.clash.ui.Design
+import com.github.kr328.clash.crash.vm.AppCrashedViewModel
 import com.github.kr328.clash.ui.component.MihomoScaffold
 import com.github.kr328.clash.ui.theme.MihomoTheme
 import com.github.kr328.clash.ui.theme.PreviewMihomo
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 
-class AppCrashedDesign(context: Context) : Design<Unit>(context) {
-  private var logs by mutableStateOf("")
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun AppCrashedScreen(modifier: Modifier = Modifier, viewModel: AppCrashedViewModel = viewModel()) {
+  LaunchedEffect(viewModel) { viewModel.loadLogs() }
+  val logs by viewModel.logs.collectAsStateWithLifecycle()
 
-  @Composable override fun Content() = MihomoTheme { AppCrashedScreen(logs = logs) }
-
-  suspend fun updateLogs(logs: String) =
-    withContext(Dispatchers.Main) { this@AppCrashedDesign.logs = logs }
+  AppCrashedContent(modifier = modifier, logs = logs)
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun AppCrashedScreen(logs: String) {
-  MihomoScaffold(title = stringResource(R.string.application_crashed)) { innerPadding ->
+private fun AppCrashedContent(modifier: Modifier = Modifier, logs: String) {
+  MihomoScaffold(modifier = modifier, title = stringResource(R.string.application_crashed)) {
+    innerPadding ->
     SelectionContainer {
       Text(
         text = logs,
@@ -58,7 +57,7 @@ private fun AppCrashedScreen(logs: String) {
 @PreviewMihomo
 @Composable
 private fun AppCrashedScreenPreview() = MihomoTheme {
-  AppCrashedScreen(
+  AppCrashedContent(
     logs =
       "04-20 10:10:10.000 I/App( 1234): App version: 2.0.0\n" +
         "04-20 10:10:10.100 E/App( 1234): java.lang.IllegalStateException: Example crash\n" +
