@@ -1,12 +1,14 @@
 package com.github.kr328.clash.crash
 
-import com.github.kr328.clash.crash.ui.ApkBrokenDesign
-import com.github.kr328.clash.ui.DesignActivity
+import android.os.Bundle
+import androidx.activity.compose.setContent
+import com.github.kr328.clash.crash.ui.ApkBrokenScreen
+import com.github.kr328.clash.ui.BaseActivity
+import com.github.kr328.clash.ui.theme.MihomoTheme
 
-class ApkBrokenActivity : DesignActivity<ApkBrokenDesign>() {
-  override suspend fun main() {
-    val design = ApkBrokenDesign(this)
-
-    setContentDesign(design)
+class ApkBrokenActivity : BaseActivity() {
+  override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
+    setContent { MihomoTheme { ApkBrokenScreen() } }
   }
 }
