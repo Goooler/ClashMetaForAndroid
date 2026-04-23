@@ -10,10 +10,14 @@ import kotlin.math.absoluteValue
 import kotlin.math.max
 
 class ProxyViewState(
-  val config: ProxyViewConfig,
   val proxy: Proxy,
   private val parent: ProxyState,
   private val link: ProxyState?,
+  private var proxyLine: Int,
+  private var selectedControl: Int,
+  private var selectedBackground: Int,
+  private var unselectedControl: Int,
+  private var unselectedBackground: Int,
 ) {
   val paint = Paint()
   val rect = Rect()
@@ -22,8 +26,8 @@ class ProxyViewState(
   var title: String = ""
   var subtitle: String = ""
   var delayText: String = ""
-  var background: Int = config.currentUnselectedBackground()
-  var controls: Int = config.unselectedControl
+  var background: Int = currentUnselectedBackground()
+  var controls: Int = unselectedControl
 
   private var delay: Int = 0
   private var selected: Boolean = false
@@ -31,6 +35,23 @@ class ProxyViewState(
   private var linkNow: String? = null
 
   private var lastFrameTime = System.currentTimeMillis()
+
+  fun updateAppearance(
+    proxyLine: Int,
+    selectedControl: Int,
+    selectedBackground: Int,
+    unselectedControl: Int,
+    unselectedBackground: Int,
+  ) {
+    this.proxyLine = proxyLine
+    this.selectedControl = selectedControl
+    this.selectedBackground = selectedBackground
+    this.unselectedControl = unselectedControl
+    this.unselectedBackground = unselectedBackground
+  }
+
+  private fun currentUnselectedBackground(): Int =
+    if (proxyLine == 1) Color.TRANSPARENT else unselectedBackground
 
   fun update(snap: Boolean): Boolean {
     val frameTime = System.currentTimeMillis()
@@ -63,12 +84,12 @@ class ProxyViewState(
       selected = proxy.name == parent.now
     }
 
-    controls = if (selected) config.selectedControl else config.unselectedControl
+    controls = if (selected) selectedControl else unselectedControl
 
     if (snap) {
-      background = if (selected) config.selectedBackground else config.currentUnselectedBackground()
+      background = if (selected) selectedBackground else currentUnselectedBackground()
     } else {
-      val target = if (selected) config.selectedBackground else config.currentUnselectedBackground()
+      val target = if (selected) selectedBackground else currentUnselectedBackground()
 
       if (background != target) {
         val sa = Color.alpha(background)

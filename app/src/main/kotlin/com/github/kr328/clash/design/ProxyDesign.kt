@@ -1,6 +1,7 @@
 package com.github.kr328.clash.design
 
 import android.content.Context
+import android.graphics.Color as AndroidColor
 import android.widget.Toast
 import androidx.annotation.ColorInt
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -66,7 +67,6 @@ import com.github.kr328.clash.core.model.Proxy
 import com.github.kr328.clash.core.model.ProxySort
 import com.github.kr328.clash.core.model.TunnelState
 import com.github.kr328.clash.design.component.MihomoScaffold
-import com.github.kr328.clash.design.component.ProxyViewConfig
 import com.github.kr328.clash.design.component.ProxyViewState
 import com.github.kr328.clash.design.model.ProxyState
 import com.github.kr328.clash.design.store.UiStore
@@ -97,7 +97,6 @@ class ProxyDesign(
     data class UrlTest(val index: Int) : Request
   }
 
-  private val config = ProxyViewConfig(uiStore.proxyLine)
   private val groups = List(groupNames.size) { ProxyGroupUiState() }
   private val initialPage = groupNames.indexOf(uiStore.proxyLastGroup).coerceAtLeast(0)
 
@@ -107,13 +106,42 @@ class ProxyDesign(
   private var excludeNotSelectable by mutableStateOf(uiStore.proxyExcludeNotSelectable)
   private var proxySort by mutableStateOf(uiStore.proxySort)
   private var selectedMode by mutableStateOf(overrideMode)
+  private var selectedControl by mutableIntStateOf(AndroidColor.WHITE)
+  private var selectedBackground by mutableIntStateOf(AndroidColor.BLACK)
+  private var unselectedControl by mutableIntStateOf(AndroidColor.BLACK)
+  private var unselectedBackground by mutableIntStateOf(AndroidColor.WHITE)
 
   @Composable
   override fun Content() = MihomoTheme {
-    config.selectedControl = MaterialTheme.colorScheme.onPrimary.toArgb()
-    config.selectedBackground = MaterialTheme.colorScheme.primary.toArgb()
-    config.unselectedControl = MaterialTheme.colorScheme.onSurface.toArgb()
-    config.unselectedBackground = MaterialTheme.colorScheme.surface.toArgb()
+    val resolvedSelectedControl = MaterialTheme.colorScheme.onPrimary.toArgb()
+    val resolvedSelectedBackground = MaterialTheme.colorScheme.primary.toArgb()
+    val resolvedUnselectedControl = MaterialTheme.colorScheme.onSurface.toArgb()
+    val resolvedUnselectedBackground = MaterialTheme.colorScheme.surface.toArgb()
+
+    LaunchedEffect(
+      proxyLine,
+      resolvedSelectedControl,
+      resolvedSelectedBackground,
+      resolvedUnselectedControl,
+      resolvedUnselectedBackground,
+    ) {
+      selectedControl = resolvedSelectedControl
+      selectedBackground = resolvedSelectedBackground
+      unselectedControl = resolvedUnselectedControl
+      unselectedBackground = resolvedUnselectedBackground
+
+      groups.forEach { group ->
+        group.rawStates.forEach { state ->
+          state.updateAppearance(
+            proxyLine = proxyLine,
+            selectedControl = selectedControl,
+            selectedBackground = selectedBackground,
+            unselectedControl = unselectedControl,
+            unselectedBackground = unselectedBackground,
+          )
+        }
+      }
+    }
 
     ProxyScreen(
       groupNames = groupNames,
@@ -137,7 +165,6 @@ class ProxyDesign(
       onProxyLineChanged = { line ->
         proxyLine = line
         uiStore.proxyLine = line
-        config.proxyLine = line
         groups.forEach { it.refresh() }
         requests.trySend(Request.ReloadAll)
       },
@@ -164,7 +191,16 @@ class ProxyDesign(
     val states =
       withContext(Dispatchers.Default) {
         proxies.map { proxy ->
-          ProxyViewState(config, proxy, parent, if (proxy.type.group) links[proxy.name] else null)
+          ProxyViewState(
+            proxy = proxy,
+            parent = parent,
+            link = if (proxy.type.group) links[proxy.name] else null,
+            proxyLine = proxyLine,
+            selectedControl = selectedControl,
+            selectedBackground = selectedBackground,
+            unselectedControl = unselectedControl,
+            unselectedBackground = unselectedBackground,
+          )
         }
       }
 
