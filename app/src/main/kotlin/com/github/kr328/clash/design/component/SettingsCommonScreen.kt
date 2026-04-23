@@ -22,8 +22,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.AnnotatedString
-import androidx.compose.ui.unit.dp
 import com.github.kr328.clash.R
+import com.github.kr328.clash.design.ui.theme.mihomoDimens
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
@@ -47,29 +47,30 @@ fun SettingsCommonScreen(
 
 @Composable
 fun SettingsTipsItem(modifier: Modifier = Modifier, text: CharSequence) {
+  val dimens = mihomoDimens
   Row(
-    modifier = modifier.padding(vertical = 16.dp),
+    modifier = modifier.padding(vertical = dimens.itemPaddingVertical),
     verticalAlignment = Alignment.CenterVertically,
   ) {
-    Spacer(modifier = Modifier.width(20.dp))
+    Spacer(modifier = Modifier.width(dimens.tipsIconMargin))
     Image(
       painter = painterResource(R.drawable.ic_outline_info),
       contentDescription = null,
-      modifier = Modifier.size(25.dp),
+      modifier = Modifier.size(dimens.tipsIconSize),
     )
-    Spacer(modifier = Modifier.width(20.dp))
+    Spacer(modifier = Modifier.width(dimens.tipsIconMargin))
     when (text) {
       is String ->
         Text(
           text = text,
           style = MaterialTheme.typography.bodyMedium,
-          modifier = Modifier.padding(end = 20.dp),
+          modifier = Modifier.padding(end = dimens.tipsIconMargin),
         )
       is AnnotatedString ->
         Text(
           text = text,
           style = MaterialTheme.typography.bodyMedium,
-          modifier = Modifier.padding(end = 20.dp),
+          modifier = Modifier.padding(end = dimens.tipsIconMargin),
         )
     }
   }
@@ -77,12 +78,22 @@ fun SettingsTipsItem(modifier: Modifier = Modifier, text: CharSequence) {
 
 @Composable
 fun SettingsCategoryTitle(text: String, modifier: Modifier = Modifier) {
+  val dimens = mihomoDimens
+  val headerLayoutWidth = dimens.itemHeaderComponentSize + dimens.itemHeaderMargin * 2
+
   Text(
     text = text,
     style = MaterialTheme.typography.bodyMedium,
     color = MaterialTheme.colorScheme.primary,
     modifier =
-      modifier.fillMaxWidth().padding(start = 65.dp, end = 20.dp, top = 16.dp, bottom = 16.dp),
+      modifier
+        .fillMaxWidth()
+        .padding(
+          start = headerLayoutWidth,
+          end = dimens.settingsItemEndPadding,
+          top = dimens.itemPaddingVertical,
+          bottom = dimens.itemPaddingVertical,
+        ),
   )
 }
 
@@ -93,21 +104,28 @@ fun SettingsClickableItem(
   onClick: () -> Unit,
   modifier: Modifier = Modifier,
 ) {
+  val dimens = mihomoDimens
+  val headerLayoutWidth = dimens.itemHeaderComponentSize + dimens.itemHeaderMargin * 2
+
   Row(
     modifier =
       modifier
         .fillMaxWidth()
         .clickable(onClick = onClick)
-        .padding(top = 16.dp, bottom = 16.dp, end = 20.dp),
+        .padding(
+          top = dimens.itemPaddingVertical,
+          bottom = dimens.itemPaddingVertical,
+          end = dimens.settingsItemEndPadding,
+        ),
     verticalAlignment = Alignment.CenterVertically,
   ) {
-    Spacer(modifier = Modifier.width(65.dp))
+    Spacer(modifier = Modifier.width(headerLayoutWidth))
     Column {
       Text(text = title, style = MaterialTheme.typography.bodyLarge)
       Text(
         text = summary,
         style = MaterialTheme.typography.bodyMedium,
-        modifier = Modifier.padding(top = 5.dp),
+        modifier = Modifier.padding(top = dimens.itemTextMargin),
       )
     }
   }

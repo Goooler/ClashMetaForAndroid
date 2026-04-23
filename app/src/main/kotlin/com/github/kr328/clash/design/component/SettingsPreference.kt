@@ -36,10 +36,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.github.kr328.clash.R
+import com.github.kr328.clash.design.ui.theme.mihomoDimens
 import me.zhanghai.compose.preference.ListPreference
 import me.zhanghai.compose.preference.Preference
 
@@ -191,6 +191,8 @@ fun FullScreenPreferenceDialog(
   onConfirm: () -> Unit,
   content: @Composable (Modifier) -> Unit,
 ) {
+  val dimens = mihomoDimens
+
   Dialog(
     onDismissRequest = onDismiss,
     properties = DialogProperties(usePlatformDefaultWidth = false),
@@ -211,7 +213,12 @@ fun FullScreenPreferenceDialog(
       Column(modifier = Modifier.fillMaxSize().padding(innerPadding)) {
         content(Modifier.weight(1f))
         Row(
-          modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 8.dp),
+          modifier =
+            Modifier.fillMaxWidth()
+              .padding(
+                horizontal = dimens.preferenceDialogButtonBarHorizontalPadding,
+                vertical = dimens.preferenceDialogButtonBarVerticalPadding,
+              ),
           horizontalArrangement = Arrangement.End,
         ) {
           TextButton(onClick = onReset) { Text(stringResource(R.string.reset)) }

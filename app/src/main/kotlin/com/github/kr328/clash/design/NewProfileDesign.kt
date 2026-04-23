@@ -29,7 +29,6 @@ import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.painter.BitmapPainter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.core.graphics.drawable.toBitmap
 import com.github.kr328.clash.R
@@ -38,6 +37,7 @@ import com.github.kr328.clash.design.component.MihomoScaffold
 import com.github.kr328.clash.design.model.ProfileProvider
 import com.github.kr328.clash.design.ui.theme.MihomoTheme
 import com.github.kr328.clash.design.ui.theme.PreviewMihomo
+import com.github.kr328.clash.design.ui.theme.mihomoDimens
 import kotlin.math.roundToInt
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -112,10 +112,11 @@ private fun ProfileProviderItem(
   onLongClick: () -> Unit,
 ) {
   val density = LocalDensity.current
-  val itemPaddingVertical = dimensionResource(R.dimen.item_padding_vertical)
-  val headerSize = dimensionResource(R.dimen.item_header_component_size)
-  val headerMargin = dimensionResource(R.dimen.item_header_margin)
-  val textMargin = dimensionResource(R.dimen.item_text_margin)
+  val dimens = mihomoDimens
+  val itemPaddingVertical = dimens.itemPaddingVertical
+  val headerSize = dimens.itemHeaderComponentSize
+  val headerMargin = dimens.itemHeaderMargin
+  val textMargin = dimens.itemTextMargin
   val iconSizePx = with(density) { headerSize.toPx().roundToInt() }
   val iconPainter =
     remember(provider, iconSizePx) {

@@ -15,8 +15,8 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
+import com.github.kr328.clash.design.ui.theme.mihomoDimens
 
 class ModelProgressBarState {
   var visible by mutableStateOf(false)
@@ -30,11 +30,13 @@ class ModelProgressBarState {
 fun ModelProgressBarDialog(state: ModelProgressBarState) {
   if (!state.visible) return
 
+  val dimens = mihomoDimens
+
   Dialog(onDismissRequest = {}) {
     Surface(shape = MaterialTheme.shapes.large) {
       Column(
-        modifier = Modifier.fillMaxWidth().padding(20.dp),
-        verticalArrangement = Arrangement.spacedBy(12.dp),
+        modifier = Modifier.fillMaxWidth().padding(dimens.dialogPadding),
+        verticalArrangement = Arrangement.spacedBy(dimens.dialogContentSpacing),
       ) {
         Text(text = state.text.orEmpty(), style = MaterialTheme.typography.bodyLarge)
 

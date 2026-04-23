@@ -32,7 +32,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
@@ -47,6 +46,7 @@ import com.github.kr328.clash.design.component.ModelTextInputDialog
 import com.github.kr328.clash.design.component.SettingsTipsItem
 import com.github.kr328.clash.design.ui.theme.MihomoTheme
 import com.github.kr328.clash.design.ui.theme.PreviewMihomo
+import com.github.kr328.clash.design.ui.theme.mihomoDimens
 import com.github.kr328.clash.design.util.ValidatorAutoUpdateInterval
 import com.github.kr328.clash.design.util.ValidatorHttpUrl
 import com.github.kr328.clash.design.util.ValidatorNotBlank
@@ -163,8 +163,9 @@ private fun PropertiesScreen(
   onUrlChanged: (String) -> Unit,
   onIntervalChanged: (Long) -> Unit,
 ) {
-  val contentPaddingHorizontal = dimensionResource(R.dimen.item_tailing_margin)
-  val itemPaddingVertical = dimensionResource(R.dimen.item_padding_vertical)
+  val dimens = mihomoDimens
+  val contentPaddingHorizontal = dimens.itemTrailingMargin
+  val itemPaddingVertical = dimens.itemPaddingVertical
   var showExitWithoutSavingDialog by rememberSaveable { mutableStateOf(false) }
   var showInputNameDialog by rememberSaveable { mutableStateOf(false) }
   var showInputUrlDialog by rememberSaveable { mutableStateOf(false) }
@@ -188,8 +189,8 @@ private fun PropertiesScreen(
     actions = {
       if (processing) {
         CircularProgressIndicator(
-          modifier = Modifier.size(dimensionResource(R.dimen.item_tailing_component_size) / 2),
-          strokeWidth = dimensionResource(R.dimen.toolbar_image_action_padding) / 2,
+          modifier = Modifier.size(dimens.itemTrailingComponentSize / 2),
+          strokeWidth = dimens.toolbarImageActionPadding / 2,
         )
       } else {
         IconButton(onClick = onCommit) {
@@ -343,9 +344,10 @@ private fun PropertiesActionItem(
   onClick: () -> Unit,
   itemPaddingVertical: Dp,
 ) {
-  val itemHeaderComponentSize = dimensionResource(R.dimen.item_header_component_size)
-  val itemHeaderMargin = dimensionResource(R.dimen.item_header_margin)
-  val itemTextMargin = dimensionResource(R.dimen.item_text_margin)
+  val dimens = mihomoDimens
+  val itemHeaderComponentSize = dimens.itemHeaderComponentSize
+  val itemHeaderMargin = dimens.itemHeaderMargin
+  val itemTextMargin = dimens.itemTextMargin
   val contentAlpha = if (enabled) 1f else 0.5f
 
   Row(
@@ -372,7 +374,7 @@ private fun PropertiesActionItem(
       )
     }
   }
-  Spacer(modifier = Modifier.height(dimensionResource(R.dimen.properties_element_margin_vertical)))
+  Spacer(modifier = Modifier.height(dimens.propertiesElementMarginVertical))
 }
 
 @PreviewMihomo

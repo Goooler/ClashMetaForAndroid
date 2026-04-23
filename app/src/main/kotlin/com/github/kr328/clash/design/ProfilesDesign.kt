@@ -37,7 +37,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
@@ -47,6 +46,7 @@ import com.github.kr328.clash.design.component.MihomoScaffold
 import com.github.kr328.clash.design.ui.ToastDuration
 import com.github.kr328.clash.design.ui.theme.MihomoTheme
 import com.github.kr328.clash.design.ui.theme.PreviewMihomo
+import com.github.kr328.clash.design.ui.theme.mihomoDimens
 import com.github.kr328.clash.design.util.elapsedIntervalString
 import com.github.kr328.clash.design.util.toBytesString
 import com.github.kr328.clash.design.util.toDateStr
@@ -195,9 +195,10 @@ private fun ProfilesScreen(
       if (hasUpdatableProfile) {
         IconButton(onClick = onUpdateAll, enabled = !allUpdating) {
           if (allUpdating) {
+            val dimens = mihomoDimens
             CircularProgressIndicator(
-              modifier = Modifier.size(dimensionResource(R.dimen.item_tailing_component_size) / 2),
-              strokeWidth = dimensionResource(R.dimen.toolbar_image_action_padding) / 2,
+              modifier = Modifier.size(dimens.itemTrailingComponentSize / 2),
+              strokeWidth = dimens.toolbarImageActionPadding / 2,
             )
           } else {
             Icon(
@@ -240,10 +241,11 @@ private fun ProfileItem(
   onMenuClick: () -> Unit,
 ) {
   val context = LocalContext.current
-  val itemMinHeight = dimensionResource(R.dimen.item_min_height)
-  val itemHeaderMargin = dimensionResource(R.dimen.item_header_margin)
-  val itemTextMargin = dimensionResource(R.dimen.item_text_margin)
-  val itemMiddleMargin = dimensionResource(R.dimen.item_midden_margin)
+  val dimens = mihomoDimens
+  val itemMinHeight = dimens.itemMinHeight
+  val itemHeaderMargin = dimens.itemHeaderMargin
+  val itemTextMargin = dimens.itemTextMargin
+  val itemMiddleMargin = dimens.itemMiddleMargin
 
   val profileTypeText =
     if (profile.pending) {
@@ -282,10 +284,7 @@ private fun ProfileItem(
         RadioButton(selected = profile.active, onClick = null)
       }
 
-      Column(
-        modifier =
-          Modifier.weight(1f).padding(vertical = dimensionResource(R.dimen.item_padding_vertical))
-      ) {
+      Column(modifier = Modifier.weight(1f).padding(vertical = dimens.itemPaddingVertical)) {
         Text(text = profile.name, maxLines = 1, overflow = TextOverflow.Ellipsis)
         Spacer(modifier = Modifier.height(itemTextMargin))
         Text(text = profileTypeText, style = MaterialTheme.typography.bodyMedium)

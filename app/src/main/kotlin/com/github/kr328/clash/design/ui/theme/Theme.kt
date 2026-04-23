@@ -8,6 +8,7 @@ import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
@@ -93,6 +94,10 @@ data class MihomoDimens(
   val largeActionCardMinHeight: Dp,
   val tipsIconSize: Dp,
   val tipsIconMargin: Dp,
+  val settingsItemEndPadding: Dp,
+  val settingsSwitchContentEndPadding: Dp,
+  val preferenceDialogButtonBarHorizontalPadding: Dp,
+  val preferenceDialogButtonBarVerticalPadding: Dp,
   val preferenceFullscreenButtonPadding: Dp,
   val mainCardMarginVertical: Dp,
   val mainLabelMarginVertical: Dp,
@@ -113,6 +118,7 @@ data class MihomoDimens(
   val aboutTextMargin: Dp,
   val logcatPaddingVertical: Dp,
   val logcatPaddingHorizontal: Dp,
+  val dialogContentSpacing: Dp,
 )
 
 private val DefaultMihomoDimens =
@@ -149,6 +155,10 @@ private val DefaultMihomoDimens =
     largeActionCardMinHeight = 85.dp,
     tipsIconSize = 25.dp,
     tipsIconMargin = 20.dp,
+    settingsItemEndPadding = 20.dp,
+    settingsSwitchContentEndPadding = 12.dp,
+    preferenceDialogButtonBarHorizontalPadding = 16.dp,
+    preferenceDialogButtonBarVerticalPadding = 8.dp,
     preferenceFullscreenButtonPadding = 20.dp,
     mainCardMarginVertical = 5.dp,
     mainLabelMarginVertical = 2.dp,
@@ -169,11 +179,15 @@ private val DefaultMihomoDimens =
     aboutTextMargin = 15.dp,
     logcatPaddingVertical = 12.dp,
     logcatPaddingHorizontal = 12.dp,
+    dialogContentSpacing = 12.dp,
   )
 
 private val LocalMihomoColors = staticCompositionLocalOf { LightMihomoColorTokens }
 private val LocalMihomoDimens = staticCompositionLocalOf { DefaultMihomoDimens }
 private val LocalMihomoTypography = staticCompositionLocalOf { DefaultMihomoTextStyles }
+
+val mihomoDimens: MihomoDimens
+  @Composable @ReadOnlyComposable get() = LocalMihomoDimens.current
 
 @Composable
 fun MihomoTheme(darkTheme: Boolean = isSystemInDarkTheme(), content: @Composable () -> Unit) {

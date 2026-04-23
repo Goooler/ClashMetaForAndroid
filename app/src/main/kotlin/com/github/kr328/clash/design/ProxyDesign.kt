@@ -72,6 +72,7 @@ import com.github.kr328.clash.design.model.ProxyState
 import com.github.kr328.clash.design.store.UiStore
 import com.github.kr328.clash.design.ui.theme.MihomoTheme
 import com.github.kr328.clash.design.ui.theme.PreviewMihomo
+import com.github.kr328.clash.design.ui.theme.mihomoDimens
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -374,6 +375,7 @@ private fun ProxyGroupPage(
   group: ProxyGroupUiState,
   onProxySelected: (Int, String) -> Unit,
 ) {
+  val dimens = mihomoDimens
   val refreshVersion = group.refreshVersion
   val rawStates = group.rawStates
   val previewItems = group.items
@@ -383,7 +385,7 @@ private fun ProxyGroupPage(
     columns = GridCells.Fixed(columnsForProxyLine(proxyLine)),
     state = rememberLazyGridState(),
     modifier = Modifier.fillMaxSize(),
-    contentPadding = PaddingValues(12.dp),
+    contentPadding = PaddingValues(dimens.proxyContentPaddingGrid3),
     horizontalArrangement = Arrangement.spacedBy(12.dp),
     verticalArrangement = Arrangement.spacedBy(12.dp),
   ) {
@@ -430,14 +432,20 @@ private fun ProxyItemCard(
   selectable: Boolean,
   onClick: () -> Unit,
 ) {
-  val shape = RoundedCornerShape(if (proxyLine == 1) 0.dp else 5.dp)
+  val dimens = mihomoDimens
+  val shape =
+    RoundedCornerShape(if (proxyLine == 1) dimens.proxyCardOffset else dimens.proxyCardRadius)
   val modifier =
     Modifier.fillMaxWidth()
       .then(if (proxyLine == 1) Modifier else Modifier.shadow(elevation = 2.dp, shape = shape))
       .clip(shape)
       .background(Color(item.background))
       .clickable(enabled = selectable, onClick = onClick)
-      .padding(horizontal = if (proxyLine == 3) 12.dp else 15.dp, vertical = 14.dp)
+      .padding(
+        horizontal =
+          if (proxyLine == 3) dimens.proxyContentPaddingGrid3 else dimens.proxyContentPadding,
+        vertical = 14.dp,
+      )
 
   Row(
     modifier = modifier,
