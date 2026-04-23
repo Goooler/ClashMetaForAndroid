@@ -99,6 +99,7 @@ dependencies {
   implementation(libs.androidx.coordinator)
   implementation(libs.androidx.recyclerview)
   implementation(libs.androidx.viewpager)
+  implementation(libs.google.material)
   implementation(libs.composePreference)
 
   implementation(libs.kotlin.coroutine)
@@ -106,6 +107,7 @@ dependencies {
   implementation(libs.androidx.activity.compose)
   implementation(libs.androidx.coordinator)
   implementation(libs.androidx.recyclerview)
+  implementation(libs.google.material)
   implementation(libs.quickie.bundled)
 }
 
