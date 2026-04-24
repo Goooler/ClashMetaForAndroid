@@ -63,7 +63,8 @@ fun MetaFeatureSettingsScreen(
 
   LaunchedEffect(importResult) {
     when (val result = importResult) {
-      ImportResult.NotStart -> Unit
+      ImportResult.NotStart,
+      ImportResult.InProgress -> Unit
 
       is ImportResult.Success -> {
         context.toast(importedText.format(result.displayName))

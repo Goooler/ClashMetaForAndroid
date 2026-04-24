@@ -38,6 +38,7 @@ class MetaFeatureSettingsViewModel(app: Application) :
 
   fun importGeoFile(uri: Uri?, importType: ImportType) {
     viewModelScope.launch(Dispatchers.IO) {
+      importResult.value = ImportResult.InProgress
       try {
         val resolver = appContext.contentResolver
         val cursor: Cursor =
@@ -204,6 +205,8 @@ class MetaFeatureSettingsViewModel(app: Application) :
 
   sealed interface ImportResult {
     data object NotStart : ImportResult
+
+    data object InProgress : ImportResult
 
     data class Success(val displayName: String) : ImportResult
 
