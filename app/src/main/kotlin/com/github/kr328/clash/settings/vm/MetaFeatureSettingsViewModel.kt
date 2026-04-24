@@ -12,6 +12,7 @@ import com.github.kr328.clash.settings.ui.MetaFeatureSettingsActions
 import com.github.kr328.clash.util.clashDir
 import com.github.kr328.clash.util.withClash
 import java.io.FileOutputStream
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -183,7 +184,8 @@ class MetaFeatureSettingsViewModel(app: Application) :
   }
 
   fun persistOverride() {
-    viewModelScope.launch(Dispatchers.IO) {
+    // Intended to use non-viewModel scope as we need the action to be called on disposed.
+    CoroutineScope(Dispatchers.IO).launch {
       if (skipPersist) return@launch
       withClash { patchOverride(Clash.OverrideSlot.Persist, uiState.value) }
     }
