@@ -37,6 +37,21 @@ class MetaFeatureSettingsViewModel(app: Application) :
     }
   }
 
+  fun persistOverride() {
+    // Intended to use non-viewModel scope as we need the action to be called on disposed.
+    CoroutineScope(Dispatchers.IO).launch {
+      if (skipPersist) return@launch
+      withClash { patchOverride(Clash.OverrideSlot.Persist, uiState.value) }
+    }
+  }
+
+  fun resetOverride() {
+    skipPersist = true
+    viewModelScope.launch(Dispatchers.IO) {
+      withClash { clearOverride(Clash.OverrideSlot.Persist) }
+    }
+  }
+
   fun importGeoFile(uri: Uri?, importType: ImportType) {
     viewModelScope.launch(Dispatchers.IO) {
       importResult.value = ImportResult.InProgress
@@ -181,21 +196,6 @@ class MetaFeatureSettingsViewModel(app: Application) :
 
   override fun updateSkipDstAddress(value: List<String>?) = uiState.update {
     it.copy(sniffer = it.sniffer.copy(skipDstAddress = value))
-  }
-
-  fun persistOverride() {
-    // Intended to use non-viewModel scope as we need the action to be called on disposed.
-    CoroutineScope(Dispatchers.IO).launch {
-      if (skipPersist) return@launch
-      withClash { patchOverride(Clash.OverrideSlot.Persist, uiState.value) }
-    }
-  }
-
-  fun resetOverride() {
-    skipPersist = true
-    viewModelScope.launch(Dispatchers.IO) {
-      withClash { clearOverride(Clash.OverrideSlot.Persist) }
-    }
   }
 
   enum class ImportType {
