@@ -11,7 +11,6 @@ import com.github.kr328.clash.core.model.ConfigurationOverride as UiState
 import com.github.kr328.clash.settings.ui.MetaFeatureSettingsActions
 import com.github.kr328.clash.util.clashDir
 import com.github.kr328.clash.util.withClash
-import java.io.File
 import java.io.FileOutputStream
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -67,17 +66,13 @@ class MetaFeatureSettingsViewModel(app: Application) :
               ImportType.ASN -> "ASN$ext"
             }
 
-          val outputFile = File(appContext.clashDir, outputFileName)
+          val outputFile = appContext.clashDir.resolve(outputFileName)
           outputFile.parentFile?.mkdirs()
           val inputStream = resolver.openInputStream(uri) ?: return@use ImportResult.Failed
-          inputStream.use { ins ->
-            FileOutputStream(outputFile).use { outs ->
-              ins.copyTo(outs)
-            }
-          }
+          inputStream.use { ins -> FileOutputStream(outputFile).use { outs -> ins.copyTo(outs) } }
           return@use ImportResult.Success(displayName)
         }
-      } catch (e: Exception) {
+      } catch (_: Exception) {
         importResult.value = ImportResult.Failed
       }
     }
