@@ -16,6 +16,7 @@ import java.io.FileOutputStream
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class MetaFeatureSettingsViewModel(app: Application) :
@@ -38,42 +39,46 @@ class MetaFeatureSettingsViewModel(app: Application) :
 
   fun importGeoFile(uri: Uri?, importType: ImportType) {
     viewModelScope.launch(Dispatchers.IO) {
-      val resolver = appContext.contentResolver
-      val cursor: Cursor =
-        uri?.let { resolver.query(it, null, null, null, null, null) }
-          ?: run {
-            importResult.value = ImportResult.Failed
-            return@launch
+      try {
+        val resolver = appContext.contentResolver
+        val cursor: Cursor =
+          uri?.let { resolver.query(it, null, null, null, null, null) }
+            ?: run {
+              importResult.value = ImportResult.Failed
+              return@launch
+            }
+
+        importResult.value = cursor.use {
+          if (!it.moveToFirst()) return@use ImportResult.Failed
+
+          val columnIndex = it.getColumnIndex(OpenableColumns.DISPLAY_NAME)
+          val displayName = if (columnIndex != -1) it.getString(columnIndex) else ""
+          val ext = "." + displayName.substringAfterLast(".")
+
+          if (!validDatabaseExtensions.contains(ext)) {
+            return@use ImportResult.UnsupportedFormat(validDatabaseExtensions.joinToString("/"))
           }
 
-      importResult.value = cursor.use {
-        if (!it.moveToFirst()) return@use ImportResult.Failed
+          val outputFileName =
+            when (importType) {
+              ImportType.GeoIp -> "geoip$ext"
+              ImportType.GeoSite -> "geosite$ext"
+              ImportType.Country -> "country$ext"
+              ImportType.ASN -> "ASN$ext"
+            }
 
-        val columnIndex = it.getColumnIndex(OpenableColumns.DISPLAY_NAME)
-        val displayName = if (columnIndex != -1) it.getString(columnIndex) else ""
-        val ext = "." + displayName.substringAfterLast(".")
-
-        if (!validDatabaseExtensions.contains(ext)) {
-          return@use ImportResult.UnsupportedFormat(validDatabaseExtensions.joinToString("/"))
+          val outputFile = File(appContext.clashDir, outputFileName)
+          outputFile.parentFile?.mkdirs()
+          val inputStream = resolver.openInputStream(uri) ?: return@use ImportResult.Failed
+          inputStream.use { ins ->
+            FileOutputStream(outputFile).use { outs ->
+              ins.copyTo(outs)
+            }
+          }
+          return@use ImportResult.Success(displayName)
         }
-
-        val outputFileName =
-          when (importType) {
-            ImportType.GeoIp -> "geoip$ext"
-            ImportType.GeoSite -> "geosite$ext"
-            ImportType.Country -> "country$ext"
-            ImportType.ASN -> "ASN$ext"
-          }
-
-        val outputFile = File(appContext.clashDir, outputFileName)
-        outputFile.parentFile?.mkdirs()
-        val inputStream = resolver.openInputStream(uri) ?: return@use ImportResult.Failed
-        inputStream.use { ins ->
-          FileOutputStream(outputFile).use { outs ->
-            ins.copyTo(outs)
-          }
-        }
-        return@use ImportResult.Success(displayName)
+      } catch (e: Exception) {
+        importResult.value = ImportResult.Failed
       }
     }
   }
@@ -192,7 +197,7 @@ class MetaFeatureSettingsViewModel(app: Application) :
   }
 
   private inline fun updateState(transform: (UiState) -> UiState) {
-    uiState.value = transform(uiState.value)
+    uiState.update(transform)
   }
 
   enum class ImportType {
