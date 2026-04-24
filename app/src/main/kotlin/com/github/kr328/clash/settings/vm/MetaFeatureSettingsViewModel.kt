@@ -67,9 +67,9 @@ class MetaFeatureSettingsViewModel(app: Application) :
 
         val outputFile = File(appContext.clashDir, outputFileName)
         outputFile.parentFile?.mkdirs()
-        resolver.openInputStream(uri).use { ins ->
+        val inputStream = resolver.openInputStream(uri) ?: return@use ImportResult.Failed
+        inputStream.use { ins ->
           FileOutputStream(outputFile).use { outs ->
-            if (ins == null) return@use ImportResult.Failed
             ins.copyTo(outs)
           }
         }
@@ -185,8 +185,8 @@ class MetaFeatureSettingsViewModel(app: Application) :
   }
 
   fun resetOverride() {
+    skipPersist = true
     viewModelScope.launch(Dispatchers.IO) {
-      skipPersist = true
       withClash { clearOverride(Clash.OverrideSlot.Persist) }
     }
   }
