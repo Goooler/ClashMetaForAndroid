@@ -40,7 +40,6 @@ import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -149,8 +148,8 @@ class ProxyDesign(
     position: Int,
     proxies: List<Proxy>,
     selectable: Boolean,
-    parent: MutableState<ProxyState>,
-    links: Map<String, MutableState<ProxyState>>,
+    parent: ProxyState,
+    links: Map<String, ProxyState>,
   ) {
     val sources =
       withContext(Dispatchers.Default) {
@@ -189,11 +188,7 @@ class ProxyDesign(
   }
 }
 
-private data class ProxyItemSource(
-  val proxy: Proxy,
-  val parent: MutableState<ProxyState>,
-  val link: MutableState<ProxyState>?,
-)
+private data class ProxyItemSource(val proxy: Proxy, val parent: ProxyState, val link: ProxyState?)
 
 private data class ProxyItemUiState(
   val key: String,
@@ -211,7 +206,7 @@ private fun ProxyItemSource.toUiState(
   unselectedControl: Color,
   unselectedBackground: Color,
 ): ProxyItemUiState {
-  val selected = proxy.name == parent.value.now
+  val selected = proxy.name == parent.now
   val background =
     if (selected) {
       selectedBackground
@@ -227,7 +222,7 @@ private fun ProxyItemSource.toUiState(
       if (link == null) {
         proxy.type.name
       } else {
-        "%s(%s)".format(proxy.type.name, link.value.now.ifEmpty { "*" })
+        "%s(%s)".format(proxy.type.name, link.now.ifEmpty { "*" })
       }
     } else {
       proxy.subtitle
@@ -650,8 +645,8 @@ private fun ProxyScreenPreview() = MihomoTheme {
                   type = Proxy.Type.URLTest,
                   delay = 48,
                 ),
-              parent = mutableStateOf(ProxyState("auto")),
-              link = mutableStateOf(ProxyState("HK-01")),
+              parent = ProxyState("auto"),
+              link = ProxyState("HK-01"),
             ),
             ProxyItemSource(
               proxy =
@@ -662,7 +657,7 @@ private fun ProxyScreenPreview() = MihomoTheme {
                   type = Proxy.Type.Shadowsocks,
                   delay = 62,
                 ),
-              parent = mutableStateOf(ProxyState("auto")),
+              parent = ProxyState("auto"),
               link = null,
             ),
             ProxyItemSource(
@@ -674,7 +669,7 @@ private fun ProxyScreenPreview() = MihomoTheme {
                   type = Proxy.Type.Shadowsocks,
                   delay = 89,
                 ),
-              parent = mutableStateOf(ProxyState("auto")),
+              parent = ProxyState("auto"),
               link = null,
             ),
             ProxyItemSource(
@@ -686,7 +681,7 @@ private fun ProxyScreenPreview() = MihomoTheme {
                   type = Proxy.Type.Shadowsocks,
                   delay = 74,
                 ),
-              parent = mutableStateOf(ProxyState("auto")),
+              parent = ProxyState("auto"),
               link = null,
             ),
           )
@@ -705,8 +700,8 @@ private fun ProxyScreenPreview() = MihomoTheme {
                   type = Proxy.Type.Selector,
                   delay = 128,
                 ),
-              parent = mutableStateOf(ProxyState("elsewhere")),
-              link = mutableStateOf(ProxyState("Node-2")),
+              parent = ProxyState("elsewhere"),
+              link = ProxyState("Node-2"),
             ),
             ProxyItemSource(
               proxy =
@@ -717,8 +712,8 @@ private fun ProxyScreenPreview() = MihomoTheme {
                   type = Proxy.Type.Selector,
                   delay = 156,
                 ),
-              parent = mutableStateOf(ProxyState("elsewhere")),
-              link = mutableStateOf(ProxyState("Node-4")),
+              parent = ProxyState("elsewhere"),
+              link = ProxyState("Node-4"),
             ),
           )
       },
