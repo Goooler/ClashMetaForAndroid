@@ -53,7 +53,7 @@ class MetaFeatureSettingsViewModel(app: Application) :
 
           val columnIndex = it.getColumnIndex(OpenableColumns.DISPLAY_NAME)
           val displayName = if (columnIndex != -1) it.getString(columnIndex) else ""
-          val ext = "." + displayName.substringAfterLast(".")
+          val ext = "." + displayName.substringAfterLast(".").lowercase()
 
           if (!validDatabaseExtensions.contains(ext)) {
             return@use ImportResult.UnsupportedFormat(validDatabaseExtensions.joinToString("/"))
