@@ -22,7 +22,7 @@ class MetaFeatureSettingsViewModel(app: Application) :
   AndroidViewModel(app), MetaFeatureSettingsActions {
   private val appContext = app
   private val validDatabaseExtensions = listOf(".metadb", ".db", ".dat", ".mmdb")
-  private var skipPersist = false
+  @Volatile private var skipPersist = false
 
   val uiState: StateFlow<UiState>
     field = MutableStateFlow(UiState())
