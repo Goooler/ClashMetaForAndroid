@@ -21,7 +21,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -42,24 +41,6 @@ import com.github.kr328.clash.R
 import com.github.kr328.clash.ui.theme.mihomoDimens
 import me.zhanghai.compose.preference.ListPreference
 import me.zhanghai.compose.preference.Preference
-
-@Composable
-fun <T> rememberWriteThroughState(initial: T, sync: (T) -> Unit): MutableState<T> = remember {
-  object : MutableState<T> {
-    private val inner = mutableStateOf(initial)
-
-    override var value: T
-      get() = inner.value
-      set(v) {
-        inner.value = v
-        sync(v)
-      }
-
-    override fun component1(): T = value
-
-    override fun component2(): (T) -> Unit = { value = it }
-  }
-}
 
 @Composable
 fun <T> SettingsListPreferenceItem(
@@ -85,63 +66,13 @@ fun <T> SettingsListPreferenceItem(
 }
 
 @Composable
-fun <T> SettingsListPreferenceItem(
-  state: MutableState<T>,
-  values: List<T>,
-  @StringRes title: Int,
-  @StringRes summary: Int,
-  modifier: Modifier = Modifier,
-  enabled: Boolean = true,
-  valueToText: @Composable (T) -> Int,
-) {
-  ListPreference(
-    state = state,
-    values = values,
-    modifier = modifier,
-    enabled = enabled,
-    title = { Text(stringResource(title)) },
-    summary = { Text(stringResource(summary)) },
-    valueToText = { AnnotatedString(stringResource(valueToText(it))) },
-  )
-}
-
-@Composable
 fun SettingsEditTextListPreferenceItem(
   @StringRes title: Int,
   @StringRes placeholder: Int,
-  value: List<String>?,
+  values: List<String>?,
   onValueChange: (List<String>?) -> Unit,
   enabled: Boolean = true,
 ) {
-  var showDialog by remember { mutableStateOf(false) }
-  Preference(
-    modifier = Modifier.fillMaxWidth(),
-    title = { Text(stringResource(title)) },
-    summary = { Text(value.summary(placeholder)) },
-    enabled = enabled,
-    onClick = { showDialog = true },
-  )
-  if (showDialog) {
-    EditableTextListDialog(
-      title = title,
-      initialValues = value,
-      onDismiss = { showDialog = false },
-      onApply = {
-        onValueChange(it)
-        showDialog = false
-      },
-    )
-  }
-}
-
-@Composable
-fun SettingsEditTextListPreferenceItem(
-  @StringRes title: Int,
-  @StringRes placeholder: Int,
-  state: MutableState<List<String>?>,
-  enabled: Boolean = true,
-) {
-  var values by state
   var showDialog by remember { mutableStateOf(false) }
   Preference(
     modifier = Modifier.fillMaxWidth(),
@@ -156,7 +87,7 @@ fun SettingsEditTextListPreferenceItem(
       initialValues = values,
       onDismiss = { showDialog = false },
       onApply = {
-        values = it
+        onValueChange(it)
         showDialog = false
       },
     )

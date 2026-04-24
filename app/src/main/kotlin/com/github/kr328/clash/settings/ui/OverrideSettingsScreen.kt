@@ -1,6 +1,5 @@
 package com.github.kr328.clash.settings.ui
 
-import android.content.Context
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -22,8 +21,8 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -39,47 +38,61 @@ import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.github.kr328.clash.R
 import com.github.kr328.clash.core.model.ConfigurationOverride
 import com.github.kr328.clash.core.model.LogMessage
 import com.github.kr328.clash.core.model.TunnelState
-import com.github.kr328.clash.ui.Design
+import com.github.kr328.clash.settings.vm.OverrideSettingsViewModel
 import com.github.kr328.clash.ui.component.EmptyEditorContent
 import com.github.kr328.clash.ui.component.FullScreenPreferenceDialog
 import com.github.kr328.clash.ui.component.MihomoScaffold
 import com.github.kr328.clash.ui.component.SettingsEditTextListPreferenceItem
 import com.github.kr328.clash.ui.component.SettingsListPreferenceItem
 import com.github.kr328.clash.ui.component.initialTextFieldValue
-import com.github.kr328.clash.ui.component.rememberWriteThroughState
 import com.github.kr328.clash.ui.theme.MihomoTheme
 import com.github.kr328.clash.ui.theme.PreviewMihomo
 import me.zhanghai.compose.preference.Preference
 import me.zhanghai.compose.preference.ProvidePreferenceLocals
 import me.zhanghai.compose.preference.preferenceCategory
 
-class OverrideSettingsDesign(context: Context, private val configuration: ConfigurationOverride) :
-  Design<OverrideSettingsDesign.Request>(context) {
-  sealed interface Request {
-    data object ResetOverride : Request
-  }
+@Composable
+@OptIn(ExperimentalMaterial3Api::class)
+fun OverrideSettingsScreen(
+  modifier: Modifier = Modifier,
+  viewModel: OverrideSettingsViewModel = viewModel(),
+  onResetCompleted: () -> Unit,
+) {
+  val configuration by viewModel.configuration.collectAsStateWithLifecycle()
+  var showResetConfirmDialog by remember { mutableStateOf(false) }
 
-  @Composable
-  override fun Content() = MihomoTheme {
-    OverrideSettingsScreen(
-      configuration = configuration,
-      onResetConfirmed = { requests.trySend(Request.ResetOverride) },
-    )
-  }
+  DisposableEffect(viewModel) { onDispose { viewModel.persistOverride() } }
+
+  OverrideSettingsContent(
+    configuration = configuration,
+    actions = viewModel,
+    modifier = modifier,
+    showResetConfirmDialog = showResetConfirmDialog,
+    onShowResetConfirmDialogChange = { showResetConfirmDialog = it },
+    onResetConfirmed = {
+      viewModel.resetOverride()
+      onResetCompleted()
+    },
+  )
 }
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
-private fun OverrideSettingsScreen(
+private fun OverrideSettingsContent(
   configuration: ConfigurationOverride,
-  onResetConfirmed: () -> Unit,
+  actions: OverrideSettingsActions,
   modifier: Modifier = Modifier,
+  showResetConfirmDialog: Boolean,
+  onShowResetConfirmDialogChange: (Boolean) -> Unit,
+  onResetConfirmed: () -> Unit,
 ) {
-  var showResetConfirmDialog by remember { mutableStateOf(false) }
+  val dnsEnabled = configuration.dns.enable
 
   val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
   MihomoScaffold(
@@ -87,7 +100,7 @@ private fun OverrideSettingsScreen(
     modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
     scrollBehavior = scrollBehavior,
     actions = {
-      IconButton(onClick = { showResetConfirmDialog = true }) {
+      IconButton(onClick = { onShowResetConfirmDialogChange(true) }) {
         Icon(
           painter = painterResource(R.drawable.ic_baseline_replay),
           contentDescription = stringResource(R.string.reset),
@@ -96,24 +109,20 @@ private fun OverrideSettingsScreen(
     },
   ) { innerPadding ->
     ProvidePreferenceLocals {
-      val dnsEnableState =
-        rememberWriteThroughState(configuration.dns.enable) { configuration.dns.enable = it }
-      val dnsEnabled by dnsEnableState
-
       LazyColumn(modifier = Modifier.fillMaxSize(), contentPadding = innerPadding) {
-        generalPreferenceItems(configuration)
-        dnsPreferenceItems(configuration, dnsEnableState, dnsEnabled)
+        generalPreferenceItems(configuration, actions)
+        dnsPreferenceItems(configuration, actions, dnsEnabled)
       }
 
       if (showResetConfirmDialog) {
         AlertDialog(
-          onDismissRequest = { showResetConfirmDialog = false },
+          onDismissRequest = { onShowResetConfirmDialogChange(false) },
           title = { Text(stringResource(R.string.reset_override_settings)) },
           text = { Text(stringResource(R.string.reset_override_settings_message)) },
           confirmButton = {
             TextButton(
               onClick = {
-                showResetConfirmDialog = false
+                onShowResetConfirmDialogChange(false)
                 onResetConfirmed()
               }
             ) {
@@ -121,7 +130,7 @@ private fun OverrideSettingsScreen(
             }
           },
           dismissButton = {
-            TextButton(onClick = { showResetConfirmDialog = false }) {
+            TextButton(onClick = { onShowResetConfirmDialogChange(false) }) {
               Text(stringResource(R.string.cancel))
             }
           },
@@ -131,17 +140,18 @@ private fun OverrideSettingsScreen(
   }
 }
 
-private fun LazyListScope.generalPreferenceItems(configuration: ConfigurationOverride) {
+private fun LazyListScope.generalPreferenceItems(
+  configuration: ConfigurationOverride,
+  actions: OverrideSettingsActions,
+) {
   preferenceCategory(key = "cat_general", title = { Text(stringResource(R.string.general)) })
   item(key = "httpPort", contentType = "EditTextPreference") {
     OverrideEditTextPreferenceItem(
       title = R.string.http_port,
       placeholder = R.string.dont_modify,
       emptyLabel = R.string.disabled,
-      state =
-        rememberWriteThroughState(portText(configuration.httpPort)) {
-          configuration.httpPort = parsePort(it)
-        },
+      value = portText(configuration.httpPort),
+      onValueChange = { actions.updateHttpPort(parsePort(it)) },
       numericOnly = true,
     )
   }
@@ -150,10 +160,8 @@ private fun LazyListScope.generalPreferenceItems(configuration: ConfigurationOve
       title = R.string.socks_port,
       placeholder = R.string.dont_modify,
       emptyLabel = R.string.disabled,
-      state =
-        rememberWriteThroughState(portText(configuration.socksPort)) {
-          configuration.socksPort = parsePort(it)
-        },
+      value = portText(configuration.socksPort),
+      onValueChange = { actions.updateSocksPort(parsePort(it)) },
       numericOnly = true,
     )
   }
@@ -162,10 +170,8 @@ private fun LazyListScope.generalPreferenceItems(configuration: ConfigurationOve
       title = R.string.redirect_port,
       placeholder = R.string.dont_modify,
       emptyLabel = R.string.disabled,
-      state =
-        rememberWriteThroughState(portText(configuration.redirectPort)) {
-          configuration.redirectPort = parsePort(it)
-        },
+      value = portText(configuration.redirectPort),
+      onValueChange = { actions.updateRedirectPort(parsePort(it)) },
       numericOnly = true,
     )
   }
@@ -174,10 +180,8 @@ private fun LazyListScope.generalPreferenceItems(configuration: ConfigurationOve
       title = R.string.tproxy_port,
       placeholder = R.string.dont_modify,
       emptyLabel = R.string.disabled,
-      state =
-        rememberWriteThroughState(portText(configuration.tproxyPort)) {
-          configuration.tproxyPort = parsePort(it)
-        },
+      value = portText(configuration.tproxyPort),
+      onValueChange = { actions.updateTproxyPort(parsePort(it)) },
       numericOnly = true,
     )
   }
@@ -186,10 +190,8 @@ private fun LazyListScope.generalPreferenceItems(configuration: ConfigurationOve
       title = R.string.mixed_port,
       placeholder = R.string.dont_modify,
       emptyLabel = R.string.disabled,
-      state =
-        rememberWriteThroughState(portText(configuration.mixedPort)) {
-          configuration.mixedPort = parsePort(it)
-        },
+      value = portText(configuration.mixedPort),
+      onValueChange = { actions.updateMixedPort(parsePort(it)) },
       numericOnly = true,
     )
   }
@@ -197,33 +199,29 @@ private fun LazyListScope.generalPreferenceItems(configuration: ConfigurationOve
     SettingsEditTextListPreferenceItem(
       title = R.string.authentication,
       placeholder = R.string.dont_modify,
-      state =
-        rememberWriteThroughState(configuration.authentication) {
-          configuration.authentication = it
-        },
+      values = configuration.authentication,
+      onValueChange = actions::updateAuthentication,
     )
   }
   item(key = "allowLan", contentType = "ListPreference") {
-    val state = rememberWriteThroughState(configuration.allowLan) { configuration.allowLan = it }
-    val value by state
     SettingsListPreferenceItem(
-      state = state,
+      value = configuration.allowLan,
+      onValueChange = actions::updateAllowLan,
       values = booleanOptions,
       modifier = Modifier.fillMaxWidth(),
       title = R.string.allow_lan,
-      summary = value.textRes,
+      summary = configuration.allowLan.textRes,
       valueToText = { it.textRes },
     )
   }
   item(key = "ipv6", contentType = "ListPreference") {
-    val state = rememberWriteThroughState(configuration.ipv6) { configuration.ipv6 = it }
-    val value by state
     SettingsListPreferenceItem(
-      state = state,
+      value = configuration.ipv6,
+      onValueChange = actions::updateIpv6,
       values = booleanOptions,
       modifier = Modifier.fillMaxWidth(),
       title = R.string.ipv6,
-      summary = value.textRes,
+      summary = configuration.ipv6.textRes,
       valueToText = { it.textRes },
     )
   }
@@ -232,8 +230,8 @@ private fun LazyListScope.generalPreferenceItems(configuration: ConfigurationOve
       title = R.string.bind_address,
       placeholder = R.string.dont_modify,
       emptyLabel = R.string.default_,
-      state =
-        rememberWriteThroughState(configuration.bindAddress) { configuration.bindAddress = it },
+      value = configuration.bindAddress,
+      onValueChange = actions::updateBindAddress,
     )
   }
   item(key = "externalController", contentType = "EditTextPreference") {
@@ -241,10 +239,8 @@ private fun LazyListScope.generalPreferenceItems(configuration: ConfigurationOve
       title = R.string.external_controller,
       placeholder = R.string.dont_modify,
       emptyLabel = R.string.default_,
-      state =
-        rememberWriteThroughState(configuration.externalController) {
-          configuration.externalController = it
-        },
+      value = configuration.externalController,
+      onValueChange = actions::updateExternalController,
     )
   }
   item(key = "externalControllerTls", contentType = "EditTextPreference") {
@@ -252,34 +248,26 @@ private fun LazyListScope.generalPreferenceItems(configuration: ConfigurationOve
       title = R.string.external_controller_tls,
       placeholder = R.string.dont_modify,
       emptyLabel = R.string.default_,
-      state =
-        rememberWriteThroughState(configuration.externalControllerTLS) {
-          configuration.externalControllerTLS = it
-        },
+      value = configuration.externalControllerTLS,
+      onValueChange = actions::updateExternalControllerTls,
     )
   }
   item(key = "allowOrigins", contentType = "EditTextListPreference") {
     SettingsEditTextListPreferenceItem(
       title = R.string.allow_origins,
       placeholder = R.string.dont_modify,
-      state =
-        rememberWriteThroughState(configuration.externalControllerCors.allowOrigins) {
-          configuration.externalControllerCors.allowOrigins = it
-        },
+      values = configuration.externalControllerCors.allowOrigins,
+      onValueChange = actions::updateAllowOrigins,
     )
   }
   item(key = "allowPrivateNetwork", contentType = "ListPreference") {
-    val state =
-      rememberWriteThroughState(configuration.externalControllerCors.allowPrivateNetwork) {
-        configuration.externalControllerCors.allowPrivateNetwork = it
-      }
-    val value by state
     SettingsListPreferenceItem(
-      state = state,
+      value = configuration.externalControllerCors.allowPrivateNetwork,
+      onValueChange = actions::updateAllowPrivateNetwork,
       values = booleanOptions,
       modifier = Modifier.fillMaxWidth(),
       title = R.string.allow_private_network,
-      summary = value.textRes,
+      summary = configuration.externalControllerCors.allowPrivateNetwork.textRes,
       valueToText = { it.textRes },
     )
   }
@@ -288,30 +276,29 @@ private fun LazyListScope.generalPreferenceItems(configuration: ConfigurationOve
       title = R.string.secret,
       placeholder = R.string.dont_modify,
       emptyLabel = R.string.default_,
-      state = rememberWriteThroughState(configuration.secret) { configuration.secret = it },
+      value = configuration.secret,
+      onValueChange = actions::updateSecret,
     )
   }
   item(key = "mode", contentType = "ListPreference") {
-    val state = rememberWriteThroughState(configuration.mode) { configuration.mode = it }
-    val value by state
     SettingsListPreferenceItem(
-      state = state,
+      value = configuration.mode,
+      onValueChange = actions::updateMode,
       values = TunnelState.Mode.entries,
       modifier = Modifier.fillMaxWidth(),
       title = R.string.mode,
-      summary = value.textRes,
+      summary = configuration.mode.textRes,
       valueToText = { it.textRes },
     )
   }
   item(key = "logLevel", contentType = "ListPreference") {
-    val state = rememberWriteThroughState(configuration.logLevel) { configuration.logLevel = it }
-    val value by state
     SettingsListPreferenceItem(
-      state = state,
+      value = configuration.logLevel,
+      onValueChange = actions::updateLogLevel,
       values = LogMessage.Level.entries,
       modifier = Modifier.fillMaxWidth(),
       title = R.string.log_level,
-      summary = value.textRes,
+      summary = configuration.logLevel.textRes,
       valueToText = { it.textRes },
     )
   }
@@ -319,20 +306,22 @@ private fun LazyListScope.generalPreferenceItems(configuration: ConfigurationOve
     OverrideEditTextMapPreferenceItem(
       title = R.string.hosts,
       placeholder = R.string.dont_modify,
-      state = rememberWriteThroughState(configuration.hosts) { configuration.hosts = it },
+      values = configuration.hosts,
+      onValueChange = actions::updateHosts,
     )
   }
 }
 
 private fun LazyListScope.dnsPreferenceItems(
   configuration: ConfigurationOverride,
-  dnsEnableState: MutableState<Boolean?>,
+  actions: OverrideSettingsActions,
   dnsEnabled: Boolean?,
 ) {
   preferenceCategory(key = "cat_dns", title = { Text(stringResource(R.string.dns)) })
   item(key = "dnsStrategy", contentType = "ListPreference") {
     SettingsListPreferenceItem(
-      state = dnsEnableState,
+      value = dnsEnabled,
+      onValueChange = actions::updateDnsEnable,
       values = booleanOptions,
       modifier = Modifier.fillMaxWidth(),
       title = R.string.strategy,
@@ -341,16 +330,14 @@ private fun LazyListScope.dnsPreferenceItems(
     )
   }
   item(key = "dnsPreferH3", contentType = "ListPreference") {
-    val state =
-      rememberWriteThroughState(configuration.dns.preferH3) { configuration.dns.preferH3 = it }
-    val value by state
     SettingsListPreferenceItem(
-      state = state,
+      value = configuration.dns.preferH3,
+      onValueChange = actions::updateDnsPreferH3,
       values = booleanOptions,
       modifier = Modifier.fillMaxWidth(),
       enabled = dnsEnabled != false,
       title = R.string.prefer_h3,
-      summary = value.textRes,
+      summary = configuration.dns.preferH3.textRes,
       valueToText = { it.textRes },
     )
   }
@@ -359,66 +346,56 @@ private fun LazyListScope.dnsPreferenceItems(
       title = R.string.listen,
       placeholder = R.string.dont_modify,
       emptyLabel = R.string.disabled,
-      state = rememberWriteThroughState(configuration.dns.listen) { configuration.dns.listen = it },
+      value = configuration.dns.listen,
+      onValueChange = actions::updateDnsListen,
       enabled = dnsEnabled != false,
     )
   }
   item(key = "appendSystemDns", contentType = "ListPreference") {
-    val state =
-      rememberWriteThroughState(configuration.app.appendSystemDns) {
-        configuration.app.appendSystemDns = it
-      }
-    val value by state
     SettingsListPreferenceItem(
-      state = state,
+      value = configuration.app.appendSystemDns,
+      onValueChange = actions::updateAppendSystemDns,
       values = booleanOptions,
       modifier = Modifier.fillMaxWidth(),
       enabled = dnsEnabled != false,
       title = R.string.append_system_dns,
-      summary = value.textRes,
+      summary = configuration.app.appendSystemDns.textRes,
       valueToText = { it.textRes },
     )
   }
   item(key = "dnsIpv6", contentType = "ListPreference") {
-    val state = rememberWriteThroughState(configuration.dns.ipv6) { configuration.dns.ipv6 = it }
-    val value by state
     SettingsListPreferenceItem(
-      state = state,
+      value = configuration.dns.ipv6,
+      onValueChange = actions::updateDnsIpv6,
       values = booleanOptions,
       modifier = Modifier.fillMaxWidth(),
       enabled = dnsEnabled != false,
       title = R.string.ipv6,
-      summary = value.textRes,
+      summary = configuration.dns.ipv6.textRes,
       valueToText = { it.textRes },
     )
   }
   item(key = "dnsUseHosts", contentType = "ListPreference") {
-    val state =
-      rememberWriteThroughState(configuration.dns.useHosts) { configuration.dns.useHosts = it }
-    val value by state
     SettingsListPreferenceItem(
-      state = state,
+      value = configuration.dns.useHosts,
+      onValueChange = actions::updateDnsUseHosts,
       values = booleanOptions,
       modifier = Modifier.fillMaxWidth(),
       enabled = dnsEnabled != false,
       title = R.string.use_hosts,
-      summary = value.textRes,
+      summary = configuration.dns.useHosts.textRes,
       valueToText = { it.textRes },
     )
   }
   item(key = "dnsEnhancedMode", contentType = "ListPreference") {
-    val state =
-      rememberWriteThroughState(configuration.dns.enhancedMode) {
-        configuration.dns.enhancedMode = it
-      }
-    val value by state
     SettingsListPreferenceItem(
-      state = state,
+      value = configuration.dns.enhancedMode,
+      onValueChange = actions::updateDnsEnhancedMode,
       values = ConfigurationOverride.DnsEnhancedMode.entries,
       modifier = Modifier.fillMaxWidth(),
       enabled = dnsEnabled != false,
       title = R.string.enhanced_mode,
-      summary = value.textRes,
+      summary = configuration.dns.enhancedMode.textRes,
       valueToText = { it.textRes },
     )
   }
@@ -426,10 +403,8 @@ private fun LazyListScope.dnsPreferenceItems(
     SettingsEditTextListPreferenceItem(
       title = R.string.name_server,
       placeholder = R.string.dont_modify,
-      state =
-        rememberWriteThroughState(configuration.dns.nameServer) {
-          configuration.dns.nameServer = it
-        },
+      values = configuration.dns.nameServer,
+      onValueChange = actions::updateDnsNameServer,
       enabled = dnsEnabled != false,
     )
   }
@@ -437,8 +412,8 @@ private fun LazyListScope.dnsPreferenceItems(
     SettingsEditTextListPreferenceItem(
       title = R.string.fallback,
       placeholder = R.string.dont_modify,
-      state =
-        rememberWriteThroughState(configuration.dns.fallback) { configuration.dns.fallback = it },
+      values = configuration.dns.fallback,
+      onValueChange = actions::updateDnsFallback,
       enabled = dnsEnabled != false,
     )
   }
@@ -446,10 +421,8 @@ private fun LazyListScope.dnsPreferenceItems(
     SettingsEditTextListPreferenceItem(
       title = R.string.default_name_server,
       placeholder = R.string.dont_modify,
-      state =
-        rememberWriteThroughState(configuration.dns.defaultServer) {
-          configuration.dns.defaultServer = it
-        },
+      values = configuration.dns.defaultServer,
+      onValueChange = actions::updateDnsDefaultServer,
       enabled = dnsEnabled != false,
     )
   }
@@ -457,42 +430,32 @@ private fun LazyListScope.dnsPreferenceItems(
     SettingsEditTextListPreferenceItem(
       title = R.string.fakeip_filter,
       placeholder = R.string.dont_modify,
-      state =
-        rememberWriteThroughState(configuration.dns.fakeIpFilter) {
-          configuration.dns.fakeIpFilter = it
-        },
+      values = configuration.dns.fakeIpFilter,
+      onValueChange = actions::updateDnsFakeIpFilter,
       enabled = dnsEnabled != false,
     )
   }
   item(key = "dnsFakeIpFilterMode", contentType = "ListPreference") {
-    val state =
-      rememberWriteThroughState(configuration.dns.fakeIPFilterMode) {
-        configuration.dns.fakeIPFilterMode = it
-      }
-    val value by state
     SettingsListPreferenceItem(
-      state = state,
+      value = configuration.dns.fakeIPFilterMode,
+      onValueChange = actions::updateDnsFakeIpFilterMode,
       values = ConfigurationOverride.FilterMode.entries,
       modifier = Modifier.fillMaxWidth(),
       enabled = dnsEnabled != false,
       title = R.string.fakeip_filter_mode,
-      summary = value.textRes,
+      summary = configuration.dns.fakeIPFilterMode.textRes,
       valueToText = { it.textRes },
     )
   }
   item(key = "dnsGeoIpFallback", contentType = "ListPreference") {
-    val state =
-      rememberWriteThroughState(configuration.dns.fallbackFilter.geoIp) {
-        configuration.dns.fallbackFilter.geoIp = it
-      }
-    val value by state
     SettingsListPreferenceItem(
-      state = state,
+      value = configuration.dns.fallbackFilter.geoIp,
+      onValueChange = actions::updateDnsGeoIpFallback,
       values = booleanOptions,
       modifier = Modifier.fillMaxWidth(),
       enabled = dnsEnabled != false,
       title = R.string.geoip_fallback,
-      summary = value.textRes,
+      summary = configuration.dns.fallbackFilter.geoIp.textRes,
       valueToText = { it.textRes },
     )
   }
@@ -501,10 +464,8 @@ private fun LazyListScope.dnsPreferenceItems(
       title = R.string.geoip_fallback_code,
       placeholder = R.string.dont_modify,
       emptyLabel = R.string.raw_cn,
-      state =
-        rememberWriteThroughState(configuration.dns.fallbackFilter.geoIpCode) {
-          configuration.dns.fallbackFilter.geoIpCode = it
-        },
+      value = configuration.dns.fallbackFilter.geoIpCode,
+      onValueChange = actions::updateDnsGeoIpCode,
       enabled = dnsEnabled != false,
     )
   }
@@ -512,10 +473,8 @@ private fun LazyListScope.dnsPreferenceItems(
     SettingsEditTextListPreferenceItem(
       title = R.string.domain_fallback,
       placeholder = R.string.dont_modify,
-      state =
-        rememberWriteThroughState(configuration.dns.fallbackFilter.domain) {
-          configuration.dns.fallbackFilter.domain = it
-        },
+      values = configuration.dns.fallbackFilter.domain,
+      onValueChange = actions::updateDnsDomainFallback,
       enabled = dnsEnabled != false,
     )
   }
@@ -523,10 +482,8 @@ private fun LazyListScope.dnsPreferenceItems(
     SettingsEditTextListPreferenceItem(
       title = R.string.ipcidr_fallback,
       placeholder = R.string.dont_modify,
-      state =
-        rememberWriteThroughState(configuration.dns.fallbackFilter.ipcidr) {
-          configuration.dns.fallbackFilter.ipcidr = it
-        },
+      values = configuration.dns.fallbackFilter.ipcidr,
+      onValueChange = actions::updateDnsIpcidrFallback,
       enabled = dnsEnabled != false,
     )
   }
@@ -534,10 +491,8 @@ private fun LazyListScope.dnsPreferenceItems(
     OverrideEditTextMapPreferenceItem(
       title = R.string.name_server_policy,
       placeholder = R.string.dont_modify,
-      state =
-        rememberWriteThroughState(configuration.dns.nameserverPolicy) {
-          configuration.dns.nameserverPolicy = it
-        },
+      values = configuration.dns.nameserverPolicy,
+      onValueChange = actions::updateDnsNameserverPolicy,
       enabled = dnsEnabled != false,
     )
   }
@@ -548,17 +503,17 @@ private fun OverrideEditTextPreferenceItem(
   @StringRes title: Int,
   @StringRes placeholder: Int,
   @StringRes emptyLabel: Int,
-  state: MutableState<String?>,
+  value: String?,
+  onValueChange: (String?) -> Unit,
   enabled: Boolean = true,
   numericOnly: Boolean = false,
 ) {
-  var text by state
   var showDialog by remember { mutableStateOf(false) }
   val summary =
     when {
-      text == null -> stringResource(placeholder)
-      text.isNullOrEmpty() -> stringResource(emptyLabel)
-      else -> text.orEmpty()
+      value == null -> stringResource(placeholder)
+      value.isEmpty() -> stringResource(emptyLabel)
+      else -> value
     }
   Preference(
     modifier = Modifier.fillMaxWidth(),
@@ -568,11 +523,12 @@ private fun OverrideEditTextPreferenceItem(
     onClick = { showDialog = true },
   )
   if (showDialog) {
-    var inputText by remember {
-      mutableStateOf(
-        TextFieldValue(text = text.orEmpty(), selection = TextRange(text.orEmpty().length))
-      )
-    }
+    var inputText by
+      remember(value) {
+        mutableStateOf(
+          TextFieldValue(text = value.orEmpty(), selection = TextRange(value.orEmpty().length))
+        )
+      }
     val focusRequester = remember { FocusRequester() }
     val keyboardController = LocalSoftwareKeyboardController.current
     LaunchedEffect(Unit) {
@@ -599,12 +555,13 @@ private fun OverrideEditTextPreferenceItem(
       confirmButton = {
         TextButton(
           onClick = {
-            text =
+            onValueChange(
               if (numericOnly) {
                 portText(parsePort(inputText.text))
               } else {
                 inputText.text
               }
+            )
             showDialog = false
           }
         ) {
@@ -615,7 +572,7 @@ private fun OverrideEditTextPreferenceItem(
         Row {
           TextButton(
             onClick = {
-              text = null
+              onValueChange(null)
               showDialog = false
             }
           ) {
@@ -632,10 +589,10 @@ private fun OverrideEditTextPreferenceItem(
 private fun OverrideEditTextMapPreferenceItem(
   @StringRes title: Int,
   @StringRes placeholder: Int,
-  state: MutableState<Map<String, String>?>,
+  values: Map<String, String>?,
+  onValueChange: (Map<String, String>?) -> Unit,
   enabled: Boolean = true,
 ) {
-  var values by state
   var showDialog by remember { mutableStateOf(false) }
   Preference(
     modifier = Modifier.fillMaxWidth(),
@@ -650,7 +607,7 @@ private fun OverrideEditTextMapPreferenceItem(
       initialValues = values,
       onDismiss = { showDialog = false },
       onApply = {
-        values = it
+        onValueChange(it)
         showDialog = false
       },
     )
@@ -704,8 +661,8 @@ private fun EditableTextMapDialog(
     MapEntryInputDialog(
       title = title,
       onDismiss = { showAddDialog = false },
-      onConfirm = { key, value ->
-        values = values + (key to value)
+      onConfirm = { key, valueText ->
+        values = values + (key to valueText)
         showAddDialog = false
       },
     )
@@ -855,8 +812,84 @@ private fun parsePort(text: String?): Int? =
     else -> text.toIntOrNull() ?: 0
   }
 
+interface OverrideSettingsActions {
+  fun updateHttpPort(value: Int?) = Unit
+
+  fun updateSocksPort(value: Int?) = Unit
+
+  fun updateRedirectPort(value: Int?) = Unit
+
+  fun updateTproxyPort(value: Int?) = Unit
+
+  fun updateMixedPort(value: Int?) = Unit
+
+  fun updateAuthentication(value: List<String>?) = Unit
+
+  fun updateAllowLan(value: Boolean?) = Unit
+
+  fun updateIpv6(value: Boolean?) = Unit
+
+  fun updateBindAddress(value: String?) = Unit
+
+  fun updateExternalController(value: String?) = Unit
+
+  fun updateExternalControllerTls(value: String?) = Unit
+
+  fun updateAllowOrigins(value: List<String>?) = Unit
+
+  fun updateAllowPrivateNetwork(value: Boolean?) = Unit
+
+  fun updateSecret(value: String?) = Unit
+
+  fun updateMode(value: TunnelState.Mode?) = Unit
+
+  fun updateLogLevel(value: LogMessage.Level?) = Unit
+
+  fun updateHosts(value: Map<String, String>?) = Unit
+
+  fun updateDnsEnable(value: Boolean?) = Unit
+
+  fun updateDnsPreferH3(value: Boolean?) = Unit
+
+  fun updateDnsListen(value: String?) = Unit
+
+  fun updateAppendSystemDns(value: Boolean?) = Unit
+
+  fun updateDnsIpv6(value: Boolean?) = Unit
+
+  fun updateDnsUseHosts(value: Boolean?) = Unit
+
+  fun updateDnsEnhancedMode(value: ConfigurationOverride.DnsEnhancedMode?) = Unit
+
+  fun updateDnsNameServer(value: List<String>?) = Unit
+
+  fun updateDnsFallback(value: List<String>?) = Unit
+
+  fun updateDnsDefaultServer(value: List<String>?) = Unit
+
+  fun updateDnsFakeIpFilter(value: List<String>?) = Unit
+
+  fun updateDnsFakeIpFilterMode(value: ConfigurationOverride.FilterMode?) = Unit
+
+  fun updateDnsGeoIpFallback(value: Boolean?) = Unit
+
+  fun updateDnsGeoIpCode(value: String?) = Unit
+
+  fun updateDnsDomainFallback(value: List<String>?) = Unit
+
+  fun updateDnsIpcidrFallback(value: List<String>?) = Unit
+
+  fun updateDnsNameserverPolicy(value: Map<String, String>?) = Unit
+}
+
 @PreviewMihomo
 @Composable
-private fun OverrideSettingsScreenPreview() = MihomoTheme {
-  OverrideSettingsScreen(configuration = ConfigurationOverride(), onResetConfirmed = {})
+private fun OverrideSettingsContentPreview() = MihomoTheme {
+  OverrideSettingsContent(
+    configuration = ConfigurationOverride(),
+    actions = object : OverrideSettingsActions {},
+    showResetConfirmDialog = false,
+    onShowResetConfirmDialogChange = {},
+    onResetConfirmed = {},
+  )
 }
