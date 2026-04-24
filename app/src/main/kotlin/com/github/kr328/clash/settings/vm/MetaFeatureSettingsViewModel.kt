@@ -7,7 +7,7 @@ import android.provider.OpenableColumns
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.github.kr328.clash.core.Clash
-import com.github.kr328.clash.core.model.ConfigurationOverride as UiState
+import com.github.kr328.clash.core.model.ConfigurationOverride
 import com.github.kr328.clash.settings.ui.MetaFeatureSettingsActions
 import com.github.kr328.clash.util.clashDir
 import com.github.kr328.clash.util.withClash
@@ -25,15 +25,15 @@ class MetaFeatureSettingsViewModel(app: Application) :
   private val validDatabaseExtensions = listOf(".metadb", ".db", ".dat", ".mmdb")
   @Volatile private var skipPersist = false
 
-  val uiState: StateFlow<UiState>
-    field = MutableStateFlow(UiState())
+  val configuration: StateFlow<ConfigurationOverride>
+    field = MutableStateFlow(ConfigurationOverride())
 
   val importResult: StateFlow<ImportResult>
     field = MutableStateFlow<ImportResult>(ImportResult.NotStart)
 
   init {
     viewModelScope.launch {
-      uiState.value = withClash { queryOverride(Clash.OverrideSlot.Persist) }
+      configuration.value = withClash { queryOverride(Clash.OverrideSlot.Persist) }
     }
   }
 
@@ -41,7 +41,7 @@ class MetaFeatureSettingsViewModel(app: Application) :
     // Intended to use non-viewModel scope as we need the action to be called on disposed.
     CoroutineScope(Dispatchers.IO).launch {
       if (skipPersist) return@launch
-      withClash { patchOverride(Clash.OverrideSlot.Persist, uiState.value) }
+      withClash { patchOverride(Clash.OverrideSlot.Persist, configuration.value) }
     }
   }
 
@@ -96,25 +96,28 @@ class MetaFeatureSettingsViewModel(app: Application) :
     }
   }
 
-  override fun updateUnifiedDelay(value: Boolean?) = uiState.update {
+  override fun updateUnifiedDelay(value: Boolean?) = configuration.update {
     it.copy(unifiedDelay = value)
   }
 
-  override fun updateGeodataMode(value: Boolean?) = uiState.update { it.copy(geodataMode = value) }
+  override fun updateGeodataMode(value: Boolean?) = configuration.update {
+    it.copy(geodataMode = value)
+  }
 
-  override fun updateTcpConcurrent(value: Boolean?) = uiState.update {
+  override fun updateTcpConcurrent(value: Boolean?) = configuration.update {
     it.copy(tcpConcurrent = value)
   }
 
-  override fun updateFindProcessMode(value: UiState.FindProcessMode?) = uiState.update {
-    it.copy(findProcessMode = value)
-  }
+  override fun updateFindProcessMode(value: ConfigurationOverride.FindProcessMode?) =
+    configuration.update {
+      it.copy(findProcessMode = value)
+    }
 
-  override fun updateSnifferEnable(value: Boolean?) = uiState.update {
+  override fun updateSnifferEnable(value: Boolean?) = configuration.update {
     it.copy(sniffer = it.sniffer.copy(enable = value))
   }
 
-  override fun updateSniffHttpPorts(value: List<String>?) = uiState.update {
+  override fun updateSniffHttpPorts(value: List<String>?) = configuration.update {
     it.copy(
       sniffer =
         it.sniffer.copy(
@@ -123,7 +126,7 @@ class MetaFeatureSettingsViewModel(app: Application) :
     )
   }
 
-  override fun updateSniffHttpOverrideDestination(value: Boolean?) = uiState.update {
+  override fun updateSniffHttpOverrideDestination(value: Boolean?) = configuration.update {
     it.copy(
       sniffer =
         it.sniffer.copy(
@@ -133,7 +136,7 @@ class MetaFeatureSettingsViewModel(app: Application) :
     )
   }
 
-  override fun updateSniffTlsPorts(value: List<String>?) = uiState.update {
+  override fun updateSniffTlsPorts(value: List<String>?) = configuration.update {
     it.copy(
       sniffer =
         it.sniffer.copy(
@@ -142,7 +145,7 @@ class MetaFeatureSettingsViewModel(app: Application) :
     )
   }
 
-  override fun updateSniffTlsOverrideDestination(value: Boolean?) = uiState.update {
+  override fun updateSniffTlsOverrideDestination(value: Boolean?) = configuration.update {
     it.copy(
       sniffer =
         it.sniffer.copy(
@@ -152,7 +155,7 @@ class MetaFeatureSettingsViewModel(app: Application) :
     )
   }
 
-  override fun updateSniffQuicPorts(value: List<String>?) = uiState.update {
+  override fun updateSniffQuicPorts(value: List<String>?) = configuration.update {
     it.copy(
       sniffer =
         it.sniffer.copy(
@@ -161,7 +164,7 @@ class MetaFeatureSettingsViewModel(app: Application) :
     )
   }
 
-  override fun updateSniffQuicOverrideDestination(value: Boolean?) = uiState.update {
+  override fun updateSniffQuicOverrideDestination(value: Boolean?) = configuration.update {
     it.copy(
       sniffer =
         it.sniffer.copy(
@@ -171,31 +174,31 @@ class MetaFeatureSettingsViewModel(app: Application) :
     )
   }
 
-  override fun updateForceDnsMapping(value: Boolean?) = uiState.update {
+  override fun updateForceDnsMapping(value: Boolean?) = configuration.update {
     it.copy(sniffer = it.sniffer.copy(forceDnsMapping = value))
   }
 
-  override fun updateParsePureIp(value: Boolean?) = uiState.update {
+  override fun updateParsePureIp(value: Boolean?) = configuration.update {
     it.copy(sniffer = it.sniffer.copy(parsePureIp = value))
   }
 
-  override fun updateOverrideDestination(value: Boolean?) = uiState.update {
+  override fun updateOverrideDestination(value: Boolean?) = configuration.update {
     it.copy(sniffer = it.sniffer.copy(overrideDestination = value))
   }
 
-  override fun updateForceDomain(value: List<String>?) = uiState.update {
+  override fun updateForceDomain(value: List<String>?) = configuration.update {
     it.copy(sniffer = it.sniffer.copy(forceDomain = value))
   }
 
-  override fun updateSkipDomain(value: List<String>?) = uiState.update {
+  override fun updateSkipDomain(value: List<String>?) = configuration.update {
     it.copy(sniffer = it.sniffer.copy(skipDomain = value))
   }
 
-  override fun updateSkipSrcAddress(value: List<String>?) = uiState.update {
+  override fun updateSkipSrcAddress(value: List<String>?) = configuration.update {
     it.copy(sniffer = it.sniffer.copy(skipSrcAddress = value))
   }
 
-  override fun updateSkipDstAddress(value: List<String>?) = uiState.update {
+  override fun updateSkipDstAddress(value: List<String>?) = configuration.update {
     it.copy(sniffer = it.sniffer.copy(skipDstAddress = value))
   }
 

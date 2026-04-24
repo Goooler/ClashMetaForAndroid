@@ -51,7 +51,7 @@ fun MetaFeatureSettingsScreen(
   onResetCompleted: () -> Unit,
 ) {
   val context = LocalContext.current
-  val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+  val configuration by viewModel.configuration.collectAsStateWithLifecycle()
   val importResult by viewModel.importResult.collectAsStateWithLifecycle()
   val importedText = stringResource(R.string.geofile_imported)
   var pendingImportType by remember { mutableStateOf<ImportType?>(null) }
@@ -87,7 +87,7 @@ fun MetaFeatureSettingsScreen(
     }
 
   MetaFeatureSettingsContent(
-    configuration = uiState,
+    configuration = configuration,
     actions = viewModel,
     modifier = modifier,
     showResetConfirmDialog = showResetConfirmDialog,
@@ -273,7 +273,7 @@ private fun LazyListScope.metaSnifferPreferenceItems(
     SettingsEditTextListPreferenceItem(
       title = R.string.sniff_http_ports,
       placeholder = R.string.dont_modify,
-      value = configuration.sniffer.sniff.http.ports,
+      values = configuration.sniffer.sniff.http.ports,
       onValueChange = actions::updateSniffHttpPorts,
       enabled = enabled,
     )
@@ -296,7 +296,7 @@ private fun LazyListScope.metaSnifferPreferenceItems(
     SettingsEditTextListPreferenceItem(
       title = R.string.sniff_tls_ports,
       placeholder = R.string.dont_modify,
-      value = configuration.sniffer.sniff.tls.ports,
+      values = configuration.sniffer.sniff.tls.ports,
       onValueChange = actions::updateSniffTlsPorts,
       enabled = enabled,
     )
@@ -319,7 +319,7 @@ private fun LazyListScope.metaSnifferPreferenceItems(
     SettingsEditTextListPreferenceItem(
       title = R.string.sniff_quic_ports,
       placeholder = R.string.dont_modify,
-      value = configuration.sniffer.sniff.quic.ports,
+      values = configuration.sniffer.sniff.quic.ports,
       onValueChange = actions::updateSniffQuicPorts,
       enabled = enabled,
     )
@@ -381,7 +381,7 @@ private fun LazyListScope.metaSnifferPreferenceItems(
     SettingsEditTextListPreferenceItem(
       title = R.string.force_domain,
       placeholder = R.string.dont_modify,
-      value = configuration.sniffer.forceDomain,
+      values = configuration.sniffer.forceDomain,
       onValueChange = actions::updateForceDomain,
       enabled = enabled,
     )
@@ -391,7 +391,7 @@ private fun LazyListScope.metaSnifferPreferenceItems(
     SettingsEditTextListPreferenceItem(
       title = R.string.skip_domain,
       placeholder = R.string.dont_modify,
-      value = configuration.sniffer.skipDomain,
+      values = configuration.sniffer.skipDomain,
       onValueChange = actions::updateSkipDomain,
       enabled = enabled,
     )
@@ -401,7 +401,7 @@ private fun LazyListScope.metaSnifferPreferenceItems(
     SettingsEditTextListPreferenceItem(
       title = R.string.skip_src_address,
       placeholder = R.string.dont_modify,
-      value = configuration.sniffer.skipSrcAddress,
+      values = configuration.sniffer.skipSrcAddress,
       onValueChange = actions::updateSkipSrcAddress,
       enabled = enabled,
     )
@@ -411,7 +411,7 @@ private fun LazyListScope.metaSnifferPreferenceItems(
     SettingsEditTextListPreferenceItem(
       title = R.string.skip_dst_address,
       placeholder = R.string.dont_modify,
-      value = configuration.sniffer.skipDstAddress,
+      values = configuration.sniffer.skipDstAddress,
       onValueChange = actions::updateSkipDstAddress,
       enabled = enabled,
     )
