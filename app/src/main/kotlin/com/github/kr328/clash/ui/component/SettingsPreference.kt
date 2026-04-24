@@ -63,6 +63,29 @@ fun <T> rememberWriteThroughState(initial: T, sync: (T) -> Unit): MutableState<T
 
 @Composable
 fun <T> SettingsListPreferenceItem(
+  value: T,
+  values: List<T>,
+  @StringRes title: Int,
+  @StringRes summary: Int,
+  modifier: Modifier = Modifier,
+  enabled: Boolean = true,
+  valueToText: @Composable (T) -> Int,
+  onValueChange: (T) -> Unit,
+) {
+  ListPreference(
+    value = value,
+    onValueChange = onValueChange,
+    values = values,
+    modifier = modifier,
+    enabled = enabled,
+    title = { Text(stringResource(title)) },
+    summary = { Text(stringResource(summary)) },
+    valueToText = { AnnotatedString(stringResource(valueToText(it))) },
+  )
+}
+
+@Composable
+fun <T> SettingsListPreferenceItem(
   state: MutableState<T>,
   values: List<T>,
   @StringRes title: Int,
@@ -80,6 +103,35 @@ fun <T> SettingsListPreferenceItem(
     summary = { Text(stringResource(summary)) },
     valueToText = { AnnotatedString(stringResource(valueToText(it))) },
   )
+}
+
+@Composable
+fun SettingsEditTextListPreferenceItem(
+  @StringRes title: Int,
+  @StringRes placeholder: Int,
+  value: List<String>?,
+  onValueChange: (List<String>?) -> Unit,
+  enabled: Boolean = true,
+) {
+  var showDialog by remember { mutableStateOf(false) }
+  Preference(
+    modifier = Modifier.fillMaxWidth(),
+    title = { Text(stringResource(title)) },
+    summary = { Text(value.summary(placeholder)) },
+    enabled = enabled,
+    onClick = { showDialog = true },
+  )
+  if (showDialog) {
+    EditableTextListDialog(
+      title = title,
+      initialValues = value,
+      onDismiss = { showDialog = false },
+      onApply = {
+        onValueChange(it)
+        showDialog = false
+      },
+    )
+  }
 }
 
 @Composable

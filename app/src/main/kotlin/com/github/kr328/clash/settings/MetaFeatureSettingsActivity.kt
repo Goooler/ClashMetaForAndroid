@@ -1,112 +1,21 @@
 package com.github.kr328.clash.settings
 
-import android.database.Cursor
-import android.net.Uri
-import android.provider.OpenableColumns
-import androidx.activity.result.contract.ActivityResultContracts
-import com.github.kr328.clash.R
-import com.github.kr328.clash.core.Clash
-import com.github.kr328.clash.settings.ui.MetaFeatureSettingsDesign
-import com.github.kr328.clash.ui.DesignActivity
-import com.github.kr328.clash.util.clashDir
-import com.github.kr328.clash.util.toast
-import com.github.kr328.clash.util.withClash
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import java.io.File
-import java.io.FileOutputStream
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.isActive
-import kotlinx.coroutines.selects.select
-import kotlinx.coroutines.withContext
+import android.os.Bundle
+import androidx.activity.compose.setContent
+import androidx.activity.viewModels
+import com.github.kr328.clash.settings.ui.MetaFeatureSettingsScreen
+import com.github.kr328.clash.settings.vm.MetaFeatureSettingsViewModel
+import com.github.kr328.clash.ui.BaseActivity
+import com.github.kr328.clash.ui.theme.MihomoTheme
 
-class MetaFeatureSettingsActivity : DesignActivity<MetaFeatureSettingsDesign>() {
-  override suspend fun main() {
-    val configuration = withClash { queryOverride(Clash.OverrideSlot.Persist) }
+class MetaFeatureSettingsActivity : BaseActivity() {
+  private val viewModel by viewModels<MetaFeatureSettingsViewModel>()
 
-    defer { withClash { patchOverride(Clash.OverrideSlot.Persist, configuration) } }
+  override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
 
-    val design = MetaFeatureSettingsDesign(this, configuration)
-
-    setContentDesign(design)
-
-    while (isActive) {
-      select {
-        events.onReceive {}
-
-        design.requests.onReceive {
-          when (it) {
-            MetaFeatureSettingsDesign.Request.ResetOverride -> {
-              defer { withClash { clearOverride(Clash.OverrideSlot.Persist) } }
-              finish()
-            }
-
-            MetaFeatureSettingsDesign.Request.ImportGeoIp -> {
-              val uri = ActivityResultContracts.GetContent().startForResult("*/*")
-              importGeoFile(uri, MetaFeatureSettingsDesign.Request.ImportGeoIp)
-            }
-
-            MetaFeatureSettingsDesign.Request.ImportGeoSite -> {
-              val uri = ActivityResultContracts.GetContent().startForResult("*/*")
-              importGeoFile(uri, MetaFeatureSettingsDesign.Request.ImportGeoSite)
-            }
-
-            MetaFeatureSettingsDesign.Request.ImportCountry -> {
-              val uri = ActivityResultContracts.GetContent().startForResult("*/*")
-              importGeoFile(uri, MetaFeatureSettingsDesign.Request.ImportCountry)
-            }
-
-            MetaFeatureSettingsDesign.Request.ImportASN -> {
-              val uri = ActivityResultContracts.GetContent().startForResult("*/*")
-              importGeoFile(uri, MetaFeatureSettingsDesign.Request.ImportASN)
-            }
-          }
-        }
-      }
+    setContent {
+      MihomoTheme { MetaFeatureSettingsScreen(viewModel = viewModel, onResetCompleted = ::finish) }
     }
-  }
-
-  private val validDatabaseExtensions = listOf(".metadb", ".db", ".dat", ".mmdb")
-
-  private suspend fun importGeoFile(uri: Uri?, importType: MetaFeatureSettingsDesign.Request) {
-    val cursor: Cursor? = uri?.let { contentResolver.query(it, null, null, null, null, null) }
-    cursor?.use {
-      if (it.moveToFirst()) {
-        val columnIndex = it.getColumnIndex(OpenableColumns.DISPLAY_NAME)
-        val displayName: String = if (columnIndex != -1) it.getString(columnIndex) else ""
-        val ext = "." + displayName.substringAfterLast(".")
-
-        if (!validDatabaseExtensions.contains(ext)) {
-          MaterialAlertDialogBuilder(this)
-            .setTitle(R.string.geofile_unknown_db_format)
-            .setMessage(
-              getString(
-                R.string.geofile_unknown_db_format_message,
-                validDatabaseExtensions.joinToString("/"),
-              )
-            )
-            .setPositiveButton("OK") { _, _ -> }
-            .show()
-          return
-        }
-        val outputFileName =
-          when (importType) {
-            MetaFeatureSettingsDesign.Request.ImportGeoIp -> "geoip$ext"
-            MetaFeatureSettingsDesign.Request.ImportGeoSite -> "geosite$ext"
-            MetaFeatureSettingsDesign.Request.ImportCountry -> "country$ext"
-            MetaFeatureSettingsDesign.Request.ImportASN -> "ASN$ext"
-            else -> ""
-          }
-
-        withContext(Dispatchers.IO) {
-          val outputFile = File(clashDir, outputFileName)
-          contentResolver.openInputStream(uri).use { ins ->
-            FileOutputStream(outputFile).use { outs -> ins?.copyTo(outs) }
-          }
-        }
-        toast(getString(R.string.geofile_imported, displayName))
-        return
-      }
-    }
-    toast(R.string.geofile_import_failed)
   }
 }
