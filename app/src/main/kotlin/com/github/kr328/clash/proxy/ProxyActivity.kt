@@ -65,7 +65,7 @@ class ProxyActivity : DesignActivity<ProxyDesign>() {
                 }
                 val state = states[it.index]
 
-                state.now = group.now
+                state.updateNow(group.now)
 
                 design.updateGroup(
                   it.index,
@@ -78,11 +78,9 @@ class ProxyActivity : DesignActivity<ProxyDesign>() {
             }
 
             is ProxyDesign.Request.Select -> {
-              withClash {
-                patchSelector(names[it.index], it.name)
+              withClash { patchSelector(names[it.index], it.name) }
 
-                states[it.index].now = it.name
-              }
+              states[it.index].updateNow(it.name)
 
               design.requestRedrawVisible()
             }
@@ -101,9 +99,7 @@ class ProxyActivity : DesignActivity<ProxyDesign>() {
               withClash {
                 val o = queryOverride(Clash.OverrideSlot.Session)
 
-                o.mode = it.mode
-
-                patchOverride(Clash.OverrideSlot.Session, o)
+                patchOverride(Clash.OverrideSlot.Session, o.copy(mode = it.mode))
               }
             }
           }

@@ -1,3 +1,15 @@
 package com.github.kr328.clash.model
 
-data class ProxyState(var now: String)
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
+
+class ProxyState(private val nowState: MutableState<String>) {
+  constructor(now: String) : this(mutableStateOf(now))
+
+  val now: String
+    get() = nowState.value
+
+  fun updateNow(value: String) {
+    nowState.value = value
+  }
+}
