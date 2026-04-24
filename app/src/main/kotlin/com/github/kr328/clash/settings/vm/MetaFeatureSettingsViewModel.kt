@@ -78,21 +78,25 @@ class MetaFeatureSettingsViewModel(app: Application) :
     }
   }
 
-  override fun updateUnifiedDelay(value: Boolean?) = updateState { it.copy(unifiedDelay = value) }
+  override fun updateUnifiedDelay(value: Boolean?) = uiState.update {
+    it.copy(unifiedDelay = value)
+  }
 
-  override fun updateGeodataMode(value: Boolean?) = updateState { it.copy(geodataMode = value) }
+  override fun updateGeodataMode(value: Boolean?) = uiState.update { it.copy(geodataMode = value) }
 
-  override fun updateTcpConcurrent(value: Boolean?) = updateState { it.copy(tcpConcurrent = value) }
+  override fun updateTcpConcurrent(value: Boolean?) = uiState.update {
+    it.copy(tcpConcurrent = value)
+  }
 
-  override fun updateFindProcessMode(value: UiState.FindProcessMode?) = updateState {
+  override fun updateFindProcessMode(value: UiState.FindProcessMode?) = uiState.update {
     it.copy(findProcessMode = value)
   }
 
-  override fun updateSnifferEnable(value: Boolean?) = updateState {
+  override fun updateSnifferEnable(value: Boolean?) = uiState.update {
     it.copy(sniffer = it.sniffer.copy(enable = value))
   }
 
-  override fun updateSniffHttpPorts(value: List<String>?) = updateState {
+  override fun updateSniffHttpPorts(value: List<String>?) = uiState.update {
     it.copy(
       sniffer =
         it.sniffer.copy(
@@ -101,7 +105,7 @@ class MetaFeatureSettingsViewModel(app: Application) :
     )
   }
 
-  override fun updateSniffHttpOverrideDestination(value: Boolean?) = updateState {
+  override fun updateSniffHttpOverrideDestination(value: Boolean?) = uiState.update {
     it.copy(
       sniffer =
         it.sniffer.copy(
@@ -111,7 +115,7 @@ class MetaFeatureSettingsViewModel(app: Application) :
     )
   }
 
-  override fun updateSniffTlsPorts(value: List<String>?) = updateState {
+  override fun updateSniffTlsPorts(value: List<String>?) = uiState.update {
     it.copy(
       sniffer =
         it.sniffer.copy(
@@ -120,7 +124,7 @@ class MetaFeatureSettingsViewModel(app: Application) :
     )
   }
 
-  override fun updateSniffTlsOverrideDestination(value: Boolean?) = updateState {
+  override fun updateSniffTlsOverrideDestination(value: Boolean?) = uiState.update {
     it.copy(
       sniffer =
         it.sniffer.copy(
@@ -130,7 +134,7 @@ class MetaFeatureSettingsViewModel(app: Application) :
     )
   }
 
-  override fun updateSniffQuicPorts(value: List<String>?) = updateState {
+  override fun updateSniffQuicPorts(value: List<String>?) = uiState.update {
     it.copy(
       sniffer =
         it.sniffer.copy(
@@ -139,7 +143,7 @@ class MetaFeatureSettingsViewModel(app: Application) :
     )
   }
 
-  override fun updateSniffQuicOverrideDestination(value: Boolean?) = updateState {
+  override fun updateSniffQuicOverrideDestination(value: Boolean?) = uiState.update {
     it.copy(
       sniffer =
         it.sniffer.copy(
@@ -149,31 +153,31 @@ class MetaFeatureSettingsViewModel(app: Application) :
     )
   }
 
-  override fun updateForceDnsMapping(value: Boolean?) = updateState {
+  override fun updateForceDnsMapping(value: Boolean?) = uiState.update {
     it.copy(sniffer = it.sniffer.copy(forceDnsMapping = value))
   }
 
-  override fun updateParsePureIp(value: Boolean?) = updateState {
+  override fun updateParsePureIp(value: Boolean?) = uiState.update {
     it.copy(sniffer = it.sniffer.copy(parsePureIp = value))
   }
 
-  override fun updateOverrideDestination(value: Boolean?) = updateState {
+  override fun updateOverrideDestination(value: Boolean?) = uiState.update {
     it.copy(sniffer = it.sniffer.copy(overrideDestination = value))
   }
 
-  override fun updateForceDomain(value: List<String>?) = updateState {
+  override fun updateForceDomain(value: List<String>?) = uiState.update {
     it.copy(sniffer = it.sniffer.copy(forceDomain = value))
   }
 
-  override fun updateSkipDomain(value: List<String>?) = updateState {
+  override fun updateSkipDomain(value: List<String>?) = uiState.update {
     it.copy(sniffer = it.sniffer.copy(skipDomain = value))
   }
 
-  override fun updateSkipSrcAddress(value: List<String>?) = updateState {
+  override fun updateSkipSrcAddress(value: List<String>?) = uiState.update {
     it.copy(sniffer = it.sniffer.copy(skipSrcAddress = value))
   }
 
-  override fun updateSkipDstAddress(value: List<String>?) = updateState {
+  override fun updateSkipDstAddress(value: List<String>?) = uiState.update {
     it.copy(sniffer = it.sniffer.copy(skipDstAddress = value))
   }
 
@@ -189,10 +193,6 @@ class MetaFeatureSettingsViewModel(app: Application) :
     viewModelScope.launch(Dispatchers.IO) {
       withClash { clearOverride(Clash.OverrideSlot.Persist) }
     }
-  }
-
-  private inline fun updateState(transform: (UiState) -> UiState) {
-    uiState.update(transform)
   }
 
   enum class ImportType {
