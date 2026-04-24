@@ -47,7 +47,8 @@ class MetaFeatureSettingsViewModel(app: Application) :
 
   fun resetOverride() {
     skipPersist = true
-    viewModelScope.launch(Dispatchers.IO) {
+    // Intended to use non-viewModel scope as the action might be called on disposed.
+    CoroutineScope(Dispatchers.IO).launch {
       withClash { clearOverride(Clash.OverrideSlot.Persist) }
     }
   }
