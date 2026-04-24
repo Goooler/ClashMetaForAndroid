@@ -101,9 +101,7 @@ class ProxyActivity : DesignActivity<ProxyDesign>() {
               withClash {
                 val o = queryOverride(Clash.OverrideSlot.Session)
 
-                o.mode = it.mode
-
-                patchOverride(Clash.OverrideSlot.Session, o)
+                patchOverride(Clash.OverrideSlot.Session, o.copy(mode = it.mode))
               }
             }
           }
