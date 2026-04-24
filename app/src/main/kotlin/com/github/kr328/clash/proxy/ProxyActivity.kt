@@ -1,5 +1,6 @@
 package com.github.kr328.clash.proxy
 
+import androidx.compose.runtime.mutableStateOf
 import com.github.kr328.clash.common.util.intent
 import com.github.kr328.clash.core.Clash
 import com.github.kr328.clash.core.model.Proxy
@@ -17,7 +18,7 @@ class ProxyActivity : DesignActivity<ProxyDesign>() {
   override suspend fun main() {
     val mode = withClash { queryOverride(Clash.OverrideSlot.Session).mode }
     val names = withClash { queryProxyGroupNames(uiStore.proxyExcludeNotSelectable) }
-    val states = List(names.size) { ProxyState("?") }
+    val states = List(names.size) { mutableStateOf(ProxyState("?")) }
     val unorderedStates = names.indices.associate { names[it] to states[it] }
     val reloadLock = Semaphore(10)
 
@@ -64,8 +65,7 @@ class ProxyActivity : DesignActivity<ProxyDesign>() {
                   withClash { queryProxyGroup(names[it.index], uiStore.proxySort) }
                 }
                 val state = states[it.index]
-
-                state.updateNow(group.now)
+                state.value = ProxyState(group.now)
 
                 design.updateGroup(
                   it.index,
@@ -79,8 +79,7 @@ class ProxyActivity : DesignActivity<ProxyDesign>() {
 
             is ProxyDesign.Request.Select -> {
               withClash { patchSelector(names[it.index], it.name) }
-
-              states[it.index].updateNow(it.name)
+              states[it.index].value = ProxyState(it.name)
 
               design.requestRedrawVisible()
             }
