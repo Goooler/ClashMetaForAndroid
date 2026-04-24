@@ -17,8 +17,8 @@ class ProxyActivity : DesignActivity<ProxyDesign>() {
   override suspend fun main() {
     val mode = withClash { queryOverride(Clash.OverrideSlot.Session).mode }
     val names = withClash { queryProxyGroupNames(uiStore.proxyExcludeNotSelectable) }
-    val states = MutableList(names.size) { ProxyState("?") }
-    val unorderedStates = names.indices.associateTo(mutableMapOf()) { names[it] to states[it] }
+    val states = List(names.size) { ProxyState("?") }
+    val unorderedStates = names.indices.associate { names[it] to states[it] }
     val reloadLock = Semaphore(10)
 
     val design = ProxyDesign(this, mode, names, uiStore)
@@ -63,9 +63,9 @@ class ProxyActivity : DesignActivity<ProxyDesign>() {
                 val group = reloadLock.withPermit {
                   withClash { queryProxyGroup(names[it.index], uiStore.proxySort) }
                 }
-                val state = states[it.index].copy(now = group.now)
-                states[it.index] = state
-                unorderedStates[names[it.index]] = state
+                val state = states[it.index]
+
+                state.updateNow(group.now)
 
                 design.updateGroup(
                   it.index,
@@ -80,9 +80,7 @@ class ProxyActivity : DesignActivity<ProxyDesign>() {
             is ProxyDesign.Request.Select -> {
               withClash { patchSelector(names[it.index], it.name) }
 
-              val state = states[it.index].copy(now = it.name)
-              states[it.index] = state
-              unorderedStates[names[it.index]] = state
+              states[it.index].updateNow(it.name)
 
               design.requestRedrawVisible()
             }
