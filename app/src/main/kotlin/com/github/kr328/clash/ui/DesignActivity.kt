@@ -30,7 +30,6 @@ import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
 
 abstract class BaseActivity : ComponentActivity(), Broadcasts.Observer {
-  protected var activityStarted: Boolean = false
   protected val uiStore by lazy { UiStore(this) }
 
   override fun onCreate(savedInstanceState: Bundle?) {
@@ -45,13 +44,11 @@ abstract class BaseActivity : ComponentActivity(), Broadcasts.Observer {
 
   override fun onStart() {
     super.onStart()
-    activityStarted = true
     Remote.broadcasts.addObserver(this)
   }
 
   override fun onStop() {
     super.onStop()
-    activityStarted = false
     Remote.broadcasts.removeObserver(this)
   }
 }
@@ -61,6 +58,7 @@ abstract class DesignActivity<D : Design<*>> : BaseActivity(), CoroutineScope by
   protected val clashRunning: Boolean
     get() = Remote.broadcasts.clashRunning
 
+  protected var activityStarted: Boolean = false
   protected var design: D? = null
 
   private val nextRequestKey = AtomicInteger(0)
@@ -87,11 +85,13 @@ abstract class DesignActivity<D : Design<*>> : BaseActivity(), CoroutineScope by
 
   override fun onStart() {
     super.onStart()
+    activityStarted = true
     events.trySend(Event.ActivityStart)
   }
 
   override fun onStop() {
     super.onStop()
+    activityStarted = false
     events.trySend(Event.ActivityStop)
   }
 
