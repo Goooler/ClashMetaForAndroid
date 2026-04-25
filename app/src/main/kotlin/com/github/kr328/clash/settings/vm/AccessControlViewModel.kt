@@ -144,8 +144,7 @@ class AccessControlViewModel(app: Application) : AndroidViewModel(app), AccessCo
 
   override fun exportToClipboard() {
     val clipboard = appContext.getSystemService<ClipboardManager>()
-    val data =
-      ClipData.newPlainText("packages", uiState.value.selected.sorted().joinToString("\n"))
+    val data = ClipData.newPlainText("packages", uiState.value.selected.sorted().joinToString("\n"))
     clipboard?.setPrimaryClip(data)
   }
 
