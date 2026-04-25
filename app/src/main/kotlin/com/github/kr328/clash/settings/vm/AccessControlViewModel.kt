@@ -64,9 +64,12 @@ class AccessControlViewModel(app: Application) : AndroidViewModel(app), AccessCo
     // Intended to use non-viewModel scope as we need the action to be called on disposed.
     CoroutineScope(Dispatchers.IO).launch {
       val selected = uiState.value.selected
-      val changed = selected != serviceStore.accessControlPackages
-      serviceStore.accessControlPackages = selected
+      val persistedSelection = serviceStore.accessControlPackages
+      val changed = selected != persistedSelection
 
+      if (changed) {
+        serviceStore.accessControlPackages = selected
+      }
       if (clashRunning.value && changed) {
         appContext.stopClashService()
 
@@ -124,7 +127,16 @@ class AccessControlViewModel(app: Application) : AndroidViewModel(app), AccessCo
     val data = clipboard?.primaryClip
 
     if (data != null && data.itemCount > 0) {
-      val packages = data.getItemAt(0).text?.split("\n")?.toSet().orEmpty()
+      val packages =
+        data
+          .getItemAt(0)
+          .text
+          ?.toString()
+          ?.lineSequence()
+          ?.map { it.trim() }
+          ?.filter { it.isNotEmpty() }
+          ?.toSet()
+          .orEmpty()
       val all = uiState.value.apps.map(AppInfo::packageName).toSet()
       uiState.update { it.copy(selected = all.intersect(packages)) }
     }
@@ -132,7 +144,8 @@ class AccessControlViewModel(app: Application) : AndroidViewModel(app), AccessCo
 
   override fun exportToClipboard() {
     val clipboard = appContext.getSystemService<ClipboardManager>()
-    val data = ClipData.newPlainText("packages", uiState.value.selected.joinToString("\n"))
+    val data =
+      ClipData.newPlainText("packages", uiState.value.selected.sorted().joinToString("\n"))
     clipboard?.setPrimaryClip(data)
   }
 
