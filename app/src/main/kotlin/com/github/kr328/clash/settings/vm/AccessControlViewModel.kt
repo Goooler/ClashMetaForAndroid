@@ -20,16 +20,17 @@ import com.github.kr328.clash.store.UiStore
 import com.github.kr328.clash.util.startClashService
 import com.github.kr328.clash.util.stopClashService
 import com.github.kr328.clash.util.toAppInfo
-import kotlin.time.Duration.Companion.milliseconds
+import kotlin.time.Duration.Companion.seconds
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import kotlinx.coroutines.withTimeoutOrNull
 
 class AccessControlViewModel(app: Application) : AndroidViewModel(app), AccessControlActions {
   private val appContext = app
@@ -68,9 +69,18 @@ class AccessControlViewModel(app: Application) : AndroidViewModel(app), AccessCo
 
       if (clashRunning.value && changed) {
         appContext.stopClashService()
-        while (Remote.broadcasts.clashRunning) {
-          delay(200.milliseconds)
+
+        val stopped =
+          withTimeoutOrNull(10.seconds) {
+            clashRunning.first { !it }
+            true
+          } ?: false
+
+        if (!stopped) {
+          // The stop signal may be lost; continue with a best-effort restart path.
+          appContext.stopClashService()
         }
+
         appContext.startClashService()
       }
     }
