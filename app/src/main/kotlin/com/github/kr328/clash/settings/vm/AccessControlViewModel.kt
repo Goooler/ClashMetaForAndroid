@@ -23,6 +23,7 @@ import com.github.kr328.clash.util.toAppInfo
 import kotlin.time.Duration.Companion.milliseconds
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -34,6 +35,7 @@ class AccessControlViewModel(app: Application) : AndroidViewModel(app), AccessCo
   private val appContext = app
   private val uiStore = UiStore(app)
   private val serviceStore = ServiceStore(app)
+  private var reloadAppsJob: Job? = null
 
   val uiState: StateFlow<UiState>
     field =
@@ -143,7 +145,8 @@ class AccessControlViewModel(app: Application) : AndroidViewModel(app), AccessCo
   }
 
   private fun reloadApps() {
-    viewModelScope.launch {
+    reloadAppsJob?.cancel()
+    reloadAppsJob = viewModelScope.launch {
       val state = uiState.value
       val apps =
         loadApps(
