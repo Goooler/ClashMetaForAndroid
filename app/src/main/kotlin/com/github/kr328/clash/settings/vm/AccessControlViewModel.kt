@@ -91,8 +91,8 @@ class AccessControlViewModel(app: Application) : AndroidViewModel(app), AccessCo
 
   override fun selectAll() {
     viewModelScope.launch {
-      val apps = uiState.value.apps
-      val all = withContext(Dispatchers.Default) { apps.map(AppInfo::packageName).toSet() }
+      val all =
+        withContext(Dispatchers.Default) { uiState.value.apps.map(AppInfo::packageName).toSet() }
       uiState.update { it.copy(selected = all) }
     }
   }
@@ -103,8 +103,8 @@ class AccessControlViewModel(app: Application) : AndroidViewModel(app), AccessCo
 
   override fun selectInvert() {
     viewModelScope.launch {
-      val apps = uiState.value.apps
-      val all = withContext(Dispatchers.Default) { apps.map(AppInfo::packageName).toSet() }
+      val all =
+        withContext(Dispatchers.Default) { uiState.value.apps.map(AppInfo::packageName).toSet() }
       uiState.update { state -> state.copy(selected = all - state.selected) }
     }
   }
