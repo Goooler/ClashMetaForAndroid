@@ -30,7 +30,6 @@ import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
 
 abstract class BaseActivity : ComponentActivity(), Broadcasts.Observer {
-  private val nextRequestKey = AtomicInteger(0)
   protected var activityStarted: Boolean = false
   protected val uiStore by lazy { UiStore(this) }
 
@@ -55,25 +54,6 @@ abstract class BaseActivity : ComponentActivity(), Broadcasts.Observer {
     activityStarted = false
     Remote.broadcasts.removeObserver(this)
   }
-
-  suspend fun <I, O> ActivityResultContract<I, O>.startForResult(input: I): O =
-    withContext(Dispatchers.Main) {
-      val requestKey = nextRequestKey.getAndIncrement().toString()
-
-      ActivityResultLifecycleOwner().use { owner, start ->
-        suspendCancellableCoroutine { c ->
-          activityResultRegistry
-            .register(
-              key = requestKey,
-              lifecycleOwner = owner,
-              contract = this@startForResult,
-              callback = c::resume,
-            )
-            .apply { start() }
-            .launch(input)
-        }
-      }
-    }
 }
 
 abstract class DesignActivity<D : Design<*>> : BaseActivity(), CoroutineScope by MainScope() {
@@ -83,6 +63,7 @@ abstract class DesignActivity<D : Design<*>> : BaseActivity(), CoroutineScope by
 
   protected var design: D? = null
 
+  private val nextRequestKey = AtomicInteger(0)
   private var defer: suspend () -> Unit = {}
   private var deferRunning = false
   private var dayNight: DayNight = DayNight.Day
@@ -171,6 +152,25 @@ abstract class DesignActivity<D : Design<*>> : BaseActivity(), CoroutineScope by
       launch { design?.showExceptionSnackbar(ClashException(cause)) }
     }
   }
+
+  suspend fun <I, O> ActivityResultContract<I, O>.startForResult(input: I): O =
+    withContext(Dispatchers.Main) {
+      val requestKey = nextRequestKey.getAndIncrement().toString()
+
+      ActivityResultLifecycleOwner().use { owner, start ->
+        suspendCancellableCoroutine { c ->
+          activityResultRegistry
+            .register(
+              key = requestKey,
+              lifecycleOwner = owner,
+              contract = this@startForResult,
+              callback = c::resume,
+            )
+            .apply { start() }
+            .launch(input)
+        }
+      }
+    }
 
   private fun queryDayNight(config: Configuration = resources.configuration): DayNight {
     return when (uiStore.darkMode) {
