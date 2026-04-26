@@ -102,7 +102,6 @@ dependencies {
 
   implementation(libs.composePreference)
 
-  implementation(libs.google.material)
   implementation(libs.quickie.bundled)
 }
 
