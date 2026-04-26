@@ -107,9 +107,14 @@ class ProvidersViewModel(app: Application) : AndroidViewModel(app), DefaultLifec
         }
       } catch (e: Exception) {
         updateProviderState(provider) { it.copy(updating = false) }
+        val errorMessage = e.localizedMessage ?: e.message ?: e.toString()
         eventState.value =
           EventState.ShowMessage(
-            application.getString(R.string.format_update_provider_failure, provider.name, e.message)
+            application.getString(
+              R.string.format_update_provider_failure,
+              provider.name,
+              errorMessage
+            )
           )
       }
     }
