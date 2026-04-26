@@ -1,10 +1,13 @@
 package com.github.kr328.clash.main.ui
 
-import android.content.Context
+import android.app.Activity
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -25,13 +28,19 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -39,85 +48,100 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.github.kr328.clash.R
-import com.github.kr328.clash.core.model.TunnelState
-import com.github.kr328.clash.core.util.trafficTotal
-import com.github.kr328.clash.ui.Design
+import com.github.kr328.clash.main.vm.MainViewModel
 import com.github.kr328.clash.ui.theme.MihomoDarkSurface
 import com.github.kr328.clash.ui.theme.MihomoLightStopped
 import com.github.kr328.clash.ui.theme.MihomoOnPrimary
 import com.github.kr328.clash.ui.theme.MihomoTheme
 import com.github.kr328.clash.ui.theme.PreviewMihomo
 import com.github.kr328.clash.ui.theme.mihomoDimens
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.launch
 
-class MainDesign(context: Context) : Design<MainDesign.Request>(context) {
-  sealed interface Request {
-    data object ToggleStatus : Request
+@Composable
+fun MainScreen(
+  modifier: Modifier = Modifier,
+  viewModel: MainViewModel = viewModel(),
+  onOpenProxy: () -> Unit,
+  onOpenProfiles: () -> Unit,
+  onOpenProviders: () -> Unit,
+  onOpenLogs: () -> Unit,
+  onOpenSettings: () -> Unit,
+  onOpenHelp: () -> Unit,
+) {
+  val lifecycleOwner = LocalLifecycleOwner.current
+  val clashRunning by viewModel.clashRunning.collectAsStateWithLifecycle()
+  val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+  val eventState by viewModel.eventState.collectAsStateWithLifecycle()
+  val snackbarHostState = remember { SnackbarHostState() }
+  val scope = rememberCoroutineScope()
 
-    data object OpenProxy : Request
+  val noProfileText = stringResource(R.string.no_profile_selected)
+  val profilesActionText = stringResource(R.string.profiles)
 
-    data object OpenProfiles : Request
-
-    data object OpenProviders : Request
-
-    data object OpenLogs : Request
-
-    data object OpenSettings : Request
-
-    data object OpenHelp : Request
-
-    data object OpenAbout : Request
+  DisposableEffect(lifecycleOwner, viewModel) {
+    lifecycleOwner.lifecycle.addObserver(viewModel)
+    onDispose { lifecycleOwner.lifecycle.removeObserver(viewModel) }
   }
 
-  private var clashRunning by mutableStateOf(false)
-  private var forwarded by mutableStateOf<String?>(null)
-  private var mode by mutableStateOf<String?>(null)
-  private var profileName by mutableStateOf<String?>(null)
-  private var hasProviders by mutableStateOf(false)
-  private var aboutVersionName by mutableStateOf<String?>(null)
-
-  @Composable
-  override fun Content() = MihomoTheme {
-    MainScreen(
-      clashRunning = clashRunning,
-      forwarded = forwarded,
-      mode = mode,
-      profileName = profileName,
-      hasProviders = hasProviders,
-      aboutVersionName = aboutVersionName,
-      onDismissAbout = { aboutVersionName = null },
-      onRequest = { requests.trySend(it) },
-    )
-  }
-
-  suspend fun setProfileName(name: String?) = withContext(Dispatchers.Main) { profileName = name }
-
-  suspend fun setClashRunning(running: Boolean) =
-    withContext(Dispatchers.Main) { clashRunning = running }
-
-  suspend fun setForwarded(value: Long) =
-    withContext(Dispatchers.Main) { forwarded = value.trafficTotal() }
-
-  suspend fun setMode(mode: TunnelState.Mode) =
-    withContext(Dispatchers.Main) {
-      this@MainDesign.mode =
-        when (mode) {
-          TunnelState.Mode.Direct -> context.getString(R.string.direct_mode)
-          TunnelState.Mode.Global -> context.getString(R.string.global_mode)
-          TunnelState.Mode.Rule -> context.getString(R.string.rule_mode)
-        }
+  val vpnLauncher =
+    rememberLauncherForActivityResult(StartActivityForResult()) { result ->
+      if (result.resultCode == Activity.RESULT_OK) {
+        viewModel.onVpnPermissionGranted()
+      }
     }
 
-  suspend fun setHasProviders(has: Boolean) = withContext(Dispatchers.Main) { hasProviders = has }
+  LaunchedEffect(eventState) {
+    when (val event = eventState) {
+      MainViewModel.EventState.Idle -> Unit
+      is MainViewModel.EventState.RequestVpnPermission -> vpnLauncher.launch(event.intent)
+      MainViewModel.EventState.ShowNoProfileMessage -> {
+        scope.launch {
+          val result =
+            snackbarHostState.showSnackbar(
+              message = noProfileText,
+              actionLabel = profilesActionText,
+              duration = SnackbarDuration.Long,
+            )
+          if (result == SnackbarResult.ActionPerformed) onOpenProfiles()
+        }
+      }
+      is MainViewModel.EventState.ShowMessage -> {
+        scope.launch {
+          snackbarHostState.showSnackbar(message = event.message, duration = SnackbarDuration.Long)
+        }
+      }
+    }
+    viewModel.consumeEvent()
+  }
 
-  suspend fun showAbout(versionName: String) =
-    withContext(Dispatchers.Main) { aboutVersionName = versionName }
+  Box(modifier = modifier.fillMaxSize()) {
+    MainContent(
+      clashRunning = clashRunning,
+      forwarded = uiState.forwarded,
+      mode = uiState.mode,
+      profileName = uiState.profileName,
+      hasProviders = uiState.hasProviders,
+      aboutVersionName = uiState.aboutVersionName,
+      onDismissAbout = viewModel::dismissAbout,
+      onToggleStatus = viewModel::toggleStatus,
+      onOpenProxy = onOpenProxy,
+      onOpenProfiles = onOpenProfiles,
+      onOpenProviders = onOpenProviders,
+      onOpenLogs = onOpenLogs,
+      onOpenSettings = onOpenSettings,
+      onOpenHelp = onOpenHelp,
+      onOpenAbout = viewModel::showAbout,
+    )
+    SnackbarHost(hostState = snackbarHostState, modifier = Modifier.align(Alignment.BottomCenter))
+  }
 }
 
 @Composable
-private fun MainScreen(
+private fun MainContent(
   clashRunning: Boolean,
   forwarded: String?,
   mode: String?,
@@ -125,7 +149,14 @@ private fun MainScreen(
   hasProviders: Boolean,
   aboutVersionName: String?,
   onDismissAbout: () -> Unit,
-  onRequest: (MainDesign.Request) -> Unit,
+  onToggleStatus: () -> Unit,
+  onOpenProxy: () -> Unit,
+  onOpenProfiles: () -> Unit,
+  onOpenProviders: () -> Unit,
+  onOpenLogs: () -> Unit,
+  onOpenSettings: () -> Unit,
+  onOpenHelp: () -> Unit,
+  onOpenAbout: () -> Unit,
 ) {
   Surface(modifier = Modifier.fillMaxSize()) {
     val darkTheme = isSystemInDarkTheme()
@@ -167,7 +198,7 @@ private fun MainScreen(
           else stringResource(R.string.tap_to_start),
         backgroundColor = if (clashRunning) MaterialTheme.colorScheme.primary else stoppedColor,
         contentColor = MihomoOnPrimary,
-        onClick = { onRequest(MainDesign.Request.ToggleStatus) },
+        onClick = onToggleStatus,
       )
 
       AnimatedVisibility(visible = clashRunning) {
@@ -178,7 +209,7 @@ private fun MainScreen(
           subtext = mode,
           backgroundColor = MaterialTheme.colorScheme.surface,
           contentColor = MaterialTheme.colorScheme.onSurface,
-          onClick = { onRequest(MainDesign.Request.OpenProxy) },
+          onClick = onOpenProxy,
         )
       }
 
@@ -191,7 +222,7 @@ private fun MainScreen(
           else stringResource(R.string.not_selected),
         backgroundColor = MaterialTheme.colorScheme.surface,
         contentColor = MaterialTheme.colorScheme.onSurface,
-        onClick = { onRequest(MainDesign.Request.OpenProfiles) },
+        onClick = onOpenProfiles,
       )
 
       AnimatedVisibility(visible = clashRunning && hasProviders) {
@@ -199,7 +230,7 @@ private fun MainScreen(
           modifier = Modifier.padding(vertical = dimens.mainLabelMarginVertical),
           iconRes = R.drawable.ic_baseline_swap_vertical_circle,
           text = stringResource(R.string.providers),
-          onClick = { onRequest(MainDesign.Request.OpenProviders) },
+          onClick = onOpenProviders,
         )
       }
 
@@ -207,25 +238,25 @@ private fun MainScreen(
         modifier = Modifier.padding(vertical = dimens.mainLabelMarginVertical),
         iconRes = R.drawable.ic_baseline_assignment,
         text = stringResource(R.string.logs),
-        onClick = { onRequest(MainDesign.Request.OpenLogs) },
+        onClick = onOpenLogs,
       )
       MainActionLabel(
         modifier = Modifier.padding(vertical = dimens.mainLabelMarginVertical),
         iconRes = R.drawable.ic_baseline_settings,
         text = stringResource(R.string.settings),
-        onClick = { onRequest(MainDesign.Request.OpenSettings) },
+        onClick = onOpenSettings,
       )
       MainActionLabel(
         modifier = Modifier.padding(vertical = dimens.mainLabelMarginVertical),
         iconRes = R.drawable.ic_baseline_help_center,
         text = stringResource(R.string.help),
-        onClick = { onRequest(MainDesign.Request.OpenHelp) },
+        onClick = onOpenHelp,
       )
       MainActionLabel(
         modifier = Modifier.padding(vertical = dimens.mainLabelMarginVertical),
         iconRes = R.drawable.ic_baseline_info,
         text = stringResource(R.string.about),
-        onClick = { onRequest(MainDesign.Request.OpenAbout) },
+        onClick = onOpenAbout,
       )
     }
 
@@ -335,8 +366,8 @@ private fun AboutDialog(versionName: String, onDismiss: () -> Unit) {
 
 @PreviewMihomo
 @Composable
-private fun MainScreenRunningPreview() = MihomoTheme {
-  MainScreen(
+private fun MainContentRunningPreview() = MihomoTheme {
+  MainContent(
     clashRunning = true,
     forwarded = "1.23 GB",
     mode = "Rule",
@@ -344,14 +375,21 @@ private fun MainScreenRunningPreview() = MihomoTheme {
     hasProviders = true,
     aboutVersionName = null,
     onDismissAbout = {},
-    onRequest = {},
+    onToggleStatus = {},
+    onOpenProxy = {},
+    onOpenProfiles = {},
+    onOpenProviders = {},
+    onOpenLogs = {},
+    onOpenSettings = {},
+    onOpenHelp = {},
+    onOpenAbout = {},
   )
 }
 
 @PreviewMihomo
 @Composable
-private fun MainScreenStoppedPreview() = MihomoTheme {
-  MainScreen(
+private fun MainContentStoppedPreview() = MihomoTheme {
+  MainContent(
     clashRunning = false,
     forwarded = null,
     mode = null,
@@ -359,6 +397,13 @@ private fun MainScreenStoppedPreview() = MihomoTheme {
     hasProviders = false,
     aboutVersionName = null,
     onDismissAbout = {},
-    onRequest = {},
+    onToggleStatus = {},
+    onOpenProxy = {},
+    onOpenProfiles = {},
+    onOpenProviders = {},
+    onOpenLogs = {},
+    onOpenSettings = {},
+    onOpenHelp = {},
+    onOpenAbout = {},
   )
 }
