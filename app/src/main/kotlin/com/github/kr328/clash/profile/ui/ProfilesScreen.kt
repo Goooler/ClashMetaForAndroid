@@ -84,7 +84,7 @@ fun ProfilesScreen(
 
   LaunchedEffect(eventState) {
     when (val event = eventState) {
-      ProfilesViewModel.EventState.NotStart -> Unit
+      ProfilesViewModel.EventState.Idle -> Unit
       ProfilesViewModel.EventState.OpenCreate -> onOpenCreate()
       is ProfilesViewModel.EventState.OpenEdit -> onOpenEdit(event.uuid)
       is ProfilesViewModel.EventState.ShowMessage -> {

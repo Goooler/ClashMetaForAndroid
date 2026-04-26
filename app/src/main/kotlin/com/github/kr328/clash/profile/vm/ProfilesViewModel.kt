@@ -32,7 +32,7 @@ class ProfilesViewModel(app: Application) : AndroidViewModel(app), DefaultLifecy
     field = MutableStateFlow(UiState())
 
   val eventState: StateFlow<EventState>
-    field = MutableStateFlow<EventState>(EventState.NotStart)
+    field = MutableStateFlow<EventState>(EventState.Idle)
 
   override fun onStart(owner: LifecycleOwner) {
     broadcastEventsJob?.cancel()
@@ -77,7 +77,7 @@ class ProfilesViewModel(app: Application) : AndroidViewModel(app), DefaultLifecy
   }
 
   fun consumeEvent() {
-    eventState.value = EventState.NotStart
+    eventState.value = EventState.Idle
   }
 
   fun onOpenCreate() {
