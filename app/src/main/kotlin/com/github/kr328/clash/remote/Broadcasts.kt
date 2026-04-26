@@ -9,28 +9,33 @@ import com.github.kr328.clash.common.compat.registerReceiverCompat
 import com.github.kr328.clash.common.constants.Intents
 import com.github.kr328.clash.common.log.Log
 import java.util.UUID
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 
 class Broadcasts(private val context: Application) {
-  interface Observer {
-    fun onServiceRecreated() = Unit
+  sealed interface Event {
+    data object ServiceRecreated : Event
 
-    fun onStarted() = Unit
+    data object Started : Event
 
-    fun onStopped(cause: String?) = Unit
+    data class Stopped(val cause: String?) : Event
 
-    fun onProfileChanged() = Unit
+    data object ProfileChanged : Event
 
-    fun onProfileUpdateCompleted(uuid: UUID?) = Unit
+    data class ProfileUpdateCompleted(val uuid: UUID?) : Event
 
-    fun onProfileUpdateFailed(uuid: UUID?, reason: String?) = Unit
+    data class ProfileUpdateFailed(val uuid: UUID?, val reason: String?) : Event
 
-    fun onProfileLoaded() = Unit
+    data object ProfileLoaded : Event
   }
 
   val clashRunningFlow: StateFlow<Boolean>
     field = MutableStateFlow(false)
+
+  val event: SharedFlow<Event>
+    field = MutableSharedFlow(extraBufferCapacity = 64)
 
   var clashRunning: Boolean
     get() = clashRunningFlow.value
@@ -39,7 +44,6 @@ class Broadcasts(private val context: Application) {
     }
 
   private var registered = false
-  private val receivers = mutableListOf<Observer>()
   private val broadcastReceiver =
     object : BroadcastReceiver() {
       override fun onReceive(context: Context?, intent: Intent?) {
@@ -48,47 +52,34 @@ class Broadcasts(private val context: Application) {
         when (intent?.action) {
           Intents.ACTION_SERVICE_RECREATED -> {
             clashRunning = false
-
-            receivers.forEach { it.onServiceRecreated() }
+            event.tryEmit(Event.ServiceRecreated)
           }
           Intents.ACTION_CLASH_STARTED -> {
             clashRunning = true
-
-            receivers.forEach { it.onStarted() }
+            event.tryEmit(Event.Started)
           }
           Intents.ACTION_CLASH_STOPPED -> {
             clashRunning = false
-
-            receivers.forEach { it.onStopped(intent.getStringExtra(Intents.EXTRA_STOP_REASON)) }
+            event.tryEmit(Event.Stopped(intent.getStringExtra(Intents.EXTRA_STOP_REASON)))
           }
-          Intents.ACTION_PROFILE_CHANGED -> receivers.forEach { it.onProfileChanged() }
+          Intents.ACTION_PROFILE_CHANGED -> event.tryEmit(Event.ProfileChanged)
           Intents.ACTION_PROFILE_UPDATE_COMPLETED ->
-            receivers.forEach {
-              it.onProfileUpdateCompleted(
+            event.tryEmit(
+              Event.ProfileUpdateCompleted(
                 UUID.fromString(intent.getStringExtra(Intents.EXTRA_UUID))
               )
-            }
+            )
           Intents.ACTION_PROFILE_UPDATE_FAILED ->
-            receivers.forEach {
-              it.onProfileUpdateFailed(
+            event.tryEmit(
+              Event.ProfileUpdateFailed(
                 UUID.fromString(intent.getStringExtra(Intents.EXTRA_UUID)),
                 intent.getStringExtra(Intents.EXTRA_FAIL_REASON),
               )
-            }
-          Intents.ACTION_PROFILE_LOADED -> {
-            receivers.forEach { it.onProfileLoaded() }
-          }
+            )
+          Intents.ACTION_PROFILE_LOADED -> event.tryEmit(Event.ProfileLoaded)
         }
       }
     }
-
-  fun addObserver(observer: Observer) {
-    receivers.add(observer)
-  }
-
-  fun removeObserver(observer: Observer) {
-    receivers.remove(observer)
-  }
 
   fun register() {
     if (registered) return
@@ -106,6 +97,7 @@ class Broadcasts(private val context: Application) {
           addAction(Intents.ACTION_PROFILE_LOADED)
         },
       )
+      registered = true
 
       clashRunning = StatusClient(context).currentProfile() != null
     } catch (e: Exception) {
@@ -118,6 +110,7 @@ class Broadcasts(private val context: Application) {
 
     try {
       context.unregisterReceiver(broadcastReceiver)
+      registered = false
 
       clashRunning = false
     } catch (e: Exception) {

@@ -28,8 +28,8 @@ import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class MainViewModel(app: Application) :
-  AndroidViewModel(app), DefaultLifecycleObserver, Broadcasts.Observer {
+class MainViewModel(app: Application) : AndroidViewModel(app), DefaultLifecycleObserver {
+  private var broadcastEventsJob: Job? = null
   private var trafficPollingJob: Job? = null
   private var fetchJob: Job? = null
 
@@ -42,36 +42,39 @@ class MainViewModel(app: Application) :
     field = MutableStateFlow<EventState>(EventState.Idle)
 
   override fun onStart(owner: LifecycleOwner) {
-    Remote.broadcasts.addObserver(this)
+    broadcastEventsJob?.cancel()
+    broadcastEventsJob = viewModelScope.launch {
+      Remote.broadcasts.event.collect { event ->
+        when (event) {
+          Broadcasts.Event.ServiceRecreated,
+          Broadcasts.Event.Started,
+          Broadcasts.Event.ProfileChanged,
+          Broadcasts.Event.ProfileLoaded -> fetch()
+          is Broadcasts.Event.Stopped -> {
+            event.cause?.let { message -> eventState.update { EventState.ShowMessage(message) } }
+            fetch()
+          }
+          is Broadcasts.Event.ProfileUpdateCompleted,
+          is Broadcasts.Event.ProfileUpdateFailed -> Unit
+        }
+      }
+    }
     startTrafficPolling()
     fetch()
   }
 
   override fun onStop(owner: LifecycleOwner) {
-    Remote.broadcasts.removeObserver(this)
+    broadcastEventsJob?.cancel()
+    broadcastEventsJob = null
     trafficPollingJob?.cancel()
     trafficPollingJob = null
   }
 
   override fun onCleared() {
+    broadcastEventsJob?.cancel()
     trafficPollingJob?.cancel()
-    Remote.broadcasts.removeObserver(this)
     super.onCleared()
   }
-
-  override fun onServiceRecreated() = fetch()
-
-  override fun onStarted() = fetch()
-
-  override fun onStopped(cause: String?) {
-    cause?.let { message -> eventState.update { EventState.ShowMessage(message) } }
-
-    fetch()
-  }
-
-  override fun onProfileChanged() = fetch()
-
-  override fun onProfileLoaded() = fetch()
 
   fun toggleStatus() {
     if (clashRunning.value) {

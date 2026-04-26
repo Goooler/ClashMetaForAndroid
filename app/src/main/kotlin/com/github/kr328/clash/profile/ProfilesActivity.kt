@@ -33,6 +33,12 @@ class ProfilesActivity : DesignActivity<ProfilesDesign>() {
             Event.ProfileChanged -> {
               design.fetch()
             }
+            is Event.ProfileUpdateCompleted -> {
+              it.uuid?.let(::showProfileUpdateCompleted)
+            }
+            is Event.ProfileUpdateFailed -> {
+              it.uuid?.let { uuid -> showProfileUpdateFailed(uuid, it.reason) }
+            }
             else -> Unit
           }
         }
@@ -76,8 +82,7 @@ class ProfilesActivity : DesignActivity<ProfilesDesign>() {
     withProfile { patchProfiles(queryAll()) }
   }
 
-  override fun onProfileUpdateCompleted(uuid: UUID?) {
-    if (uuid == null) return
+  private fun showProfileUpdateCompleted(uuid: UUID) {
     launch {
       var name: String? = null
       withProfile { name = queryByUUID(uuid)?.name }
@@ -88,8 +93,7 @@ class ProfilesActivity : DesignActivity<ProfilesDesign>() {
     }
   }
 
-  override fun onProfileUpdateFailed(uuid: UUID?, reason: String?) {
-    if (uuid == null) return
+  private fun showProfileUpdateFailed(uuid: UUID, reason: String?) {
     launch {
       var name: String? = null
       withProfile { name = queryByUUID(uuid)?.name }
