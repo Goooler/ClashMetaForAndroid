@@ -1,7 +1,5 @@
 package com.github.kr328.clash.profile.ui
 
-import android.app.Activity
-import android.content.Context
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -25,22 +23,28 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.fromHtml
 import androidx.compose.ui.unit.Dp
+import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.github.kr328.clash.R
-import com.github.kr328.clash.core.model.FetchStatus
+import com.github.kr328.clash.profile.vm.PropertiesViewModel
 import com.github.kr328.clash.service.model.Profile
-import com.github.kr328.clash.ui.Design
 import com.github.kr328.clash.ui.component.MihomoScaffold
 import com.github.kr328.clash.ui.component.ModelProgressBarDialog
 import com.github.kr328.clash.ui.component.ModelProgressBarState
@@ -52,108 +56,72 @@ import com.github.kr328.clash.ui.theme.mihomoDimens
 import com.github.kr328.clash.util.ValidatorAutoUpdateInterval
 import com.github.kr328.clash.util.ValidatorHttpUrl
 import com.github.kr328.clash.util.ValidatorNotBlank
+import com.github.kr328.clash.util.toast
 import java.util.UUID
 import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.minutes
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 
-class PropertiesDesign(context: Context) : Design<PropertiesDesign.Request>(context) {
-  sealed interface Request {
-    data object Commit : Request
+@Composable
+fun PropertiesScreen(
+  uuid: UUID,
+  modifier: Modifier = Modifier,
+  viewModel: PropertiesViewModel = viewModel(),
+  onBrowseFiles: (UUID) -> Unit,
+  onFinish: (Boolean) -> Unit,
+) {
+  val lifecycleOwner = LocalLifecycleOwner.current
+  val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+  val eventState by viewModel.eventState.collectAsStateWithLifecycle()
+  val context = LocalContext.current
 
-    data object BrowseFiles : Request
+  LaunchedEffect(uuid) { viewModel.init(uuid = uuid) }
+
+  DisposableEffect(lifecycleOwner, viewModel) {
+    lifecycleOwner.lifecycle.addObserver(viewModel)
+    onDispose { lifecycleOwner.lifecycle.removeObserver(viewModel) }
   }
 
-  private var profileState by mutableStateOf<Profile?>(null)
-  private var originalProfileState by mutableStateOf<Profile?>(null)
-  private var processingState by mutableStateOf(false)
-  private val progressBarState = ModelProgressBarState()
-
-  @Composable
-  override fun Content() = MihomoTheme {
-    profileState?.let { profile ->
-      PropertiesScreen(
-        profile = profile,
-        processing = processingState,
-        progressBarState = progressBarState,
-        hasUnsavedChanges =
-          originalProfileState?.let { original -> hasUnsavedChanges(profile, original) } == true,
-        onBrowseFiles = { requests.trySend(Request.BrowseFiles) },
-        onCommit = { requests.trySend(Request.Commit) },
-        onRequestClose = { (context as? Activity)?.finish() },
-        onNameChanged = { name -> this@PropertiesDesign.profile = profile.copy(name = name) },
-        onUrlChanged = { url -> this@PropertiesDesign.profile = profile.copy(source = url) },
-        onIntervalChanged = { interval ->
-          this@PropertiesDesign.profile = profile.copy(interval = interval)
-        },
-      )
+  LaunchedEffect(eventState) {
+    when (val event = eventState) {
+      PropertiesViewModel.EventState.Idle -> Unit
+      is PropertiesViewModel.EventState.BrowseFiles -> {
+        onBrowseFiles(event.uuid)
+      }
+      is PropertiesViewModel.EventState.Finish -> {
+        onFinish(event.success)
+      }
+      is PropertiesViewModel.EventState.ShowMessage -> {
+        context.toast(event.message)
+      }
     }
+    viewModel.consumeEvent()
   }
 
-  var profile: Profile
-    get() = requireNotNull(profileState)
-    set(value) {
-      if (originalProfileState == null) {
-        originalProfileState = value.copy()
-      }
-      profileState = value
-    }
-
-  suspend fun withProcessing(executeTask: suspend (suspend (FetchStatus) -> Unit) -> Unit) =
-    try {
-      withContext(Dispatchers.Main) {
-        processingState = true
-        progressBarState.visible = true
-        progressBarState.isIndeterminate = true
-        progressBarState.text = context.getString(R.string.initializing)
-        progressBarState.progress = 0
-        progressBarState.max = 0
-      }
-
-      executeTask { status -> withContext(Dispatchers.Main) { progressBarState.applyFrom(status) } }
-    } finally {
-      withContext(Dispatchers.Main) {
-        progressBarState.visible = false
-        progressBarState.text = null
-        processingState = false
-      }
-    }
-
-  private fun hasUnsavedChanges(profile: Profile, original: Profile): Boolean {
-    return profile.name != original.name ||
-      profile.source != original.source ||
-      profile.interval != original.interval
-  }
-
-  private fun ModelProgressBarState.applyFrom(status: FetchStatus) {
-    when (status.action) {
-      FetchStatus.Action.FetchConfiguration -> {
-        text = context.getString(R.string.format_fetching_configuration, status.args[0])
-        isIndeterminate = true
-      }
-      FetchStatus.Action.FetchProviders -> {
-        text = context.getString(R.string.format_fetching_provider, status.args[0])
-        isIndeterminate = false
-        max = status.max
-        progress = status.progress
-      }
-      FetchStatus.Action.Verifying -> {
-        text = context.getString(R.string.verifying)
-        isIndeterminate = false
-        max = status.max
-        progress = status.progress
-      }
-    }
+  val profile = uiState.profile
+  if (profile != null) {
+    PropertiesContent(
+      modifier = modifier,
+      profile = profile,
+      processing = uiState.processing,
+      progressState = uiState.progress,
+      hasUnsavedChanges = uiState.hasUnsavedChanges,
+      onBrowseFiles = viewModel::onBrowseFiles,
+      onCommit = viewModel::onCommit,
+      onRequestClose = viewModel::onRequestClose,
+      onNameChanged = viewModel::onNameChanged,
+      onUrlChanged = viewModel::onUrlChanged,
+      onIntervalChanged = viewModel::onIntervalChanged,
+    )
   }
 }
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
-private fun PropertiesScreen(
+private fun PropertiesContent(
+  modifier: Modifier = Modifier,
   profile: Profile,
   processing: Boolean,
-  progressBarState: ModelProgressBarState,
+  progressState: PropertiesViewModel.ProgressState,
   hasUnsavedChanges: Boolean,
   onBrowseFiles: () -> Unit,
   onCommit: () -> Unit,
@@ -170,6 +138,15 @@ private fun PropertiesScreen(
   var showInputUrlDialog by rememberSaveable { mutableStateOf(false) }
   var showInputIntervalDialog by rememberSaveable { mutableStateOf(false) }
 
+  val progressBarState = remember { ModelProgressBarState() }
+  with(progressBarState) {
+    visible = progressState.visible
+    isIndeterminate = progressState.isIndeterminate
+    text = progressState.text
+    progress = progressState.progress
+    max = progressState.max
+  }
+
   val onBack = {
     when {
       processing -> Unit
@@ -182,6 +159,7 @@ private fun PropertiesScreen(
   BackHandler(onBack = onBack)
 
   MihomoScaffold(
+    modifier = modifier,
     title = stringResource(R.string.properties),
     onBack = onBack,
     scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(),
@@ -378,8 +356,8 @@ private fun PropertiesActionItem(
 
 @PreviewMihomo
 @Composable
-private fun PropertiesScreenPreview() = MihomoTheme {
-  PropertiesScreen(
+private fun PropertiesContentPreview() = MihomoTheme {
+  PropertiesContent(
     profile =
       Profile(
         uuid = UUID(0, 0),
@@ -397,7 +375,7 @@ private fun PropertiesScreenPreview() = MihomoTheme {
         pending = false,
       ),
     processing = false,
-    progressBarState = ModelProgressBarState(),
+    progressState = PropertiesViewModel.ProgressState(),
     hasUnsavedChanges = false,
     onBrowseFiles = {},
     onCommit = {},
