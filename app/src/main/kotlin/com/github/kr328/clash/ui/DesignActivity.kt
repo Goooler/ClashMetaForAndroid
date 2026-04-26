@@ -8,6 +8,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContract
 import androidx.core.content.getSystemService
+import androidx.lifecycle.lifecycleScope
 import com.github.kr328.clash.core.bridge.ClashException
 import com.github.kr328.clash.model.DarkMode
 import com.github.kr328.clash.remote.Broadcasts
@@ -21,6 +22,7 @@ import java.util.concurrent.atomic.AtomicInteger
 import kotlin.coroutines.resume
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.cancel
@@ -29,7 +31,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
 
-abstract class BaseActivity : ComponentActivity(), Broadcasts.Observer {
+abstract class BaseActivity : ComponentActivity() {
   protected val uiStore by lazy { UiStore(this) }
 
   override fun onCreate(savedInstanceState: Bundle?) {
@@ -40,16 +42,6 @@ abstract class BaseActivity : ComponentActivity(), Broadcasts.Observer {
     checkNotNull(getSystemService<ActivityManager>()).appTasks.forEach { task ->
       task.setExcludeFromRecents(uiStore.hideFromRecents)
     }
-  }
-
-  override fun onStart() {
-    super.onStart()
-    Remote.broadcasts.addObserver(this)
-  }
-
-  override fun onStop() {
-    super.onStop()
-    Remote.broadcasts.removeObserver(this)
   }
 }
 
@@ -62,6 +54,7 @@ abstract class DesignActivity<D : Design<*>> : BaseActivity(), CoroutineScope by
   protected var design: D? = null
 
   private val nextRequestKey = AtomicInteger(0)
+  private var broadcastEventsJob: Job? = null
   private var defer: suspend () -> Unit = {}
   private var deferRunning = false
   private var dayNight: DayNight = DayNight.Day
@@ -85,12 +78,35 @@ abstract class DesignActivity<D : Design<*>> : BaseActivity(), CoroutineScope by
 
   override fun onStart() {
     super.onStart()
+    broadcastEventsJob = lifecycleScope.launch {
+      Remote.broadcasts.event.collect { event ->
+        when (event) {
+          Broadcasts.Event.ServiceRecreated -> events.trySend(Event.ServiceRecreated)
+          Broadcasts.Event.Started -> events.trySend(Event.ClashStart)
+          is Broadcasts.Event.Stopped -> {
+            events.trySend(Event.ClashStop)
+
+            if (event.cause != null && activityStarted) {
+              launch { design?.showExceptionSnackbar(ClashException(event.cause)) }
+            }
+          }
+          Broadcasts.Event.ProfileChanged -> events.trySend(Event.ProfileChanged)
+          is Broadcasts.Event.ProfileUpdateCompleted ->
+            events.trySend(Event.ProfileUpdateCompleted(event.uuid))
+          is Broadcasts.Event.ProfileUpdateFailed ->
+            events.trySend(Event.ProfileUpdateFailed(event.uuid, event.reason))
+          Broadcasts.Event.ProfileLoaded -> events.trySend(Event.ProfileLoaded)
+        }
+      }
+    }
     activityStarted = true
     events.trySend(Event.ActivityStart)
   }
 
   override fun onStop() {
     super.onStop()
+    broadcastEventsJob?.cancel()
+    broadcastEventsJob = null
     activityStarted = false
     events.trySend(Event.ActivityStop)
   }
@@ -118,38 +134,6 @@ abstract class DesignActivity<D : Design<*>> : BaseActivity(), CoroutineScope by
 
     if (queryDayNight(newConfig) != dayNight) {
       ApplicationObserver.createdActivities.forEach { it.recreate() }
-    }
-  }
-
-  override fun onProfileChanged() {
-    events.trySend(Event.ProfileChanged)
-  }
-
-  override fun onProfileUpdateCompleted(uuid: UUID?) {
-    events.trySend(Event.ProfileUpdateCompleted)
-  }
-
-  override fun onProfileUpdateFailed(uuid: UUID?, reason: String?) {
-    events.trySend(Event.ProfileUpdateFailed)
-  }
-
-  override fun onProfileLoaded() {
-    events.trySend(Event.ProfileLoaded)
-  }
-
-  override fun onServiceRecreated() {
-    events.trySend(Event.ServiceRecreated)
-  }
-
-  override fun onStarted() {
-    events.trySend(Event.ClashStart)
-  }
-
-  override fun onStopped(cause: String?) {
-    events.trySend(Event.ClashStop)
-
-    if (cause != null && activityStarted) {
-      launch { design?.showExceptionSnackbar(ClashException(cause)) }
     }
   }
 
@@ -198,8 +182,8 @@ abstract class DesignActivity<D : Design<*>> : BaseActivity(), CoroutineScope by
 
     data object ProfileChanged : Event
 
-    data object ProfileUpdateCompleted : Event
+    data class ProfileUpdateCompleted(val uuid: UUID?) : Event
 
-    data object ProfileUpdateFailed : Event
+    data class ProfileUpdateFailed(val uuid: UUID?, val reason: String?) : Event
   }
 }
