@@ -9,38 +9,33 @@ import com.github.kr328.clash.common.compat.registerReceiverCompat
 import com.github.kr328.clash.common.constants.Intents
 import com.github.kr328.clash.common.log.Log
 import java.util.UUID
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 
 class Broadcasts(private val context: Application) {
   sealed interface Event {
-    val id: Long
+    data object ServiceRecreated : Event
 
-    data object NotStart : Event {
-      override val id: Long = 0L
-    }
+    data object Started : Event
 
-    data class ServiceRecreated(override val id: Long) : Event
+    data class Stopped(val cause: String?) : Event
 
-    data class Started(override val id: Long) : Event
+    data object ProfileChanged : Event
 
-    data class Stopped(override val id: Long, val cause: String?) : Event
+    data class ProfileUpdateCompleted(val uuid: UUID?) : Event
 
-    data class ProfileChanged(override val id: Long) : Event
+    data class ProfileUpdateFailed(val uuid: UUID?, val reason: String?) : Event
 
-    data class ProfileUpdateCompleted(override val id: Long, val uuid: UUID?) : Event
-
-    data class ProfileUpdateFailed(override val id: Long, val uuid: UUID?, val reason: String?) :
-      Event
-
-    data class ProfileLoaded(override val id: Long) : Event
+    data object ProfileLoaded : Event
   }
 
   val clashRunningFlow: StateFlow<Boolean>
     field = MutableStateFlow(false)
 
-  val event: StateFlow<Event>
-    field = MutableStateFlow<Event>(Event.NotStart)
+  val event: SharedFlow<Event>
+    field = MutableSharedFlow(extraBufferCapacity = 64)
 
   var clashRunning: Boolean
     get() = clashRunningFlow.value
@@ -49,7 +44,6 @@ class Broadcasts(private val context: Application) {
     }
 
   private var registered = false
-  private var nextEventId = 0L
   private val broadcastReceiver =
     object : BroadcastReceiver() {
       override fun onReceive(context: Context?, intent: Intent?) {
@@ -58,41 +52,34 @@ class Broadcasts(private val context: Application) {
         when (intent?.action) {
           Intents.ACTION_SERVICE_RECREATED -> {
             clashRunning = false
-            emitEvent { id -> Event.ServiceRecreated(id) }
+            event.tryEmit(Event.ServiceRecreated)
           }
           Intents.ACTION_CLASH_STARTED -> {
             clashRunning = true
-            emitEvent { id -> Event.Started(id) }
+            event.tryEmit(Event.Started)
           }
           Intents.ACTION_CLASH_STOPPED -> {
             clashRunning = false
-            emitEvent { id -> Event.Stopped(id, intent.getStringExtra(Intents.EXTRA_STOP_REASON)) }
+            event.tryEmit(Event.Stopped(intent.getStringExtra(Intents.EXTRA_STOP_REASON)))
           }
-          Intents.ACTION_PROFILE_CHANGED -> emitEvent { id -> Event.ProfileChanged(id) }
+          Intents.ACTION_PROFILE_CHANGED -> event.tryEmit(Event.ProfileChanged)
           Intents.ACTION_PROFILE_UPDATE_COMPLETED ->
-            emitEvent { id ->
+            event.tryEmit(
               Event.ProfileUpdateCompleted(
-                id,
-                UUID.fromString(intent.getStringExtra(Intents.EXTRA_UUID)),
+                UUID.fromString(intent.getStringExtra(Intents.EXTRA_UUID))
               )
-            }
+            )
           Intents.ACTION_PROFILE_UPDATE_FAILED ->
-            emitEvent { id ->
+            event.tryEmit(
               Event.ProfileUpdateFailed(
-                id,
                 UUID.fromString(intent.getStringExtra(Intents.EXTRA_UUID)),
                 intent.getStringExtra(Intents.EXTRA_FAIL_REASON),
               )
-            }
-          Intents.ACTION_PROFILE_LOADED -> emitEvent { id -> Event.ProfileLoaded(id) }
+            )
+          Intents.ACTION_PROFILE_LOADED -> event.tryEmit(Event.ProfileLoaded)
         }
       }
     }
-
-  private fun emitEvent(block: (Long) -> Event) {
-    nextEventId += 1
-    event.value = block(nextEventId)
-  }
 
   fun register() {
     if (registered) return

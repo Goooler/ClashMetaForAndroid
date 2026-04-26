@@ -44,24 +44,18 @@ class MainViewModel(app: Application) : AndroidViewModel(app), DefaultLifecycleO
   override fun onStart(owner: LifecycleOwner) {
     broadcastEventsJob?.cancel()
     broadcastEventsJob = viewModelScope.launch {
-      var lastEventId = Remote.broadcasts.event.value.id
-
       Remote.broadcasts.event.collect { event ->
-        if (event is Broadcasts.Event.NotStart || event.id <= lastEventId) return@collect
-        lastEventId = event.id
-
         when (event) {
-          is Broadcasts.Event.ServiceRecreated,
-          is Broadcasts.Event.Started,
-          is Broadcasts.Event.ProfileChanged,
-          is Broadcasts.Event.ProfileLoaded -> fetch()
+          Broadcasts.Event.ServiceRecreated,
+          Broadcasts.Event.Started,
+          Broadcasts.Event.ProfileChanged,
+          Broadcasts.Event.ProfileLoaded -> fetch()
           is Broadcasts.Event.Stopped -> {
             event.cause?.let { message -> eventState.update { EventState.ShowMessage(message) } }
             fetch()
           }
           is Broadcasts.Event.ProfileUpdateCompleted,
           is Broadcasts.Event.ProfileUpdateFailed -> Unit
-          Broadcasts.Event.NotStart -> Unit
         }
       }
     }
