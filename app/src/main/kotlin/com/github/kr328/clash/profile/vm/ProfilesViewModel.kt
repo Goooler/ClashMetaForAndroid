@@ -168,7 +168,8 @@ class ProfilesViewModel(app: Application) : AndroidViewModel(app), DefaultLifecy
 
   private suspend fun showProfileUpdateFailed(uuid: UUID, reason: String?) {
     val name = withProfile { queryByUUID(uuid)?.name }
-    val displayReason = reason?.takeUnless { it.isBlank() } ?: application.getString(R.string.unknown)
+    val displayReason =
+      reason?.takeUnless { it.isBlank() } ?: application.getString(R.string.unknown)
     eventState.value =
       EventState.ShowEditableMessage(
         application.getString(R.string.toast_profile_updated_failed, name, displayReason),
