@@ -42,7 +42,10 @@ class MainViewModel(app: Application) :
     viewModelScope.launch {
       while (isActive) {
         delay(1.seconds)
-        if (clashRunning.value) fetchTraffic()
+        if (clashRunning.value) {
+          val total = withClash { queryTrafficTotal() }
+          uiState.update { it.copy(forwarded = total.trafficTotal()) }
+        }
       }
     }
   }
@@ -66,12 +69,11 @@ class MainViewModel(app: Application) :
   override fun onStarted() = fetch()
 
   override fun onStopped(cause: String?) {
-    cause?.let { message ->
-      eventState.update { EventState.ShowMessage(message) }
-    }
+    cause?.let { message -> eventState.update { EventState.ShowMessage(message) } }
 
     fetch()
   }
+
   override fun onProfileChanged() = fetch()
 
   override fun onProfileLoaded() = fetch()
@@ -130,13 +132,6 @@ class MainViewModel(app: Application) :
     }
   }
 
-  private fun fetchTraffic() {
-    viewModelScope.launch {
-      val total = withClash { queryTrafficTotal() }
-      uiState.update { it.copy(forwarded = total.trafficTotal()) }
-    }
-  }
-
   private fun startClash() {
     viewModelScope.launch {
       val active = withProfile { queryActive() }
@@ -152,7 +147,8 @@ class MainViewModel(app: Application) :
           eventState.value = EventState.RequestVpnPermission(vpnRequest)
         }
       } catch (_: Exception) {
-        eventState.value = EventState.ShowMessage(application.getString(R.string.unable_to_start_vpn))
+        eventState.value =
+          EventState.ShowMessage(application.getString(R.string.unable_to_start_vpn))
       }
     }
   }
