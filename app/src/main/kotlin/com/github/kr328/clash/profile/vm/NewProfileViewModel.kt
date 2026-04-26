@@ -61,7 +61,7 @@ class NewProfileViewModel(app: Application) : AndroidViewModel(app) {
         }
         eventState.value = EventState.LaunchProperties(uuid)
       } catch (e: Exception) {
-        eventState.value = EventState.ShowMessage(e.message ?: "")
+        eventState.value = EventState.ShowMessage(e.message ?: application.getString(R.string.unknown))
       }
     }
   }
@@ -81,7 +81,7 @@ class NewProfileViewModel(app: Application) : AndroidViewModel(app) {
             }
             eventState.value = EventState.LaunchProperties(uuid)
           } catch (e: Exception) {
-            eventState.value = EventState.ShowMessage(e.message ?: "")
+            eventState.value = EventState.ShowMessage(e.message ?: application.getString(R.string.unknown))
           }
         }
       }
@@ -106,7 +106,7 @@ class NewProfileViewModel(app: Application) : AndroidViewModel(app) {
         val uuid = withProfile { create(type, name) }
         eventState.value = EventState.LaunchProperties(uuid)
       } catch (e: Exception) {
-        eventState.value = EventState.ShowMessage(e.message ?: "")
+        eventState.value = EventState.ShowMessage(e.message ?: application.getString(R.string.unknown))
       }
     }
   }
