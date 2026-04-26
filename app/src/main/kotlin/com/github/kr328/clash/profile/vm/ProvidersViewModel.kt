@@ -124,7 +124,14 @@ class ProvidersViewModel(app: Application) : AndroidViewModel(app), DefaultLifec
           current.providers.associateBy { "${it.provider.type}-${it.provider.name}" }
         val newStates = providers.map { provider ->
           val key = "${provider.type}-${provider.name}"
-          existingMap[key]?.copy(provider = provider)
+          existingMap[key]?.let { existing ->
+              existing.copy(
+                provider = provider,
+                updatedAt =
+                  if (existing.updating) existing.updatedAt
+                  else maxOf(existing.updatedAt, provider.updatedAt),
+              )
+            }
             ?: UiState.ProviderItemState(
               provider = provider,
               updatedAt = provider.updatedAt,
