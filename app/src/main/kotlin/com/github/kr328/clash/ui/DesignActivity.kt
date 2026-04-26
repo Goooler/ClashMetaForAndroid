@@ -79,10 +79,15 @@ abstract class DesignActivity<D : Design<*>> : BaseActivity(), CoroutineScope by
   override fun onStart() {
     super.onStart()
     broadcastEventsJob = lifecycleScope.launch {
+      var lastEventId = Remote.broadcasts.event.value.id
+
       Remote.broadcasts.event.collect { event ->
+        if (event is Broadcasts.Event.NotStart || event.id <= lastEventId) return@collect
+        lastEventId = event.id
+
         when (event) {
-          Broadcasts.Event.ServiceRecreated -> events.trySend(Event.ServiceRecreated)
-          Broadcasts.Event.Started -> events.trySend(Event.ClashStart)
+          is Broadcasts.Event.ServiceRecreated -> events.trySend(Event.ServiceRecreated)
+          is Broadcasts.Event.Started -> events.trySend(Event.ClashStart)
           is Broadcasts.Event.Stopped -> {
             events.trySend(Event.ClashStop)
 
@@ -90,12 +95,13 @@ abstract class DesignActivity<D : Design<*>> : BaseActivity(), CoroutineScope by
               launch { design?.showExceptionSnackbar(ClashException(event.cause)) }
             }
           }
-          Broadcasts.Event.ProfileChanged -> events.trySend(Event.ProfileChanged)
+          is Broadcasts.Event.ProfileChanged -> events.trySend(Event.ProfileChanged)
           is Broadcasts.Event.ProfileUpdateCompleted ->
             events.trySend(Event.ProfileUpdateCompleted(event.uuid))
           is Broadcasts.Event.ProfileUpdateFailed ->
             events.trySend(Event.ProfileUpdateFailed(event.uuid, event.reason))
-          Broadcasts.Event.ProfileLoaded -> events.trySend(Event.ProfileLoaded)
+          is Broadcasts.Event.ProfileLoaded -> events.trySend(Event.ProfileLoaded)
+          Broadcasts.Event.NotStart -> Unit
         }
       }
     }
