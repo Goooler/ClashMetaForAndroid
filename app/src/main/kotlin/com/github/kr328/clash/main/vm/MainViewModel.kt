@@ -31,6 +31,7 @@ import kotlinx.coroutines.withContext
 class MainViewModel(app: Application) :
   AndroidViewModel(app), DefaultLifecycleObserver, Broadcasts.Observer {
   private var trafficPollingJob: Job? = null
+  private var fetchJob: Job? = null
 
   val clashRunning: StateFlow<Boolean> = Remote.broadcasts.clashRunningFlow
 
@@ -105,7 +106,8 @@ class MainViewModel(app: Application) :
   }
 
   private fun fetch() {
-    viewModelScope.launch {
+    fetchJob?.cancel()
+    fetchJob = viewModelScope.launch {
       val state = withClash { queryTunnelState() }
       val providers = withClash { queryProviders() }
       val mode =
