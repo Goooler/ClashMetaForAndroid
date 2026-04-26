@@ -1,0 +1,247 @@
+package com.github.kr328.clash.profile.vm
+
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.DefaultLifecycleObserver
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.viewModelScope
+import com.github.kr328.clash.R
+import com.github.kr328.clash.core.model.FetchStatus
+import com.github.kr328.clash.service.model.Profile
+import com.github.kr328.clash.util.withProfile
+import java.util.UUID
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+
+class PropertiesViewModel(app: Application) : AndroidViewModel(app), DefaultLifecycleObserver {
+  private var rootUuid: UUID? = null
+  private var canceled = false
+
+  val uiState: StateFlow<UiState>
+    field = MutableStateFlow(UiState())
+
+  val eventState: StateFlow<EventState>
+    field = MutableStateFlow<EventState>(EventState.Idle)
+
+  fun init(uuid: UUID) {
+    if (rootUuid != null) return
+    rootUuid = uuid
+
+    viewModelScope.launch {
+      val profile = withProfile { queryByUUID(uuid) }
+      if (profile == null) {
+        eventState.value = EventState.Finish(false)
+        return@launch
+      }
+      uiState.update { it.copy(profile = profile, originalProfile = profile.copy()) }
+    }
+  }
+
+  fun consumeEvent() {
+    eventState.value = EventState.Idle
+  }
+
+  override fun onStop(owner: LifecycleOwner) {
+    if (!canceled && uiState.value.hasUnsavedChanges) {
+      val profile = uiState.value.profile ?: return
+      viewModelScope.launch {
+        runCatching {
+          withProfile { patch(profile.uuid, profile.name, profile.source, profile.interval) }
+        }
+      }
+    }
+  }
+
+  @OptIn(DelicateCoroutinesApi::class)
+  override fun onCleared() {
+    rootUuid?.let { uuid ->
+      GlobalScope.launch(Dispatchers.IO) {
+        try {
+          withProfile { release(uuid) }
+        } catch (e: Exception) {
+          // ignore
+        }
+      }
+    }
+    super.onCleared()
+  }
+
+  fun onNameChanged(name: String) {
+    uiState.update { current ->
+      val profile = current.profile?.copy(name = name) ?: return@update current
+      current.copy(
+        profile = profile,
+        hasUnsavedChanges = hasUnsavedChanges(profile, current.originalProfile),
+      )
+    }
+  }
+
+  fun onUrlChanged(url: String) {
+    uiState.update { current ->
+      val profile = current.profile?.copy(source = url) ?: return@update current
+      current.copy(
+        profile = profile,
+        hasUnsavedChanges = hasUnsavedChanges(profile, current.originalProfile),
+      )
+    }
+  }
+
+  fun onIntervalChanged(interval: Long) {
+    uiState.update { current ->
+      val profile = current.profile?.copy(interval = interval) ?: return@update current
+      current.copy(
+        profile = profile,
+        hasUnsavedChanges = hasUnsavedChanges(profile, current.originalProfile),
+      )
+    }
+  }
+
+  fun onBrowseFiles() {
+    val uuid = rootUuid ?: return
+    eventState.value = EventState.BrowseFiles(uuid)
+  }
+
+  fun onRequestClose() {
+    canceled = true
+    eventState.value = EventState.Finish(false)
+  }
+
+  fun onCommit() {
+    val profile = uiState.value.profile ?: return
+
+    if (profile.name.isBlank()) {
+      eventState.value =
+        EventState.ShowMessage(getApplication<Application>().getString(R.string.empty_name))
+      return
+    }
+
+    if (profile.type != Profile.Type.File && profile.source.isBlank()) {
+      eventState.value =
+        EventState.ShowMessage(getApplication<Application>().getString(R.string.invalid_url))
+      return
+    }
+
+    viewModelScope.launch {
+      try {
+        withProcessing { updateStatus ->
+          withProfile {
+            patch(profile.uuid, profile.name, profile.source, profile.interval)
+            coroutineScope { commit(profile.uuid) { launch { updateStatus(it) } } }
+          }
+        }
+        canceled = true
+        eventState.value = EventState.Finish(true)
+      } catch (e: Exception) {
+        eventState.value = EventState.ShowMessage(e.message ?: "Unknown error")
+      }
+    }
+  }
+
+  private suspend fun withProcessing(executeTask: suspend (suspend (FetchStatus) -> Unit) -> Unit) {
+    try {
+      withContext(Dispatchers.Main) {
+        uiState.update {
+          it.copy(
+            processing = true,
+            progress =
+              ProgressState(
+                visible = true,
+                isIndeterminate = true,
+                text = getApplication<Application>().getString(R.string.initializing),
+                progress = 0,
+                max = 0,
+              ),
+          )
+        }
+      }
+
+      executeTask { status -> withContext(Dispatchers.Main) { applyProgressStatus(status) } }
+    } finally {
+      withContext(Dispatchers.Main) {
+        uiState.update {
+          it.copy(processing = false, progress = it.progress.copy(visible = false, text = null))
+        }
+      }
+    }
+  }
+
+  private fun applyProgressStatus(status: FetchStatus) {
+    uiState.update { current ->
+      val context = getApplication<Application>()
+      val newProgress =
+        when (status.action) {
+          FetchStatus.Action.FetchConfiguration -> {
+            current.progress.copy(
+              text =
+                context.getString(
+                  R.string.format_fetching_configuration,
+                  status.args.getOrNull(0) ?: "",
+                ),
+              isIndeterminate = true,
+            )
+          }
+          FetchStatus.Action.FetchProviders -> {
+            current.progress.copy(
+              text =
+                context.getString(
+                  R.string.format_fetching_provider,
+                  status.args.getOrNull(0) ?: "",
+                ),
+              isIndeterminate = false,
+              max = status.max,
+              progress = status.progress,
+            )
+          }
+          FetchStatus.Action.Verifying -> {
+            current.progress.copy(
+              text = context.getString(R.string.verifying),
+              isIndeterminate = false,
+              max = status.max,
+              progress = status.progress,
+            )
+          }
+        }
+      current.copy(progress = newProgress)
+    }
+  }
+
+  private fun hasUnsavedChanges(profile: Profile, original: Profile?): Boolean {
+    if (original == null) return false
+    return profile.name != original.name ||
+      profile.source != original.source ||
+      profile.interval != original.interval
+  }
+
+  data class UiState(
+    val profile: Profile? = null,
+    val originalProfile: Profile? = null,
+    val processing: Boolean = false,
+    val progress: ProgressState = ProgressState(),
+    val hasUnsavedChanges: Boolean = false,
+  )
+
+  data class ProgressState(
+    val visible: Boolean = false,
+    val isIndeterminate: Boolean = false,
+    val text: String? = null,
+    val progress: Int = 0,
+    val max: Int = 0,
+  )
+
+  sealed interface EventState {
+    data object Idle : EventState
+
+    data class Finish(val success: Boolean) : EventState
+
+    data class BrowseFiles(val uuid: UUID) : EventState
+
+    data class ShowMessage(val message: String) : EventState
+  }
+}
