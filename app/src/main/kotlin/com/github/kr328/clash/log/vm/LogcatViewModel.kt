@@ -238,7 +238,7 @@ class LogcatViewModel(app: Application) : AndroidViewModel(app), DefaultLifecycl
         application.bindService(
           LogcatService::class.intent,
           connection,
-          Application.BIND_AUTO_CREATE,
+          android.content.Context.BIND_AUTO_CREATE,
         )
 
       if (!bound) {
