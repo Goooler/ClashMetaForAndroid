@@ -122,9 +122,9 @@ class ProvidersViewModel(app: Application) : AndroidViewModel(app), DefaultLifec
       val providers = withClash { queryProviders().sorted() }
       uiState.update { current ->
         val existingMap =
-          current.providers.associateBy { "${it.provider.type}-${it.provider.name}" }
+          current.providers.associateBy { providerKey(it.provider) }
         val newStates = providers.map { provider ->
-          val key = "${provider.type}-${provider.name}"
+          val key = providerKey(provider)
           existingMap[key]?.let { existing ->
             existing.copy(
               provider = provider,
