@@ -1,6 +1,5 @@
 package com.github.kr328.clash.settings.ui
 
-import android.content.Context
 import android.widget.ImageView
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -33,10 +32,10 @@ import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.mutableStateSetOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
@@ -52,11 +51,12 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.graphics.drawable.toDrawable
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.github.kr328.clash.R
 import com.github.kr328.clash.model.AppInfo
 import com.github.kr328.clash.model.AppInfoSort
-import com.github.kr328.clash.store.UiStore
-import com.github.kr328.clash.ui.Design
+import com.github.kr328.clash.settings.vm.AccessControlViewModel
 import com.github.kr328.clash.ui.component.MihomoScaffold
 import com.github.kr328.clash.ui.theme.MihomoTheme
 import com.github.kr328.clash.ui.theme.PreviewMihomo
@@ -67,100 +67,37 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.withContext
 
-class AccessControlDesign(
-  context: Context,
-  private val uiStore: UiStore,
-  private val selected: MutableSet<String>,
-) : Design<AccessControlDesign.Request>(context) {
-  sealed interface Request {
-    data object ReloadApps : Request
+@Composable
+fun AccessControlScreen(
+  modifier: Modifier = Modifier,
+  viewModel: AccessControlViewModel = viewModel(),
+) {
+  val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-    data object SelectAll : Request
+  DisposableEffect(viewModel) { onDispose { viewModel.persistSelection() } }
 
-    data object SelectNone : Request
-
-    data object SelectInvert : Request
-
-    data object Import : Request
-
-    data object Export : Request
-  }
-
-  private var appsState by mutableStateOf<List<AppInfo>>(emptyList())
-  private val selectedState = mutableStateSetOf<String>().apply { addAll(selected) }
-
-  val apps: List<AppInfo>
-    get() = appsState
-
-  @Composable
-  override fun Content() = MihomoTheme {
-    AccessControlScreen(
-      apps = appsState,
-      selected = selectedState,
-      initialSort = uiStore.accessControlSort,
-      initialReverse = uiStore.accessControlReverse,
-      initialShowSystemApps = uiStore.accessControlSystemApp,
-      onToggleApp = ::toggleApp,
-      onSelectAll = { requests.trySend(Request.SelectAll) },
-      onSelectNone = { requests.trySend(Request.SelectNone) },
-      onSelectInvert = { requests.trySend(Request.SelectInvert) },
-      onImport = { requests.trySend(Request.Import) },
-      onExport = { requests.trySend(Request.Export) },
-      onUpdateSort = {
-        uiStore.accessControlSort = it
-        requests.trySend(Request.ReloadApps)
-      },
-      onUpdateReverse = {
-        uiStore.accessControlReverse = it
-        requests.trySend(Request.ReloadApps)
-      },
-      onUpdateShowSystemApps = {
-        uiStore.accessControlSystemApp = it
-        requests.trySend(Request.ReloadApps)
-      },
-    )
-  }
-
-  suspend fun patchApps(apps: List<AppInfo>) = withContext(Dispatchers.Main) { appsState = apps }
-
-  suspend fun rebindAll() =
-    withContext(Dispatchers.Main) {
-      selectedState.clear()
-      selectedState.addAll(selected)
-    }
-
-  private fun toggleApp(packageName: String) {
-    if (packageName in selectedState) {
-      selectedState.remove(packageName)
-      selected.remove(packageName)
-    } else {
-      selectedState.add(packageName)
-      selected.add(packageName)
-    }
-  }
+  AccessControlContent(
+    apps = uiState.apps,
+    selected = uiState.selected,
+    sort = uiState.sort,
+    reverse = uiState.reverse,
+    showSystemApps = uiState.showSystemApps,
+    actions = viewModel,
+    modifier = modifier,
+  )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun AccessControlScreen(
+private fun AccessControlContent(
   apps: List<AppInfo>,
   selected: Set<String>,
-  initialSort: AppInfoSort,
-  initialReverse: Boolean,
-  initialShowSystemApps: Boolean,
-  onToggleApp: (String) -> Unit,
-  onSelectAll: () -> Unit,
-  onSelectNone: () -> Unit,
-  onSelectInvert: () -> Unit,
-  onImport: () -> Unit,
-  onExport: () -> Unit,
-  onUpdateSort: (AppInfoSort) -> Unit,
-  onUpdateReverse: (Boolean) -> Unit,
-  onUpdateShowSystemApps: (Boolean) -> Unit,
+  sort: AppInfoSort,
+  reverse: Boolean,
+  showSystemApps: Boolean,
+  actions: AccessControlActions,
+  modifier: Modifier = Modifier,
 ) {
-  var sort by rememberSaveable { mutableStateOf(initialSort) }
-  var reverse by rememberSaveable { mutableStateOf(initialReverse) }
-  var showSystemApps by rememberSaveable { mutableStateOf(initialShowSystemApps) }
   var showSearch by remember { mutableStateOf(false) }
   var showMenu by remember { mutableStateOf(false) }
 
@@ -175,38 +112,35 @@ private fun AccessControlScreen(
         showSystemApps = showSystemApps,
         onSelectAll = {
           showMenu = false
-          onSelectAll()
+          actions.selectAll()
         },
         onSelectNone = {
           showMenu = false
-          onSelectNone()
+          actions.selectNone()
         },
         onSelectInvert = {
           showMenu = false
-          onSelectInvert()
+          actions.selectInvert()
         },
         onImport = {
           showMenu = false
-          onImport()
+          actions.importFromClipboard()
         },
         onExport = {
           showMenu = false
-          onExport()
+          actions.exportToClipboard()
         },
         onUpdateSort = {
-          sort = it
           showMenu = false
-          onUpdateSort(it)
+          actions.updateSort(it)
         },
         onUpdateReverse = {
-          reverse = it
           showMenu = false
-          onUpdateReverse(it)
+          actions.updateReverse(it)
         },
         onUpdateShowSystemApps = {
-          showSystemApps = it
           showMenu = false
-          onUpdateShowSystemApps(it)
+          actions.updateShowSystemApps(it)
         },
       )
       Spacer(modifier = Modifier.height(16.dp))
@@ -218,12 +152,13 @@ private fun AccessControlScreen(
       onDismissRequest = { showSearch = false },
       sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
     ) {
-      AccessControlSearchContent(apps = apps, selected = selected, onToggleApp = onToggleApp)
+      AccessControlSearchContent(apps = apps, selected = selected, onToggleApp = actions::toggleApp)
     }
   }
 
   MihomoScaffold(
     title = stringResource(R.string.access_control_packages),
+    modifier = modifier,
     actions = {
       IconButton(onClick = { showSearch = true }) {
         Icon(
@@ -244,7 +179,7 @@ private fun AccessControlScreen(
         AccessControlAppItem(
           app = app,
           selected = app.packageName in selected,
-          onClick = { onToggleApp(app.packageName) },
+          onClick = { actions.toggleApp(app.packageName) },
         )
         HorizontalDivider()
       }
@@ -265,14 +200,14 @@ private fun ColumnScope.AccessControlSearchContent(
     snapshotFlow { keyword }
       .debounce(200)
       .distinctUntilChanged()
-      .mapLatest { keyword ->
-        if (keyword.isBlank()) {
+      .mapLatest { currentKeyword ->
+        if (currentKeyword.isBlank()) {
           emptyList()
         } else {
           withContext(Dispatchers.Default) {
             apps.filter {
-              it.label.contains(keyword, ignoreCase = true) ||
-                it.packageName.contains(keyword, ignoreCase = true)
+              it.label.contains(currentKeyword, ignoreCase = true) ||
+                it.packageName.contains(currentKeyword, ignoreCase = true)
             }
           }
         }
@@ -463,10 +398,30 @@ private fun AccessControlAppItem(app: AppInfo, selected: Boolean, onClick: () ->
   }
 }
 
+interface AccessControlActions {
+  fun toggleApp(packageName: String) = Unit
+
+  fun selectAll() = Unit
+
+  fun selectNone() = Unit
+
+  fun selectInvert() = Unit
+
+  fun importFromClipboard() = Unit
+
+  fun exportToClipboard() = Unit
+
+  fun updateSort(sort: AppInfoSort) = Unit
+
+  fun updateReverse(reverse: Boolean) = Unit
+
+  fun updateShowSystemApps(show: Boolean) = Unit
+}
+
 @PreviewMihomo
 @Composable
-private fun AccessControlScreenPreview() = MihomoTheme {
-  AccessControlScreen(
+private fun AccessControlContentPreview() = MihomoTheme {
+  AccessControlContent(
     apps =
       listOf(
         AppInfo(
@@ -485,18 +440,10 @@ private fun AccessControlScreenPreview() = MihomoTheme {
         ),
       ),
     selected = setOf("com.example.alpha"),
-    initialSort = AppInfoSort.Label,
-    initialReverse = false,
-    initialShowSystemApps = true,
-    onToggleApp = {},
-    onSelectAll = {},
-    onSelectNone = {},
-    onSelectInvert = {},
-    onImport = {},
-    onExport = {},
-    onUpdateSort = {},
-    onUpdateReverse = {},
-    onUpdateShowSystemApps = {},
+    sort = AppInfoSort.Label,
+    reverse = false,
+    showSystemApps = true,
+    actions = object : AccessControlActions {},
   )
 }
 
