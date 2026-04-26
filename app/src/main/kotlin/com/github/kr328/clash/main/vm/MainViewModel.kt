@@ -19,6 +19,7 @@ import com.github.kr328.clash.util.withClash
 import com.github.kr328.clash.util.withProfile
 import kotlin.time.Duration.Companion.seconds
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -29,6 +30,7 @@ import kotlinx.coroutines.withContext
 
 class MainViewModel(app: Application) :
   AndroidViewModel(app), DefaultLifecycleObserver, Broadcasts.Observer {
+  private var trafficPollingJob: Job? = null
 
   val clashRunning: StateFlow<Boolean> = Remote.broadcasts.clashRunningFlow
 
@@ -38,28 +40,20 @@ class MainViewModel(app: Application) :
   val eventState: StateFlow<EventState>
     field = MutableStateFlow<EventState>(EventState.Idle)
 
-  init {
-    viewModelScope.launch {
-      while (isActive) {
-        delay(1.seconds)
-        if (clashRunning.value) {
-          val total = withClash { queryTrafficTotal() }
-          uiState.update { it.copy(forwarded = total.trafficTotal()) }
-        }
-      }
-    }
-  }
-
   override fun onStart(owner: LifecycleOwner) {
     Remote.broadcasts.addObserver(this)
+    startTrafficPolling()
     fetch()
   }
 
   override fun onStop(owner: LifecycleOwner) {
     Remote.broadcasts.removeObserver(this)
+    trafficPollingJob?.cancel()
+    trafficPollingJob = null
   }
 
   override fun onCleared() {
+    trafficPollingJob?.cancel()
     Remote.broadcasts.removeObserver(this)
     super.onCleared()
   }
@@ -128,6 +122,19 @@ class MainViewModel(app: Application) :
           hasProviders = providers.isNotEmpty(),
           profileName = profileName,
         )
+      }
+    }
+  }
+
+  private fun startTrafficPolling() {
+    if (trafficPollingJob?.isActive == true) return
+    trafficPollingJob = viewModelScope.launch {
+      while (isActive) {
+        delay(1.seconds)
+        if (clashRunning.value) {
+          val total = withClash { queryTrafficTotal() }
+          uiState.update { it.copy(forwarded = total.trafficTotal()) }
+        }
       }
     }
   }
