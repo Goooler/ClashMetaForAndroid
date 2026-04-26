@@ -2,7 +2,8 @@ package com.github.kr328.clash.log.ui
 
 import android.content.ClipData
 import android.content.ClipboardManager
-import android.content.Context
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts.CreateDocument
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
@@ -19,11 +20,19 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Snackbar
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -31,10 +40,12 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.core.content.getSystemService
+import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.github.kr328.clash.R
 import com.github.kr328.clash.core.model.LogMessage
-import com.github.kr328.clash.ui.Design
-import com.github.kr328.clash.ui.SnackbarDuration
+import com.github.kr328.clash.log.vm.LogcatViewModel
 import com.github.kr328.clash.ui.component.MihomoScaffold
 import com.github.kr328.clash.ui.component.ModelProgressBarDialog
 import com.github.kr328.clash.ui.component.ModelProgressBarState
@@ -42,81 +53,109 @@ import com.github.kr328.clash.ui.theme.MihomoTheme
 import com.github.kr328.clash.ui.theme.PreviewMihomo
 import com.github.kr328.clash.ui.theme.mihomoDimens
 import com.github.kr328.clash.util.format
+import com.github.kr328.clash.util.toast
 import java.util.Date
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.launch
 
-class LogcatDesign(context: Context, private val streaming: Boolean) :
-  Design<LogcatDesign.Request>(context) {
-  sealed interface Request {
-    data object Close : Request
+@Composable
+fun LogcatScreen(
+  fileName: String?,
+  modifier: Modifier = Modifier,
+  viewModel: LogcatViewModel = viewModel(),
+  onOpenLogs: () -> Unit,
+  onInvalidFile: () -> Unit,
+  onClose: () -> Unit,
+) {
+  val context = LocalContext.current
+  val lifecycleOwner = LocalLifecycleOwner.current
+  val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+  val evenState by viewModel.eventState.collectAsStateWithLifecycle()
+  val listState = rememberLazyListState()
+  val snackbarHostState = remember { SnackbarHostState() }
+  val progressBarState = remember { ModelProgressBarState() }
+  val scope = rememberCoroutineScope()
+  val messageCopied = stringResource(R.string.copied)
 
-    data object Delete : Request
+  LaunchedEffect(fileName, viewModel) { viewModel.init(fileName) }
 
-    data object Export : Request
+  DisposableEffect(lifecycleOwner, viewModel) {
+    lifecycleOwner.lifecycle.addObserver(viewModel)
+    onDispose { lifecycleOwner.lifecycle.removeObserver(viewModel) }
   }
 
-  private var messages by mutableStateOf<List<LogMessage>>(emptyList())
-  private val listState = LazyListState()
-  private val exportProgressState = ModelProgressBarState()
+  val exportLauncher =
+    rememberLauncherForActivityResult(CreateDocument("text/plain")) { uri ->
+      viewModel.exportTo(uri)
+    }
 
-  private val onCopyMessage: (LogMessage) -> Unit = {
-    val data = ClipData.newPlainText("log_message", it.message)
-    context.getSystemService<ClipboardManager>()?.setPrimaryClip(data)
-    snackbar(R.string.copied, SnackbarDuration.Short)
-  }
-
-  @Composable
-  override fun Content() = MihomoTheme {
-    LogcatScreen(
-      title = stringResource(R.string.clash_logcat),
-      streaming = streaming,
-      messages = messages,
-      listState = listState,
-      progressBarState = exportProgressState,
-      onClose = { requests.trySend(Request.Close) },
-      onDelete = { requests.trySend(Request.Delete) },
-      onExport = { requests.trySend(Request.Export) },
-      onCopyMessage = onCopyMessage,
-    )
-  }
-
-  suspend fun patchMessages(messages: List<LogMessage>) =
-    withContext(Dispatchers.Main) {
-      val shouldAutoFollow = streaming && listState.isBottom
-      this@LogcatDesign.messages = messages
-
-      if (shouldAutoFollow && messages.isNotEmpty()) {
-        listState.scrollToItem(messages.lastIndex)
+  LaunchedEffect(evenState) {
+    when (val event = evenState) {
+      LogcatViewModel.EventState.Idle -> Unit
+      LogcatViewModel.EventState.Close -> onClose()
+      LogcatViewModel.EventState.InvalidFile -> {
+        context.toast(R.string.invalid_log_file)
+        onInvalidFile()
+      }
+      LogcatViewModel.EventState.OpenLogs -> onOpenLogs()
+      is LogcatViewModel.EventState.RequestExport -> exportLauncher.launch(event.fileName)
+      is LogcatViewModel.EventState.ShowMessage -> {
+        snackbarHostState.showSnackbar(
+          message = event.message,
+          withDismissAction = true,
+          duration = SnackbarDuration.Short,
+        )
       }
     }
+    viewModel.consumeEvent()
+  }
 
-  suspend fun startExportProgress(max: Int) =
-    withContext(Dispatchers.Main) {
-      exportProgressState.visible = true
-      exportProgressState.isIndeterminate = true
-      exportProgressState.text = null
-      exportProgressState.progress = 0
-      exportProgressState.max = max
-    }
+  LaunchedEffect(uiState.exportProgress) {
+    val exportProgress = uiState.exportProgress
+    progressBarState.visible = exportProgress.visible
+    progressBarState.isIndeterminate = exportProgress.isIndeterminate
+    progressBarState.text = exportProgress.text
+    progressBarState.progress = exportProgress.progress
+    progressBarState.max = exportProgress.max
+  }
 
-  suspend fun updateExportProgress(progress: Int) =
-    withContext(Dispatchers.Main) {
-      exportProgressState.isIndeterminate = false
-      exportProgressState.progress = progress
-    }
+  LaunchedEffect(listState, uiState.streaming) {
+    if (!uiState.streaming) return@LaunchedEffect
 
-  suspend fun finishExportProgress() =
-    withContext(Dispatchers.Main) {
-      exportProgressState.visible = false
-      exportProgressState.text = null
-    }
+    snapshotFlow { uiState.messages.size }
+      .collect { size ->
+        if (size > 0 && listState.isBottom) {
+          listState.animateScrollToItem(size - 1)
+        }
+      }
+  }
+
+  LogcatContent(
+    modifier = modifier,
+    streaming = uiState.streaming,
+    messages = uiState.messages,
+    listState = listState,
+    progressBarState = progressBarState,
+    snackbarHost = { SnackbarHost(hostState = snackbarHostState) { Snackbar(it) } },
+    onClose = viewModel::close,
+    onDelete = viewModel::delete,
+    onExport = viewModel::requestExport,
+    onCopyMessage = { message ->
+      val data = ClipData.newPlainText("log_message", message.message)
+      context.getSystemService<ClipboardManager>()?.setPrimaryClip(data)
+      scope.launch {
+        snackbarHostState.showSnackbar(
+          message = messageCopied,
+          withDismissAction = true,
+          duration = SnackbarDuration.Short,
+        )
+      }
+    },
+  )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun LogcatScreen(
-  title: String,
+private fun LogcatContent(
   streaming: Boolean,
   messages: List<LogMessage>,
   listState: LazyListState,
@@ -125,9 +164,13 @@ private fun LogcatScreen(
   onDelete: () -> Unit,
   onExport: () -> Unit,
   onCopyMessage: (LogMessage) -> Unit,
+  modifier: Modifier = Modifier,
+  snackbarHost: @Composable () -> Unit = {},
 ) {
   MihomoScaffold(
-    title = title,
+    title = stringResource(R.string.clash_logcat),
+    modifier = modifier,
+    snackbarHost = snackbarHost,
     actions = {
       if (streaming) {
         IconButton(onClick = onClose) {
@@ -208,9 +251,8 @@ private val LazyListState.isBottom: Boolean
 
 @PreviewMihomo
 @Composable
-private fun LogcatScreenPreview() = MihomoTheme {
-  LogcatScreen(
-    title = stringResource(R.string.clash_logcat),
+private fun LogcatContentPreview() = MihomoTheme {
+  LogcatContent(
     streaming = false,
     messages =
       listOf(
