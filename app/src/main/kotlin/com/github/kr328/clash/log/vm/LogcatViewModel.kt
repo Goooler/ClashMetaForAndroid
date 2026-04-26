@@ -184,7 +184,14 @@ class LogcatViewModel(app: Application) : AndroidViewModel(app), DefaultLifecycl
       val connection =
         object : ServiceConnection {
           override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
-            val binder = service ?: return
+            val binder =
+              service
+                ?: run {
+                  continuation.resumeWithException(
+                    IllegalStateException("Logcat service returned a null binder"),
+                  )
+                  return
+                }
             val srv = binder.queryLocalInterface("") as LogcatService
 
             conn = this
