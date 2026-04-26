@@ -2,6 +2,7 @@ package com.github.kr328.clash.log.vm
 
 import android.app.Application
 import android.content.ComponentName
+import android.content.Context
 import android.content.ServiceConnection
 import android.net.Uri
 import android.os.IBinder
@@ -235,11 +236,7 @@ class LogcatViewModel(app: Application) : AndroidViewModel(app), DefaultLifecycl
       conn = connection
 
       val bound =
-        application.bindService(
-          LogcatService::class.intent,
-          connection,
-          android.content.Context.BIND_AUTO_CREATE,
-        )
+        application.bindService(LogcatService::class.intent, connection, Context.BIND_AUTO_CREATE)
 
       if (!bound) {
         conn = null

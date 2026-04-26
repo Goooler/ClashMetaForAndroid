@@ -30,13 +30,13 @@ class LogcatReader(
           val time = parsedTime?.let { date -> Date(date) } ?: lastTime
           val logMessage =
             if (parsedTime != null && parts.size >= 3) {
-              LogMessage(time = time, level = LogMessage.Level.valueOf(parts[1]), message = parts[2])
-            } else {
               LogMessage(
                 time = time,
-                level = LogMessage.Level.Warning,
-                message = line,
+                level = LogMessage.Level.valueOf(parts[1]),
+                message = parts[2],
               )
+            } else {
+              LogMessage(time = time, level = LogMessage.Level.Warning, message = line)
             }
           lastTime = time
           logMessage
