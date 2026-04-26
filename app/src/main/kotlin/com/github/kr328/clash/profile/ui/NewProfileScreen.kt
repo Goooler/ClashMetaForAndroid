@@ -84,7 +84,7 @@ fun NewProfileScreen(
 
   LaunchedEffect(eventState) {
     when (val event = eventState) {
-      NewProfileViewModel.EventState.NotStart -> Unit
+      NewProfileViewModel.EventState.Idle -> Unit
       NewProfileViewModel.EventState.LaunchQRScanner -> qrLauncher.launch(null)
       is NewProfileViewModel.EventState.LaunchExternalProvider ->
         externalProviderLauncher.launch(event.intent)

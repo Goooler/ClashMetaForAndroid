@@ -26,14 +26,14 @@ class NewProfileViewModel(app: Application) : AndroidViewModel(app) {
     field = MutableStateFlow(UiState())
 
   val eventState: StateFlow<EventState>
-    field = MutableStateFlow<EventState>(EventState.NotStart)
+    field = MutableStateFlow<EventState>(EventState.Idle)
 
   init {
     loadProviders()
   }
 
   fun consumeEvent() {
-    eventState.value = EventState.NotStart
+    eventState.value = EventState.Idle
   }
 
   fun onCreate(provider: ProfileProvider) {
@@ -145,7 +145,7 @@ class NewProfileViewModel(app: Application) : AndroidViewModel(app) {
   data class UiState(val providers: List<ProfileProvider> = emptyList())
 
   sealed interface EventState {
-    data object NotStart : EventState
+    data object Idle : EventState
 
     data object LaunchQRScanner : EventState
 
