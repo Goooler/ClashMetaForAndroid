@@ -231,7 +231,7 @@ class LogcatViewModel(app: Application) : AndroidViewModel(app), DefaultLifecycl
   private suspend fun writeLogTo(messages: List<LogMessage>, file: LogFile, uri: Uri) =
     withContext(Dispatchers.IO) {
       LogcatFilter(
-          OutputStreamWriter(requireNotNull(application.contentResolver.openOutputStream(uri))),
+          OutputStreamWriter(checkNotNull(application.contentResolver.openOutputStream(uri))),
           application,
         )
         .use { filter ->
