@@ -75,7 +75,7 @@ fun ProvidersScreen(modifier: Modifier = Modifier, viewModel: ProvidersViewModel
       providers = uiState.providers,
       currentTime = uiState.currentTime,
       onUpdateAll = viewModel::onUpdateAll,
-      onUpdate = viewModel::onUpdate,
+      onUpdate = { _, provider -> viewModel.onUpdate(provider) },
     )
 
     SnackbarHost(hostState = snackbarHostState, modifier = Modifier.align(Alignment.BottomCenter))

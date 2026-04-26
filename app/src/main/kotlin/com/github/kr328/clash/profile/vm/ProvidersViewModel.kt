@@ -68,12 +68,32 @@ class ProvidersViewModel(app: Application) : AndroidViewModel(app), DefaultLifec
     uiState.value.providers.forEach { state ->
       if (state.updating || state.provider.vehicleType == Provider.VehicleType.Inline)
         return@forEach
-      doUpdate(state.provider)
+      onUpdate(state.provider)
     }
   }
 
-  fun onUpdate(index: Int, provider: Provider) {
-    doUpdate(provider)
+  fun onUpdate(provider: Provider) {
+    updateProviderState(provider) { it.copy(updating = true) }
+
+    viewModelScope.launch {
+      try {
+        withClash { updateProvider(provider.type, provider.name) }
+        updateProviderState(provider) {
+          it.copy(updating = false, updatedAt = System.currentTimeMillis())
+        }
+      } catch (e: Exception) {
+        updateProviderState(provider) { it.copy(updating = false) }
+        val errorMessage = e.localizedMessage ?: e.message ?: e.toString()
+        eventState.value =
+          EventState.ShowMessage(
+            application.getString(
+              R.string.format_update_provider_failure,
+              provider.name,
+              errorMessage,
+            )
+          )
+      }
+    }
   }
 
   private fun providerKey(provider: Provider): String {
@@ -93,30 +113,6 @@ class ProvidersViewModel(app: Application) : AndroidViewModel(app), DefaultLifec
             if (providerKey(state.provider) == key) transform(state) else state
           }
       )
-    }
-  }
-
-  private fun doUpdate(provider: Provider) {
-    updateProviderState(provider) { it.copy(updating = true) }
-
-    viewModelScope.launch {
-      try {
-        withClash { updateProvider(provider.type, provider.name) }
-        updateProviderState(provider) {
-          it.copy(updating = false, updatedAt = System.currentTimeMillis())
-        }
-      } catch (e: Exception) {
-        updateProviderState(provider) { it.copy(updating = false) }
-        val errorMessage = e.localizedMessage ?: e.message ?: e.toString()
-        eventState.value =
-          EventState.ShowMessage(
-            application.getString(
-              R.string.format_update_provider_failure,
-              provider.name,
-              errorMessage
-            )
-          )
-      }
     }
   }
 
