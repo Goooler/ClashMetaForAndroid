@@ -138,7 +138,7 @@ class LogcatViewModel(app: Application) : AndroidViewModel(app), DefaultLifecycl
     viewModelScope.launch {
       val messages =
         try {
-          LogcatReader(application, file).readAll()
+          LogcatReader(application, file).use { it.readAll() }
         } catch (e: Exception) {
           Log.e("Fail to read log file ${file.fileName}: ${e.message}", e)
           eventState.value = EventState.InvalidFile
@@ -188,7 +188,7 @@ class LogcatViewModel(app: Application) : AndroidViewModel(app), DefaultLifecycl
               service
                 ?: run {
                   continuation.resumeWithException(
-                    IllegalStateException("Logcat service returned a null binder"),
+                    IllegalStateException("Logcat service returned a null binder")
                   )
                   return
                 }
