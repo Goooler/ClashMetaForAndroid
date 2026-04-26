@@ -1,0 +1,159 @@
+package com.github.kr328.clash.profile.vm
+
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.DefaultLifecycleObserver
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.application
+import androidx.lifecycle.viewModelScope
+import com.github.kr328.clash.R
+import com.github.kr328.clash.core.model.Provider
+import com.github.kr328.clash.remote.Broadcasts
+import com.github.kr328.clash.remote.Remote
+import com.github.kr328.clash.util.withClash
+import kotlin.time.Duration.Companion.minutes
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.isActive
+import kotlinx.coroutines.launch
+
+class ProvidersViewModel(app: Application) : AndroidViewModel(app), DefaultLifecycleObserver {
+  private var broadcastEventsJob: Job? = null
+  private var elapsedJob: Job? = null
+  private var fetchJob: Job? = null
+
+  val uiState: StateFlow<UiState>
+    field = MutableStateFlow(UiState())
+
+  val eventState: StateFlow<EventState>
+    field = MutableStateFlow<EventState>(EventState.Idle)
+
+  override fun onStart(owner: LifecycleOwner) {
+    broadcastEventsJob?.cancel()
+    broadcastEventsJob = viewModelScope.launch {
+      Remote.broadcasts.event.collect { event ->
+        when (event) {
+          Broadcasts.Event.ProfileLoaded -> fetch()
+          else -> Unit
+        }
+      }
+    }
+
+    startElapsedTicker()
+    fetch()
+  }
+
+  override fun onStop(owner: LifecycleOwner) {
+    broadcastEventsJob?.cancel()
+    broadcastEventsJob = null
+    elapsedJob?.cancel()
+    elapsedJob = null
+  }
+
+  override fun onCleared() {
+    broadcastEventsJob?.cancel()
+    elapsedJob?.cancel()
+    fetchJob?.cancel()
+    super.onCleared()
+  }
+
+  fun consumeEvent() {
+    eventState.value = EventState.Idle
+  }
+
+  fun onUpdateAll() {
+    uiState.value.providers.forEachIndexed { index, state ->
+      if (state.updating || state.provider.vehicleType == Provider.VehicleType.Inline)
+        return@forEachIndexed
+      doUpdate(index, state.provider)
+    }
+  }
+
+  fun onUpdate(index: Int, provider: Provider) {
+    doUpdate(index, provider)
+  }
+
+  private fun doUpdate(index: Int, provider: Provider) {
+    uiState.update { current ->
+      current.copy(
+        providers =
+          current.providers.mapIndexed { i, s -> if (i == index) s.copy(updating = true) else s }
+      )
+    }
+
+    viewModelScope.launch {
+      try {
+        withClash { updateProvider(provider.type, provider.name) }
+        uiState.update { current ->
+          current.copy(
+            providers =
+              current.providers.mapIndexed { i, s ->
+                if (i == index) s.copy(updating = false, updatedAt = System.currentTimeMillis())
+                else s
+              }
+          )
+        }
+      } catch (e: Exception) {
+        uiState.update { current ->
+          current.copy(
+            providers =
+              current.providers.mapIndexed { i, s ->
+                if (i == index) s.copy(updating = false) else s
+              }
+          )
+        }
+        eventState.value =
+          EventState.ShowMessage(
+            application.getString(R.string.format_update_provider_failure, provider.name, e.message)
+          )
+      }
+    }
+  }
+
+  private fun fetch() {
+    fetchJob?.cancel()
+    fetchJob = viewModelScope.launch {
+      val providers = withClash { queryProviders().sorted() }
+      uiState.update { current ->
+        val existingMap =
+          current.providers.associateBy { "${it.provider.type}-${it.provider.name}" }
+        val newStates = providers.map { provider ->
+          val key = "${provider.type}-${provider.name}"
+          existingMap[key]?.copy(provider = provider)
+            ?: UiState.ProviderItemState(
+              provider = provider,
+              updatedAt = provider.updatedAt,
+              updating = false,
+            )
+        }
+        current.copy(providers = newStates)
+      }
+    }
+  }
+
+  private fun startElapsedTicker() {
+    if (elapsedJob?.isActive == true) return
+    elapsedJob = viewModelScope.launch {
+      while (isActive) {
+        delay(1.minutes)
+        uiState.update { it.copy(currentTime = System.currentTimeMillis()) }
+      }
+    }
+  }
+
+  data class UiState(
+    val providers: List<ProviderItemState> = emptyList(),
+    val currentTime: Long = System.currentTimeMillis(),
+  ) {
+    data class ProviderItemState(val provider: Provider, val updatedAt: Long, val updating: Boolean)
+  }
+
+  sealed interface EventState {
+    data object Idle : EventState
+
+    data class ShowMessage(val message: String) : EventState
+  }
+}
