@@ -126,10 +126,7 @@ class LogcatViewModel(app: Application) : AndroidViewModel(app), DefaultLifecycl
 
   override fun onCleared() {
     pollJob?.cancel()
-    conn?.let { connection -> runCatching { application.unbindService(connection) } }
-    conn = null
-    logcat = null
-
+    reset()
     super.onCleared()
   }
 
@@ -156,8 +153,10 @@ class LogcatViewModel(app: Application) : AndroidViewModel(app), DefaultLifecycl
         logcat = bindLogcatService()
         startPolling()
       } catch (e: Exception) {
-        eventState.value =
-          EventState.ShowMessage(e.message ?: application.getString(R.string.unknown))
+        Log.e("Bind logcat service failed: ${e.message}", e)
+        runCatching { application.stopService(LogcatService::class.intent) }
+        reset()
+        eventState.value = EventState.OpenLogs
       }
     }
   }
@@ -186,21 +185,49 @@ class LogcatViewModel(app: Application) : AndroidViewModel(app), DefaultLifecycl
             val binder =
               service
                 ?: run {
-                  continuation.resumeWithException(
-                    IllegalStateException("Logcat service returned a null binder")
-                  )
+                  if (!continuation.isActive) {
+                    runCatching { application.unbindService(this) }
+                    if (conn === this) {
+                      conn = null
+                    }
+                    return
+                  }
+                  runCatching {
+                      continuation.resumeWithException(
+                        IllegalStateException("Logcat service returned a null binder")
+                      )
+                    }
+                    .onFailure {
+                      runCatching { application.unbindService(this) }
+                      if (conn === this) {
+                        conn = null
+                      }
+                    }
                   return
                 }
-            val srv = binder.queryLocalInterface("") as LogcatService
+            val logcatService = binder.queryLocalInterface("") as LogcatService
 
-            continuation.resume(srv)
+            if (!continuation.isActive) {
+              runCatching { application.unbindService(this) }
+              if (conn === this) {
+                conn = null
+              }
+              return
+            }
+
+            runCatching { continuation.resume(logcatService) }
+              .onFailure {
+                runCatching { application.unbindService(this) }
+                if (conn === this) {
+                  conn = null
+                }
+              }
           }
 
           override fun onServiceDisconnected(name: ComponentName?) {
             if (conn === this) {
               conn = null
             }
-
             logcat = null
           }
         }
@@ -267,6 +294,12 @@ class LogcatViewModel(app: Application) : AndroidViewModel(app), DefaultLifecycl
           }
         }
     }
+
+  private fun reset() {
+    conn?.let { connection -> runCatching { application.unbindService(connection) } }
+    conn = null
+    logcat = null
+  }
 
   data class UiState(
     val streaming: Boolean = true,
