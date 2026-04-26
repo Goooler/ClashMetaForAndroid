@@ -1,4 +1,4 @@
-package com.github.kr328.clash.files.ui
+package com.github.kr328.clash.profile.ui
 
 import android.content.Context
 import android.content.Intent
@@ -47,8 +47,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.github.kr328.clash.R
 import com.github.kr328.clash.common.util.grantPermissions
-import com.github.kr328.clash.files.vm.FilesViewModel
 import com.github.kr328.clash.model.File
+import com.github.kr328.clash.profile.vm.FilesViewModel
 import com.github.kr328.clash.ui.component.MihomoScaffold
 import com.github.kr328.clash.ui.component.ModelTextInputDialog
 import com.github.kr328.clash.ui.icon.BaselineAdd

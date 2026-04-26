@@ -2,11 +2,11 @@ package com.github.kr328.clash.remote
 
 import android.content.Context
 import android.content.Intent
+import com.github.kr328.clash.MainActivity.Companion.intent as mainIntent
 import com.github.kr328.clash.common.Global
+import com.github.kr328.clash.common.Global.application
+import com.github.kr328.clash.common.constants.Intents
 import com.github.kr328.clash.common.log.Log
-import com.github.kr328.clash.common.util.intent
-import com.github.kr328.clash.crash.ApkBrokenActivity
-import com.github.kr328.clash.crash.AppCrashedActivity
 import com.github.kr328.clash.store.AppStore
 import com.github.kr328.clash.util.ApplicationObserver
 import com.github.kr328.clash.util.verifyApk
@@ -14,18 +14,20 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 object Remote {
-  val broadcasts: Broadcasts = Broadcasts(Global.application)
+  val broadcasts: Broadcasts = Broadcasts(application)
   val service: Service =
-    Service(Global.application) {
+    Service(application) {
       ApplicationObserver.createdActivities.forEach { it.finish() }
 
-      val intent = AppCrashedActivity::class.intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+      val intent =
+        mainIntent(context = application, action = Intents.ACTION_APP_CRASHED)
+          .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
 
-      Global.application.startActivity(intent)
+      application.startActivity(intent)
     }
 
   fun launch() {
-    ApplicationObserver.attach(Global.application)
+    ApplicationObserver.attach(application)
 
     ApplicationObserver.onVisibleChanged {
       if (it) {
@@ -43,7 +45,7 @@ object Remote {
   }
 
   private fun verifyApp() {
-    val context = Global.application
+    val context = application
     val store = AppStore(context)
     val updatedAt = getLastUpdated(context)
 
@@ -51,7 +53,9 @@ object Remote {
       if (!context.verifyApk()) {
         ApplicationObserver.createdActivities.forEach { it.finish() }
 
-        val intent = ApkBrokenActivity::class.intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        val intent =
+          mainIntent(context = application, action = Intents.ACTION_APK_BROKEN)
+            .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
 
         return context.startActivity(intent)
       } else {

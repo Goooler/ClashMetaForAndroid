@@ -38,7 +38,7 @@
             android:value="@integer/release_code" />
 
         <activity
-            android:name=".main.MainActivity"
+            android:name=".MainActivity"
             android:exported="true"
             android:launchMode="singleTask">
             <intent-filter>
@@ -52,7 +52,7 @@
         <activity-alias
             android:name=".MainActivityAlias"
             android:exported="true"
-            android:targetActivity=".main.MainActivity">
+            android:targetActivity=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -62,7 +62,7 @@
         </activity-alias>
 
         <activity
-            android:name=".main.ExternalControlActivity"
+            android:name=".ExternalControlActivity"
             android:excludeFromRecents="true"
             android:exported="true"
             android:label="@string/external_control_activity"
@@ -91,57 +91,7 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".crash.ApkBrokenActivity"
-            android:exported="false" />
-        <activity
-            android:name=".crash.AppCrashedActivity"
-            android:exported="false"
-            android:launchMode="singleTask" />
-        <activity
-            android:name=".profile.ProfilesActivity" />
-        <activity
-            android:name=".profile.NewProfileActivity"
-            android:exported="false" />
-        <activity
-            android:name=".profile.PropertiesActivity"
-            android:exported="false" />
-        <activity
-            android:name=".proxy.ProxyActivity"
-            android:exported="false" />
-        <activity
-            android:name=".profile.ProvidersActivity"
-            android:exported="false" />
-        <activity
-            android:name=".log.LogsActivity"
-            android:exported="false" />
-        <activity
-            android:name=".log.LogcatActivity"
-            android:exported="false" />
-        <activity
-            android:name=".settings.SettingsActivity"
-            android:exported="false" />
-        <activity
-            android:name=".settings.NetworkSettingsActivity"
-            android:exported="false" />
-        <activity
-            android:name=".settings.AppSettingsActivity"
-            android:exported="false" />
-        <activity
-            android:name=".settings.OverrideSettingsActivity"
-            android:exported="false" />
-        <activity
-            android:name=".settings.MetaFeatureSettingsActivity"
-            android:exported="false" />
-        <activity
-            android:name=".settings.AccessControlActivity"
-            android:exported="false" />
-        <activity
-            android:name=".main.HelpActivity"
-            android:exported="false" />
-        <activity
-            android:name=".files.FilesActivity"
-            android:exported="false" />
+
 
         <service
             android:name=".log.LogcatService"

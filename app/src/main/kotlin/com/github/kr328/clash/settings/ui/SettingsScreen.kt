@@ -29,18 +29,14 @@ import com.github.kr328.clash.ui.theme.MihomoTheme
 import com.github.kr328.clash.ui.theme.PreviewMihomo
 import com.github.kr328.clash.ui.theme.mihomoDimens
 
-sealed interface SettingsRoute {
-  data object App : SettingsRoute
-
-  data object Network : SettingsRoute
-
-  data object Override : SettingsRoute
-
-  data object MetaFeature : SettingsRoute
-}
-
 @Composable
-fun SettingsScreen(modifier: Modifier = Modifier, onRoute: (SettingsRoute) -> Unit) {
+fun SettingsScreen(
+  modifier: Modifier = Modifier,
+  onOpenAppSettings: () -> Unit,
+  onOpenNetworkSettings: () -> Unit,
+  onOpenOverrideSettings: () -> Unit,
+  onOpenMetaFeatureSettings: () -> Unit,
+) {
   SettingsCommonScreen(
     title = stringResource(R.string.settings),
     modifier = modifier.fillMaxSize(),
@@ -48,25 +44,25 @@ fun SettingsScreen(modifier: Modifier = Modifier, onRoute: (SettingsRoute) -> Un
     SettingsEntryItem(
       icon = MihomoIcons.BaselineSettings,
       titleRes = R.string.app,
-      onClick = { onRoute(SettingsRoute.App) },
+      onClick = onOpenAppSettings,
     )
 
     SettingsEntryItem(
       icon = MihomoIcons.BaselineDns,
       titleRes = R.string.network,
-      onClick = { onRoute(SettingsRoute.Network) },
+      onClick = onOpenNetworkSettings,
     )
 
     SettingsEntryItem(
       icon = MihomoIcons.BaselineExtension,
       titleRes = R.string.override,
-      onClick = { onRoute(SettingsRoute.Override) },
+      onClick = onOpenOverrideSettings,
     )
 
     SettingsEntryItem(
       icon = MihomoIcons.BaselineMeta,
       titleRes = R.string.meta_features,
-      onClick = { onRoute(SettingsRoute.MetaFeature) },
+      onClick = onOpenMetaFeatureSettings,
     )
   }
 }
@@ -105,4 +101,11 @@ private fun SettingsEntryItem(
 
 @PreviewMihomo
 @Composable
-private fun SettingsScreenPreview() = MihomoTheme { SettingsScreen(onRoute = {}) }
+private fun SettingsScreenPreview() = MihomoTheme {
+  SettingsScreen(
+    onOpenAppSettings = {},
+    onOpenNetworkSettings = {},
+    onOpenOverrideSettings = {},
+    onOpenMetaFeatureSettings = {},
+  )
+}

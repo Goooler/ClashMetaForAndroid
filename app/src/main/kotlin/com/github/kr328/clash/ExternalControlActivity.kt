@@ -1,13 +1,11 @@
-package com.github.kr328.clash.main
+package com.github.kr328.clash
 
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import com.github.kr328.clash.R
+import com.github.kr328.clash.MainActivity.Companion.intent as mainIntent
 import com.github.kr328.clash.common.constants.Intents
-import com.github.kr328.clash.common.util.intent
 import com.github.kr328.clash.common.util.setUUID
-import com.github.kr328.clash.profile.PropertiesActivity
 import com.github.kr328.clash.remote.Remote
 import com.github.kr328.clash.service.model.Profile
 import com.github.kr328.clash.util.startClashService
@@ -41,7 +39,10 @@ class ExternalControlActivity : Activity(), CoroutineScope by MainScope() {
 
             create(type, name).also { patch(it, name, url, 0) }
           }
-          startActivity(PropertiesActivity::class.intent.setUUID(uuid))
+          val intent =
+            mainIntent(context = this@ExternalControlActivity, action = Intents.ACTION_PROPERTIES)
+              .setUUID(uuid = uuid)
+          startActivity(intent)
           finish()
         }
       }

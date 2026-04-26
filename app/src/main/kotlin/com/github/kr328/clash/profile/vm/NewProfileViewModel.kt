@@ -97,10 +97,6 @@ class NewProfileViewModel(app: Application) : AndroidViewModel(app) {
     }
   }
 
-  fun onPropertiesResult(success: Boolean) {
-    if (success) eventState.value = EventState.Finish
-  }
-
   private fun createProfile(type: Profile.Type) {
     viewModelScope.launch {
       try {
