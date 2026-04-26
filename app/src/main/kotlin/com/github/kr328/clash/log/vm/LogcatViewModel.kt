@@ -194,7 +194,6 @@ class LogcatViewModel(app: Application) : AndroidViewModel(app), DefaultLifecycl
                 }
             val srv = binder.queryLocalInterface("") as LogcatService
 
-            conn = this
             continuation.resume(srv)
           }
 
@@ -207,6 +206,8 @@ class LogcatViewModel(app: Application) : AndroidViewModel(app), DefaultLifecycl
           }
         }
 
+      conn = connection
+
       val bound =
         application.bindService(
           LogcatService::class.intent,
@@ -215,13 +216,15 @@ class LogcatViewModel(app: Application) : AndroidViewModel(app), DefaultLifecycl
         )
 
       if (!bound) {
+        conn = null
         continuation.resumeWithException(IllegalStateException("Failed to bind logcat service"))
         return@suspendCancellableCoroutine
       }
 
       continuation.invokeOnCancellation {
+        runCatching { application.unbindService(connection) }
+
         if (conn === connection) {
-          runCatching { application.unbindService(connection) }
           conn = null
         }
       }
