@@ -24,7 +24,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -37,6 +36,8 @@ import com.github.kr328.clash.ui.component.MihomoScaffold
 import com.github.kr328.clash.ui.component.SettingsClickablePreferenceItem
 import com.github.kr328.clash.ui.component.SettingsEditTextListPreferenceItem
 import com.github.kr328.clash.ui.component.SettingsListPreferenceItem
+import com.github.kr328.clash.ui.icon.BaselineReplay
+import com.github.kr328.clash.ui.icon.MihomoIcons
 import com.github.kr328.clash.ui.theme.MihomoTheme
 import com.github.kr328.clash.ui.theme.PreviewMihomo
 import com.github.kr328.clash.util.toast
@@ -152,7 +153,7 @@ private fun MetaFeatureSettingsContent(
     actions = {
       IconButton(onClick = { onShowResetConfirmDialogChange(true) }) {
         Icon(
-          painter = painterResource(R.drawable.ic_baseline_replay),
+          imageVector = MihomoIcons.BaselineReplay,
           contentDescription = stringResource(R.string.reset),
         )
       }

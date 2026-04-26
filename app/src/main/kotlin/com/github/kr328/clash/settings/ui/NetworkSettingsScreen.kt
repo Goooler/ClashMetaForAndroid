@@ -35,6 +35,8 @@ import com.github.kr328.clash.ui.component.SettingsCategoryTitle
 import com.github.kr328.clash.ui.component.SettingsCommonScreen
 import com.github.kr328.clash.ui.component.SettingsPreferenceClickableItem
 import com.github.kr328.clash.ui.component.SettingsPreferenceSwitchItem
+import com.github.kr328.clash.ui.icon.BaselineVpnLock
+import com.github.kr328.clash.ui.icon.MihomoIcons
 import com.github.kr328.clash.ui.theme.MihomoTheme
 import com.github.kr328.clash.ui.theme.PreviewMihomo
 
@@ -102,7 +104,7 @@ private fun NetworkSettingsContent(
     snackbarHost = { SnackbarHost(hostState = snackbarHostState) { Snackbar(it) } },
   ) {
     SettingsPreferenceSwitchItem(
-      iconRes = R.drawable.ic_baseline_vpn_lock,
+      icon = MihomoIcons.BaselineVpnLock,
       titleRes = R.string.route_system_traffic,
       summaryRes = R.string.routing_via_vpn_service,
       checked = uiState.enableVpn,

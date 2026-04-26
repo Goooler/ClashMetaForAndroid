@@ -32,7 +32,6 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.KeyboardType
@@ -51,6 +50,9 @@ import com.github.kr328.clash.ui.component.MihomoScaffold
 import com.github.kr328.clash.ui.component.SettingsEditTextListPreferenceItem
 import com.github.kr328.clash.ui.component.SettingsListPreferenceItem
 import com.github.kr328.clash.ui.component.initialTextFieldValue
+import com.github.kr328.clash.ui.icon.BaselineReplay
+import com.github.kr328.clash.ui.icon.MihomoIcons
+import com.github.kr328.clash.ui.icon.OutlineDelete
 import com.github.kr328.clash.ui.theme.MihomoTheme
 import com.github.kr328.clash.ui.theme.PreviewMihomo
 import me.zhanghai.compose.preference.Preference
@@ -102,7 +104,7 @@ private fun OverrideSettingsContent(
     actions = {
       IconButton(onClick = { onShowResetConfirmDialogChange(true) }) {
         Icon(
-          painter = painterResource(R.drawable.ic_baseline_replay),
+          imageVector = MihomoIcons.BaselineReplay,
           contentDescription = stringResource(R.string.reset),
         )
       }
@@ -645,7 +647,7 @@ private fun EditableTextMapDialog(
             trailingContent = {
               IconButton(onClick = { values = values.toMutableList().apply { removeAt(index) } }) {
                 Icon(
-                  painter = painterResource(R.drawable.ic_outline_delete),
+                  imageVector = MihomoIcons.OutlineDelete,
                   contentDescription = stringResource(R.string.delete),
                 )
               }

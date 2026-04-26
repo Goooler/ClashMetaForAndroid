@@ -38,8 +38,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.LocalLifecycleOwner
@@ -51,6 +51,15 @@ import com.github.kr328.clash.files.vm.FilesViewModel
 import com.github.kr328.clash.model.File
 import com.github.kr328.clash.ui.component.MihomoScaffold
 import com.github.kr328.clash.ui.component.ModelTextInputDialog
+import com.github.kr328.clash.ui.icon.BaselineAdd
+import com.github.kr328.clash.ui.icon.BaselineEdit
+import com.github.kr328.clash.ui.icon.BaselineGetApp
+import com.github.kr328.clash.ui.icon.BaselineMoreVert
+import com.github.kr328.clash.ui.icon.BaselinePublish
+import com.github.kr328.clash.ui.icon.MihomoIcons
+import com.github.kr328.clash.ui.icon.OutlineArticle
+import com.github.kr328.clash.ui.icon.OutlineDelete
+import com.github.kr328.clash.ui.icon.OutlineFolder
 import com.github.kr328.clash.ui.theme.MihomoTheme
 import com.github.kr328.clash.ui.theme.PreviewMihomo
 import com.github.kr328.clash.util.ValidatorFileName
@@ -161,7 +170,7 @@ private fun FilesContent(
       val file = menuFile!!
       if (!file.isDirectory && (!currentInBaseDir || configurationEditable)) {
         FilesMenuAction(
-          icon = R.drawable.ic_baseline_get_app,
+          icon = MihomoIcons.BaselineGetApp,
           text = stringResource(R.string.import_),
           onClick = {
             menuFile = null
@@ -171,7 +180,7 @@ private fun FilesContent(
       }
       if (!file.isDirectory && file.size > 0) {
         FilesMenuAction(
-          icon = R.drawable.ic_baseline_publish,
+          icon = MihomoIcons.BaselinePublish,
           text = stringResource(R.string.export),
           onClick = {
             menuFile = null
@@ -181,7 +190,7 @@ private fun FilesContent(
       }
       if (!currentInBaseDir) {
         FilesMenuAction(
-          icon = R.drawable.ic_baseline_edit,
+          icon = MihomoIcons.BaselineEdit,
           text = stringResource(R.string.rename),
           onClick = {
             menuFile = null
@@ -189,7 +198,7 @@ private fun FilesContent(
           },
         )
         FilesMenuAction(
-          icon = R.drawable.ic_outline_delete,
+          icon = MihomoIcons.OutlineDelete,
           text = stringResource(R.string.delete),
           tint = MaterialTheme.colorScheme.error,
           onClick = {
@@ -212,7 +221,7 @@ private fun FilesContent(
       if (!currentInBaseDir) {
         IconButton(onClick = onNew) {
           Icon(
-            painter = painterResource(R.drawable.ic_baseline_add),
+            imageVector = MihomoIcons.BaselineAdd,
             contentDescription = stringResource(R.string._new),
           )
         }
@@ -280,10 +289,8 @@ private fun FileItem(
       contentAlignment = Alignment.Center,
     ) {
       Icon(
-        painter =
-          painterResource(
-            if (file.isDirectory) R.drawable.ic_outline_folder else R.drawable.ic_outline_article
-          ),
+        imageVector =
+          if (file.isDirectory) MihomoIcons.OutlineFolder else MihomoIcons.OutlineArticle,
         contentDescription = null,
         modifier = Modifier.size(28.dp),
       )
@@ -307,7 +314,7 @@ private fun FileItem(
 
     IconButton(onClick = onMore) {
       Icon(
-        painter = painterResource(R.drawable.ic_baseline_more_vert),
+        imageVector = MihomoIcons.BaselineMoreVert,
         contentDescription = stringResource(R.string.more),
       )
     }
@@ -316,7 +323,7 @@ private fun FileItem(
 
 @Composable
 private fun FilesMenuAction(
-  icon: Int,
+  icon: ImageVector,
   text: String,
   onClick: () -> Unit,
   modifier: Modifier = Modifier,
@@ -331,7 +338,7 @@ private fun FilesMenuAction(
     verticalAlignment = Alignment.CenterVertically,
   ) {
     Icon(
-      painter = painterResource(icon),
+      imageVector = icon,
       contentDescription = null,
       tint = tint,
       modifier = Modifier.size(24.dp),

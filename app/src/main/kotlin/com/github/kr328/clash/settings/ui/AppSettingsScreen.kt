@@ -30,6 +30,12 @@ import com.github.kr328.clash.ui.component.SettingsCategoryTitle
 import com.github.kr328.clash.ui.component.SettingsCommonScreen
 import com.github.kr328.clash.ui.component.SettingsPreferenceClickableItem
 import com.github.kr328.clash.ui.component.SettingsPreferenceSwitchItem
+import com.github.kr328.clash.ui.icon.BaselineBrightness4
+import com.github.kr328.clash.ui.icon.BaselineDomain
+import com.github.kr328.clash.ui.icon.BaselineHide
+import com.github.kr328.clash.ui.icon.BaselineRestore
+import com.github.kr328.clash.ui.icon.BaselineStack
+import com.github.kr328.clash.ui.icon.MihomoIcons
 import com.github.kr328.clash.ui.theme.MihomoTheme
 import com.github.kr328.clash.ui.theme.PreviewMihomo
 
@@ -69,7 +75,7 @@ private fun AppSettingsContent(
   SettingsCommonScreen(title = stringResource(R.string.app), modifier = modifier.fillMaxSize()) {
     SettingsCategoryTitle(text = stringResource(R.string.behavior))
     SettingsPreferenceSwitchItem(
-      iconRes = R.drawable.ic_baseline_restore,
+      icon = MihomoIcons.BaselineRestore,
       titleRes = R.string.auto_restart,
       summaryRes = R.string.allow_clash_auto_restart,
       checked = uiState.autoRestart,
@@ -78,20 +84,20 @@ private fun AppSettingsContent(
 
     SettingsCategoryTitle(text = stringResource(R.string.interface_))
     SettingsPreferenceClickableItem(
-      iconRes = R.drawable.ic_baseline_brightness_4,
+      icon = MihomoIcons.BaselineBrightness4,
       titleRes = R.string.dark_mode,
       summaryRes = uiState.darkMode.summaryRes,
       onClick = { showDarkModeDialog = true },
     )
     SettingsPreferenceSwitchItem(
-      iconRes = R.drawable.ic_baseline_hide,
+      icon = MihomoIcons.BaselineHide,
       titleRes = R.string.hide_app_icon_title,
       summaryRes = R.string.hide_app_icon_desc,
       checked = uiState.hideAppIcon,
       onCheckedChange = onHideAppIconChange,
     )
     SettingsPreferenceSwitchItem(
-      iconRes = R.drawable.ic_baseline_stack,
+      icon = MihomoIcons.BaselineStack,
       titleRes = R.string.hide_from_recents_title,
       summaryRes = R.string.hide_from_recents_desc,
       checked = uiState.hideFromRecents,
@@ -100,7 +106,7 @@ private fun AppSettingsContent(
 
     SettingsCategoryTitle(text = stringResource(R.string.service))
     SettingsPreferenceSwitchItem(
-      iconRes = R.drawable.ic_baseline_domain,
+      icon = MihomoIcons.BaselineDomain,
       titleRes = R.string.show_traffic,
       summaryRes = R.string.show_traffic_summary,
       checked = uiState.dynamicNotification,

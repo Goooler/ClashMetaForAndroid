@@ -42,8 +42,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -54,6 +54,14 @@ import com.github.kr328.clash.R
 import com.github.kr328.clash.profile.vm.ProfilesViewModel
 import com.github.kr328.clash.service.model.Profile
 import com.github.kr328.clash.ui.component.MihomoScaffold
+import com.github.kr328.clash.ui.icon.BaselineAdd
+import com.github.kr328.clash.ui.icon.BaselineContentCopy
+import com.github.kr328.clash.ui.icon.BaselineEdit
+import com.github.kr328.clash.ui.icon.BaselineMoreVert
+import com.github.kr328.clash.ui.icon.BaselineSync
+import com.github.kr328.clash.ui.icon.BaselineUpdate
+import com.github.kr328.clash.ui.icon.MihomoIcons
+import com.github.kr328.clash.ui.icon.OutlineDelete
 import com.github.kr328.clash.ui.theme.MihomoTheme
 import com.github.kr328.clash.ui.theme.PreviewMihomo
 import com.github.kr328.clash.ui.theme.mihomoDimens
@@ -146,7 +154,7 @@ private fun ProfilesContent(
     ModalBottomSheet(onDismissRequest = { menuProfile = null }, sheetState = sheetState) {
       if (profile.imported && profile.type != Profile.Type.File) {
         ProfilesMenuAction(
-          icon = R.drawable.ic_baseline_update,
+          icon = MihomoIcons.BaselineUpdate,
           text = stringResource(R.string.update),
           onClick = {
             menuProfile = null
@@ -155,7 +163,7 @@ private fun ProfilesContent(
         )
       }
       ProfilesMenuAction(
-        icon = R.drawable.ic_baseline_edit,
+        icon = MihomoIcons.BaselineEdit,
         text = stringResource(R.string.edit),
         onClick = {
           menuProfile = null
@@ -164,7 +172,7 @@ private fun ProfilesContent(
       )
       if (profile.imported) {
         ProfilesMenuAction(
-          icon = R.drawable.ic_baseline_content_copy,
+          icon = MihomoIcons.BaselineContentCopy,
           text = stringResource(R.string.duplicate),
           onClick = {
             menuProfile = null
@@ -173,7 +181,7 @@ private fun ProfilesContent(
         )
       }
       ProfilesMenuAction(
-        icon = R.drawable.ic_outline_delete,
+        icon = MihomoIcons.OutlineDelete,
         text = stringResource(R.string.delete),
         tint = MaterialTheme.colorScheme.error,
         onClick = {
@@ -198,7 +206,7 @@ private fun ProfilesContent(
             )
           } else {
             Icon(
-              painter = painterResource(R.drawable.ic_baseline_sync),
+              imageVector = MihomoIcons.BaselineSync,
               contentDescription = stringResource(R.string.update_all),
             )
           }
@@ -206,7 +214,7 @@ private fun ProfilesContent(
       }
       IconButton(onClick = onCreate) {
         Icon(
-          painter = painterResource(R.drawable.ic_baseline_add),
+          imageVector = MihomoIcons.BaselineAdd,
           contentDescription = stringResource(R.string.new_profile),
         )
       }
@@ -314,7 +322,7 @@ private fun ProfileItem(
 
       IconButton(onClick = onMenuClick, modifier = Modifier.padding(horizontal = 4.dp)) {
         Icon(
-          painter = painterResource(R.drawable.ic_baseline_more_vert),
+          imageVector = MihomoIcons.BaselineMoreVert,
           contentDescription = stringResource(R.string.more),
         )
       }
@@ -324,7 +332,7 @@ private fun ProfileItem(
 
 @Composable
 private fun ProfilesMenuAction(
-  icon: Int,
+  icon: ImageVector,
   text: String,
   onClick: () -> Unit,
   modifier: Modifier = Modifier,
@@ -339,7 +347,7 @@ private fun ProfilesMenuAction(
     verticalAlignment = Alignment.CenterVertically,
   ) {
     Icon(
-      painter = painterResource(icon),
+      imageVector = icon,
       contentDescription = null,
       tint = tint,
       modifier = Modifier.size(24.dp),

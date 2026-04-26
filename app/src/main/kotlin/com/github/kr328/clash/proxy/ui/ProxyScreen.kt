@@ -50,7 +50,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontWeight
@@ -66,6 +65,9 @@ import com.github.kr328.clash.core.model.TunnelState
 import com.github.kr328.clash.proxy.vm.ProxyViewModel
 import com.github.kr328.clash.proxy.vm.ProxyViewModel.SelectedProxy
 import com.github.kr328.clash.ui.component.MihomoScaffold
+import com.github.kr328.clash.ui.icon.BaselineFlashOn
+import com.github.kr328.clash.ui.icon.BaselineMoreVert
+import com.github.kr328.clash.ui.icon.MihomoIcons
 import com.github.kr328.clash.ui.theme.MihomoTheme
 import com.github.kr328.clash.ui.theme.PreviewMihomo
 import com.github.kr328.clash.ui.theme.mihomoDimens
@@ -174,7 +176,7 @@ private fun ProxyContent(
         } else {
           IconButton(onClick = { onUrlTest(uiState.currentPage) }) {
             Icon(
-              painter = painterResource(R.drawable.ic_baseline_flash_on),
+              imageVector = MihomoIcons.BaselineFlashOn,
               contentDescription = stringResource(R.string.delay_test),
             )
           }
@@ -183,7 +185,7 @@ private fun ProxyContent(
 
       IconButton(onClick = { menuVisible = true }) {
         Icon(
-          painter = painterResource(R.drawable.ic_baseline_more_vert),
+          imageVector = MihomoIcons.BaselineMoreVert,
           contentDescription = stringResource(R.string.more),
         )
       }

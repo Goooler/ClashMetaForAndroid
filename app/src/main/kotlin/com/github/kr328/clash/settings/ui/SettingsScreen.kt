@@ -1,6 +1,5 @@
 package com.github.kr328.clash.settings.ui
 
-import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
@@ -17,10 +16,15 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import com.github.kr328.clash.R
 import com.github.kr328.clash.ui.component.SettingsCommonScreen
+import com.github.kr328.clash.ui.icon.BaselineDns
+import com.github.kr328.clash.ui.icon.BaselineExtension
+import com.github.kr328.clash.ui.icon.BaselineMeta
+import com.github.kr328.clash.ui.icon.BaselineSettings
+import com.github.kr328.clash.ui.icon.MihomoIcons
 import com.github.kr328.clash.ui.theme.MihomoTheme
 import com.github.kr328.clash.ui.theme.PreviewMihomo
 import com.github.kr328.clash.ui.theme.mihomoDimens
@@ -42,25 +46,25 @@ fun SettingsScreen(modifier: Modifier = Modifier, onRoute: (SettingsRoute) -> Un
     modifier = modifier.fillMaxSize(),
   ) {
     SettingsEntryItem(
-      iconRes = R.drawable.ic_baseline_settings,
+      icon = MihomoIcons.BaselineSettings,
       titleRes = R.string.app,
       onClick = { onRoute(SettingsRoute.App) },
     )
 
     SettingsEntryItem(
-      iconRes = R.drawable.ic_baseline_dns,
+      icon = MihomoIcons.BaselineDns,
       titleRes = R.string.network,
       onClick = { onRoute(SettingsRoute.Network) },
     )
 
     SettingsEntryItem(
-      iconRes = R.drawable.ic_baseline_extension,
+      icon = MihomoIcons.BaselineExtension,
       titleRes = R.string.override,
       onClick = { onRoute(SettingsRoute.Override) },
     )
 
     SettingsEntryItem(
-      iconRes = R.drawable.ic_baseline_meta,
+      icon = MihomoIcons.BaselineMeta,
       titleRes = R.string.meta_features,
       onClick = { onRoute(SettingsRoute.MetaFeature) },
     )
@@ -69,7 +73,7 @@ fun SettingsScreen(modifier: Modifier = Modifier, onRoute: (SettingsRoute) -> Un
 
 @Composable
 private fun SettingsEntryItem(
-  @DrawableRes iconRes: Int,
+  icon: ImageVector,
   @StringRes titleRes: Int,
   onClick: () -> Unit,
   modifier: Modifier = Modifier,
@@ -90,7 +94,7 @@ private fun SettingsEntryItem(
   ) {
     Spacer(modifier = Modifier.width(dimens.itemHeaderMargin))
     Icon(
-      painter = painterResource(iconRes),
+      imageVector = icon,
       contentDescription = null,
       modifier = Modifier.size(dimens.itemHeaderComponentSize),
     )

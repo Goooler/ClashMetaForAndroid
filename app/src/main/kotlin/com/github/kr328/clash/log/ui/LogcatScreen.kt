@@ -36,7 +36,6 @@ import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.core.content.getSystemService
@@ -49,6 +48,10 @@ import com.github.kr328.clash.log.vm.LogcatViewModel
 import com.github.kr328.clash.ui.component.MihomoScaffold
 import com.github.kr328.clash.ui.component.ModelProgressBarDialog
 import com.github.kr328.clash.ui.component.ModelProgressBarState
+import com.github.kr328.clash.ui.icon.BaselineDelete
+import com.github.kr328.clash.ui.icon.BaselinePublish
+import com.github.kr328.clash.ui.icon.BaselineStop
+import com.github.kr328.clash.ui.icon.MihomoIcons
 import com.github.kr328.clash.ui.theme.MihomoTheme
 import com.github.kr328.clash.ui.theme.PreviewMihomo
 import com.github.kr328.clash.ui.theme.mihomoDimens
@@ -175,20 +178,20 @@ private fun LogcatContent(
       if (streaming) {
         IconButton(onClick = onClose) {
           Icon(
-            painter = painterResource(R.drawable.ic_baseline_stop),
+            imageVector = MihomoIcons.BaselineStop,
             contentDescription = stringResource(R.string.close),
           )
         }
       } else {
         IconButton(onClick = onDelete) {
           Icon(
-            painter = painterResource(R.drawable.ic_baseline_delete),
+            imageVector = MihomoIcons.BaselineDelete,
             contentDescription = stringResource(R.string.delete),
           )
         }
         IconButton(onClick = onExport) {
           Icon(
-            painter = painterResource(R.drawable.ic_baseline_publish),
+            imageVector = MihomoIcons.BaselinePublish,
             contentDescription = stringResource(R.string.export),
           )
         }

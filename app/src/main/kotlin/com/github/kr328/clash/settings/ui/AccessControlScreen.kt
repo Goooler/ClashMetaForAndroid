@@ -44,7 +44,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.style.TextOverflow
@@ -58,6 +57,9 @@ import com.github.kr328.clash.model.AppInfo
 import com.github.kr328.clash.model.AppInfoSort
 import com.github.kr328.clash.settings.vm.AccessControlViewModel
 import com.github.kr328.clash.ui.component.MihomoScaffold
+import com.github.kr328.clash.ui.icon.BaselineMoreVert
+import com.github.kr328.clash.ui.icon.BaselineSearch
+import com.github.kr328.clash.ui.icon.MihomoIcons
 import com.github.kr328.clash.ui.theme.MihomoTheme
 import com.github.kr328.clash.ui.theme.PreviewMihomo
 import com.github.kr328.clash.ui.theme.mihomoDimens
@@ -162,13 +164,13 @@ private fun AccessControlContent(
     actions = {
       IconButton(onClick = { showSearch = true }) {
         Icon(
-          painter = painterResource(R.drawable.ic_baseline_search),
+          imageVector = MihomoIcons.BaselineSearch,
           contentDescription = stringResource(R.string.search),
         )
       }
       IconButton(onClick = { showMenu = true }) {
         Icon(
-          painter = painterResource(R.drawable.ic_baseline_more_vert),
+          imageVector = MihomoIcons.BaselineMoreVert,
           contentDescription = stringResource(R.string.more),
         )
       }
