@@ -1,6 +1,5 @@
 package com.github.kr328.clash.profile.ui
 
-import android.content.Context
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -19,14 +18,15 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableLongStateOf
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -34,89 +34,62 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.github.kr328.clash.R
 import com.github.kr328.clash.core.model.Provider
-import com.github.kr328.clash.ui.Design
+import com.github.kr328.clash.profile.vm.ProvidersViewModel
+import com.github.kr328.clash.profile.vm.ProvidersViewModel.UiState.ProviderItemState
 import com.github.kr328.clash.ui.component.MihomoScaffold
 import com.github.kr328.clash.ui.theme.MihomoTheme
 import com.github.kr328.clash.ui.theme.PreviewMihomo
 import com.github.kr328.clash.ui.theme.mihomoDimens
 import com.github.kr328.clash.util.elapsedIntervalString
 import com.github.kr328.clash.util.type
-import kotlin.time.Duration.Companion.minutes
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.withContext
 
-class ProvidersDesign(context: Context, providers: List<Provider>) :
-  Design<ProvidersDesign.Request>(context) {
-  sealed interface Request {
-    data class Update(val index: Int, val provider: Provider) : Request
+@Composable
+fun ProvidersScreen(modifier: Modifier = Modifier, viewModel: ProvidersViewModel = viewModel()) {
+  val lifecycleOwner = LocalLifecycleOwner.current
+  val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+  val eventState by viewModel.eventState.collectAsStateWithLifecycle()
+  val snackbarHostState = remember { SnackbarHostState() }
+
+  DisposableEffect(lifecycleOwner, viewModel) {
+    lifecycleOwner.lifecycle.addObserver(viewModel)
+    onDispose { lifecycleOwner.lifecycle.removeObserver(viewModel) }
   }
 
-  private val states =
-    mutableStateListOf<ProviderItemState>().apply {
-      addAll(
-        providers.map {
-          ProviderItemState(provider = it, updatedAt = it.updatedAt, updating = false)
-        }
-      )
-    }
-
-  @Composable
-  override fun Content() = MihomoTheme {
-    ProvidersScreen(
-      states = states,
-      onUpdateAll = ::requestUpdateAll,
-      onUpdate = { index, provider ->
-        states[index] = states[index].copy(updating = true)
-        requests.trySend(Request.Update(index, provider))
-      },
-    )
-  }
-
-  suspend fun notifyUpdated(index: Int) =
-    withContext(Dispatchers.Main) { states[index] = states[index].copy(updating = false) }
-
-  suspend fun notifyChanged(index: Int) =
-    withContext(Dispatchers.Main) {
-      states[index] = states[index].copy(updating = false, updatedAt = System.currentTimeMillis())
-    }
-
-  private fun requestUpdateAll() {
-    states.forEachIndexed { index, state ->
-      if (state.updating || state.provider.vehicleType == Provider.VehicleType.Inline) {
-        return@forEachIndexed
+  LaunchedEffect(eventState) {
+    when (val event = eventState) {
+      ProvidersViewModel.EventState.Idle -> Unit
+      is ProvidersViewModel.EventState.ShowMessage -> {
+        snackbarHostState.showSnackbar(message = event.message, duration = SnackbarDuration.Long)
       }
-
-      states[index] = state.copy(updating = true)
-      requests.trySend(Request.Update(index, state.provider))
     }
+    viewModel.consumeEvent()
+  }
+
+  Box(modifier = modifier.fillMaxSize()) {
+    ProvidersContent(
+      providers = uiState.providers,
+      currentTime = uiState.currentTime,
+      onUpdateAll = viewModel::onUpdateAll,
+      onUpdate = { _, provider -> viewModel.onUpdate(provider) },
+    )
+
+    SnackbarHost(hostState = snackbarHostState, modifier = Modifier.align(Alignment.BottomCenter))
   }
 }
 
-private data class ProviderItemState(
-  val provider: Provider,
-  val updatedAt: Long,
-  val updating: Boolean,
-)
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun ProvidersScreen(
-  states: List<ProviderItemState>,
+private fun ProvidersContent(
+  providers: List<ProviderItemState>,
+  currentTime: Long,
   onUpdateAll: () -> Unit,
   onUpdate: (Int, Provider) -> Unit,
 ) {
-  var currentTime by remember { mutableLongStateOf(System.currentTimeMillis()) }
-
-  LaunchedEffect(Unit) {
-    while (true) {
-      delay(1.minutes)
-      currentTime = System.currentTimeMillis()
-    }
-  }
-
   MihomoScaffold(
     title = stringResource(R.string.providers),
     actions = {
@@ -130,7 +103,7 @@ private fun ProvidersScreen(
   ) { innerPadding ->
     LazyColumn(modifier = Modifier.fillMaxSize().padding(innerPadding)) {
       itemsIndexed(
-        items = states,
+        items = providers,
         key = { _, state -> "${state.provider.type}-${state.provider.name}" },
       ) { index, state ->
         ProviderItem(
@@ -198,9 +171,9 @@ private fun ProviderItem(state: ProviderItemState, currentTime: Long, onUpdate: 
 
 @PreviewMihomo
 @Composable
-private fun ProvidersScreenPreview() = MihomoTheme {
-  ProvidersScreen(
-    states =
+private fun ProvidersContentPreview() = MihomoTheme {
+  ProvidersContent(
+    providers =
       listOf(
         ProviderItemState(
           provider =
@@ -225,6 +198,7 @@ private fun ProvidersScreenPreview() = MihomoTheme {
           updating = false,
         ),
       ),
+    currentTime = System.currentTimeMillis(),
     onUpdateAll = {},
     onUpdate = { _, _ -> },
   )

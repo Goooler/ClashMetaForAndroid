@@ -1,58 +1,15 @@
 package com.github.kr328.clash.profile
 
-import com.github.kr328.clash.R
-import com.github.kr328.clash.common.util.intent
-import com.github.kr328.clash.profile.ui.ProvidersDesign
-import com.github.kr328.clash.ui.DesignActivity
-import com.github.kr328.clash.util.showExceptionSnackbar
-import com.github.kr328.clash.util.withClash
-import kotlinx.coroutines.isActive
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.selects.select
+import android.os.Bundle
+import androidx.activity.compose.setContent
+import com.github.kr328.clash.profile.ui.ProvidersScreen
+import com.github.kr328.clash.ui.BaseActivity
+import com.github.kr328.clash.ui.theme.MihomoTheme
 
-class ProvidersActivity : DesignActivity<ProvidersDesign>() {
-  override suspend fun main() {
-    val providers = withClash { queryProviders().sorted() }
-    val design = ProvidersDesign(this, providers)
+class ProvidersActivity : BaseActivity() {
+  override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
 
-    setContentDesign(design)
-
-    while (isActive) {
-      select<Unit> {
-        events.onReceive {
-          when (it) {
-            Event.ProfileLoaded -> {
-              val newList = withClash { queryProviders().sorted() }
-
-              if (newList != providers) {
-                startActivity(ProvidersActivity::class.intent)
-
-                finish()
-              }
-            }
-            else -> Unit
-          }
-        }
-        design.requests.onReceive {
-          when (it) {
-            is ProvidersDesign.Request.Update -> {
-              launch {
-                try {
-                  withClash { updateProvider(it.provider.type, it.provider.name) }
-
-                  design.notifyChanged(it.index)
-                } catch (e: Exception) {
-                  design.showExceptionSnackbar(
-                    getString(R.string.format_update_provider_failure, it.provider.name, e.message)
-                  )
-
-                  design.notifyUpdated(it.index)
-                }
-              }
-            }
-          }
-        }
-      }
-    }
+    setContent { MihomoTheme { ProvidersScreen() } }
   }
 }
