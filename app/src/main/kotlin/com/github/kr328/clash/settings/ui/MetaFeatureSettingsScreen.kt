@@ -63,7 +63,7 @@ fun MetaFeatureSettingsScreen(
 
   LaunchedEffect(importResult) {
     when (val result = importResult) {
-      ImportResult.NotStart,
+      ImportResult.Idle,
       ImportResult.InProgress -> Unit
 
       is ImportResult.Success -> {

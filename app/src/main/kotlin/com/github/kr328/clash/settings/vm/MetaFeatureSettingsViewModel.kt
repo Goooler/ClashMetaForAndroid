@@ -29,7 +29,7 @@ class MetaFeatureSettingsViewModel(app: Application) :
     field = MutableStateFlow(ConfigurationOverride())
 
   val importResult: StateFlow<ImportResult>
-    field = MutableStateFlow<ImportResult>(ImportResult.NotStart)
+    field = MutableStateFlow<ImportResult>(ImportResult.Idle)
 
   init {
     viewModelScope.launch {
@@ -210,7 +210,7 @@ class MetaFeatureSettingsViewModel(app: Application) :
   }
 
   sealed interface ImportResult {
-    data object NotStart : ImportResult
+    data object Idle : ImportResult
 
     data object InProgress : ImportResult
 
