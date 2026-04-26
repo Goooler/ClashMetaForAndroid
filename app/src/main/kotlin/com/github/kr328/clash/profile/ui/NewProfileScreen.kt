@@ -2,6 +2,7 @@ package com.github.kr328.clash.profile.ui
 
 import android.app.Activity.RESULT_OK
 import android.content.Intent
+import android.graphics.drawable.Drawable
 import android.provider.Settings
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult
@@ -33,6 +34,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.painter.BitmapPainter
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
@@ -40,7 +43,6 @@ import androidx.core.graphics.drawable.toBitmap
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.github.kr328.clash.R
-import com.github.kr328.clash.common.compat.getDrawableCompat
 import com.github.kr328.clash.common.constants.Intents
 import com.github.kr328.clash.common.util.intent
 import com.github.kr328.clash.common.util.setUUID
@@ -48,6 +50,8 @@ import com.github.kr328.clash.model.ProfileProvider
 import com.github.kr328.clash.profile.PropertiesActivity
 import com.github.kr328.clash.profile.vm.NewProfileViewModel
 import com.github.kr328.clash.ui.component.MihomoScaffold
+import com.github.kr328.clash.ui.icon.BaselineExtension
+import com.github.kr328.clash.ui.icon.MihomoIcons
 import com.github.kr328.clash.ui.theme.MihomoTheme
 import com.github.kr328.clash.ui.theme.PreviewMihomo
 import com.github.kr328.clash.ui.theme.mihomoDimens
@@ -145,12 +149,18 @@ private fun ProfileProviderItem(
   val headerMargin = dimens.itemHeaderMargin
   val textMargin = dimens.itemTextMargin
   val iconSizePx = with(density) { headerSize.toPx().roundToInt() }
+  val iconVector = provider.icon as? ImageVector
+  val iconDrawable = provider.icon as? Drawable
   val iconPainter =
-    remember(provider, iconSizePx) {
-      provider.icon
-        ?.toBitmap(width = iconSizePx, height = iconSizePx)
-        ?.asImageBitmap()
-        ?.let(::BitmapPainter)
+    if (iconVector != null) {
+      rememberVectorPainter(iconVector)
+    } else {
+      remember(iconDrawable, iconSizePx) {
+        iconDrawable
+          ?.toBitmap(width = iconSizePx, height = iconSizePx)
+          ?.asImageBitmap()
+          ?.let(::BitmapPainter)
+      }
     }
 
   Row(
@@ -190,7 +200,7 @@ private fun NewProfileContentPreview() = MihomoTheme {
       ProfileProvider.External(
         name = "External Provider",
         summary = "Import from external app",
-        icon = context.getDrawableCompat(R.drawable.ic_baseline_extension),
+        icon = MihomoIcons.BaselineExtension,
         intent = Intent(),
       ),
     )

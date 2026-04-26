@@ -1,6 +1,5 @@
 package com.github.kr328.clash.ui.component
 
-import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -18,7 +17,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import com.github.kr328.clash.ui.theme.mihomoDimens
 
@@ -29,7 +28,7 @@ fun SettingsPreferenceClickableItem(
   onClick: () -> Unit,
   modifier: Modifier = Modifier,
   enabled: Boolean = true,
-  @DrawableRes iconRes: Int? = null,
+  icon: ImageVector? = null,
 ) {
   val dimens = mihomoDimens
   val headerLayoutWidth = dimens.itemHeaderComponentSize + dimens.itemHeaderMargin * 2
@@ -47,12 +46,12 @@ fun SettingsPreferenceClickableItem(
         ),
     verticalAlignment = Alignment.CenterVertically,
   ) {
-    if (iconRes == null) {
+    if (icon == null) {
       Spacer(modifier = Modifier.width(headerLayoutWidth))
     } else {
       Spacer(modifier = Modifier.width(dimens.itemHeaderMargin))
       Icon(
-        painter = painterResource(iconRes),
+        imageVector = icon,
         contentDescription = null,
         modifier = Modifier.size(dimens.itemHeaderComponentSize),
         tint =
@@ -88,7 +87,7 @@ fun SettingsPreferenceSwitchItem(
   onCheckedChange: (Boolean) -> Unit,
   modifier: Modifier = Modifier,
   enabled: Boolean = true,
-  @DrawableRes iconRes: Int? = null,
+  icon: ImageVector? = null,
 ) {
   val dimens = mihomoDimens
   val headerLayoutWidth = dimens.itemHeaderComponentSize + dimens.itemHeaderMargin * 2
@@ -101,12 +100,12 @@ fun SettingsPreferenceSwitchItem(
         .padding(top = dimens.itemPaddingVertical, bottom = dimens.itemPaddingVertical),
     verticalAlignment = Alignment.CenterVertically,
   ) {
-    if (iconRes == null) {
+    if (icon == null) {
       Spacer(modifier = Modifier.width(headerLayoutWidth))
     } else {
       Spacer(modifier = Modifier.width(dimens.itemHeaderMargin))
       Icon(
-        painter = painterResource(iconRes),
+        imageVector = icon,
         contentDescription = null,
         modifier = Modifier.size(dimens.itemHeaderComponentSize),
         tint =

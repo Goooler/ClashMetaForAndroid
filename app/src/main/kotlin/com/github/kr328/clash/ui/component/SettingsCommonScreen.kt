@@ -1,6 +1,5 @@
 package com.github.kr328.clash.ui.component
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
@@ -14,15 +13,16 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.AnnotatedString
-import com.github.kr328.clash.R
+import com.github.kr328.clash.ui.icon.MihomoIcons
+import com.github.kr328.clash.ui.icon.OutlineInfo
 import com.github.kr328.clash.ui.theme.mihomoDimens
 
 @Composable
@@ -55,8 +55,8 @@ fun SettingsTipsItem(modifier: Modifier = Modifier, text: CharSequence) {
     verticalAlignment = Alignment.CenterVertically,
   ) {
     Spacer(modifier = Modifier.width(dimens.tipsIconMargin))
-    Image(
-      painter = painterResource(R.drawable.ic_outline_info),
+    Icon(
+      imageVector = MihomoIcons.OutlineInfo,
       contentDescription = null,
       modifier = Modifier.size(dimens.tipsIconSize),
     )

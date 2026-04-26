@@ -33,8 +33,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.fromHtml
@@ -50,6 +50,12 @@ import com.github.kr328.clash.ui.component.ModelProgressBarDialog
 import com.github.kr328.clash.ui.component.ModelProgressBarState
 import com.github.kr328.clash.ui.component.ModelTextInputDialog
 import com.github.kr328.clash.ui.component.SettingsTipsItem
+import com.github.kr328.clash.ui.icon.BaselineSave
+import com.github.kr328.clash.ui.icon.MihomoIcons
+import com.github.kr328.clash.ui.icon.OutlineFolder
+import com.github.kr328.clash.ui.icon.OutlineInbox
+import com.github.kr328.clash.ui.icon.OutlineLabel
+import com.github.kr328.clash.ui.icon.OutlineUpdate
 import com.github.kr328.clash.ui.theme.MihomoTheme
 import com.github.kr328.clash.ui.theme.PreviewMihomo
 import com.github.kr328.clash.ui.theme.mihomoDimens
@@ -172,7 +178,7 @@ private fun PropertiesContent(
       } else {
         IconButton(onClick = onCommit) {
           Icon(
-            painter = painterResource(R.drawable.ic_baseline_save),
+            imageVector = MihomoIcons.BaselineSave,
             contentDescription = stringResource(R.string.save),
           )
         }
@@ -191,7 +197,7 @@ private fun PropertiesContent(
         title = stringResource(R.string.name),
         text = profile.name,
         placeholder = stringResource(R.string.profile_name),
-        iconRes = R.drawable.ic_outline_label,
+        icon = MihomoIcons.OutlineLabel,
         enabled = true,
         onClick = { showInputNameDialog = true },
         itemPaddingVertical = itemPaddingVertical,
@@ -200,7 +206,7 @@ private fun PropertiesContent(
         title = stringResource(R.string.url),
         text = profile.source,
         placeholder = stringResource(R.string.accept_http_content),
-        iconRes = R.drawable.ic_outline_inbox,
+        icon = MihomoIcons.OutlineInbox,
         enabled = profile.type != Profile.Type.File && profile.type != Profile.Type.External,
         onClick = { showInputUrlDialog = true },
         itemPaddingVertical = itemPaddingVertical,
@@ -214,7 +220,7 @@ private fun PropertiesContent(
             stringResource(R.string.format_minutes, profile.interval.milliseconds.inWholeMinutes)
           },
         placeholder = stringResource(R.string.at_least_15_minutes),
-        iconRes = R.drawable.ic_outline_update,
+        icon = MihomoIcons.OutlineUpdate,
         enabled = profile.type != Profile.Type.File,
         onClick = { showInputIntervalDialog = true },
         itemPaddingVertical = itemPaddingVertical,
@@ -223,7 +229,7 @@ private fun PropertiesContent(
         title = stringResource(R.string.browse_files),
         text = stringResource(R.string.browse_configuration_providers),
         placeholder = stringResource(R.string.browse_configuration_providers),
-        iconRes = R.drawable.ic_outline_folder,
+        icon = MihomoIcons.OutlineFolder,
         enabled = true,
         onClick = onBrowseFiles,
         itemPaddingVertical = itemPaddingVertical,
@@ -316,7 +322,7 @@ private fun PropertiesActionItem(
   title: String,
   text: String,
   placeholder: String,
-  iconRes: Int,
+  icon: ImageVector,
   enabled: Boolean,
   onClick: () -> Unit,
   itemPaddingVertical: Dp,
@@ -337,7 +343,7 @@ private fun PropertiesActionItem(
   ) {
     Spacer(modifier = Modifier.width(itemHeaderMargin))
     Icon(
-      painter = painterResource(iconRes),
+      imageVector = icon,
       contentDescription = null,
       modifier = Modifier.size(itemHeaderComponentSize),
     )

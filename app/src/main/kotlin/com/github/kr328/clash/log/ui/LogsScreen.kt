@@ -1,6 +1,5 @@
 package com.github.kr328.clash.log.ui
 
-import androidx.annotation.DrawableRes
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -30,8 +29,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -39,6 +38,9 @@ import com.github.kr328.clash.R
 import com.github.kr328.clash.log.vm.LogsViewModel
 import com.github.kr328.clash.model.LogFile
 import com.github.kr328.clash.ui.component.MihomoScaffold
+import com.github.kr328.clash.ui.icon.BaselineAdb
+import com.github.kr328.clash.ui.icon.BaselineClearAll
+import com.github.kr328.clash.ui.icon.MihomoIcons
 import com.github.kr328.clash.ui.theme.MihomoTheme
 import com.github.kr328.clash.ui.theme.PreviewMihomo
 import com.github.kr328.clash.ui.theme.mihomoDimens
@@ -104,7 +106,7 @@ private fun LogsContent(
     actions = {
       IconButton(onClick = onDeleteAllConfirm) {
         Icon(
-          painter = painterResource(R.drawable.ic_baseline_clear_all),
+          imageVector = MihomoIcons.BaselineClearAll,
           contentDescription = stringResource(R.string.delete_all_logs),
         )
       }
@@ -118,7 +120,7 @@ private fun LogsContent(
         LogsActionItem(
           title = stringResource(R.string.clash_logcat),
           summary = stringResource(R.string.tap_to_start),
-          icon = R.drawable.ic_baseline_adb,
+          icon = MihomoIcons.BaselineAdb,
           onClick = onStartLogcat,
         )
       }
@@ -154,7 +156,7 @@ private fun LogsActionItem(
   summary: String,
   onClick: () -> Unit,
   modifier: Modifier = Modifier,
-  @DrawableRes icon: Int? = null,
+  icon: ImageVector? = null,
 ) {
   val dimens = mihomoDimens
   val headerLayoutWidth = dimens.itemHeaderComponentSize + dimens.itemHeaderMargin * 2
@@ -172,7 +174,7 @@ private fun LogsActionItem(
     ) {
       if (icon != null) {
         Icon(
-          painter = painterResource(icon),
+          imageVector = icon,
           contentDescription = null,
           modifier = Modifier.size(dimens.itemHeaderComponentSize),
         )

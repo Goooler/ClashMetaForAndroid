@@ -44,7 +44,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -53,6 +53,17 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.github.kr328.clash.R
 import com.github.kr328.clash.main.vm.MainViewModel
+import com.github.kr328.clash.ui.icon.BaselineApps
+import com.github.kr328.clash.ui.icon.BaselineAssignment
+import com.github.kr328.clash.ui.icon.BaselineHelpCenter
+import com.github.kr328.clash.ui.icon.BaselineInfo
+import com.github.kr328.clash.ui.icon.BaselineSettings
+import com.github.kr328.clash.ui.icon.BaselineSwapVerticalCircle
+import com.github.kr328.clash.ui.icon.BaselineViewList
+import com.github.kr328.clash.ui.icon.Clash
+import com.github.kr328.clash.ui.icon.MihomoIcons
+import com.github.kr328.clash.ui.icon.OutlineCheckCircle
+import com.github.kr328.clash.ui.icon.OutlineNotInterested
 import com.github.kr328.clash.ui.theme.MihomoDarkSurface
 import com.github.kr328.clash.ui.theme.MihomoLightStopped
 import com.github.kr328.clash.ui.theme.MihomoOnPrimary
@@ -175,7 +186,7 @@ private fun MainContent(
         verticalAlignment = Alignment.CenterVertically,
       ) {
         Image(
-          painter = painterResource(R.drawable.ic_clash),
+          imageVector = MihomoIcons.Clash,
           contentDescription = null,
           modifier = Modifier.size(dimens.mainLogoSize),
         )
@@ -188,9 +199,8 @@ private fun MainContent(
 
       MainActionCard(
         modifier = Modifier.padding(vertical = dimens.mainCardMarginVertical),
-        iconRes =
-          if (clashRunning) R.drawable.ic_outline_check_circle
-          else R.drawable.ic_outline_not_interested,
+        icon =
+          if (clashRunning) MihomoIcons.OutlineCheckCircle else MihomoIcons.OutlineNotInterested,
         text = stringResource(if (clashRunning) R.string.running else R.string.stopped),
         subtext =
           if (clashRunning && forwarded != null)
@@ -204,7 +214,7 @@ private fun MainContent(
       AnimatedVisibility(visible = clashRunning) {
         MainActionCard(
           modifier = Modifier.padding(vertical = dimens.mainCardMarginVertical),
-          iconRes = R.drawable.ic_baseline_apps,
+          icon = MihomoIcons.BaselineApps,
           text = stringResource(R.string.proxy),
           subtext = mode,
           backgroundColor = MaterialTheme.colorScheme.surface,
@@ -215,7 +225,7 @@ private fun MainContent(
 
       MainActionCard(
         modifier = Modifier.padding(vertical = dimens.mainCardMarginVertical),
-        iconRes = R.drawable.ic_baseline_view_list,
+        icon = MihomoIcons.BaselineViewList,
         text = stringResource(R.string.profile),
         subtext =
           if (profileName != null) stringResource(R.string.format_profile_activated, profileName)
@@ -228,7 +238,7 @@ private fun MainContent(
       AnimatedVisibility(visible = clashRunning && hasProviders) {
         MainActionLabel(
           modifier = Modifier.padding(vertical = dimens.mainLabelMarginVertical),
-          iconRes = R.drawable.ic_baseline_swap_vertical_circle,
+          icon = MihomoIcons.BaselineSwapVerticalCircle,
           text = stringResource(R.string.providers),
           onClick = onOpenProviders,
         )
@@ -236,25 +246,25 @@ private fun MainContent(
 
       MainActionLabel(
         modifier = Modifier.padding(vertical = dimens.mainLabelMarginVertical),
-        iconRes = R.drawable.ic_baseline_assignment,
+        icon = MihomoIcons.BaselineAssignment,
         text = stringResource(R.string.logs),
         onClick = onOpenLogs,
       )
       MainActionLabel(
         modifier = Modifier.padding(vertical = dimens.mainLabelMarginVertical),
-        iconRes = R.drawable.ic_baseline_settings,
+        icon = MihomoIcons.BaselineSettings,
         text = stringResource(R.string.settings),
         onClick = onOpenSettings,
       )
       MainActionLabel(
         modifier = Modifier.padding(vertical = dimens.mainLabelMarginVertical),
-        iconRes = R.drawable.ic_baseline_help_center,
+        icon = MihomoIcons.BaselineHelpCenter,
         text = stringResource(R.string.help),
         onClick = onOpenHelp,
       )
       MainActionLabel(
         modifier = Modifier.padding(vertical = dimens.mainLabelMarginVertical),
-        iconRes = R.drawable.ic_baseline_info,
+        icon = MihomoIcons.BaselineInfo,
         text = stringResource(R.string.about),
         onClick = onOpenAbout,
       )
@@ -266,7 +276,7 @@ private fun MainContent(
 
 @Composable
 private fun MainActionCard(
-  iconRes: Int,
+  icon: ImageVector,
   text: String,
   subtext: String?,
   backgroundColor: Color,
@@ -291,7 +301,7 @@ private fun MainActionCard(
       verticalAlignment = Alignment.CenterVertically,
     ) {
       Icon(
-        painter = painterResource(iconRes),
+        imageVector = icon,
         contentDescription = null,
         modifier = Modifier.size(dimens.largeItemHeaderComponentSize),
         tint = contentColor,
@@ -310,7 +320,7 @@ private fun MainActionCard(
 
 @Composable
 private fun MainActionLabel(
-  iconRes: Int,
+  icon: ImageVector,
   text: String,
   onClick: () -> Unit,
   modifier: Modifier = Modifier,
@@ -327,7 +337,7 @@ private fun MainActionLabel(
   ) {
     Spacer(modifier = Modifier.width(dimens.largeItemTrailingMarginHorizontal))
     Icon(
-      painter = painterResource(iconRes),
+      imageVector = icon,
       contentDescription = null,
       modifier = Modifier.size(dimens.largeItemHeaderComponentSize),
     )
@@ -346,7 +356,7 @@ private fun AboutDialog(versionName: String, onDismiss: () -> Unit) {
     },
     icon = {
       Image(
-        painter = painterResource(R.drawable.ic_clash),
+        imageVector = MihomoIcons.Clash,
         contentDescription = null,
         modifier = Modifier.size(dimens.aboutIconSize),
       )

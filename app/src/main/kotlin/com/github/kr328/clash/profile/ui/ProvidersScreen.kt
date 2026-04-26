@@ -30,7 +30,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -42,6 +41,9 @@ import com.github.kr328.clash.core.model.Provider
 import com.github.kr328.clash.profile.vm.ProvidersViewModel
 import com.github.kr328.clash.profile.vm.ProvidersViewModel.UiState.ProviderItemState
 import com.github.kr328.clash.ui.component.MihomoScaffold
+import com.github.kr328.clash.ui.icon.BaselineSwapVert
+import com.github.kr328.clash.ui.icon.BaselineSync
+import com.github.kr328.clash.ui.icon.MihomoIcons
 import com.github.kr328.clash.ui.theme.MihomoTheme
 import com.github.kr328.clash.ui.theme.PreviewMihomo
 import com.github.kr328.clash.ui.theme.mihomoDimens
@@ -95,7 +97,7 @@ private fun ProvidersContent(
     actions = {
       IconButton(onClick = onUpdateAll) {
         Icon(
-          painter = painterResource(R.drawable.ic_baseline_sync),
+          imageVector = MihomoIcons.BaselineSync,
           contentDescription = stringResource(R.string.update_all),
         )
       }
@@ -160,7 +162,7 @@ private fun ProviderItem(state: ProviderItemState, currentTime: Long, onUpdate: 
           )
         } else {
           Icon(
-            painter = painterResource(R.drawable.ic_baseline_swap_vert),
+            imageVector = MihomoIcons.BaselineSwapVert,
             contentDescription = stringResource(R.string.update),
           )
         }

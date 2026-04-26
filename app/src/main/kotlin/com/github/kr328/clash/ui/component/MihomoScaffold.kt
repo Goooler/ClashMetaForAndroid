@@ -13,10 +13,11 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import com.github.kr328.clash.R
+import com.github.kr328.clash.ui.icon.BaselineArrowBack
+import com.github.kr328.clash.ui.icon.MihomoIcons
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -39,7 +40,7 @@ fun MihomoScaffold(
         navigationIcon = {
           IconButton(onClick = onBack) {
             Icon(
-              painter = painterResource(R.drawable.ic_baseline_arrow_back),
+              imageVector = MihomoIcons.BaselineArrowBack,
               contentDescription = stringResource(R.string.close),
             )
           }

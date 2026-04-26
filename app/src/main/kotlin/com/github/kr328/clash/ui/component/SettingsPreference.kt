@@ -30,7 +30,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextRange
@@ -38,6 +37,9 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.github.kr328.clash.R
+import com.github.kr328.clash.ui.icon.BaselineAdd
+import com.github.kr328.clash.ui.icon.MihomoIcons
+import com.github.kr328.clash.ui.icon.OutlineDelete
 import com.github.kr328.clash.ui.theme.mihomoDimens
 import me.zhanghai.compose.preference.ListPreference
 import me.zhanghai.compose.preference.Preference
@@ -137,7 +139,7 @@ fun EditableTextListDialog(
             trailingContent = {
               IconButton(onClick = { values = values.toMutableList().apply { removeAt(index) } }) {
                 Icon(
-                  painter = painterResource(R.drawable.ic_outline_delete),
+                  imageVector = MihomoIcons.OutlineDelete,
                   contentDescription = stringResource(R.string.delete),
                 )
               }
@@ -187,7 +189,7 @@ fun FullScreenPreferenceDialog(
       actions = {
         IconButton(onClick = onAdd) {
           Icon(
-            painter = painterResource(R.drawable.ic_baseline_add),
+            imageVector = MihomoIcons.BaselineAdd,
             contentDescription = stringResource(R.string._new),
           )
         }
