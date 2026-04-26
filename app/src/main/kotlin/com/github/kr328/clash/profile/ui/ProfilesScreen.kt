@@ -1,6 +1,5 @@
 package com.github.kr328.clash.profile.ui
 
-import android.content.Context
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -27,11 +26,16 @@ import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.RadioButton
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -43,9 +47,12 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.github.kr328.clash.R
+import com.github.kr328.clash.profile.vm.ProfilesViewModel
 import com.github.kr328.clash.service.model.Profile
-import com.github.kr328.clash.ui.Design
 import com.github.kr328.clash.ui.component.MihomoScaffold
 import com.github.kr328.clash.ui.theme.MihomoTheme
 import com.github.kr328.clash.ui.theme.PreviewMihomo
@@ -56,81 +63,70 @@ import com.github.kr328.clash.util.toDateStr
 import com.github.kr328.clash.util.toString
 import java.util.UUID
 import kotlin.time.Duration.Companion.minutes
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 
-class ProfilesDesign(context: Context) : Design<ProfilesDesign.Request>(context) {
-  sealed interface Request {
-    data object UpdateAll : Request
+@Composable
+fun ProfilesScreen(
+  modifier: Modifier = Modifier,
+  viewModel: ProfilesViewModel = viewModel(),
+  onOpenCreate: () -> Unit,
+  onOpenEdit: (UUID) -> Unit,
+) {
+  val lifecycleOwner = LocalLifecycleOwner.current
+  val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+  val eventState by viewModel.eventState.collectAsStateWithLifecycle()
+  val snackbarHostState = remember { SnackbarHostState() }
+  val editText = stringResource(R.string.edit)
 
-    data object Create : Request
-
-    data class Active(val profile: Profile) : Request
-
-    data class Update(val profile: Profile) : Request
-
-    data class Edit(val profile: Profile) : Request
-
-    data class Duplicate(val profile: Profile) : Request
-
-    data class Delete(val profile: Profile) : Request
+  DisposableEffect(lifecycleOwner, viewModel) {
+    lifecycleOwner.lifecycle.addObserver(viewModel)
+    onDispose { lifecycleOwner.lifecycle.removeObserver(viewModel) }
   }
 
-  private var profiles by mutableStateOf<List<Profile>>(emptyList())
-  private var allUpdating by mutableStateOf(false)
-  private var hasUpdatableProfile by mutableStateOf(false)
-  private var currentTime by mutableLongStateOf(System.currentTimeMillis())
-
-  @Composable
-  override fun Content() = MihomoTheme {
-    ProfilesScreen(
-      profiles = profiles,
-      allUpdating = allUpdating,
-      hasUpdatableProfile = hasUpdatableProfile,
-      currentTime = currentTime,
-      onUpdateAll = {
-        allUpdating = true
-        requests.trySend(Request.UpdateAll)
-      },
-      onCreate = { requests.trySend(Request.Create) },
-      onActivate = { requests.trySend(Request.Active(it)) },
-      onUpdate = { requests.trySend(Request.Update(it)) },
-      onEdit = { requests.trySend(Request.Edit(it)) },
-      onDuplicate = { requests.trySend(Request.Duplicate(it)) },
-      onDelete = { requests.trySend(Request.Delete(it)) },
-    )
-  }
-
-  suspend fun patchProfiles(profiles: List<Profile>) {
-    val updatable =
-      withContext(Dispatchers.Default) {
-        profiles.any { it.imported && it.type != Profile.Type.File }
+  LaunchedEffect(eventState) {
+    when (val event = eventState) {
+      ProfilesViewModel.EventState.Idle -> Unit
+      ProfilesViewModel.EventState.OpenCreate -> onOpenCreate()
+      is ProfilesViewModel.EventState.OpenEdit -> onOpenEdit(event.uuid)
+      is ProfilesViewModel.EventState.ShowMessage -> {
+        snackbarHostState.showSnackbar(message = event.message, duration = SnackbarDuration.Long)
       }
-
-    withContext(Dispatchers.Main) {
-      this@ProfilesDesign.profiles = profiles
-      hasUpdatableProfile = updatable
+      is ProfilesViewModel.EventState.ShowEditableMessage -> {
+        val result =
+          snackbarHostState.showSnackbar(
+            message = event.message,
+            actionLabel = editText,
+            duration = SnackbarDuration.Long,
+          )
+        if (result == SnackbarResult.ActionPerformed) {
+          onOpenEdit(event.uuid)
+        }
+      }
     }
+    viewModel.consumeEvent()
   }
 
-  suspend fun requestSave(profile: Profile) {
-    snackbar(R.string.active_unsaved_tips) {
-      setAction(R.string.edit) { requests.trySend(Request.Edit(profile)) }
-    }
-  }
+  Box(modifier = modifier.fillMaxSize()) {
+    ProfilesContent(
+      profiles = uiState.profiles,
+      allUpdating = uiState.allUpdating,
+      hasUpdatableProfile = uiState.hasUpdatableProfile,
+      currentTime = uiState.currentTime,
+      onUpdateAll = viewModel::onUpdateAll,
+      onCreate = viewModel::onOpenCreate,
+      onActivate = viewModel::onActivate,
+      onUpdate = viewModel::onUpdate,
+      onEdit = viewModel::onEdit,
+      onDuplicate = viewModel::onDuplicate,
+      onDelete = viewModel::onDelete,
+    )
 
-  fun updateElapsed() {
-    currentTime = System.currentTimeMillis()
-  }
-
-  fun finishUpdateAll() {
-    allUpdating = false
+    SnackbarHost(hostState = snackbarHostState, modifier = Modifier.align(Alignment.BottomCenter))
   }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun ProfilesScreen(
+private fun ProfilesContent(
   profiles: List<Profile>,
   allUpdating: Boolean,
   hasUpdatableProfile: Boolean,
@@ -355,8 +351,8 @@ private fun ProfilesMenuAction(
 
 @PreviewMihomo
 @Composable
-private fun ProfilesScreenPreview() = MihomoTheme {
-  ProfilesScreen(
+private fun ProfilesContentPreview() = MihomoTheme {
+  ProfilesContent(
     profiles =
       listOf(
         Profile(
