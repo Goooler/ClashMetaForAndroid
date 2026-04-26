@@ -185,7 +185,7 @@ class ProfilesViewModel(app: Application) : AndroidViewModel(app), DefaultLifecy
   )
 
   sealed interface EventState {
-    data object NotStart : EventState
+    data object Idle : EventState
 
     data object OpenCreate : EventState
 
