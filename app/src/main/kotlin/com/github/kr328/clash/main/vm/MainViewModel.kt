@@ -65,8 +65,13 @@ class MainViewModel(app: Application) :
 
   override fun onStarted() = fetch()
 
-  override fun onStopped(cause: String?) = fetch()
+  override fun onStopped(cause: String?) {
+    cause?.let { message ->
+      eventState.update { EventState.ShowMessage(message) }
+    }
 
+    fetch()
+  }
   override fun onProfileChanged() = fetch()
 
   override fun onProfileLoaded() = fetch()
@@ -141,9 +146,13 @@ class MainViewModel(app: Application) :
         return@launch
       }
 
-      val vpnRequest = application.startClashService()
-      if (vpnRequest != null) {
-        eventState.value = EventState.RequestVpnPermission(vpnRequest)
+      try {
+        val vpnRequest = application.startClashService()
+        if (vpnRequest != null) {
+          eventState.value = EventState.RequestVpnPermission(vpnRequest)
+        }
+      } catch (_: Exception) {
+        eventState.value = EventState.ShowMessage(application.getString(R.string.unable_to_start_vpn))
       }
     }
   }
