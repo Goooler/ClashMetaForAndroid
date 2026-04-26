@@ -65,46 +65,48 @@ class ProvidersViewModel(app: Application) : AndroidViewModel(app), DefaultLifec
   }
 
   fun onUpdateAll() {
-    uiState.value.providers.forEachIndexed { index, state ->
+    uiState.value.providers.forEach { state ->
       if (state.updating || state.provider.vehicleType == Provider.VehicleType.Inline)
-        return@forEachIndexed
-      doUpdate(index, state.provider)
+        return@forEach
+      doUpdate(state.provider)
     }
   }
 
   fun onUpdate(index: Int, provider: Provider) {
-    doUpdate(index, provider)
+    doUpdate(provider)
   }
 
-  private fun doUpdate(index: Int, provider: Provider) {
+  private fun providerKey(provider: Provider): String {
+    return "${provider.type}-${provider.name}"
+  }
+
+  private fun updateProviderState(
+    provider: Provider,
+    transform: (UiState.ProviderState) -> UiState.ProviderState
+  ) {
+    val key = providerKey(provider)
+
     uiState.update { current ->
       current.copy(
         providers =
-          current.providers.mapIndexed { i, s -> if (i == index) s.copy(updating = true) else s }
+          current.providers.map { state ->
+            if (providerKey(state.provider) == key) transform(state) else state
+          }
       )
     }
+  }
+
+  private fun doUpdate(provider: Provider) {
+    updateProviderState(provider) { it.copy(updating = true) }
 
     viewModelScope.launch {
       try {
         withClash { updateProvider(provider.type, provider.name) }
-        uiState.update { current ->
-          current.copy(
-            providers =
-              current.providers.mapIndexed { i, s ->
-                if (i == index) s.copy(updating = false, updatedAt = System.currentTimeMillis())
-                else s
-              }
-          )
+        updateProviderState(provider) {
+          it.copy(updating = false, updatedAt = System.currentTimeMillis())
         }
       } catch (e: Exception) {
-        uiState.update { current ->
-          current.copy(
-            providers =
-              current.providers.mapIndexed { i, s ->
-                if (i == index) s.copy(updating = false) else s
-              }
-          )
-        }
+        updateProviderState(provider) { it.copy(updating = false) }
         eventState.value =
           EventState.ShowMessage(
             application.getString(R.string.format_update_provider_failure, provider.name, e.message)
