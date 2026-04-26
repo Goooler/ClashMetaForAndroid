@@ -1,6 +1,5 @@
 package com.github.kr328.clash.proxy.ui
 
-import android.content.Context
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -35,13 +34,12 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.PrimaryScrollableTabRow
 import androidx.compose.material3.RadioButton
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -51,217 +49,81 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.github.kr328.clash.R
 import com.github.kr328.clash.core.model.Proxy
 import com.github.kr328.clash.core.model.ProxySort
 import com.github.kr328.clash.core.model.TunnelState
-import com.github.kr328.clash.model.ProxyState
-import com.github.kr328.clash.store.UiStore
-import com.github.kr328.clash.ui.Design
+import com.github.kr328.clash.proxy.vm.ProxyViewModel
+import com.github.kr328.clash.proxy.vm.ProxyViewModel.SelectedProxy
 import com.github.kr328.clash.ui.component.MihomoScaffold
 import com.github.kr328.clash.ui.theme.MihomoTheme
 import com.github.kr328.clash.ui.theme.PreviewMihomo
 import com.github.kr328.clash.ui.theme.mihomoDimens
 import com.github.kr328.clash.util.toast
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
-class ProxyDesign(
-  context: Context,
-  overrideMode: TunnelState.Mode?,
-  private val groupNames: List<String>,
-  private val uiStore: UiStore,
-) : Design<ProxyDesign.Request>(context) {
-  sealed interface Request {
-    data object ReloadAll : Request
+@Composable
+fun ProxyScreen(
+  modifier: Modifier = Modifier,
+  viewModel: ProxyViewModel = viewModel(),
+  onReLaunch: () -> Unit,
+) {
+  val lifecycleOwner = LocalLifecycleOwner.current
+  val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+  val selectedProxies by viewModel.selectedProxies.collectAsStateWithLifecycle()
+  val eventState by viewModel.eventState.collectAsStateWithLifecycle()
+  val context = LocalContext.current
 
-    data object ReLaunch : Request
-
-    data class PatchMode(val mode: TunnelState.Mode?) : Request
-
-    data class Reload(val index: Int) : Request
-
-    data class Select(val index: Int, val name: String) : Request
-
-    data class UrlTest(val index: Int) : Request
+  DisposableEffect(lifecycleOwner, viewModel) {
+    lifecycleOwner.lifecycle.addObserver(viewModel)
+    onDispose { lifecycleOwner.lifecycle.removeObserver(viewModel) }
   }
 
-  private val groups = List(groupNames.size) { ProxyGroupUiState() }
-  private val initialPage = groupNames.indexOf(uiStore.proxyLastGroup).coerceAtLeast(0)
-
-  private var currentPage by
-    mutableIntStateOf(initialPage.coerceAtMost((groupNames.size - 1).coerceAtLeast(0)))
-  private var proxyLine by mutableIntStateOf(uiStore.proxyLine)
-  private var excludeNotSelectable by mutableStateOf(uiStore.proxyExcludeNotSelectable)
-  private var proxySort by mutableStateOf(uiStore.proxySort)
-  private var selectedMode by mutableStateOf(overrideMode)
-
-  @Composable
-  override fun Content() = MihomoTheme {
-    ProxyScreen(
-      groupNames = groupNames,
-      groups = groups,
-      currentPage = currentPage,
-      proxyLine = proxyLine,
-      excludeNotSelectable = excludeNotSelectable,
-      proxySort = proxySort,
-      overrideMode = selectedMode,
-      initialPage = initialPage,
-      onPageChanged = { index ->
-        currentPage = index
-        groupNames.getOrNull(index)?.let { uiStore.proxyLastGroup = it }
-      },
-      onUrlTest = ::requestUrlTesting,
-      onExcludeNotSelectableChanged = { enabled ->
-        excludeNotSelectable = enabled
-        uiStore.proxyExcludeNotSelectable = enabled
-        requests.trySend(Request.ReLaunch)
-      },
-      onProxyLineChanged = { line ->
-        proxyLine = line
-        uiStore.proxyLine = line
-        groups.forEach { it.refresh() }
-        requests.trySend(Request.ReloadAll)
-      },
-      onProxySortChanged = { sort ->
-        proxySort = sort
-        uiStore.proxySort = sort
-        requests.trySend(Request.ReloadAll)
-      },
-      onOverrideModeSelected = { mode ->
-        selectedMode = mode
-        requests.trySend(Request.PatchMode(mode))
-      },
-      onProxySelected = { index, name -> requests.trySend(Request.Select(index, name)) },
-    )
-  }
-
-  suspend fun updateGroup(
-    position: Int,
-    proxies: List<Proxy>,
-    selectable: Boolean,
-    parent: ProxyState,
-    links: Map<String, ProxyState>,
-  ) {
-    val sources =
-      withContext(Dispatchers.Default) {
-        proxies.map { proxy ->
-          ProxyItemSource(
-            proxy = proxy,
-            parent = parent,
-            link = if (proxy.type.group) links[proxy.name] else null,
-          )
-        }
+  LaunchedEffect(eventState) {
+    when (eventState) {
+      ProxyViewModel.EventState.Idle -> Unit
+      ProxyViewModel.EventState.ReLaunch -> {
+        onReLaunch()
       }
-
-    withContext(Dispatchers.Main) {
-      groups[position].apply {
-        this.sources = sources
-        this.selectable = selectable
-        urlTesting = false
-        refresh()
+      ProxyViewModel.EventState.ShowModeSwitchTips -> {
+        context.toast(R.string.mode_switch_tips)
       }
     }
+    viewModel.consumeEvent()
   }
 
-  suspend fun requestRedrawVisible() =
-    withContext(Dispatchers.Main) { groups.getOrNull(currentPage)?.refresh() }
-
-  suspend fun showModeSwitchTips() =
-    withContext(Dispatchers.Main) { context.toast(R.string.mode_switch_tips) }
-
-  private fun requestUrlTesting() {
-    if (groups.isEmpty()) return
-
-    val page = currentPage.coerceIn(groups.indices)
-
-    groups[page].urlTesting = true
-    requests.trySend(Request.UrlTest(page))
-  }
-}
-
-private data class ProxyItemSource(val proxy: Proxy, val parent: ProxyState, val link: ProxyState?)
-
-private data class ProxyItemUiState(
-  val key: String,
-  val title: String,
-  val subtitle: String,
-  val delayText: String,
-  val background: Color,
-  val controls: Color,
-)
-
-private fun ProxyItemSource.toUiState(
-  proxyLine: Int,
-  selectedControl: Color,
-  selectedBackground: Color,
-  unselectedControl: Color,
-  unselectedBackground: Color,
-): ProxyItemUiState {
-  val selected = proxy.name == parent.now
-  val background =
-    if (selected) {
-      selectedBackground
-    } else if (proxyLine == 1) {
-      Color.Transparent
-    } else {
-      unselectedBackground
-    }
-  val controls = if (selected) selectedControl else unselectedControl
-  val title = if (proxy.type.group) proxy.name else proxy.title
-  val subtitle =
-    if (proxy.type.group) {
-      if (link == null) {
-        proxy.type.name
-      } else {
-        "%s(%s)".format(proxy.type.name, link.now.ifEmpty { "*" })
-      }
-    } else {
-      proxy.subtitle
-    }
-
-  return ProxyItemUiState(
-    key = proxy.name,
-    title = title,
-    subtitle = subtitle,
-    delayText = if (proxy.delay in 0..Short.MAX_VALUE) proxy.delay.toString() else "",
-    background = background,
-    controls = controls,
+  ProxyContent(
+    modifier = modifier,
+    uiState = uiState,
+    selectedProxies = selectedProxies,
+    onPageChanged = viewModel::onPageChanged,
+    onUrlTest = viewModel::onUrlTest,
+    onExcludeNotSelectableChanged = viewModel::onExcludeNotSelectableChanged,
+    onProxyLineChanged = viewModel::onProxyLineChanged,
+    onProxySortChanged = viewModel::onProxySortChanged,
+    onOverrideModeSelected = viewModel::onOverrideModeSelected,
+    onProxySelected = viewModel::onProxySelected,
   )
-}
-
-private class ProxyGroupUiState {
-  var selectable by mutableStateOf(false)
-  var urlTesting by mutableStateOf(false)
-  var sources: List<ProxyItemSource> = emptyList()
-  var refreshVersion by mutableIntStateOf(0)
-
-  fun refresh() {
-    refreshVersion++
-  }
 }
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @Composable
-private fun ProxyScreen(
-  groupNames: List<String>,
-  groups: List<ProxyGroupUiState>,
-  currentPage: Int,
-  proxyLine: Int,
-  excludeNotSelectable: Boolean,
-  proxySort: ProxySort,
-  overrideMode: TunnelState.Mode?,
-  initialPage: Int,
+private fun ProxyContent(
+  modifier: Modifier = Modifier,
+  uiState: ProxyViewModel.UiState,
+  selectedProxies: List<SelectedProxy>,
   onPageChanged: (Int) -> Unit,
-  onUrlTest: () -> Unit,
+  onUrlTest: (Int) -> Unit,
   onExcludeNotSelectableChanged: (Boolean) -> Unit,
   onProxyLineChanged: (Int) -> Unit,
   onProxySortChanged: (ProxySort) -> Unit,
@@ -269,16 +131,16 @@ private fun ProxyScreen(
   onProxySelected: (Int, String) -> Unit,
 ) {
   var menuVisible by remember { mutableStateOf(false) }
-  val currentGroup = groups.getOrNull(currentPage)
-  val showUrlTestAction = groupNames.isNotEmpty()
+  val currentGroup = uiState.groups.getOrNull(uiState.currentPage)
+  val showUrlTestAction = uiState.groupNames.isNotEmpty()
 
   if (menuVisible) {
     ModalBottomSheet(onDismissRequest = { menuVisible = false }) {
       ProxyMenuSheetContent(
-        overrideMode = overrideMode,
-        excludeNotSelectable = excludeNotSelectable,
-        proxyLine = proxyLine,
-        proxySort = proxySort,
+        overrideMode = uiState.overrideMode,
+        excludeNotSelectable = uiState.excludeNotSelectable,
+        proxyLine = uiState.proxyLine,
+        proxySort = uiState.proxySort,
         onExcludeNotSelectableChanged = {
           menuVisible = false
           onExcludeNotSelectableChanged(it)
@@ -300,6 +162,7 @@ private fun ProxyScreen(
   }
 
   MihomoScaffold(
+    modifier = modifier,
     title = stringResource(R.string.proxy),
     actions = {
       if (showUrlTestAction) {
@@ -309,7 +172,7 @@ private fun ProxyScreen(
             strokeWidth = 2.dp,
           )
         } else {
-          IconButton(onClick = onUrlTest) {
+          IconButton(onClick = { onUrlTest(uiState.currentPage) }) {
             Icon(
               painter = painterResource(R.drawable.ic_baseline_flash_on),
               contentDescription = stringResource(R.string.delay_test),
@@ -327,7 +190,7 @@ private fun ProxyScreen(
     },
   ) { innerPadding ->
     Box(modifier = Modifier.fillMaxSize().padding(innerPadding)) {
-      if (groupNames.isEmpty()) {
+      if (uiState.groupNames.isEmpty()) {
         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
           Text(
             text = stringResource(R.string.proxy_empty_tips),
@@ -336,11 +199,8 @@ private fun ProxyScreen(
         }
       } else {
         ProxyPagerContent(
-          groupNames = groupNames,
-          groups = groups,
-          proxyLine = proxyLine,
-          initialPage = initialPage,
-          currentPage = currentPage,
+          uiState = uiState,
+          selectedProxies = selectedProxies,
           onPageChanged = onPageChanged,
           onProxySelected = onProxySelected,
         )
@@ -352,19 +212,21 @@ private fun ProxyScreen(
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun ProxyPagerContent(
-  groupNames: List<String>,
-  groups: List<ProxyGroupUiState>,
-  proxyLine: Int,
-  initialPage: Int,
-  currentPage: Int,
+  uiState: ProxyViewModel.UiState,
+  selectedProxies: List<SelectedProxy>,
   onPageChanged: (Int) -> Unit,
   onProxySelected: (Int, String) -> Unit,
 ) {
+  val groupNames = uiState.groupNames
+  if (groupNames.isEmpty()) return
+
+  val initialPage = uiState.initialPage.coerceIn(groupNames.indices)
   val pagerState = rememberPagerState(initialPage = initialPage, pageCount = { groupNames.size })
   val scope = rememberCoroutineScope()
 
   LaunchedEffect(pagerState) { snapshotFlow { pagerState.currentPage }.collect(onPageChanged) }
 
+  val currentPage = uiState.currentPage.coerceIn(groupNames.indices)
   LaunchedEffect(currentPage) {
     if (currentPage != pagerState.currentPage) pagerState.scrollToPage(currentPage)
   }
@@ -385,8 +247,9 @@ private fun ProxyPagerContent(
     HorizontalPager(state = pagerState, modifier = Modifier.fillMaxSize()) { page ->
       ProxyGroupPage(
         index = page,
-        proxyLine = proxyLine,
-        group = groups[page],
+        proxyLine = uiState.proxyLine,
+        group = uiState.groups.getOrNull(page) ?: ProxyViewModel.UiState.ProxyGroupUiState(),
+        selectedProxies = selectedProxies,
         onProxySelected = onProxySelected,
       )
     }
@@ -397,7 +260,8 @@ private fun ProxyPagerContent(
 private fun ProxyGroupPage(
   index: Int,
   proxyLine: Int,
-  group: ProxyGroupUiState,
+  group: ProxyViewModel.UiState.ProxyGroupUiState,
+  selectedProxies: List<SelectedProxy>,
   onProxySelected: (Int, String) -> Unit,
 ) {
   val dimens = mihomoDimens
@@ -418,9 +282,13 @@ private fun ProxyGroupPage(
   ) {
     items(count = sources.size, key = { itemIndex -> sources[itemIndex].proxy.name }) { itemIndex ->
       val source = sources[itemIndex]
+      val parentNow = selectedProxies.getOrNull(index)
+      val linkNow = source.linkIndex.takeIf { it >= 0 }?.let { selectedProxies.getOrNull(it) }
       val item =
-        remember(source, refreshVersion, proxyLine) {
+        remember(source, refreshVersion, proxyLine, parentNow, linkNow) {
           source.toUiState(
+            parentNow = parentNow ?: SelectedProxy("?"),
+            linkNow = linkNow,
             proxyLine = proxyLine,
             selectedControl = selectedControl,
             selectedBackground = selectedBackground,
@@ -441,7 +309,7 @@ private fun ProxyGroupPage(
 
 @Composable
 private fun ProxyItemCard(
-  item: ProxyItemUiState,
+  item: ProxyViewModel.UiState.ProxyItemUiState,
   proxyLine: Int,
   selectable: Boolean,
   onClick: () -> Unit,
@@ -629,14 +497,14 @@ private fun columnsForProxyLine(proxyLine: Int): Int =
 
 @PreviewMihomo
 @Composable
-private fun ProxyScreenPreview() = MihomoTheme {
+private fun ProxyContentPreview() = MihomoTheme {
   val groups = remember {
     listOf(
-      ProxyGroupUiState().apply {
-        selectable = true
+      ProxyViewModel.UiState.ProxyGroupUiState(
+        selectable = true,
         sources =
           listOf(
-            ProxyItemSource(
+            ProxyViewModel.UiState.ProxyItemSource(
               proxy =
                 Proxy(
                   name = "auto",
@@ -645,10 +513,9 @@ private fun ProxyScreenPreview() = MihomoTheme {
                   type = Proxy.Type.URLTest,
                   delay = 48,
                 ),
-              parent = ProxyState("auto"),
-              link = ProxyState("HK-01"),
+              linkIndex = 1,
             ),
-            ProxyItemSource(
+            ProxyViewModel.UiState.ProxyItemSource(
               proxy =
                 Proxy(
                   name = "hk-01",
@@ -657,125 +524,32 @@ private fun ProxyScreenPreview() = MihomoTheme {
                   type = Proxy.Type.Shadowsocks,
                   delay = 62,
                 ),
-              parent = ProxyState("auto"),
-              link = null,
+              linkIndex = -1,
             ),
-            ProxyItemSource(
-              proxy =
-                Proxy(
-                  name = "jp-01",
-                  title = "Japan 01",
-                  subtitle = "Tokyo | IPLC",
-                  type = Proxy.Type.Shadowsocks,
-                  delay = 89,
-                ),
-              parent = ProxyState("auto"),
-              link = null,
-            ),
-            ProxyItemSource(
-              proxy =
-                Proxy(
-                  name = "sg-01",
-                  title = "Singapore 01",
-                  subtitle = "Premium",
-                  type = Proxy.Type.Shadowsocks,
-                  delay = 74,
-                ),
-              parent = ProxyState("auto"),
-              link = null,
-            ),
-          )
-      },
-      ProxyGroupUiState().apply {
-        selectable = true
-        urlTesting = true
-        sources =
-          listOf(
-            ProxyItemSource(
-              proxy =
-                Proxy(
-                  name = "fallback-a",
-                  title = "Fallback A",
-                  subtitle = "",
-                  type = Proxy.Type.Selector,
-                  delay = 128,
-                ),
-              parent = ProxyState("elsewhere"),
-              link = ProxyState("Node-2"),
-            ),
-            ProxyItemSource(
-              proxy =
-                Proxy(
-                  name = "fallback-b",
-                  title = "Fallback B",
-                  subtitle = "",
-                  type = Proxy.Type.Selector,
-                  delay = 156,
-                ),
-              parent = ProxyState("elsewhere"),
-              link = ProxyState("Node-4"),
-            ),
-          )
-      },
+          ),
+      )
     )
   }
 
-  ProxyScreen(
-    groupNames = listOf("Auto", "Fallback"),
-    groups = groups,
-    currentPage = 0,
-    proxyLine = 2,
-    excludeNotSelectable = false,
-    proxySort = ProxySort.Delay,
-    overrideMode = TunnelState.Mode.Rule,
-    initialPage = 0,
-    onPageChanged = {},
-    onUrlTest = {},
-    onExcludeNotSelectableChanged = {},
-    onProxyLineChanged = {},
-    onProxySortChanged = {},
-    onOverrideModeSelected = {},
-    onProxySelected = { _, _ -> },
-  )
-}
-
-@PreviewMihomo
-@Composable
-private fun ProxyScreenEmptyPreview() = MihomoTheme {
-  ProxyScreen(
-    groupNames = emptyList(),
-    groups = emptyList(),
-    currentPage = 0,
-    proxyLine = 2,
-    excludeNotSelectable = false,
-    proxySort = ProxySort.Default,
-    overrideMode = null,
-    initialPage = 0,
-    onPageChanged = {},
-    onUrlTest = {},
-    onExcludeNotSelectableChanged = {},
-    onProxyLineChanged = {},
-    onProxySortChanged = {},
-    onOverrideModeSelected = {},
-    onProxySelected = { _, _ -> },
-  )
-}
-
-@PreviewMihomo
-@Composable
-private fun ProxyMenuSheetContentPreview() = MihomoTheme {
-  Surface {
-    Column {
-      ProxyMenuSheetContent(
-        overrideMode = TunnelState.Mode.Rule,
-        excludeNotSelectable = false,
+  ProxyContent(
+    selectedProxies = listOf(SelectedProxy("auto"), SelectedProxy("hk-01")),
+    uiState =
+      ProxyViewModel.UiState(
+        groupNames = listOf("Auto"),
+        groups = groups,
+        currentPage = 0,
         proxyLine = 2,
+        excludeNotSelectable = false,
         proxySort = ProxySort.Delay,
-        onExcludeNotSelectableChanged = {},
-        onProxyLineChanged = {},
-        onProxySortChanged = {},
-        onOverrideModeSelected = {},
-      )
-    }
-  }
+        overrideMode = TunnelState.Mode.Rule,
+        initialPage = 0,
+      ),
+    onPageChanged = {},
+    onUrlTest = {},
+    onExcludeNotSelectableChanged = {},
+    onProxyLineChanged = {},
+    onProxySortChanged = {},
+    onOverrideModeSelected = {},
+    onProxySelected = { _, _ -> },
+  )
 }
