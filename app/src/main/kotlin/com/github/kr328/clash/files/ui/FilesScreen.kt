@@ -1,6 +1,12 @@
 package com.github.kr328.clash.files.ui
 
 import android.content.Context
+import android.content.Intent
+import androidx.activity.compose.BackHandler
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts.CreateDocument
+import androidx.activity.result.contract.ActivityResultContracts.GetContent
+import androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -22,6 +28,7 @@ import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableLongStateOf
@@ -35,9 +42,13 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.github.kr328.clash.R
+import com.github.kr328.clash.common.util.grantPermissions
+import com.github.kr328.clash.files.vm.FilesViewModel
 import com.github.kr328.clash.model.File
-import com.github.kr328.clash.ui.Design
 import com.github.kr328.clash.ui.component.MihomoScaffold
 import com.github.kr328.clash.ui.component.ModelTextInputDialog
 import com.github.kr328.clash.ui.theme.MihomoTheme
@@ -45,71 +56,91 @@ import com.github.kr328.clash.ui.theme.PreviewMihomo
 import com.github.kr328.clash.util.ValidatorFileName
 import com.github.kr328.clash.util.elapsedIntervalString
 import com.github.kr328.clash.util.toBytesString
+import com.github.kr328.clash.util.toast
+import java.util.UUID
 import kotlin.time.Duration.Companion.minutes
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.withContext
 
-class FilesDesign(context: Context) : Design<FilesDesign.Request>(context) {
-  sealed interface Request {
-    data class OpenFile(val file: File) : Request
+@Composable
+fun FilesScreen(
+  uuid: UUID,
+  modifier: Modifier = Modifier,
+  viewModel: FilesViewModel = viewModel(),
+  onFinish: () -> Unit,
+) {
+  val lifecycleOwner = LocalLifecycleOwner.current
+  val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+  val eventState by viewModel.eventState.collectAsStateWithLifecycle()
+  val context = LocalContext.current
 
-    data class OpenDirectory(val file: File) : Request
+  var pendingImportTarget by remember { mutableStateOf<File?>(null) }
+  var pendingExportSource by remember { mutableStateOf<File?>(null) }
 
-    data class RenameFile(val file: File, val newName: String) : Request
+  val openFileLauncher = rememberLauncherForActivityResult(StartActivityForResult()) {}
 
-    data class DeleteFile(val file: File) : Request
-
-    data class ImportFile(val file: File?) : Request
-
-    data class ExportFile(val file: File) : Request
-
-    data object PopStack : Request
-  }
-
-  private var files by mutableStateOf<List<File>>(emptyList())
-  private var currentInBaseDir by mutableStateOf(false)
-  private var configurationEditable by mutableStateOf(false)
-
-  @Composable
-  override fun Content() = MihomoTheme {
-    FilesScreen(
-      files = files,
-      currentInBaseDir = currentInBaseDir,
-      configurationEditable = configurationEditable,
-      onBack = { requests.trySend(Request.PopStack) },
-      onOpen = { file ->
-        if (file.isDirectory) {
-          requests.trySend(Request.OpenDirectory(file))
-        } else {
-          requests.trySend(Request.OpenFile(file))
-        }
-      },
-      onNew = { requests.trySend(Request.ImportFile(null)) },
-      onImport = { requests.trySend(Request.ImportFile(it)) },
-      onExport = { requests.trySend(Request.ExportFile(it)) },
-      onRename = { file, newName -> requests.trySend(Request.RenameFile(file, newName)) },
-      onDelete = { requests.trySend(Request.DeleteFile(it)) },
-    )
-  }
-
-  suspend fun swapFiles(files: List<File>, currentInBaseDir: Boolean) =
-    withContext(Dispatchers.Main) {
-      this@FilesDesign.files = files
-      this@FilesDesign.currentInBaseDir = currentInBaseDir
+  val importLauncher =
+    rememberLauncherForActivityResult(GetContent()) { uri ->
+      viewModel.onImportResult(uri, pendingImportTarget)
+      pendingImportTarget = null
     }
 
-  fun updateConfigurationEditable(editable: Boolean) {
-    configurationEditable = editable
+  val exportLauncher =
+    rememberLauncherForActivityResult(CreateDocument("text/plain")) { uri ->
+      viewModel.onExportResult(uri, pendingExportSource)
+      pendingExportSource = null
+    }
+
+  LaunchedEffect(uuid) { viewModel.init(uuid = uuid) }
+
+  DisposableEffect(lifecycleOwner, viewModel) {
+    lifecycleOwner.lifecycle.addObserver(viewModel)
+    onDispose { lifecycleOwner.lifecycle.removeObserver(viewModel) }
   }
+
+  LaunchedEffect(eventState) {
+    when (val event = eventState) {
+      FilesViewModel.EventState.Idle -> Unit
+      FilesViewModel.EventState.Finish -> {
+        onFinish()
+      }
+      is FilesViewModel.EventState.OpenFile -> {
+        openFileLauncher.launch(
+          Intent(Intent.ACTION_VIEW).setDataAndType(event.uri, "text/plain").grantPermissions()
+        )
+      }
+      is FilesViewModel.EventState.RequestImport -> {
+        pendingImportTarget = event.targetFile
+        importLauncher.launch("*/*")
+      }
+      is FilesViewModel.EventState.RequestExport -> {
+        pendingExportSource = event.sourceFile
+        exportLauncher.launch(event.sourceFile.name)
+      }
+      is FilesViewModel.EventState.ShowMessage -> {
+        context.toast(event.message)
+      }
+    }
+    viewModel.consumeEvent()
+  }
+
+  FilesContent(
+    modifier = modifier,
+    uiState = uiState,
+    onBack = viewModel::onBack,
+    onOpen = viewModel::onOpen,
+    onNew = { viewModel.onRequestImport(null) },
+    onImport = { viewModel.onRequestImport(it) },
+    onExport = { viewModel.onRequestExport(it) },
+    onRename = viewModel::onRename,
+    onDelete = viewModel::onDelete,
+  )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun FilesScreen(
-  files: List<File>,
-  currentInBaseDir: Boolean,
-  configurationEditable: Boolean,
+private fun FilesContent(
+  modifier: Modifier = Modifier,
+  uiState: FilesViewModel.UiState,
   onBack: () -> Unit,
   onOpen: (File) -> Unit,
   onNew: () -> Unit,
@@ -121,6 +152,9 @@ private fun FilesScreen(
   var menuFile by remember { mutableStateOf<File?>(null) }
   var renameFile by remember { mutableStateOf<File?>(null) }
   val sheetState = rememberModalBottomSheetState()
+  val currentInBaseDir = uiState.currentInBaseDir
+  val configurationEditable = uiState.configurationEditable
+  val files = uiState.files
 
   if (menuFile != null) {
     ModalBottomSheet(onDismissRequest = { menuFile = null }, sheetState = sheetState) {
@@ -168,7 +202,10 @@ private fun FilesScreen(
     }
   }
 
+  BackHandler(onBack = onBack)
+
   MihomoScaffold(
+    modifier = modifier,
     title = stringResource(R.string.files),
     onBack = onBack,
     actions = {
@@ -306,15 +343,18 @@ private fun FilesMenuAction(
 
 @PreviewMihomo
 @Composable
-private fun FilesScreenPreview() = MihomoTheme {
-  FilesScreen(
-    files =
-      listOf(
-        File("1", "config.yaml", 1024, System.currentTimeMillis() - 60_000, false),
-        File("2", "scripts", 0, System.currentTimeMillis() - 3_600_000, true),
+private fun FilesContentPreview() = MihomoTheme {
+  FilesContent(
+    uiState =
+      FilesViewModel.UiState(
+        files =
+          listOf(
+            File("1", "config.yaml", 1024, System.currentTimeMillis() - 60_000, false),
+            File("2", "scripts", 0, System.currentTimeMillis() - 3_600_000, true),
+          ),
+        currentInBaseDir = true,
+        configurationEditable = false,
       ),
-    currentInBaseDir = true,
-    configurationEditable = false,
     onBack = {},
     onOpen = {},
     onNew = {},
