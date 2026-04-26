@@ -1,9 +1,13 @@
 package com.github.kr328.clash.profile.ui
 
-import android.content.Context
+import android.app.Activity.RESULT_OK
 import android.content.Intent
+import android.provider.Settings
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -17,12 +21,14 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.asImageBitmap
@@ -31,60 +37,86 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.core.graphics.drawable.toBitmap
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.github.kr328.clash.R
 import com.github.kr328.clash.common.compat.getDrawableCompat
+import com.github.kr328.clash.common.constants.Intents
+import com.github.kr328.clash.common.util.intent
+import com.github.kr328.clash.common.util.setUUID
 import com.github.kr328.clash.model.ProfileProvider
-import com.github.kr328.clash.ui.Design
+import com.github.kr328.clash.profile.PropertiesActivity
+import com.github.kr328.clash.profile.vm.NewProfileViewModel
 import com.github.kr328.clash.ui.component.MihomoScaffold
 import com.github.kr328.clash.ui.theme.MihomoTheme
 import com.github.kr328.clash.ui.theme.PreviewMihomo
 import com.github.kr328.clash.ui.theme.mihomoDimens
+import io.github.g00fy2.quickie.ScanQRCode
 import kotlin.math.roundToInt
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 
-class NewProfileDesign(context: Context) : Design<NewProfileDesign.Request>(context) {
-  sealed interface Request {
-    data class Create(val provider: ProfileProvider) : Request
+@Composable
+fun NewProfileScreen(
+  modifier: Modifier = Modifier,
+  viewModel: NewProfileViewModel = viewModel(),
+  onFinish: () -> Unit,
+) {
+  val context = LocalContext.current
+  val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+  val eventState by viewModel.eventState.collectAsStateWithLifecycle()
+  val snackbarHostState = remember { SnackbarHostState() }
 
-    data class OpenDetail(val provider: ProfileProvider.External) : Request
+  val qrLauncher =
+    rememberLauncherForActivityResult(ScanQRCode()) { result -> viewModel.onQRResult(result) }
 
-    data class LaunchScanner(val provider: ProfileProvider.QR) : Request
-  }
-
-  private var providers by mutableStateOf<List<ProfileProvider>>(emptyList())
-
-  @Composable
-  override fun Content() = MihomoTheme {
-    NewProfileScreen(providers = providers, onCreate = ::requestCreate, onDetail = ::requestDetail)
-  }
-
-  suspend fun patchProviders(providers: List<ProfileProvider>) =
-    withContext(Dispatchers.Main) { this@NewProfileDesign.providers = providers }
-
-  private fun requestCreate(provider: ProfileProvider) {
-    if (provider is ProfileProvider.QR) {
-      requests.trySend(Request.LaunchScanner(provider))
-    } else {
-      requests.trySend(Request.Create(provider))
+  val externalProviderLauncher =
+    rememberLauncherForActivityResult(StartActivityForResult()) { result ->
+      if (result.resultCode == RESULT_OK) {
+        val uri = result.data?.data ?: return@rememberLauncherForActivityResult
+        val name = result.data?.getStringExtra(Intents.EXTRA_NAME)
+        viewModel.onExternalProviderResult(uri, name)
+      }
     }
+
+  val propertiesLauncher =
+    rememberLauncherForActivityResult(StartActivityForResult()) { result ->
+      viewModel.onPropertiesResult(result.resultCode == RESULT_OK)
+    }
+
+  LaunchedEffect(eventState) {
+    when (val event = eventState) {
+      NewProfileViewModel.EventState.NotStart -> Unit
+      NewProfileViewModel.EventState.LaunchQRScanner -> qrLauncher.launch(null)
+      is NewProfileViewModel.EventState.LaunchExternalProvider ->
+        externalProviderLauncher.launch(event.intent)
+      is NewProfileViewModel.EventState.LaunchProperties ->
+        propertiesLauncher.launch(PropertiesActivity::class.intent.setUUID(event.uuid))
+      is NewProfileViewModel.EventState.OpenAppSettings ->
+        context.startActivity(
+          Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).setData(event.uri)
+        )
+      is NewProfileViewModel.EventState.ShowMessage ->
+        snackbarHostState.showSnackbar(message = event.message, duration = SnackbarDuration.Long)
+      NewProfileViewModel.EventState.Finish -> onFinish()
+    }
+    viewModel.consumeEvent()
   }
 
-  private fun requestDetail(provider: ProfileProvider): Boolean {
-    if (provider !is ProfileProvider.External) return false
-
-    requests.trySend(Request.OpenDetail(provider))
-
-    return true
+  Box(modifier = modifier.fillMaxSize()) {
+    NewProfileContent(
+      providers = uiState.providers,
+      onCreate = viewModel::onCreate,
+      onDetail = viewModel::onDetail,
+    )
+    SnackbarHost(hostState = snackbarHostState, modifier = Modifier.align(Alignment.BottomCenter))
   }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun NewProfileScreen(
+private fun NewProfileContent(
   providers: List<ProfileProvider>,
   onCreate: (ProfileProvider) -> Unit,
-  onDetail: (ProfileProvider) -> Boolean,
+  onDetail: (ProfileProvider.External) -> Unit,
 ) {
   MihomoScaffold(title = stringResource(R.string.new_profile)) { innerPadding ->
     LazyColumn(modifier = Modifier.fillMaxSize().padding(innerPadding)) {
@@ -92,7 +124,7 @@ private fun NewProfileScreen(
         ProfileProviderItem(
           provider = provider,
           onClick = { onCreate(provider) },
-          onLongClick = { onDetail(provider) },
+          onLongClick = { if (provider is ProfileProvider.External) onDetail(provider) },
         )
       }
     }
@@ -148,7 +180,7 @@ private fun ProfileProviderItem(
 
 @PreviewMihomo
 @Composable
-private fun NewProfileScreenPreview() = MihomoTheme {
+private fun NewProfileContentPreview() = MihomoTheme {
   val context = LocalContext.current
   val providers =
     listOf(
@@ -163,5 +195,5 @@ private fun NewProfileScreenPreview() = MihomoTheme {
       ),
     )
 
-  NewProfileScreen(providers = providers, onCreate = {}, onDetail = { false })
+  NewProfileContent(providers = providers, onCreate = {}, onDetail = {})
 }
