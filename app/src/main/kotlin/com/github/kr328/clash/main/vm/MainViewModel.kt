@@ -42,6 +42,7 @@ class MainViewModel(app: Application) : AndroidViewModel(app), DefaultLifecycleO
     field = MutableStateFlow<EventState>(EventState.Idle)
 
   override fun onStart(owner: LifecycleOwner) {
+    broadcastEventsJob?.cancel()
     broadcastEventsJob = viewModelScope.launch {
       Remote.broadcasts.event.collect { event ->
         when (event) {
