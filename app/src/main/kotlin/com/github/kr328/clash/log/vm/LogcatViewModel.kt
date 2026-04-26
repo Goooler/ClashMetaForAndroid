@@ -1,6 +1,5 @@
 package com.github.kr328.clash.log.vm
 
-import android.annotation.SuppressLint
 import android.app.Application
 import android.content.ComponentName
 import android.content.ServiceConnection
@@ -37,7 +36,7 @@ import kotlinx.coroutines.withContext
 
 class LogcatViewModel(app: Application) : AndroidViewModel(app), DefaultLifecycleObserver {
   private var conn: ServiceConnection? = null
-  @SuppressLint("StaticFieldLeak") private var logcat: LogcatService? = null
+  @Suppress("StaticFieldLeak") private var logcat: LogcatService? = null
   private var pollJob: Job? = null
   private var currentFile: LogFile? = null
   private var initialized = false
