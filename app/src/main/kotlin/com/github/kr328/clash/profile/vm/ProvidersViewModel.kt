@@ -121,8 +121,7 @@ class ProvidersViewModel(app: Application) : AndroidViewModel(app), DefaultLifec
     fetchJob = viewModelScope.launch {
       val providers = withClash { queryProviders().sorted() }
       uiState.update { current ->
-        val existingMap =
-          current.providers.associateBy { providerKey(it.provider) }
+        val existingMap = current.providers.associateBy { providerKey(it.provider) }
         val newStates = providers.map { provider ->
           val key = providerKey(provider)
           existingMap[key]?.let { existing ->
