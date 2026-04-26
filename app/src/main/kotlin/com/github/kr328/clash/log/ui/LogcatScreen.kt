@@ -29,10 +29,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -75,7 +75,6 @@ fun LogcatScreen(
   val progressBarState = remember { ModelProgressBarState() }
   val scope = rememberCoroutineScope()
   val messageCopied = stringResource(R.string.copied)
-  var previousMessageCount by remember { mutableIntStateOf(0) }
 
   LaunchedEffect(fileName, viewModel) { viewModel.init(fileName) }
 
@@ -119,13 +118,15 @@ fun LogcatScreen(
     progressBarState.max = exportProgress.max
   }
 
-  LaunchedEffect(uiState.messages.size, uiState.streaming) {
-    val shouldAutoFollow = uiState.streaming && (listState.isBottom || previousMessageCount == 0)
-    previousMessageCount = uiState.messages.size
+  LaunchedEffect(listState, uiState.streaming) {
+    if (!uiState.streaming) return@LaunchedEffect
 
-    if (shouldAutoFollow && uiState.messages.isNotEmpty()) {
-      listState.scrollToItem(uiState.messages.lastIndex)
-    }
+    snapshotFlow { uiState.messages.size }
+      .collect { size ->
+        if (size > 0 && listState.isBottom) {
+          listState.animateScrollToItem(size - 1)
+        }
+      }
   }
 
   LogcatContent(
