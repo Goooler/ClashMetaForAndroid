@@ -1,0 +1,168 @@
+package com.github.kr328.clash.main.vm
+
+import android.app.Application
+import android.content.Intent
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.DefaultLifecycleObserver
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.application
+import androidx.lifecycle.viewModelScope
+import com.github.kr328.clash.R
+import com.github.kr328.clash.core.bridge.Bridge
+import com.github.kr328.clash.core.model.TunnelState
+import com.github.kr328.clash.core.util.trafficTotal
+import com.github.kr328.clash.remote.Broadcasts
+import com.github.kr328.clash.remote.Remote
+import com.github.kr328.clash.util.startClashService
+import com.github.kr328.clash.util.stopClashService
+import com.github.kr328.clash.util.withClash
+import com.github.kr328.clash.util.withProfile
+import kotlin.time.Duration.Companion.seconds
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.isActive
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+
+class MainViewModel(app: Application) :
+  AndroidViewModel(app), DefaultLifecycleObserver, Broadcasts.Observer {
+
+  val clashRunning: StateFlow<Boolean> = Remote.broadcasts.clashRunningFlow
+
+  val uiState: StateFlow<UiState>
+    field = MutableStateFlow(UiState())
+
+  val eventState: StateFlow<EventState>
+    field = MutableStateFlow<EventState>(EventState.Idle)
+
+  init {
+    viewModelScope.launch {
+      while (isActive) {
+        delay(1.seconds)
+        if (clashRunning.value) fetchTraffic()
+      }
+    }
+  }
+
+  override fun onStart(owner: LifecycleOwner) {
+    Remote.broadcasts.addObserver(this)
+    fetch()
+  }
+
+  override fun onStop(owner: LifecycleOwner) {
+    Remote.broadcasts.removeObserver(this)
+  }
+
+  override fun onCleared() {
+    Remote.broadcasts.removeObserver(this)
+    super.onCleared()
+  }
+
+  override fun onServiceRecreated() = fetch()
+
+  override fun onStarted() = fetch()
+
+  override fun onStopped(cause: String?) = fetch()
+
+  override fun onProfileChanged() = fetch()
+
+  override fun onProfileLoaded() = fetch()
+
+  fun toggleStatus() {
+    if (clashRunning.value) {
+      application.stopClashService()
+    } else {
+      startClash()
+    }
+  }
+
+  fun showAbout() {
+    viewModelScope.launch {
+      val versionName =
+        withContext(Dispatchers.IO) {
+          application.packageManager.getPackageInfo(application.packageName, 0).versionName +
+            "\n" +
+            Bridge.nativeCoreVersion().replace("_", "-")
+        }
+      uiState.update { it.copy(aboutVersionName = versionName) }
+    }
+  }
+
+  fun dismissAbout() {
+    uiState.update { it.copy(aboutVersionName = null) }
+  }
+
+  fun onVpnPermissionGranted() {
+    application.startClashService()
+  }
+
+  fun consumeEvent() {
+    eventState.value = EventState.Idle
+  }
+
+  private fun fetch() {
+    viewModelScope.launch {
+      val state = withClash { queryTunnelState() }
+      val providers = withClash { queryProviders() }
+      val mode =
+        when (state.mode) {
+          TunnelState.Mode.Direct -> application.getString(R.string.direct_mode)
+          TunnelState.Mode.Global -> application.getString(R.string.global_mode)
+          TunnelState.Mode.Rule -> application.getString(R.string.rule_mode)
+        }
+      val profileName = withProfile { queryActive()?.name }
+
+      uiState.update {
+        it.copy(
+          mode = if (clashRunning.value) mode else null,
+          hasProviders = providers.isNotEmpty(),
+          profileName = profileName,
+        )
+      }
+    }
+  }
+
+  private fun fetchTraffic() {
+    viewModelScope.launch {
+      val total = withClash { queryTrafficTotal() }
+      uiState.update { it.copy(forwarded = total.trafficTotal()) }
+    }
+  }
+
+  private fun startClash() {
+    viewModelScope.launch {
+      val active = withProfile { queryActive() }
+
+      if (active == null || !active.imported) {
+        eventState.value = EventState.ShowNoProfileMessage
+        return@launch
+      }
+
+      val vpnRequest = application.startClashService()
+      if (vpnRequest != null) {
+        eventState.value = EventState.RequestVpnPermission(vpnRequest)
+      }
+    }
+  }
+
+  data class UiState(
+    val forwarded: String? = null,
+    val mode: String? = null,
+    val profileName: String? = null,
+    val hasProviders: Boolean = false,
+    val aboutVersionName: String? = null,
+  )
+
+  sealed interface EventState {
+    data object Idle : EventState
+
+    data class RequestVpnPermission(val intent: Intent) : EventState
+
+    data object ShowNoProfileMessage : EventState
+
+    data class ShowMessage(val message: String) : EventState
+  }
+}
