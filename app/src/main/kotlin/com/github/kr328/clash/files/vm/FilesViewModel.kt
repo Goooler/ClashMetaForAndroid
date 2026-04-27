@@ -12,13 +12,11 @@ import com.github.kr328.clash.service.model.Profile
 import com.github.kr328.clash.util.fileName
 import com.github.kr328.clash.util.withProfile
 import java.util.UUID
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 class FilesViewModel(app: Application) : AndroidViewModel(app), DefaultLifecycleObserver {
   private val client = FilesClient(app)
@@ -78,12 +76,10 @@ class FilesViewModel(app: Application) : AndroidViewModel(app), DefaultLifecycle
 
   fun onDelete(file: File) {
     viewModelScope.launch {
-      withContext(Dispatchers.IO) {
-        try {
-          client.deleteDocument(file.id)
-        } catch (e: Exception) {
-          eventState.value = EventState.ShowMessage(e.message ?: "Unknown error")
-        }
+      try {
+        client.deleteDocument(file.id)
+      } catch (e: Exception) {
+        eventState.value = EventState.ShowMessage(e.message ?: "Unknown error")
       }
       fetch()
     }
@@ -91,12 +87,10 @@ class FilesViewModel(app: Application) : AndroidViewModel(app), DefaultLifecycle
 
   fun onRename(file: File, newName: String) {
     viewModelScope.launch {
-      withContext(Dispatchers.IO) {
-        try {
-          client.renameDocument(file.id, newName)
-        } catch (e: Exception) {
-          eventState.value = EventState.ShowMessage(e.message ?: "Unknown error")
-        }
+      try {
+        client.renameDocument(file.id, newName)
+      } catch (e: Exception) {
+        eventState.value = EventState.ShowMessage(e.message ?: "Unknown error")
       }
       fetch()
     }
@@ -110,16 +104,14 @@ class FilesViewModel(app: Application) : AndroidViewModel(app), DefaultLifecycle
     if (uri == null) return
     val parentId = if (stack.isEmpty()) root else stack.last()
     viewModelScope.launch {
-      withContext(Dispatchers.IO) {
-        try {
-          if (targetFile == null) {
-            client.importDocument(parentId, uri, uri.fileName ?: "File")
-          } else {
-            client.copyDocument(targetFile.id, uri)
-          }
-        } catch (e: Exception) {
-          eventState.value = EventState.ShowMessage(e.message ?: "Unknown error")
+      try {
+        if (targetFile == null) {
+          client.importDocument(parentId, uri, uri.fileName ?: "File")
+        } else {
+          client.copyDocument(targetFile.id, uri)
         }
+      } catch (e: Exception) {
+        eventState.value = EventState.ShowMessage(e.message ?: "Unknown error")
       }
       fetch()
     }
@@ -132,12 +124,10 @@ class FilesViewModel(app: Application) : AndroidViewModel(app), DefaultLifecycle
   fun onExportResult(uri: Uri?, sourceFile: File?) {
     if (uri == null || sourceFile == null) return
     viewModelScope.launch {
-      withContext(Dispatchers.IO) {
-        try {
-          client.copyDocument(uri, sourceFile.id)
-        } catch (e: Exception) {
-          eventState.value = EventState.ShowMessage(e.message ?: "Unknown error")
-        }
+      try {
+        client.copyDocument(uri, sourceFile.id)
+      } catch (e: Exception) {
+        eventState.value = EventState.ShowMessage(e.message ?: "Unknown error")
       }
       fetch()
     }
@@ -146,25 +136,24 @@ class FilesViewModel(app: Application) : AndroidViewModel(app), DefaultLifecycle
   private fun fetch() {
     fetchJob?.cancel()
     val documentId = stack.lastOrNull() ?: root
+    if (root.isEmpty()) return
     val inBaseDir = stack.isEmpty()
-    fetchJob =
-      viewModelScope.launch(Dispatchers.IO) {
-        if (root.isEmpty()) return@launch
-        try {
-          val files =
-            if (inBaseDir) {
-              val list = client.list(documentId)
-              val config = list.firstOrNull { it.id.endsWith("config.yaml") }
-              if (config == null || config.size > 0) list else listOf(config)
-            } else {
-              client.list(documentId)
-            }
+    fetchJob = viewModelScope.launch {
+      try {
+        val files =
+          if (inBaseDir) {
+            val list = client.list(documentId)
+            val config = list.firstOrNull { it.id.endsWith("config.yaml") }
+            if (config == null || config.size > 0) list else listOf(config)
+          } else {
+            client.list(documentId)
+          }
 
-          uiState.update { it.copy(files = files, currentInBaseDir = inBaseDir) }
-        } catch (e: Exception) {
-          eventState.value = EventState.ShowMessage(e.message ?: "Unknown error")
-        }
+        uiState.update { it.copy(files = files, currentInBaseDir = inBaseDir) }
+      } catch (e: Exception) {
+        eventState.value = EventState.ShowMessage(e.message ?: "Unknown error")
       }
+    }
   }
 
   data class UiState(
