@@ -9,7 +9,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -25,7 +24,6 @@ import com.github.kr328.clash.ui.theme.PreviewMihomo
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AppCrashedScreen(modifier: Modifier = Modifier, viewModel: AppCrashedViewModel = viewModel()) {
-  LaunchedEffect(viewModel) { viewModel.loadLogs() }
   val logs by viewModel.logs.collectAsStateWithLifecycle()
 
   AppCrashedContent(modifier = modifier, logs = logs)
