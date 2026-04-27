@@ -11,12 +11,7 @@ class FilesActivity : BaseActivity() {
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
 
-    val uuid =
-      intent.uuid
-        ?: run {
-          finish()
-          return
-        }
+    val uuid = checkNotNull(intent.uuid) { "The uuid must not be null." }
 
     setContent { MihomoTheme { FilesScreen(uuid = uuid, onFinish = ::finish) } }
   }
