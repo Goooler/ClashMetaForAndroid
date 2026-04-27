@@ -36,18 +36,11 @@ class AppCrashedViewModel(app: Application) : AndroidViewModel(app) {
     withContext(Dispatchers.IO) {
       val process = ProcessBuilder(*crashDumpCommand).redirectErrorStream(true).start()
       val result =
-        process.inputStream.bufferedReader().useLines { lines ->
-          buildString {
-            var isFirstLine = true
-            lines.forEach { line ->
-              if (!line.startsWith("------")) {
-                if (!isFirstLine) append('\n')
-                append(line)
-                isFirstLine = false
-              }
-            }
-          }
-        }
+        process.inputStream
+          .bufferedReader()
+          .readLines()
+          .filterNot { it.startsWith("------") }
+          .joinToString("\n")
       val exitCode = process.waitFor()
 
       if (exitCode != 0) {
