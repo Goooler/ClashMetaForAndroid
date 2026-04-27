@@ -199,10 +199,11 @@ class ProxyViewModel(app: Application) : AndroidViewModel(app), DefaultLifecycle
 
       val sources =
         withContext(Dispatchers.Default) {
+          val nameIndexMap = names.withIndex().associate { (index, name) -> name to index }
           group.proxies.map { proxy ->
             UiState.ProxyItemSource(
               proxy = proxy,
-              linkIndex = if (proxy.type.group) names.indexOf(proxy.name) else -1,
+              linkIndex = if (proxy.type.group) nameIndexMap[proxy.name] ?: -1 else -1,
             )
           }
         }
