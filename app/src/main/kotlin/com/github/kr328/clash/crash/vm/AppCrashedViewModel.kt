@@ -9,7 +9,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.withContext
 
@@ -31,7 +30,6 @@ class AppCrashedViewModel(app: Application) : AndroidViewModel(app) {
             }
         emit(log)
       }
-      .flowOn(Dispatchers.IO)
       .stateIn(viewModelScope, SharingStarted.Lazily, "")
 
   private suspend fun dumpCrash(): String =
