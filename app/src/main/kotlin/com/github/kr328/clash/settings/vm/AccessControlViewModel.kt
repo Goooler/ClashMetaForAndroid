@@ -11,6 +11,7 @@ import android.os.Process
 import androidx.core.content.getSystemService
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import com.github.kr328.clash.common.Global
 import com.github.kr328.clash.model.AppInfo
 import com.github.kr328.clash.model.AppInfoSort
 import com.github.kr328.clash.remote.Remote
@@ -21,7 +22,6 @@ import com.github.kr328.clash.util.startClashService
 import com.github.kr328.clash.util.stopClashService
 import com.github.kr328.clash.util.toAppInfo
 import kotlin.time.Duration.Companion.seconds
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -62,7 +62,7 @@ class AccessControlViewModel(app: Application) : AndroidViewModel(app), AccessCo
 
   fun persistSelection() {
     // Intended to use non-viewModel scope as we need the action to be called on disposed.
-    CoroutineScope(Dispatchers.IO).launch {
+    Global.launch {
       val selected = uiState.value.selected
       val persistedSelection = serviceStore.accessControlPackages
       val changed = selected != persistedSelection
