@@ -36,12 +36,16 @@ class AppCrashedViewModel(app: Application) : AndroidViewModel(app) {
 
   private suspend fun dumpCrash(): String =
     withContext(Dispatchers.IO) {
-      val process = Runtime.getRuntime().exec(crashDumpCommand)
+      val process = ProcessBuilder(*crashDumpCommand).redirectErrorStream(true).start()
       val result =
         process.inputStream.use { stream ->
           stream.reader().readLines().filterNot { it.startsWith("------") }.joinToString("\n")
         }
-      process.waitFor()
+      val exitCode = process.waitFor()
+
+      if (exitCode != 0) {
+        error("logcat exited with code $exitCode: ${result.trim()}")
+      }
       result.trim()
     }
 }
