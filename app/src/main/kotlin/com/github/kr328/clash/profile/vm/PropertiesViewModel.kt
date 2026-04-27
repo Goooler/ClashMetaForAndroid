@@ -5,8 +5,8 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.viewModelScope
-import com.github.kr328.clash.common.Global
 import com.github.kr328.clash.R
+import com.github.kr328.clash.common.Global
 import com.github.kr328.clash.core.model.FetchStatus
 import com.github.kr328.clash.service.model.Profile
 import com.github.kr328.clash.util.withProfile
@@ -52,12 +52,13 @@ class PropertiesViewModel(app: Application) : AndroidViewModel(app), DefaultLife
       val profile = uiState.value.profile ?: return
       viewModelScope.launch {
         runCatching {
-          withProfile { patch(profile.uuid, profile.name, profile.source, profile.interval) }
-        }.onSuccess {
-          uiState.update { state ->
-            state.copy(originalProfile = profile.copy(), hasUnsavedChanges = false)
+            withProfile { patch(profile.uuid, profile.name, profile.source, profile.interval) }
           }
-        }
+          .onSuccess {
+            uiState.update { state ->
+              state.copy(originalProfile = profile.copy(), hasUnsavedChanges = false)
+            }
+          }
       }
     }
   }
@@ -143,7 +144,7 @@ class PropertiesViewModel(app: Application) : AndroidViewModel(app), DefaultLife
       } catch (e: Exception) {
         eventState.value =
           EventState.ShowMessage(
-            e.message ?: getApplication<Application>().getString(R.string.unknown),
+            e.message ?: getApplication<Application>().getString(R.string.unknown)
           )
       }
     }

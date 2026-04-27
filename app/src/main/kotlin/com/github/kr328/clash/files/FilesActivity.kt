@@ -11,10 +11,12 @@ class FilesActivity : BaseActivity() {
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
 
-    val uuid = intent.uuid ?: run {
-      finish()
-      return
-    }
+    val uuid =
+      intent.uuid
+        ?: run {
+          finish()
+          return
+        }
 
     setContent { MihomoTheme { FilesScreen(uuid = uuid, onFinish = ::finish) } }
   }

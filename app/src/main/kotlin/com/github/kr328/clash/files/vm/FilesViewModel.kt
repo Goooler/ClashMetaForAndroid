@@ -147,23 +147,24 @@ class FilesViewModel(app: Application) : AndroidViewModel(app), DefaultLifecycle
     fetchJob?.cancel()
     val documentId = stack.lastOrNull() ?: root
     val inBaseDir = stack.isEmpty()
-    fetchJob = viewModelScope.launch(Dispatchers.IO) {
-      if (root.isEmpty()) return@launch
-      try {
-        val files =
-          if (inBaseDir) {
-            val list = client.list(documentId)
-            val config = list.firstOrNull { it.id.endsWith("config.yaml") }
-            if (config == null || config.size > 0) list else listOf(config)
-          } else {
-            client.list(documentId)
-          }
+    fetchJob =
+      viewModelScope.launch(Dispatchers.IO) {
+        if (root.isEmpty()) return@launch
+        try {
+          val files =
+            if (inBaseDir) {
+              val list = client.list(documentId)
+              val config = list.firstOrNull { it.id.endsWith("config.yaml") }
+              if (config == null || config.size > 0) list else listOf(config)
+            } else {
+              client.list(documentId)
+            }
 
-        uiState.update { it.copy(files = files, currentInBaseDir = inBaseDir) }
-      } catch (e: Exception) {
-        eventState.value = EventState.ShowMessage(e.message ?: "Unknown error")
+          uiState.update { it.copy(files = files, currentInBaseDir = inBaseDir) }
+        } catch (e: Exception) {
+          eventState.value = EventState.ShowMessage(e.message ?: "Unknown error")
+        }
       }
-    }
   }
 
   data class UiState(
