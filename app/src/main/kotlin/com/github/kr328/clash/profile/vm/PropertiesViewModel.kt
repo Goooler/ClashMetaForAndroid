@@ -5,14 +5,13 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.viewModelScope
+import com.github.kr328.clash.common.Global
 import com.github.kr328.clash.R
 import com.github.kr328.clash.core.model.FetchStatus
 import com.github.kr328.clash.service.model.Profile
 import com.github.kr328.clash.util.withProfile
 import java.util.UUID
-import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -54,15 +53,18 @@ class PropertiesViewModel(app: Application) : AndroidViewModel(app), DefaultLife
       viewModelScope.launch {
         runCatching {
           withProfile { patch(profile.uuid, profile.name, profile.source, profile.interval) }
+        }.onSuccess {
+          uiState.update { state ->
+            state.copy(originalProfile = profile.copy(), hasUnsavedChanges = false)
+          }
         }
       }
     }
   }
 
-  @OptIn(DelicateCoroutinesApi::class)
   override fun onCleared() {
     rootUuid?.let { uuid ->
-      GlobalScope.launch(Dispatchers.IO) {
+      Global.launch {
         try {
           withProfile { release(uuid) }
         } catch (e: Exception) {
@@ -139,7 +141,10 @@ class PropertiesViewModel(app: Application) : AndroidViewModel(app), DefaultLife
         canceled = true
         eventState.value = EventState.Finish(true)
       } catch (e: Exception) {
-        eventState.value = EventState.ShowMessage(e.message ?: "Unknown error")
+        eventState.value =
+          EventState.ShowMessage(
+            e.message ?: getApplication<Application>().getString(R.string.unknown),
+          )
       }
     }
   }
