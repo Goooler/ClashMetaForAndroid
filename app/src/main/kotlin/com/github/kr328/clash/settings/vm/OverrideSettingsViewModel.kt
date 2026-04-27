@@ -3,14 +3,13 @@ package com.github.kr328.clash.settings.vm
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import com.github.kr328.clash.common.Global
 import com.github.kr328.clash.core.Clash
 import com.github.kr328.clash.core.model.ConfigurationOverride
 import com.github.kr328.clash.core.model.LogMessage
 import com.github.kr328.clash.core.model.TunnelState
 import com.github.kr328.clash.settings.ui.OverrideSettingsActions
 import com.github.kr328.clash.util.withClash
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
@@ -30,7 +29,7 @@ class OverrideSettingsViewModel(app: Application) : AndroidViewModel(app), Overr
 
   fun persistOverride() {
     // Intended to use non-viewModel scope as we need the action to be called on disposed.
-    CoroutineScope(Dispatchers.IO).launch {
+    Global.launch {
       if (skipPersist) return@launch
       withClash { patchOverride(Clash.OverrideSlot.Persist, configuration.value) }
     }
@@ -39,9 +38,7 @@ class OverrideSettingsViewModel(app: Application) : AndroidViewModel(app), Overr
   fun resetOverride() {
     skipPersist = true
     // Intended to use non-viewModel scope as the action might be called on disposed.
-    CoroutineScope(Dispatchers.IO).launch {
-      withClash { clearOverride(Clash.OverrideSlot.Persist) }
-    }
+    Global.launch { withClash { clearOverride(Clash.OverrideSlot.Persist) } }
   }
 
   override fun updateHttpPort(value: Int?) = configuration.update { it.copy(httpPort = value) }

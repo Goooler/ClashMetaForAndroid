@@ -4,6 +4,7 @@ import android.app.Application
 import android.content.pm.PackageManager
 import androidx.core.content.pm.ShortcutManagerCompat
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.application
 import com.github.kr328.clash.RestartReceiver
 import com.github.kr328.clash.common.util.componentName
 import com.github.kr328.clash.model.DarkMode
@@ -80,17 +81,20 @@ class AppSettingsViewModel(app: Application) : AndroidViewModel(app) {
     }
 
   private fun hideAppIcon(hide: Boolean) {
-    val app = getApplication<Application>()
     val newState =
       if (hide) {
         PackageManager.COMPONENT_ENABLED_STATE_DISABLED
       } else {
         PackageManager.COMPONENT_ENABLED_STATE_ENABLED
       }
-    pm.setComponentEnabledSetting(app.mainActivityAlias, newState, PackageManager.DONT_KILL_APP)
+    pm.setComponentEnabledSetting(
+      application.mainActivityAlias,
+      newState,
+      PackageManager.DONT_KILL_APP,
+    )
     if (hide) {
       // Prevent launcher activity not found.
-      ShortcutManagerCompat.removeAllDynamicShortcuts(app)
+      ShortcutManagerCompat.removeAllDynamicShortcuts(application)
     }
   }
 

@@ -4,15 +4,15 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.application
 import androidx.lifecycle.viewModelScope
 import com.github.kr328.clash.R
+import com.github.kr328.clash.common.Global
 import com.github.kr328.clash.core.model.FetchStatus
 import com.github.kr328.clash.service.model.Profile
 import com.github.kr328.clash.util.withProfile
 import java.util.UUID
-import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -53,16 +53,20 @@ class PropertiesViewModel(app: Application) : AndroidViewModel(app), DefaultLife
       val profile = uiState.value.profile ?: return
       viewModelScope.launch {
         runCatching {
-          withProfile { patch(profile.uuid, profile.name, profile.source, profile.interval) }
-        }
+            withProfile { patch(profile.uuid, profile.name, profile.source, profile.interval) }
+          }
+          .onSuccess {
+            uiState.update { state ->
+              state.copy(originalProfile = profile.copy(), hasUnsavedChanges = false)
+            }
+          }
       }
     }
   }
 
-  @OptIn(DelicateCoroutinesApi::class)
   override fun onCleared() {
     rootUuid?.let { uuid ->
-      GlobalScope.launch(Dispatchers.IO) {
+      Global.launch {
         try {
           withProfile { release(uuid) }
         } catch (e: Exception) {
@@ -117,14 +121,12 @@ class PropertiesViewModel(app: Application) : AndroidViewModel(app), DefaultLife
     val profile = uiState.value.profile ?: return
 
     if (profile.name.isBlank()) {
-      eventState.value =
-        EventState.ShowMessage(getApplication<Application>().getString(R.string.empty_name))
+      eventState.value = EventState.ShowMessage(application.getString(R.string.empty_name))
       return
     }
 
     if (profile.type != Profile.Type.File && profile.source.isBlank()) {
-      eventState.value =
-        EventState.ShowMessage(getApplication<Application>().getString(R.string.invalid_url))
+      eventState.value = EventState.ShowMessage(application.getString(R.string.invalid_url))
       return
     }
 
@@ -139,7 +141,8 @@ class PropertiesViewModel(app: Application) : AndroidViewModel(app), DefaultLife
         canceled = true
         eventState.value = EventState.Finish(true)
       } catch (e: Exception) {
-        eventState.value = EventState.ShowMessage(e.message ?: "Unknown error")
+        eventState.value =
+          EventState.ShowMessage(e.message ?: application.getString(R.string.unknown))
       }
     }
   }
@@ -154,7 +157,7 @@ class PropertiesViewModel(app: Application) : AndroidViewModel(app), DefaultLife
               ProgressState(
                 visible = true,
                 isIndeterminate = true,
-                text = getApplication<Application>().getString(R.string.initializing),
+                text = application.getString(R.string.initializing),
                 progress = 0,
                 max = 0,
               ),
@@ -174,13 +177,12 @@ class PropertiesViewModel(app: Application) : AndroidViewModel(app), DefaultLife
 
   private fun applyProgressStatus(status: FetchStatus) {
     uiState.update { current ->
-      val context = getApplication<Application>()
       val newProgress =
         when (status.action) {
           FetchStatus.Action.FetchConfiguration -> {
             current.progress.copy(
               text =
-                context.getString(
+                application.getString(
                   R.string.format_fetching_configuration,
                   status.args.getOrNull(0) ?: "",
                 ),
@@ -190,7 +192,7 @@ class PropertiesViewModel(app: Application) : AndroidViewModel(app), DefaultLife
           FetchStatus.Action.FetchProviders -> {
             current.progress.copy(
               text =
-                context.getString(
+                application.getString(
                   R.string.format_fetching_provider,
                   status.args.getOrNull(0) ?: "",
                 ),
@@ -201,7 +203,7 @@ class PropertiesViewModel(app: Application) : AndroidViewModel(app), DefaultLife
           }
           FetchStatus.Action.Verifying -> {
             current.progress.copy(
-              text = context.getString(R.string.verifying),
+              text = application.getString(R.string.verifying),
               isIndeterminate = false,
               max = status.max,
               progress = status.progress,

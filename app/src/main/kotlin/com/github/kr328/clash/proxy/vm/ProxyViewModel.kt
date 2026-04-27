@@ -27,6 +27,8 @@ import kotlinx.coroutines.withContext
 class ProxyViewModel(app: Application) : AndroidViewModel(app), DefaultLifecycleObserver {
   private val uiStore = UiStore(app)
   private var broadcastEventsJob: Job? = null
+  private var fetchInitialStateJob: Job? = null
+  @Volatile private var initialized = false
   // Allow up to 10 concurrent group queries to avoid overwhelming the service
   private val reloadLock = Semaphore(10)
 
@@ -55,6 +57,7 @@ class ProxyViewModel(app: Application) : AndroidViewModel(app), DefaultLifecycle
       Remote.broadcasts.event.collect { event ->
         when (event) {
           Broadcasts.Event.ProfileLoaded -> {
+            if (!initialized) return@collect
             val newNames = withClash { queryProxyGroupNames(uiStore.proxyExcludeNotSelectable) }
             if (newNames != uiState.value.groupNames) {
               eventState.value = EventState.ReLaunch
@@ -65,17 +68,22 @@ class ProxyViewModel(app: Application) : AndroidViewModel(app), DefaultLifecycle
       }
     }
 
-    viewModelScope.launch { fetchInitialState() }
+    fetchInitialStateJob?.cancel()
+    fetchInitialStateJob = viewModelScope.launch { fetchInitialState() }
   }
 
   override fun onStop(owner: LifecycleOwner) {
     broadcastEventsJob?.cancel()
     broadcastEventsJob = null
+    fetchInitialStateJob?.cancel()
+    fetchInitialStateJob = null
   }
 
   override fun onCleared() {
     broadcastEventsJob?.cancel()
     broadcastEventsJob = null
+    fetchInitialStateJob?.cancel()
+    fetchInitialStateJob = null
     super.onCleared()
   }
 
@@ -102,6 +110,7 @@ class ProxyViewModel(app: Application) : AndroidViewModel(app), DefaultLifecycle
       )
     }
 
+    initialized = true
     reloadAll()
   }
 
@@ -190,10 +199,11 @@ class ProxyViewModel(app: Application) : AndroidViewModel(app), DefaultLifecycle
 
       val sources =
         withContext(Dispatchers.Default) {
+          val nameIndexMap = names.withIndex().associate { (index, name) -> name to index }
           group.proxies.map { proxy ->
             UiState.ProxyItemSource(
               proxy = proxy,
-              linkIndex = if (proxy.type.group) names.indexOf(proxy.name) else -1,
+              linkIndex = if (proxy.type.group) nameIndexMap[proxy.name] ?: -1 else -1,
             )
           }
         }

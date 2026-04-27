@@ -6,13 +6,13 @@ import android.net.Uri
 import android.provider.OpenableColumns
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import com.github.kr328.clash.common.Global
 import com.github.kr328.clash.core.Clash
 import com.github.kr328.clash.core.model.ConfigurationOverride
 import com.github.kr328.clash.settings.ui.MetaFeatureSettingsActions
 import com.github.kr328.clash.util.clashDir
 import com.github.kr328.clash.util.withClash
 import java.io.FileOutputStream
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -39,7 +39,7 @@ class MetaFeatureSettingsViewModel(app: Application) :
 
   fun persistOverride() {
     // Intended to use non-viewModel scope as we need the action to be called on disposed.
-    CoroutineScope(Dispatchers.IO).launch {
+    Global.launch {
       if (skipPersist) return@launch
       withClash { patchOverride(Clash.OverrideSlot.Persist, configuration.value) }
     }
@@ -48,9 +48,7 @@ class MetaFeatureSettingsViewModel(app: Application) :
   fun resetOverride() {
     skipPersist = true
     // Intended to use non-viewModel scope as the action might be called on disposed.
-    CoroutineScope(Dispatchers.IO).launch {
-      withClash { clearOverride(Clash.OverrideSlot.Persist) }
-    }
+    Global.launch { withClash { clearOverride(Clash.OverrideSlot.Persist) } }
   }
 
   fun importGeoFile(uri: Uri?, importType: ImportType) {
