@@ -5,28 +5,50 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.application
 import androidx.lifecycle.viewModelScope
 import com.github.kr328.clash.common.log.Log
-import com.github.kr328.clash.log.util.dumpCrash
-import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.withContext
 
 class AppCrashedViewModel(app: Application) : AndroidViewModel(app) {
-  val logs: StateFlow<String>
-    field = MutableStateFlow("")
+  val logs: StateFlow<String> =
+    flow {
+        val log =
+          runCatching {
+              val packageInfo =
+                application.packageManager.getPackageInfo(application.packageName, 0)
+              Log.i(
+                "App version: versionName = ${packageInfo.versionName} versionCode = ${packageInfo.longVersionCode}"
+              )
+              dumpCrash()
+            }
+            .getOrElse { e ->
+              Log.e("Failed to load crash logs", e)
+              "Failed to load crash logs: ${e.stackTraceToString()}"
+            }
+        emit(log)
+      }
+      .stateIn(viewModelScope, SharingStarted.Lazily, "")
 
-  fun loadLogs() {
-    viewModelScope.launch {
-      runCatching {
-          val packageInfo = application.packageManager.getPackageInfo(application.packageName, 0)
-          Log.i(
-            "App version: versionName = ${packageInfo.versionName} versionCode = ${packageInfo.longVersionCode}"
-          )
-          logs.value = dumpCrash()
-        }
-        .getOrElse { e ->
-          Log.e("Failed to load crash logs", e)
-          logs.value = "Failed to load crash logs: ${e.stackTraceToString()}"
-        }
+  private suspend fun dumpCrash(): String =
+    withContext(Dispatchers.IO) {
+      val process = ProcessBuilder(*crashDumpCommand).redirectErrorStream(true).start()
+      val result =
+        process.inputStream
+          .bufferedReader()
+          .readLines()
+          .filterNot { it.startsWith("------") }
+          .joinToString("\n")
+      val exitCode = process.waitFor()
+
+      if (exitCode != 0) {
+        error("logcat exited with code $exitCode: ${result.trim()}")
+      }
+      result.trim()
     }
-  }
 }
+
+private val crashDumpCommand =
+  arrayOf("logcat", "-d", "-s", "Go", "DEBUG", "AndroidRuntime", "ClashMetaForAndroid", "LwIP")
