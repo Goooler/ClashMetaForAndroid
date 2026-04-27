@@ -28,7 +28,7 @@ class ProxyViewModel(app: Application) : AndroidViewModel(app), DefaultLifecycle
   private val uiStore = UiStore(app)
   private var broadcastEventsJob: Job? = null
   private var fetchInitialStateJob: Job? = null
-  private var initialized = false
+  @Volatile private var initialized = false
   // Allow up to 10 concurrent group queries to avoid overwhelming the service
   private val reloadLock = Semaphore(10)
 
