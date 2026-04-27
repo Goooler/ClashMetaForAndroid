@@ -16,18 +16,18 @@ class LogsViewModel(app: Application) : AndroidViewModel(app) {
   val logFiles: StateFlow<List<LogFile>>
     field = MutableStateFlow(emptyList<LogFile>())
 
-  fun init() {
-    viewModelScope.launch { logFiles.value = loadFiles() }
+  init {
+    viewModelScope.launch { logFiles.value = loadAllLogs() }
   }
 
   fun deleteAll() {
     viewModelScope.launch {
       deleteAllLogs()
-      logFiles.value = loadFiles()
+      logFiles.value = loadAllLogs()
     }
   }
 
-  private suspend fun loadFiles(): List<LogFile> =
+  private suspend fun loadAllLogs(): List<LogFile> =
     withContext(Dispatchers.IO) {
       application.logsDir.listFiles()?.toList().orEmpty().mapNotNull {
         LogFile.parseFromFileName(it.name)
