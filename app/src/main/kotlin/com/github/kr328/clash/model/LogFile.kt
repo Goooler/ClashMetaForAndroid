@@ -4,7 +4,7 @@ import java.util.Date
 
 data class LogFile(val fileName: String, val date: Date) {
   companion object {
-    private val REGEX_FILE = Regex("clash-(\\d+).log")
+    private val REGEX_FILE = "clash-(\\d+).log".toRegex()
     private const val FORMAT_FILE_NAME = "clash-%d.log"
 
     fun parse(fileName: String): LogFile? {

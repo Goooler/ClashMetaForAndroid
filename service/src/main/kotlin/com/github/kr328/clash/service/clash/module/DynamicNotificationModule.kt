@@ -17,7 +17,7 @@ import com.github.kr328.clash.core.util.trafficDownload
 import com.github.kr328.clash.core.util.trafficUpload
 import com.github.kr328.clash.service.R
 import com.github.kr328.clash.service.StatusProvider
-import java.util.concurrent.TimeUnit
+import kotlin.time.Duration.Companion.seconds
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.selects.select
@@ -66,6 +66,7 @@ class DynamicNotificationModule(service: Service) : Module<Unit>(service) {
         .setSubText(service.getString(R.string.clash_notification_content, uploaded, downloaded))
         .build()
 
+    @Suppress("MissingPermission") // We don't care about the permission is granted or not.
     notificationManager.notify(R.id.nf_clash_status, notification)
   }
 
@@ -81,7 +82,7 @@ class DynamicNotificationModule(service: Service) : Module<Unit>(service) {
     val profileLoaded =
       receiveBroadcast(capacity = Channel.CONFLATED) { addAction(Intents.ACTION_PROFILE_LOADED) }
 
-    val ticker = ticker(TimeUnit.SECONDS.toMillis(1))
+    val ticker = ticker(1.seconds)
 
     while (true) {
       select<Unit> {

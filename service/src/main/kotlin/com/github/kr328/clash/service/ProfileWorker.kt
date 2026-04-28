@@ -19,13 +19,14 @@ import com.github.kr328.clash.service.data.ImportedDao
 import com.github.kr328.clash.service.util.sendProfileUpdateCompleted
 import com.github.kr328.clash.service.util.sendProfileUpdateFailed
 import java.util.UUID
-import java.util.concurrent.TimeUnit
+import kotlin.time.Duration.Companion.seconds
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
+@Suppress("MissingPermission") // We don't care about the permission is granted or not.
 class ProfileWorker : BaseService() {
   private val service: ProfileWorker
     get() = this
@@ -40,7 +41,7 @@ class ProfileWorker : BaseService() {
     foreground()
 
     launch {
-      delay(TimeUnit.SECONDS.toMillis(10))
+      delay(10.seconds)
 
       while (true) {
         jobs.removeFirstOrNull()?.join() ?: break
@@ -51,7 +52,7 @@ class ProfileWorker : BaseService() {
   }
 
   override fun onDestroy() {
-    stopForeground(true)
+    stopForeground(STOP_FOREGROUND_REMOVE)
 
     super.onDestroy()
   }
@@ -71,7 +72,7 @@ class ProfileWorker : BaseService() {
         val job = launch {
           ProfileReceiver.rescheduleAll(service)
 
-          delay(TimeUnit.SECONDS.toMillis(30))
+          delay(30.seconds)
         }
 
         jobs.add(job)

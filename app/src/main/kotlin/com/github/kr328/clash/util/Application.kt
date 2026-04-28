@@ -9,7 +9,6 @@ import java.io.File
 import java.util.zip.ZipFile
 
 object ApplicationObserver {
-  private val _createdActivities: MutableSet<Activity> = mutableSetOf()
   private val _visibleActivities: MutableSet<Activity> = mutableSetOf()
 
   private var visibleChanged: (Boolean) -> Unit = {}
@@ -24,18 +23,18 @@ object ApplicationObserver {
     }
 
   val createdActivities: Set<Activity>
-    get() = _createdActivities
+    field: MutableSet<Activity> = mutableSetOf()
 
   private val activityObserver =
     object : Application.ActivityLifecycleCallbacks {
       @Synchronized
       override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {
-        _createdActivities.add(activity)
+        createdActivities.add(activity)
       }
 
       @Synchronized
       override fun onActivityDestroyed(activity: Activity) {
-        _createdActivities.remove(activity)
+        createdActivities.remove(activity)
         _visibleActivities.remove(activity)
         appVisible = _visibleActivities.isNotEmpty()
       }
@@ -71,7 +70,7 @@ fun Context.verifyApk(): Boolean {
     val info = applicationInfo
     val sources = info.splitSourceDirs ?: arrayOf(info.sourceDir) ?: return false
 
-    val regexNativeLibrary = Regex("lib/(\\S+)/libclash.so")
+    val regexNativeLibrary = "lib/(\\S+)/libclash.so".toRegex()
     val availableAbi = Build.SUPPORTED_ABIS.toSet()
     val apkAbi =
       sources
@@ -83,7 +82,7 @@ fun Context.verifyApk(): Boolean {
         .toSet()
 
     availableAbi.intersect(apkAbi).isNotEmpty()
-  } catch (e: Exception) {
+  } catch (_: Exception) {
     false
   }
 }

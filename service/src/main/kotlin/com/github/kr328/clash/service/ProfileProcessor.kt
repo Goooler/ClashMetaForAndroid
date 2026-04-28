@@ -1,7 +1,7 @@
 package com.github.kr328.clash.service
 
 import android.content.Context
-import android.net.Uri
+import androidx.core.net.toUri
 import com.github.kr328.clash.common.log.Log
 import com.github.kr328.clash.core.Clash
 import com.github.kr328.clash.service.data.Imported
@@ -18,7 +18,7 @@ import com.github.kr328.clash.service.util.sendProfileChanged
 import java.math.BigDecimal
 import java.util.Locale
 import java.util.UUID
-import java.util.concurrent.TimeUnit
+import kotlin.time.Duration.Companion.milliseconds
 import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
@@ -253,7 +253,7 @@ object ProfileProcessor {
   }
 
   private fun Pending.enforceFieldValid() {
-    val scheme = Uri.parse(source)?.scheme?.lowercase(Locale.getDefault())
+    val scheme = source.toUri().scheme?.lowercase(Locale.getDefault())
 
     when {
       name.isBlank() -> throw IllegalArgumentException("Empty name")
@@ -263,7 +263,7 @@ object ProfileProcessor {
       source.isNotEmpty() && scheme != "https" && scheme != "http" && scheme != "content" ->
         throw IllegalArgumentException("Unsupported url $source")
 
-      interval != 0L && TimeUnit.MILLISECONDS.toMinutes(interval) < 15 ->
+      interval != 0L && interval.milliseconds.inWholeMinutes < 15 ->
         throw IllegalArgumentException("Invalid interval")
     }
   }

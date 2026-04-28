@@ -11,7 +11,7 @@ import com.github.kr328.clash.service.RemoteService
 import com.github.kr328.clash.service.remote.IRemoteService
 import com.github.kr328.clash.service.remote.unwrap
 import com.github.kr328.clash.util.unbindServiceSilent
-import java.util.concurrent.TimeUnit
+import kotlin.time.Duration.Companion.seconds
 
 class Service(private val context: Application, val crashed: () -> Unit) {
   val remote = Resource<IRemoteService>()
@@ -55,6 +55,6 @@ class Service(private val context: Application, val crashed: () -> Unit) {
   }
 
   companion object {
-    private val TOGGLE_CRASHED_INTERVAL = TimeUnit.SECONDS.toMillis(10)
+    private val TOGGLE_CRASHED_INTERVAL = 10.seconds.inWholeMilliseconds
   }
 }
