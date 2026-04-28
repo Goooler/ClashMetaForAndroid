@@ -5,9 +5,10 @@ import com.github.kr328.clash.R
 import kotlin.time.Duration.Companion.milliseconds
 
 fun Long.elapsedIntervalString(context: Context): String {
-  val day = milliseconds.inWholeDays
-  val hour = milliseconds.inWholeHours
-  val minute = milliseconds.inWholeMinutes
+  val duration = this.milliseconds
+  val day = duration.inWholeDays
+  val hour = duration.inWholeHours
+  val minute = duration.inWholeMinutes
 
   return when {
     day > 0 -> context.getString(R.string.format_days_ago, day)
