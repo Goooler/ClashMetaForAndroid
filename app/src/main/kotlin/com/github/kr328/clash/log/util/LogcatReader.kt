@@ -5,7 +5,6 @@ import com.github.kr328.clash.core.model.LogMessage
 import com.github.kr328.clash.model.LogFile
 import com.github.kr328.clash.util.logsDir
 import java.io.BufferedReader
-import java.io.FileReader
 import java.util.Date
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
