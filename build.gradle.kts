@@ -37,7 +37,10 @@ allprojects {
   }
 
   tasks.withType<KotlinCompile>().configureEach {
-    compilerOptions { jvmTarget = JvmTarget.fromTarget(libs.versions.jvmTarget.get()) }
+    compilerOptions {
+      allWarningsAsErrors = true
+      jvmTarget = JvmTarget.fromTarget(libs.versions.jvmTarget.get())
+    }
   }
 
   plugins.apply(rootProject.libs.plugins.spotless.get().pluginId)
