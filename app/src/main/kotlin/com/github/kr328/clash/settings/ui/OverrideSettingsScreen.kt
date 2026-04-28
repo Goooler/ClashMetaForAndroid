@@ -1,21 +1,16 @@
 package com.github.kr328.clash.settings.ui
 
 import androidx.annotation.StringRes
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
-import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.ListItem
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -36,28 +31,36 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation3.runtime.NavKey
+import androidx.navigation3.runtime.entryProvider
 import com.github.kr328.clash.R
 import com.github.kr328.clash.core.model.ConfigurationOverride
 import com.github.kr328.clash.core.model.LogMessage
 import com.github.kr328.clash.core.model.TunnelState
+import com.github.kr328.clash.nav.MihomoNavDisplay
+import com.github.kr328.clash.nav.addIfNotLast
+import com.github.kr328.clash.nav.rememberNavBackStackBuilder
 import com.github.kr328.clash.settings.vm.OverrideSettingsViewModel
-import com.github.kr328.clash.ui.component.EmptyEditorContent
-import com.github.kr328.clash.ui.component.FullScreenPreferenceDialog
 import com.github.kr328.clash.ui.component.MihomoScaffold
 import com.github.kr328.clash.ui.component.SettingsEditTextListPreferenceItem
 import com.github.kr328.clash.ui.component.SettingsListPreferenceItem
-import com.github.kr328.clash.ui.component.initialTextFieldValue
 import com.github.kr328.clash.ui.icon.BaselineReplay
 import com.github.kr328.clash.ui.icon.MihomoIcons
-import com.github.kr328.clash.ui.icon.OutlineDelete
 import com.github.kr328.clash.ui.theme.MihomoTheme
 import com.github.kr328.clash.ui.theme.PreviewMihomo
+import kotlinx.serialization.Serializable
 import me.zhanghai.compose.preference.Preference
 import me.zhanghai.compose.preference.ProvidePreferenceLocals
 import me.zhanghai.compose.preference.preferenceCategory
+
+sealed interface OverrideSettingsRoute : NavKey {
+  @Serializable data object Main : OverrideSettingsRoute
+
+  @Serializable
+  data class EditableTextMap(val title: Int, val mapKey: String) : OverrideSettingsRoute
+}
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
@@ -66,21 +69,55 @@ fun OverrideSettingsScreen(
   viewModel: OverrideSettingsViewModel = viewModel(),
   onResetCompleted: () -> Unit,
 ) {
-  val configuration by viewModel.configuration.collectAsStateWithLifecycle()
-  var showResetConfirmDialog by remember { mutableStateOf(false) }
+  val backStack = rememberNavBackStackBuilder { add(OverrideSettingsRoute.Main) }
 
   DisposableEffect(viewModel) { onDispose { viewModel.persistOverride() } }
 
-  OverrideSettingsContent(
-    configuration = configuration,
-    actions = viewModel,
-    modifier = modifier,
-    showResetConfirmDialog = showResetConfirmDialog,
-    onShowResetConfirmDialogChange = { showResetConfirmDialog = it },
-    onResetConfirmed = {
-      viewModel.resetOverride()
-      onResetCompleted()
-    },
+  MihomoNavDisplay(
+    backStack = backStack,
+    entryProvider =
+      entryProvider {
+        entry<OverrideSettingsRoute.Main> {
+          val configuration by viewModel.configuration.collectAsStateWithLifecycle()
+          var showResetConfirmDialog by remember { mutableStateOf(false) }
+
+          OverrideSettingsContent(
+            configuration = configuration,
+            actions = viewModel,
+            modifier = modifier,
+            showResetConfirmDialog = showResetConfirmDialog,
+            onShowResetConfirmDialogChange = { showResetConfirmDialog = it },
+            onResetConfirmed = {
+              viewModel.resetOverride()
+              onResetCompleted()
+            },
+            onOpenEditableTextMap = { title, mapKey ->
+              backStack.addIfNotLast(OverrideSettingsRoute.EditableTextMap(title, mapKey))
+            },
+          )
+        }
+        entry<OverrideSettingsRoute.EditableTextMap> { route ->
+          val configuration by viewModel.configuration.collectAsStateWithLifecycle()
+          val values =
+            when (route.mapKey) {
+              "hosts" -> configuration.hosts
+              "dnsNameserverPolicy" -> configuration.dns.nameserverPolicy
+              else -> emptyMap()
+            }
+          EditableTextMapScreen(
+            title = route.title,
+            initialValues = values,
+            onDismiss = { backStack.removeLastOrNull() },
+            onApply = { newValues ->
+              when (route.mapKey) {
+                "hosts" -> viewModel.updateHosts(newValues)
+                "dnsNameserverPolicy" -> viewModel.updateDnsNameserverPolicy(newValues)
+              }
+              backStack.removeLastOrNull()
+            },
+          )
+        }
+      },
   )
 }
 
@@ -93,6 +130,7 @@ private fun OverrideSettingsContent(
   showResetConfirmDialog: Boolean,
   onShowResetConfirmDialogChange: (Boolean) -> Unit,
   onResetConfirmed: () -> Unit,
+  onOpenEditableTextMap: (Int, String) -> Unit,
 ) {
   val dnsEnabled = configuration.dns.enable
 
@@ -112,8 +150,8 @@ private fun OverrideSettingsContent(
   ) { innerPadding ->
     ProvidePreferenceLocals {
       LazyColumn(modifier = Modifier.fillMaxSize(), contentPadding = innerPadding) {
-        generalPreferenceItems(configuration, actions)
-        dnsPreferenceItems(configuration, actions, dnsEnabled)
+        generalPreferenceItems(configuration, actions, onOpenEditableTextMap)
+        dnsPreferenceItems(configuration, actions, dnsEnabled, onOpenEditableTextMap)
       }
 
       if (showResetConfirmDialog) {
@@ -145,6 +183,7 @@ private fun OverrideSettingsContent(
 private fun LazyListScope.generalPreferenceItems(
   configuration: ConfigurationOverride,
   actions: OverrideSettingsActions,
+  onOpenEditableTextMap: (Int, String) -> Unit,
 ) {
   preferenceCategory(key = "cat_general", title = { Text(stringResource(R.string.general)) })
   item(key = "httpPort", contentType = "EditTextPreference") {
@@ -309,7 +348,7 @@ private fun LazyListScope.generalPreferenceItems(
       title = R.string.hosts,
       placeholder = R.string.dont_modify,
       values = configuration.hosts,
-      onValueChange = actions::updateHosts,
+      onClick = { onOpenEditableTextMap(R.string.hosts, "hosts") },
     )
   }
 }
@@ -318,6 +357,7 @@ private fun LazyListScope.dnsPreferenceItems(
   configuration: ConfigurationOverride,
   actions: OverrideSettingsActions,
   dnsEnabled: Boolean?,
+  onOpenEditableTextMap: (Int, String) -> Unit,
 ) {
   preferenceCategory(key = "cat_dns", title = { Text(stringResource(R.string.dns)) })
   item(key = "dnsStrategy", contentType = "ListPreference") {
@@ -494,7 +534,7 @@ private fun LazyListScope.dnsPreferenceItems(
       title = R.string.name_server_policy,
       placeholder = R.string.dont_modify,
       values = configuration.dns.nameserverPolicy,
-      onValueChange = actions::updateDnsNameserverPolicy,
+      onClick = { onOpenEditableTextMap(R.string.name_server_policy, "dnsNameserverPolicy") },
       enabled = dnsEnabled != false,
     )
   }
@@ -592,134 +632,15 @@ private fun OverrideEditTextMapPreferenceItem(
   @StringRes title: Int,
   @StringRes placeholder: Int,
   values: Map<String, String>?,
-  onValueChange: (Map<String, String>?) -> Unit,
+  onClick: () -> Unit,
   enabled: Boolean = true,
 ) {
-  var showDialog by remember { mutableStateOf(false) }
   Preference(
     modifier = Modifier.fillMaxWidth(),
     title = { Text(stringResource(title)) },
     summary = { Text(values.summary(placeholder)) },
     enabled = enabled,
-    onClick = { showDialog = true },
-  )
-  if (showDialog) {
-    EditableTextMapDialog(
-      title = title,
-      initialValues = values,
-      onDismiss = { showDialog = false },
-      onApply = {
-        onValueChange(it)
-        showDialog = false
-      },
-    )
-  }
-}
-
-@Composable
-private fun EditableTextMapDialog(
-  @StringRes title: Int,
-  initialValues: Map<String, String>?,
-  onDismiss: () -> Unit,
-  onApply: (Map<String, String>?) -> Unit,
-) {
-  var values by
-    remember(initialValues) {
-      mutableStateOf(initialValues?.entries?.map { it.toPair() }.orEmpty())
-    }
-  var showAddDialog by remember { mutableStateOf(false) }
-
-  FullScreenPreferenceDialog(
-    title = title,
-    onDismiss = onDismiss,
-    onAdd = { showAddDialog = true },
-    onReset = { onApply(null) },
-    onConfirm = { onApply(values.toMap()) },
-  ) { modifier ->
-    if (values.isEmpty()) {
-      EmptyEditorContent(modifier)
-    } else {
-      LazyColumn(modifier = modifier) {
-        itemsIndexed(values) { index, entry ->
-          ListItem(
-            headlineContent = { Text(entry.first) },
-            supportingContent = { Text(entry.second) },
-            trailingContent = {
-              IconButton(onClick = { values = values.toMutableList().apply { removeAt(index) } }) {
-                Icon(
-                  imageVector = MihomoIcons.OutlineDelete,
-                  contentDescription = stringResource(R.string.delete),
-                )
-              }
-            },
-          )
-          HorizontalDivider()
-        }
-      }
-    }
-  }
-
-  if (showAddDialog) {
-    MapEntryInputDialog(
-      title = title,
-      onDismiss = { showAddDialog = false },
-      onConfirm = { key, valueText ->
-        values = values + (key to valueText)
-        showAddDialog = false
-      },
-    )
-  }
-}
-
-@Composable
-private fun MapEntryInputDialog(
-  @StringRes title: Int,
-  onDismiss: () -> Unit,
-  onConfirm: (String, String) -> Unit,
-) {
-  var keyText by remember { mutableStateOf(initialTextFieldValue("")) }
-  var valueText by remember { mutableStateOf(initialTextFieldValue("")) }
-  val focusRequester = remember { FocusRequester() }
-  val keyboardController = LocalSoftwareKeyboardController.current
-  val confirmEnabled = keyText.text.isNotBlank() && valueText.text.isNotBlank()
-
-  LaunchedEffect(Unit) {
-    focusRequester.requestFocus()
-    keyboardController?.show()
-  }
-
-  AlertDialog(
-    onDismissRequest = onDismiss,
-    title = { Text(stringResource(title)) },
-    text = {
-      Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-        OutlinedTextField(
-          value = keyText,
-          onValueChange = { keyText = it },
-          label = { Text(stringResource(R.string.key)) },
-          placeholder = { Text(stringResource(R.string.key)) },
-          singleLine = true,
-          modifier = Modifier.fillMaxWidth().focusRequester(focusRequester),
-        )
-        OutlinedTextField(
-          value = valueText,
-          onValueChange = { valueText = it },
-          label = { Text(stringResource(R.string.value)) },
-          placeholder = { Text(stringResource(R.string.value)) },
-          singleLine = true,
-          modifier = Modifier.fillMaxWidth(),
-        )
-      }
-    },
-    confirmButton = {
-      TextButton(
-        onClick = { onConfirm(keyText.text.trim(), valueText.text.trim()) },
-        enabled = confirmEnabled,
-      ) {
-        Text(stringResource(R.string.ok))
-      }
-    },
-    dismissButton = { TextButton(onClick = onDismiss) { Text(stringResource(R.string.cancel)) } },
+    onClick = onClick,
   )
 }
 
@@ -893,5 +814,6 @@ private fun OverrideSettingsContentPreview() = MihomoTheme {
     showResetConfirmDialog = false,
     onShowResetConfirmDialogChange = {},
     onResetConfirmed = {},
+    onOpenEditableTextMap = { _, _ -> },
   )
 }
