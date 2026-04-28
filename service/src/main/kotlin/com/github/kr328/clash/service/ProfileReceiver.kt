@@ -16,7 +16,7 @@ import com.github.kr328.clash.service.data.Imported
 import com.github.kr328.clash.service.data.ImportedDao
 import com.github.kr328.clash.service.model.Profile
 import com.github.kr328.clash.service.util.importedDir
-import kotlin.time.Duration.Companion.seconds
+import kotlin.time.Duration.Companion.minutes
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
@@ -83,7 +83,7 @@ class ProfileReceiver : BroadcastReceiver() {
 
       context.getSystemService<AlarmManager>()?.cancel(intent)
 
-      if (imported.interval < 15.seconds.inWholeMilliseconds) return
+      if (imported.interval < 15.minutes.inWholeMilliseconds) return
 
       val current = System.currentTimeMillis()
       val last =
