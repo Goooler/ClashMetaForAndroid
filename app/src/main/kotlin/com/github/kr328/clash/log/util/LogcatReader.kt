@@ -13,8 +13,7 @@ import kotlinx.coroutines.withContext
 class LogcatReader(
   context: Context,
   file: LogFile,
-  private val reader: BufferedReader =
-    BufferedReader(FileReader(context.logsDir.resolve(file.fileName))),
+  private val reader: BufferedReader = context.logsDir.resolve(file.fileName).bufferedReader(),
 ) : AutoCloseable by reader {
 
   suspend fun readAll(): List<LogMessage> =
