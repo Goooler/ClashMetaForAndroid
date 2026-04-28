@@ -14,7 +14,7 @@ import kotlinx.coroutines.channels.ReceiveChannel
 import kotlinx.coroutines.selects.SelectClause1
 import kotlinx.coroutines.withContext
 
-abstract class Module<E>(val service: Service) {
+sealed class Module<E>(val service: Service) {
   private val events: Channel<E> = Channel(Channel.UNLIMITED)
   private val receivers: MutableList<BroadcastReceiver> = mutableListOf()
 

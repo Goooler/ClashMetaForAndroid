@@ -63,7 +63,10 @@ import com.github.kr328.clash.ui.icon.MihomoIcons
 import com.github.kr328.clash.ui.theme.MihomoTheme
 import com.github.kr328.clash.ui.theme.PreviewMihomo
 import com.github.kr328.clash.ui.theme.mihomoDimens
+import kotlin.time.Duration.Companion.milliseconds
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.mapLatest
@@ -189,6 +192,7 @@ private fun AccessControlContent(
   }
 }
 
+@OptIn(FlowPreview::class, ExperimentalCoroutinesApi::class)
 @Composable
 private fun ColumnScope.AccessControlSearchContent(
   apps: List<AppInfo>,
@@ -200,7 +204,7 @@ private fun ColumnScope.AccessControlSearchContent(
 
   LaunchedEffect(apps) {
     snapshotFlow { keyword }
-      .debounce(200)
+      .debounce(200.milliseconds)
       .distinctUntilChanged()
       .mapLatest { currentKeyword ->
         if (currentKeyword.isBlank()) {

@@ -57,20 +57,16 @@ fun Date.format(
 fun Long.toBytesString(): String {
   return when {
     this > 1024.0 * 1024 * 1024 * 1024 * 1024 * 1024 ->
-      String.format("%.2f EiB", (this.toDouble() / 1024 / 1024 / 1024 / 1024 / 1024 / 1024))
+      "%.2f EiB".format(this.toDouble() / 1024 / 1024 / 1024 / 1024 / 1024 / 1024)
     this > 1024.0 * 1024 * 1024 * 1024 * 1024 ->
-      String.format("%.2f PiB", (this.toDouble() / 1024 / 1024 / 1024 / 1024 / 1024))
+      "%.2f PiB".format(this.toDouble() / 1024 / 1024 / 1024 / 1024 / 1024)
     this > 1024.0 * 1024 * 1024 * 1024 ->
-      String.format("%.2f TiB", (this.toDouble() / 1024 / 1024 / 1024 / 1024))
-    this > 1024 * 1024 * 1024 -> String.format("%.2f GiB", (this.toDouble() / 1024 / 1024 / 1024))
-    this > 1024 * 1024 -> String.format("%.2f MiB", (this.toDouble() / 1024 / 1024))
-    this > 1024 -> String.format("%.2f KiB", (this.toDouble() / 1024))
+      "%.2f TiB".format(this.toDouble() / 1024 / 1024 / 1024 / 1024)
+    this > 1024 * 1024 * 1024 -> "%.2f GiB".format(this.toDouble() / 1024 / 1024 / 1024)
+    this > 1024 * 1024 -> "%.2f MiB".format(this.toDouble() / 1024 / 1024)
+    this > 1024 -> "%.2f KiB".format(this.toDouble() / 1024)
     else -> "$this Bytes"
   }
-}
-
-fun Double.toProgress(): Int {
-  return this.toInt()
 }
 
 fun Long.toDateStr(): String {

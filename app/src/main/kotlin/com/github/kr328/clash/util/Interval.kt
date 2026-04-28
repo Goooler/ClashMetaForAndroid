@@ -2,12 +2,13 @@ package com.github.kr328.clash.util
 
 import android.content.Context
 import com.github.kr328.clash.R
-import java.util.concurrent.TimeUnit
+import kotlin.time.Duration.Companion.milliseconds
 
 fun Long.elapsedIntervalString(context: Context): String {
-  val day = TimeUnit.MILLISECONDS.toDays(this)
-  val hour = TimeUnit.MILLISECONDS.toHours(this)
-  val minute = TimeUnit.MILLISECONDS.toMinutes(this)
+  val duration = this.milliseconds
+  val day = duration.inWholeDays
+  val hour = duration.inWholeHours
+  val minute = duration.inWholeMinutes
 
   return when {
     day > 0 -> context.getString(R.string.format_days_ago, day)

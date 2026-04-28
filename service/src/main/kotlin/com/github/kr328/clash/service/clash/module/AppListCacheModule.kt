@@ -5,7 +5,7 @@ import android.content.Intent
 import android.content.pm.PackageInfo
 import com.github.kr328.clash.common.log.Log
 import com.github.kr328.clash.core.Clash
-import java.util.concurrent.TimeUnit
+import kotlin.time.Duration.Companion.seconds
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
 
@@ -50,7 +50,7 @@ class AppListCacheModule(service: Service) : Module<Unit>(service) {
 
       packageChanged.receive()
 
-      delay(TimeUnit.SECONDS.toMillis(10))
+      delay(10.seconds)
     }
   }
 }

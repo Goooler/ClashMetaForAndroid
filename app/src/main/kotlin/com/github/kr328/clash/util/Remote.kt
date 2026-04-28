@@ -19,7 +19,7 @@ suspend fun <T> withClash(
 
     try {
       return withContext(context) { client.block() }
-    } catch (e: DeadObjectException) {
+    } catch (_: DeadObjectException) {
       Log.w("Remote services panic")
 
       Remote.service.remote.reset(remote)
@@ -37,7 +37,7 @@ suspend fun <T> withProfile(
 
     try {
       return withContext(context) { client.block() }
-    } catch (e: DeadObjectException) {
+    } catch (_: DeadObjectException) {
       Log.w("Remote services panic")
 
       Remote.service.remote.reset(remote)

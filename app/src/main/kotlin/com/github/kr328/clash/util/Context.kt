@@ -1,34 +1,10 @@
 package com.github.kr328.clash.util
 
-import android.R
-import android.app.Activity
 import android.content.Context
-import android.text.Html
-import android.text.Spanned
-import android.view.LayoutInflater
-import android.view.ViewGroup
-import androidx.annotation.DimenRes
-import androidx.annotation.StringRes
+import java.io.File
 
-val Context.layoutInflater: LayoutInflater
-  get() = LayoutInflater.from(this)
+val Context.logsDir: File
+  get() = cacheDir.resolve("logs")
 
-val Context.root: ViewGroup?
-  get() {
-    return when (this) {
-      is Activity -> {
-        findViewById(R.id.content)
-      }
-      else -> {
-        null
-      }
-    }
-  }
-
-fun Context.getPixels(@DimenRes resId: Int): Int {
-  return resources.getDimensionPixelSize(resId)
-}
-
-fun Context.getHtml(@StringRes resId: Int): Spanned {
-  return Html.fromHtml(getString(resId), Html.FROM_HTML_MODE_COMPACT)
-}
+val Context.clashDir: File
+  get() = filesDir.resolve("clash")

@@ -6,10 +6,11 @@ import com.github.kr328.clash.common.compat.foreground
 import com.github.kr328.clash.model.AppInfo
 
 fun PackageInfo.toAppInfo(pm: PackageManager): AppInfo {
+  val applicationInfo = checkNotNull(applicationInfo)
   return AppInfo(
     packageName = packageName,
-    icon = applicationInfo!!.loadIcon(pm).foreground,
-    label = applicationInfo!!.loadLabel(pm).toString(),
+    icon = applicationInfo.loadIcon(pm).foreground,
+    label = applicationInfo.loadLabel(pm).toString(),
     installTime = firstInstallTime,
     updateDate = lastUpdateTime,
   )
