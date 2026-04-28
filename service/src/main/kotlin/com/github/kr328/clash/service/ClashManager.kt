@@ -9,6 +9,7 @@ import com.github.kr328.clash.core.model.Provider
 import com.github.kr328.clash.core.model.ProviderList
 import com.github.kr328.clash.core.model.ProxyGroup
 import com.github.kr328.clash.core.model.ProxySort
+import com.github.kr328.clash.core.model.Traffic
 import com.github.kr328.clash.core.model.TunnelState
 import com.github.kr328.clash.core.model.UiConfiguration
 import com.github.kr328.clash.service.data.Selection
@@ -35,7 +36,7 @@ class ClashManager(private val context: Context) :
     return Clash.queryTunnelState()
   }
 
-  override fun queryTrafficTotal(): Long {
+  override fun queryTrafficTotal(): Traffic {
     return Clash.queryTrafficTotal()
   }
 

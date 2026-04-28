@@ -2,20 +2,11 @@ package com.github.kr328.clash.core.util
 
 import com.github.kr328.clash.core.model.Traffic
 
-fun Traffic.trafficUpload(): String {
-  return trafficString(scaleTraffic(this ushr 32))
-}
+fun Traffic.trafficUpload(): String = trafficString(uploadScaled)
 
-fun Traffic.trafficDownload(): String {
-  return trafficString(scaleTraffic(this and 0xFFFFFFFF))
-}
+fun Traffic.trafficDownload(): String = trafficString(downloadScaled)
 
-fun Traffic.trafficTotal(): String {
-  val upload = scaleTraffic(this ushr 32)
-  val download = scaleTraffic(this and 0xFFFFFFFF)
-
-  return trafficString(upload + download)
-}
+fun Traffic.trafficTotal(): String = trafficString(uploadScaled + downloadScaled)
 
 private fun trafficString(scaled: Long): String {
   return when {
@@ -37,18 +28,5 @@ private fun trafficString(scaled: Long): String {
     else -> {
       "$scaled Bytes"
     }
-  }
-}
-
-private fun scaleTraffic(value: Long): Long {
-  val type = (value ushr 30) and 0x3
-  val data = value and 0x3FFFFFFF
-
-  return when (type) {
-    0L -> data
-    1L -> data * 1024
-    2L -> data * 1024 * 1024
-    3L -> data * 1024 * 1024 * 1024
-    else -> throw IllegalArgumentException("invalid value type")
   }
 }

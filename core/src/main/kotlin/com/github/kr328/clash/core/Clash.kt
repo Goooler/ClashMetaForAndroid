@@ -55,11 +55,11 @@ object Clash {
   }
 
   fun queryTrafficNow(): Traffic {
-    return Bridge.nativeQueryTrafficNow()
+    return Traffic(Bridge.nativeQueryTrafficNow())
   }
 
   fun queryTrafficTotal(): Traffic {
-    return Bridge.nativeQueryTrafficTotal()
+    return Traffic(Bridge.nativeQueryTrafficTotal())
   }
 
   fun notifyDnsChanged(dns: List<String>) {
