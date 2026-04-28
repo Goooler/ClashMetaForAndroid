@@ -27,8 +27,13 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation3.runtime.NavKey
+import androidx.navigation3.runtime.entryProvider
 import com.github.kr328.clash.R
 import com.github.kr328.clash.core.model.ConfigurationOverride
+import com.github.kr328.clash.nav.MihomoNavDisplay
+import com.github.kr328.clash.nav.addIfNotLast
+import com.github.kr328.clash.nav.rememberNavBackStackBuilder
 import com.github.kr328.clash.settings.vm.MetaFeatureSettingsViewModel
 import com.github.kr328.clash.settings.vm.MetaFeatureSettingsViewModel.ImportResult
 import com.github.kr328.clash.settings.vm.MetaFeatureSettingsViewModel.ImportType
@@ -41,8 +46,16 @@ import com.github.kr328.clash.ui.icon.MihomoIcons
 import com.github.kr328.clash.ui.theme.MihomoTheme
 import com.github.kr328.clash.ui.theme.PreviewMihomo
 import com.github.kr328.clash.util.toast
+import kotlinx.serialization.Serializable
 import me.zhanghai.compose.preference.ProvidePreferenceLocals
 import me.zhanghai.compose.preference.preferenceCategory
+
+sealed interface MetaFeatureSettingsRoute : NavKey {
+  @Serializable data object Main : MetaFeatureSettingsRoute
+
+  @Serializable
+  data class EditableTextList(val title: Int, val listKey: String) : MetaFeatureSettingsRoute
+}
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
@@ -51,84 +64,130 @@ fun MetaFeatureSettingsScreen(
   viewModel: MetaFeatureSettingsViewModel = viewModel(),
   onResetCompleted: () -> Unit,
 ) {
-  val context = LocalContext.current
-  val configuration by viewModel.configuration.collectAsStateWithLifecycle()
-  val importResult by viewModel.importResult.collectAsStateWithLifecycle()
-  val importedText = stringResource(R.string.geofile_imported)
-  var pendingImportType by remember { mutableStateOf<ImportType?>(null) }
-  var showUnsupportedFormatDialog by remember { mutableStateOf(false) }
-  var validExtensionsSummary by remember { mutableStateOf("") }
-  var showResetConfirmDialog by remember { mutableStateOf(false) }
+  val backStack = rememberNavBackStackBuilder { add(MetaFeatureSettingsRoute.Main) }
 
   DisposableEffect(viewModel) { onDispose { viewModel.persistOverride() } }
 
-  LaunchedEffect(importResult) {
-    when (val result = importResult) {
-      ImportResult.Idle,
-      ImportResult.InProgress -> Unit
+  MihomoNavDisplay(
+    backStack = backStack,
+    entryProvider =
+      entryProvider {
+        entry<MetaFeatureSettingsRoute.Main> {
+          val context = LocalContext.current
+          val configuration by viewModel.configuration.collectAsStateWithLifecycle()
+          val importResult by viewModel.importResult.collectAsStateWithLifecycle()
+          val importedText = stringResource(R.string.geofile_imported)
+          var pendingImportType by remember { mutableStateOf<ImportType?>(null) }
+          var showUnsupportedFormatDialog by remember { mutableStateOf(false) }
+          var validExtensionsSummary by remember { mutableStateOf("") }
+          var showResetConfirmDialog by remember { mutableStateOf(false) }
 
-      is ImportResult.Success -> {
-        context.toast(importedText.format(result.displayName))
-      }
+          LaunchedEffect(importResult) {
+            when (val result = importResult) {
+              ImportResult.Idle,
+              ImportResult.InProgress -> Unit
 
-      is ImportResult.UnsupportedFormat -> {
-        validExtensionsSummary = result.summary
-        showUnsupportedFormatDialog = true
-      }
+              is ImportResult.Success -> {
+                context.toast(importedText.format(result.displayName))
+              }
 
-      ImportResult.Failed -> context.toast(R.string.geofile_import_failed)
-    }
-  }
+              is ImportResult.UnsupportedFormat -> {
+                validExtensionsSummary = result.summary
+                showUnsupportedFormatDialog = true
+              }
 
-  val importLauncher =
-    rememberLauncherForActivityResult(GetContent()) { uri ->
-      val type = pendingImportType ?: return@rememberLauncherForActivityResult
-      pendingImportType = null
-      viewModel.importGeoFile(uri, type)
-    }
+              ImportResult.Failed -> context.toast(R.string.geofile_import_failed)
+            }
+          }
 
-  MetaFeatureSettingsContent(
-    configuration = configuration,
-    actions = viewModel,
-    modifier = modifier,
-    showResetConfirmDialog = showResetConfirmDialog,
-    onShowResetConfirmDialogChange = { showResetConfirmDialog = it },
-    onResetConfirmed = {
-      viewModel.resetOverride()
-      onResetCompleted()
-    },
-    onImportGeoIp = {
-      pendingImportType = ImportType.GeoIp
-      importLauncher.launch("*/*")
-    },
-    onImportGeoSite = {
-      pendingImportType = ImportType.GeoSite
-      importLauncher.launch("*/*")
-    },
-    onImportCountry = {
-      pendingImportType = ImportType.Country
-      importLauncher.launch("*/*")
-    },
-    onImportASN = {
-      pendingImportType = ImportType.ASN
-      importLauncher.launch("*/*")
-    },
-  )
+          val importLauncher =
+            rememberLauncherForActivityResult(GetContent()) { uri ->
+              val type = pendingImportType ?: return@rememberLauncherForActivityResult
+              pendingImportType = null
+              viewModel.importGeoFile(uri, type)
+            }
 
-  if (showUnsupportedFormatDialog) {
-    AlertDialog(
-      onDismissRequest = { showUnsupportedFormatDialog = false },
-      title = { Text(stringResource(R.string.geofile_unknown_db_format)) },
-      text = {
-        Text(stringResource(R.string.geofile_unknown_db_format_message, validExtensionsSummary))
-      },
-      confirmButton = {
-        TextButton(onClick = { showUnsupportedFormatDialog = false }) {
-          Text(text = stringResource(R.string.ok))
+          MetaFeatureSettingsContent(
+            configuration = configuration,
+            actions = viewModel,
+            modifier = modifier,
+            showResetConfirmDialog = showResetConfirmDialog,
+            onShowResetConfirmDialogChange = { showResetConfirmDialog = it },
+            onResetConfirmed = {
+              viewModel.resetOverride()
+              onResetCompleted()
+            },
+            onImportGeoIp = {
+              pendingImportType = ImportType.GeoIp
+              importLauncher.launch("*/*")
+            },
+            onImportGeoSite = {
+              pendingImportType = ImportType.GeoSite
+              importLauncher.launch("*/*")
+            },
+            onImportCountry = {
+              pendingImportType = ImportType.Country
+              importLauncher.launch("*/*")
+            },
+            onImportASN = {
+              pendingImportType = ImportType.ASN
+              importLauncher.launch("*/*")
+            },
+            onOpenEditableTextList = { title, listKey ->
+              backStack.addIfNotLast(MetaFeatureSettingsRoute.EditableTextList(title, listKey))
+            },
+          )
+
+          if (showUnsupportedFormatDialog) {
+            AlertDialog(
+              onDismissRequest = { showUnsupportedFormatDialog = false },
+              title = { Text(stringResource(R.string.geofile_unknown_db_format)) },
+              text = {
+                Text(
+                  stringResource(R.string.geofile_unknown_db_format_message, validExtensionsSummary)
+                )
+              },
+              confirmButton = {
+                TextButton(onClick = { showUnsupportedFormatDialog = false }) {
+                  Text(text = stringResource(R.string.ok))
+                }
+              },
+            )
+          }
+        }
+        entry<MetaFeatureSettingsRoute.EditableTextList> { route ->
+          val configuration by viewModel.configuration.collectAsStateWithLifecycle()
+          val values =
+            when (route.listKey) {
+              "sniffHttpPorts" -> configuration.sniffer.sniff.http.ports
+              "sniffTlsPorts" -> configuration.sniffer.sniff.tls.ports
+              "sniffQuicPorts" -> configuration.sniffer.sniff.quic.ports
+              "forceDomain" -> configuration.sniffer.forceDomain
+              "skipDomain" -> configuration.sniffer.skipDomain
+              "skipSrcAddress" -> configuration.sniffer.skipSrcAddress
+              "skipDstAddress" -> configuration.sniffer.skipDstAddress
+              else -> emptyList()
+            }
+          EditableTextListScreen(
+            title = route.title,
+            initialValues = values,
+            onDismiss = { backStack.removeLastOrNull() },
+            onApply = { newValues ->
+              when (route.listKey) {
+                "sniffHttpPorts" -> viewModel.updateSniffHttpPorts(newValues)
+                "sniffTlsPorts" -> viewModel.updateSniffTlsPorts(newValues)
+                "sniffQuicPorts" -> viewModel.updateSniffQuicPorts(newValues)
+                "forceDomain" -> viewModel.updateForceDomain(newValues)
+                "skipDomain" -> viewModel.updateSkipDomain(newValues)
+                "skipSrcAddress" -> viewModel.updateSkipSrcAddress(newValues)
+                "skipDstAddress" -> viewModel.updateSkipDstAddress(newValues)
+              }
+              backStack.removeLastOrNull()
+            },
+          )
         }
       },
-    )
-  }
+  )
 }
 
 @Composable
@@ -144,6 +203,7 @@ private fun MetaFeatureSettingsContent(
   onImportGeoSite: () -> Unit,
   onImportCountry: () -> Unit,
   onImportASN: () -> Unit,
+  onOpenEditableTextList: (Int, String) -> Unit,
 ) {
   val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
   MihomoScaffold(
@@ -162,7 +222,7 @@ private fun MetaFeatureSettingsContent(
     ProvidePreferenceLocals {
       LazyColumn(modifier = Modifier.fillMaxSize(), contentPadding = innerPadding) {
         metaBasicPreferenceItems(configuration, actions)
-        metaSnifferPreferenceItems(configuration, actions)
+        metaSnifferPreferenceItems(configuration, actions, onOpenEditableTextList)
         metaGeoFileItems(
           onImportGeoIp = onImportGeoIp,
           onImportGeoSite = onImportGeoSite,
@@ -252,6 +312,7 @@ private fun LazyListScope.metaBasicPreferenceItems(
 private fun LazyListScope.metaSnifferPreferenceItems(
   configuration: ConfigurationOverride,
   actions: MetaFeatureSettingsActions,
+  onOpenEditableTextList: (Int, String) -> Unit,
 ) {
   preferenceCategory(
     key = "cat_sniffer",
@@ -275,7 +336,7 @@ private fun LazyListScope.metaSnifferPreferenceItems(
       title = R.string.sniff_http_ports,
       placeholder = R.string.dont_modify,
       values = configuration.sniffer.sniff.http.ports,
-      onValueChange = actions::updateSniffHttpPorts,
+      onClick = { onOpenEditableTextList(R.string.sniff_http_ports, "sniffHttpPorts") },
       enabled = enabled,
     )
   }
@@ -298,7 +359,7 @@ private fun LazyListScope.metaSnifferPreferenceItems(
       title = R.string.sniff_tls_ports,
       placeholder = R.string.dont_modify,
       values = configuration.sniffer.sniff.tls.ports,
-      onValueChange = actions::updateSniffTlsPorts,
+      onClick = { onOpenEditableTextList(R.string.sniff_tls_ports, "sniffTlsPorts") },
       enabled = enabled,
     )
   }
@@ -321,7 +382,7 @@ private fun LazyListScope.metaSnifferPreferenceItems(
       title = R.string.sniff_quic_ports,
       placeholder = R.string.dont_modify,
       values = configuration.sniffer.sniff.quic.ports,
-      onValueChange = actions::updateSniffQuicPorts,
+      onClick = { onOpenEditableTextList(R.string.sniff_quic_ports, "sniffQuicPorts") },
       enabled = enabled,
     )
   }
@@ -383,7 +444,7 @@ private fun LazyListScope.metaSnifferPreferenceItems(
       title = R.string.force_domain,
       placeholder = R.string.dont_modify,
       values = configuration.sniffer.forceDomain,
-      onValueChange = actions::updateForceDomain,
+      onClick = { onOpenEditableTextList(R.string.force_domain, "forceDomain") },
       enabled = enabled,
     )
   }
@@ -393,7 +454,7 @@ private fun LazyListScope.metaSnifferPreferenceItems(
       title = R.string.skip_domain,
       placeholder = R.string.dont_modify,
       values = configuration.sniffer.skipDomain,
-      onValueChange = actions::updateSkipDomain,
+      onClick = { onOpenEditableTextList(R.string.skip_domain, "skipDomain") },
       enabled = enabled,
     )
   }
@@ -403,7 +464,7 @@ private fun LazyListScope.metaSnifferPreferenceItems(
       title = R.string.skip_src_address,
       placeholder = R.string.dont_modify,
       values = configuration.sniffer.skipSrcAddress,
-      onValueChange = actions::updateSkipSrcAddress,
+      onClick = { onOpenEditableTextList(R.string.skip_src_address, "skipSrcAddress") },
       enabled = enabled,
     )
   }
@@ -413,7 +474,7 @@ private fun LazyListScope.metaSnifferPreferenceItems(
       title = R.string.skip_dst_address,
       placeholder = R.string.dont_modify,
       values = configuration.sniffer.skipDstAddress,
-      onValueChange = actions::updateSkipDstAddress,
+      onClick = { onOpenEditableTextList(R.string.skip_dst_address, "skipDstAddress") },
       enabled = enabled,
     )
   }
@@ -519,5 +580,6 @@ private fun MetaFeatureSettingsContentPreview() = MihomoTheme {
     onImportGeoSite = {},
     onImportCountry = {},
     onImportASN = {},
+    onOpenEditableTextList = { _, _ -> },
   )
 }

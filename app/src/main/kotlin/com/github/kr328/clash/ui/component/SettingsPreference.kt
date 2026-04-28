@@ -8,28 +8,16 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.ListItem
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextRange
@@ -39,7 +27,6 @@ import androidx.compose.ui.window.DialogProperties
 import com.github.kr328.clash.R
 import com.github.kr328.clash.ui.icon.BaselineAdd
 import com.github.kr328.clash.ui.icon.MihomoIcons
-import com.github.kr328.clash.ui.icon.OutlineDelete
 import com.github.kr328.clash.ui.theme.mihomoDimens
 import me.zhanghai.compose.preference.ListPreference
 import me.zhanghai.compose.preference.Preference
@@ -72,28 +59,16 @@ fun SettingsEditTextListPreferenceItem(
   @StringRes title: Int,
   @StringRes placeholder: Int,
   values: List<String>?,
-  onValueChange: (List<String>?) -> Unit,
+  onClick: () -> Unit,
   enabled: Boolean = true,
 ) {
-  var showDialog by remember { mutableStateOf(false) }
   Preference(
     modifier = Modifier.fillMaxWidth(),
     title = { Text(stringResource(title)) },
     summary = { Text(values.summary(placeholder)) },
     enabled = enabled,
-    onClick = { showDialog = true },
+    onClick = onClick,
   )
-  if (showDialog) {
-    EditableTextListDialog(
-      title = title,
-      initialValues = values,
-      onDismiss = { showDialog = false },
-      onApply = {
-        onValueChange(it)
-        showDialog = false
-      },
-    )
-  }
 }
 
 @Composable
@@ -110,60 +85,6 @@ fun SettingsClickablePreferenceItem(
     enabled = enabled,
     onClick = onClick,
   )
-}
-
-@Composable
-fun EditableTextListDialog(
-  @StringRes title: Int,
-  initialValues: List<String>?,
-  onDismiss: () -> Unit,
-  onApply: (List<String>?) -> Unit,
-) {
-  var values by remember(initialValues) { mutableStateOf(initialValues.orEmpty()) }
-  var showAddDialog by remember { mutableStateOf(false) }
-
-  FullScreenPreferenceDialog(
-    title = title,
-    onDismiss = onDismiss,
-    onAdd = { showAddDialog = true },
-    onReset = { onApply(null) },
-    onConfirm = { onApply(values) },
-  ) { modifier ->
-    if (values.isEmpty()) {
-      EmptyEditorContent(modifier)
-    } else {
-      LazyColumn(modifier = modifier) {
-        itemsIndexed(values) { index, value ->
-          ListItem(
-            headlineContent = { Text(value) },
-            trailingContent = {
-              IconButton(onClick = { values = values.toMutableList().apply { removeAt(index) } }) {
-                Icon(
-                  imageVector = MihomoIcons.OutlineDelete,
-                  contentDescription = stringResource(R.string.delete),
-                )
-              }
-            },
-          )
-          HorizontalDivider()
-        }
-      }
-    }
-  }
-
-  if (showAddDialog) {
-    SingleTextInputDialog(
-      title = title,
-      initialValue = "",
-      onDismiss = { showAddDialog = false },
-      onConfirm = { newValue ->
-        if (newValue.isNotBlank()) {
-          values = values + newValue
-        }
-        showAddDialog = false
-      },
-    )
-  }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -220,40 +141,6 @@ fun EmptyEditorContent(modifier: Modifier = Modifier) {
   Box(modifier = modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
     Text(stringResource(R.string.empty))
   }
-}
-
-@Composable
-fun SingleTextInputDialog(
-  @StringRes title: Int,
-  initialValue: String,
-  onDismiss: () -> Unit,
-  onConfirm: (String) -> Unit,
-) {
-  var inputText by remember { mutableStateOf(initialTextFieldValue(initialValue)) }
-  val focusRequester = remember { FocusRequester() }
-  val keyboardController = LocalSoftwareKeyboardController.current
-
-  LaunchedEffect(Unit) {
-    focusRequester.requestFocus()
-    keyboardController?.show()
-  }
-
-  AlertDialog(
-    onDismissRequest = onDismiss,
-    title = { Text(stringResource(title)) },
-    text = {
-      OutlinedTextField(
-        value = inputText,
-        onValueChange = { inputText = it },
-        singleLine = true,
-        modifier = Modifier.fillMaxWidth().focusRequester(focusRequester),
-      )
-    },
-    confirmButton = {
-      TextButton(onClick = { onConfirm(inputText.text) }) { Text(stringResource(R.string.ok)) }
-    },
-    dismissButton = { TextButton(onClick = onDismiss) { Text(stringResource(R.string.cancel)) } },
-  )
 }
 
 fun initialTextFieldValue(text: String) =
