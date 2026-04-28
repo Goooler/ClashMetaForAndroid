@@ -51,7 +51,7 @@ class ProfileReceiver : BroadcastReceiver() {
     private var initialized: Boolean = false
 
     suspend fun rescheduleAll(context: Context) = lock.withLock {
-      if (initialized) return
+      if (initialized) return@withLock
 
       initialized = true
 

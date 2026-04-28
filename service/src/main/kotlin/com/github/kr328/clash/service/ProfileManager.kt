@@ -158,6 +158,7 @@ class ProfileManager(private val context: Context) :
         var expire: Long = 0
 
         val userinfo = response.headers["subscription-userinfo"]
+        @Suppress("KotlinConstantConditions")
         if (response.isSuccessful && userinfo != null) {
 
           val flags = userinfo.split(";")
@@ -193,14 +194,10 @@ class ProfileManager(private val context: Context) :
             download,
             total,
             expire,
-            old?.createdAt ?: System.currentTimeMillis(),
+            old.createdAt,
           )
 
-        if (old != null) {
-          ImportedDao().update(new)
-        } else {
-          ImportedDao().insert(new)
-        }
+        ImportedDao().update(new)
 
         PendingDao().remove(new.uuid)
         context.sendProfileChanged(new.uuid)
