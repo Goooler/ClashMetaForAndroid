@@ -2,19 +2,40 @@ package com.github.kr328.clash.core.util
 
 import com.github.kr328.clash.core.model.Traffic
 
-fun Traffic.trafficUpload(): String {
-  return trafficString(scaleTraffic(this ushr 32))
+fun Traffic.trafficUpload(): String = trafficString(uploadScaled)
+
+fun Traffic.trafficDownload(): String = trafficString(downloadScaled)
+
+fun Traffic.trafficTotal(): String =
+  trafficTotalString(
+    normalizeScaledToCentiBytes(uploadScaled) + normalizeScaledToCentiBytes(downloadScaled)
+  )
+
+private fun normalizeScaledToCentiBytes(scaled: Long): Long {
+  return if (scaled <= 1024L) scaled * 100 else scaled
 }
 
-fun Traffic.trafficDownload(): String {
-  return trafficString(scaleTraffic(this and 0xFFFFFFFF))
-}
+private fun trafficTotalString(centiBytes: Long): String {
+  return when {
+    centiBytes >= 1024 * 1024 * 1024 * 100L -> {
+      val data = centiBytes / 1024 / 1024 / 1024
 
-fun Traffic.trafficTotal(): String {
-  val upload = scaleTraffic(this ushr 32)
-  val download = scaleTraffic(this and 0xFFFFFFFF)
+      "%.2f GiB".format(data.toFloat() / 100)
+    }
+    centiBytes >= 1024 * 1024 * 100L -> {
+      val data = centiBytes / 1024 / 1024
 
-  return trafficString(upload + download)
+      "%.2f MiB".format(data.toFloat() / 100)
+    }
+    centiBytes >= 1024 * 100L -> {
+      val data = centiBytes / 1024
+
+      "%.2f KiB".format(data.toFloat() / 100)
+    }
+    else -> {
+      "${centiBytes / 100} Bytes"
+    }
+  }
 }
 
 private fun trafficString(scaled: Long): String {
@@ -37,18 +58,5 @@ private fun trafficString(scaled: Long): String {
     else -> {
       "$scaled Bytes"
     }
-  }
-}
-
-private fun scaleTraffic(value: Long): Long {
-  val type = (value ushr 30) and 0x3
-  val data = value and 0x3FFFFFFF
-
-  return when (type) {
-    0L -> data
-    1L -> data * 1024
-    2L -> data * 1024 * 1024
-    3L -> data * 1024 * 1024 * 1024
-    else -> throw IllegalArgumentException("invalid value type")
   }
 }

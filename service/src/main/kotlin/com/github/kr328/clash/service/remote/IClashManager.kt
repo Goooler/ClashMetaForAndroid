@@ -6,6 +6,7 @@ import com.github.kr328.clash.core.model.Provider
 import com.github.kr328.clash.core.model.ProviderList
 import com.github.kr328.clash.core.model.ProxyGroup
 import com.github.kr328.clash.core.model.ProxySort
+import com.github.kr328.clash.core.model.Traffic
 import com.github.kr328.clash.core.model.TunnelState
 import com.github.kr328.clash.core.model.UiConfiguration
 import com.github.kr328.kaidl.BinderInterface
@@ -14,7 +15,7 @@ import com.github.kr328.kaidl.BinderInterface
 interface IClashManager {
   fun queryTunnelState(): TunnelState
 
-  fun queryTrafficTotal(): Long
+  fun queryTrafficTotal(): Traffic
 
   fun queryProxyGroupNames(excludeNotSelectable: Boolean): List<String>
 
