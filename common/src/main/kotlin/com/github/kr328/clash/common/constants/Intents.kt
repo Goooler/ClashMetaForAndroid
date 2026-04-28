@@ -11,6 +11,12 @@ object Intents {
 
   const val EXTRA_NAME = "name"
 
+  // Routes
+  val ACTION_PROPERTIES = "$packageName.ACTION_PROPERTIES"
+  val ACTION_LOGCAT = "$packageName.ACTION_LOGCAT"
+  val ACTION_APK_BROKEN = "$packageName.ACTION_APK_BROKEN"
+  val ACTION_APP_CRASHED = "$packageName.ACTION_APP_CRASHED"
+
   // Self
   val ACTION_SERVICE_RECREATED = "$packageName.intent.action.CLASH_RECREATED"
   val ACTION_CLASH_STARTED = "$packageName.intent.action.CLASH_STARTED"

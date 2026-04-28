@@ -1,4 +1,4 @@
-package com.github.kr328.clash.files.vm
+package com.github.kr328.clash.profile.vm
 
 import android.app.Application
 import android.net.Uri

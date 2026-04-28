@@ -11,10 +11,12 @@ import android.os.IInterface
 import androidx.core.app.NotificationChannelCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import com.github.kr328.clash.MainActivity.Companion.intent as mainIntent
 import com.github.kr328.clash.R
 import com.github.kr328.clash.common.compat.getColorCompat
 import com.github.kr328.clash.common.compat.pendingIntentFlags
 import com.github.kr328.clash.common.compat.startForegroundCompat
+import com.github.kr328.clash.common.constants.Intents
 import com.github.kr328.clash.common.log.Log
 import com.github.kr328.clash.common.util.intent
 import com.github.kr328.clash.core.model.LogMessage
@@ -31,6 +33,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -52,7 +56,7 @@ class LogcatService : Service(), CoroutineScope by CoroutineScope(Dispatchers.De
   override fun onCreate() {
     super.onCreate()
 
-    running = true
+    running.value = true
 
     createNotificationChannel()
 
@@ -68,7 +72,7 @@ class LogcatService : Service(), CoroutineScope by CoroutineScope(Dispatchers.De
 
     stopForeground(STOP_FOREGROUND_REMOVE)
 
-    running = false
+    running.value = false
 
     super.onDestroy()
   }
@@ -151,8 +155,7 @@ class LogcatService : Service(), CoroutineScope by CoroutineScope(Dispatchers.De
           PendingIntent.getActivity(
             this,
             R.id.nf_logcat_status,
-            LogcatActivity::class
-              .intent
+            mainIntent(context = this, action = Intents.ACTION_LOGCAT)
               .setFlags(
                 Intent.FLAG_ACTIVITY_NEW_TASK or
                   Intent.FLAG_ACTIVITY_SINGLE_TOP or
@@ -170,6 +173,7 @@ class LogcatService : Service(), CoroutineScope by CoroutineScope(Dispatchers.De
     private const val CHANNEL_ID = "clash_logcat_channel"
     private const val CACHE_CAPACITY = 128
 
-    var running: Boolean = false
+    val running: StateFlow<Boolean>
+      field = MutableStateFlow(false)
   }
 }

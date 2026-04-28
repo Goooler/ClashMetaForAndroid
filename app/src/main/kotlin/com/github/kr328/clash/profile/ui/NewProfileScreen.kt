@@ -44,10 +44,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.github.kr328.clash.R
 import com.github.kr328.clash.common.constants.Intents
-import com.github.kr328.clash.common.util.intent
-import com.github.kr328.clash.common.util.setUUID
 import com.github.kr328.clash.model.ProfileProvider
-import com.github.kr328.clash.profile.PropertiesActivity
 import com.github.kr328.clash.profile.vm.NewProfileViewModel
 import com.github.kr328.clash.ui.component.MihomoScaffold
 import com.github.kr328.clash.ui.icon.BaselineExtension
@@ -56,12 +53,14 @@ import com.github.kr328.clash.ui.theme.MihomoTheme
 import com.github.kr328.clash.ui.theme.PreviewMihomo
 import com.github.kr328.clash.ui.theme.mihomoDimens
 import io.github.g00fy2.quickie.ScanQRCode
+import java.util.UUID
 import kotlin.math.roundToInt
 
 @Composable
 fun NewProfileScreen(
   modifier: Modifier = Modifier,
   viewModel: NewProfileViewModel = viewModel(),
+  onProperties: (UUID) -> Unit,
   onFinish: () -> Unit,
 ) {
   val context = LocalContext.current
@@ -81,19 +80,13 @@ fun NewProfileScreen(
       }
     }
 
-  val propertiesLauncher =
-    rememberLauncherForActivityResult(StartActivityForResult()) { result ->
-      viewModel.onPropertiesResult(result.resultCode == RESULT_OK)
-    }
-
   LaunchedEffect(eventState) {
     when (val event = eventState) {
       NewProfileViewModel.EventState.Idle -> Unit
       NewProfileViewModel.EventState.LaunchQRScanner -> qrLauncher.launch(null)
       is NewProfileViewModel.EventState.LaunchExternalProvider ->
         externalProviderLauncher.launch(event.intent)
-      is NewProfileViewModel.EventState.LaunchProperties ->
-        propertiesLauncher.launch(PropertiesActivity::class.intent.setUUID(event.uuid))
+      is NewProfileViewModel.EventState.LaunchProperties -> onProperties(event.uuid)
       is NewProfileViewModel.EventState.OpenAppSettings ->
         context.startActivity(
           Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).setData(event.uri)
