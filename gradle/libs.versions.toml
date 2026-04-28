@@ -32,7 +32,7 @@ rikkax-multiprocess = "dev.rikka.rikkax.preference:multiprocess:1.0.0"
 quickie-bundled = "io.github.g00fy2.quickie:quickie-bundled:1.11.0"
 okhttp-client = { module = "com.squareup.okhttp3:okhttp", version.ref = "okhttp" }
 okhttp-interceptor = { module = "com.squareup.okhttp3:logging-interceptor", version.ref = "okhttp" }
-bytesize = "me.saket.bytesize:bytesize:2.2.0"
+bytesize = "me.saket.bytesize:bytesize:2.2.1"
 
 composePreference = "me.zhanghai.compose.preference:preference:2.2.0"
 
