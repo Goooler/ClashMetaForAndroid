@@ -73,7 +73,6 @@ class ProfilesViewModel(app: Application) : AndroidViewModel(app), DefaultLifecy
     broadcastEventsJob?.cancel()
     elapsedJob?.cancel()
     fetchJob?.cancel()
-    super.onCleared()
   }
 
   fun consumeEvent() {

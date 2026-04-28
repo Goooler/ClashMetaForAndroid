@@ -84,7 +84,6 @@ class ProxyViewModel(app: Application) : AndroidViewModel(app), DefaultLifecycle
     broadcastEventsJob = null
     fetchInitialStateJob?.cancel()
     fetchInitialStateJob = null
-    super.onCleared()
   }
 
   fun consumeEvent() {

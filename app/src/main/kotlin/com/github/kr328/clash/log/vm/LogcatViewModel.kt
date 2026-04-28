@@ -128,7 +128,6 @@ class LogcatViewModel(app: Application) : AndroidViewModel(app), DefaultLifecycl
   override fun onCleared() {
     pollJob?.cancel()
     reset()
-    super.onCleared()
   }
 
   private fun loadLocalFile(file: LogFile) {

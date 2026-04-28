@@ -73,7 +73,6 @@ class MainViewModel(app: Application) : AndroidViewModel(app), DefaultLifecycleO
   override fun onCleared() {
     broadcastEventsJob?.cancel()
     trafficPollingJob?.cancel()
-    super.onCleared()
   }
 
   fun toggleStatus() {

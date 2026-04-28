@@ -74,7 +74,6 @@ class PropertiesViewModel(app: Application) : AndroidViewModel(app), DefaultLife
         }
       }
     }
-    super.onCleared()
   }
 
   fun onNameChanged(name: String) {

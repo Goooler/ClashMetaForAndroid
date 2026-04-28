@@ -57,7 +57,6 @@ class ProvidersViewModel(app: Application) : AndroidViewModel(app), DefaultLifec
     broadcastEventsJob?.cancel()
     elapsedJob?.cancel()
     fetchJob?.cancel()
-    super.onCleared()
   }
 
   fun consumeEvent() {
