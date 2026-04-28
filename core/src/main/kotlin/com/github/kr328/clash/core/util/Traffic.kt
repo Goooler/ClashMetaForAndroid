@@ -12,7 +12,7 @@ fun Traffic.trafficTotal(): String =
   )
 
 private fun normalizeScaledToCentiBytes(scaled: Long): Long {
-  return if (scaled < 1024L) scaled * 100 else scaled
+  return if (scaled <= 1024L) scaled * 100 else scaled
 }
 
 private fun trafficTotalString(centiBytes: Long): String {
