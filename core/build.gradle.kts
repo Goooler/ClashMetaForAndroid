@@ -30,6 +30,7 @@ dependencies {
   implementation(libs.androidx.core)
   implementation(libs.kotlin.coroutine)
   implementation(libs.kotlin.serialization.json)
+  implementation(libs.bytesize)
 }
 
 androidComponents.onVariants { variant ->

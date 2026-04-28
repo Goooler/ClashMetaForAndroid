@@ -64,11 +64,11 @@ import com.github.kr328.clash.ui.theme.MihomoTheme
 import com.github.kr328.clash.ui.theme.PreviewMihomo
 import com.github.kr328.clash.util.ValidatorFileName
 import com.github.kr328.clash.util.elapsedIntervalString
-import com.github.kr328.clash.util.toBytesString
 import com.github.kr328.clash.util.toast
 import java.util.UUID
 import kotlin.time.Duration.Companion.minutes
 import kotlinx.coroutines.delay
+import me.saket.bytesize.binaryBytes
 
 @Composable
 fun FilesScreen(
@@ -300,7 +300,7 @@ private fun FileItem(
       Text(text = file.name)
       if (!file.isDirectory) {
         Spacer(modifier = Modifier.size(3.dp))
-        Text(text = file.size.toBytesString(), style = MaterialTheme.typography.bodyMedium)
+        Text(text = file.size.binaryBytes.toString(), style = MaterialTheme.typography.bodyMedium)
       }
     }
 
