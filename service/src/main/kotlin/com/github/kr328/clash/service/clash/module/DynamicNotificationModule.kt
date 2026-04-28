@@ -66,7 +66,7 @@ class DynamicNotificationModule(service: Service) : Module<Unit>(service) {
         .setSubText(service.getString(R.string.clash_notification_content, uploaded, downloaded))
         .build()
 
-    @Suppress("MissingPermission") // We don't care about the permission is granted or not.
+    @Suppress("MissingPermission") // We don't care whether the permission is granted.
     notificationManager.notify(R.id.nf_clash_status, notification)
   }
 

@@ -26,7 +26,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-@Suppress("MissingPermission") // We don't care about the permission is granted or not.
+@Suppress("MissingPermission") // We don't care whether the permission is granted.
 class ProfileWorker : BaseService() {
   private val service: ProfileWorker
     get() = this
