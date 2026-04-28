@@ -29,9 +29,7 @@ class LogsViewModel(app: Application) : AndroidViewModel(app) {
 
   private suspend fun loadAllLogs(): List<LogFile> =
     withContext(Dispatchers.IO) {
-      application.logsDir.listFiles()?.toList().orEmpty().mapNotNull {
-        LogFile.parseFromFileName(it.name)
-      }
+      application.logsDir.listFiles()?.toList().orEmpty().mapNotNull { LogFile.parse(it.name) }
     }
 
   private suspend fun deleteAllLogs() =

@@ -54,7 +54,7 @@ class LogcatViewModel(app: Application) : AndroidViewModel(app), DefaultLifecycl
     if (initialized) return
     initialized = true
 
-    val file = fileName?.let(LogFile::parseFromFileName)
+    val file = fileName?.let(LogFile::parse)
 
     if (fileName != null && file == null) {
       eventState.value = EventState.InvalidFile
