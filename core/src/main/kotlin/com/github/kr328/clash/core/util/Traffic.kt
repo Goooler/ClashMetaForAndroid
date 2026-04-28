@@ -17,17 +17,17 @@ private fun normalizeScaledToCentiBytes(scaled: Long): Long {
 
 private fun trafficTotalString(centiBytes: Long): String {
   return when {
-    centiBytes > 1024 * 1024 * 1024 * 100L -> {
+    centiBytes >= 1024 * 1024 * 1024 * 100L -> {
       val data = centiBytes / 1024 / 1024 / 1024
 
       "%.2f GiB".format(data.toFloat() / 100)
     }
-    centiBytes > 1024 * 1024 * 100L -> {
+    centiBytes >= 1024 * 1024 * 100L -> {
       val data = centiBytes / 1024 / 1024
 
       "%.2f MiB".format(data.toFloat() / 100)
     }
-    centiBytes > 1024 * 100L -> {
+    centiBytes >= 1024 * 100L -> {
       val data = centiBytes / 1024
 
       "%.2f KiB".format(data.toFloat() / 100)
