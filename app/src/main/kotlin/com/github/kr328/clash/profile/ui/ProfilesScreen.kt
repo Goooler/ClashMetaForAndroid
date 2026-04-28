@@ -66,11 +66,11 @@ import com.github.kr328.clash.ui.theme.MihomoTheme
 import com.github.kr328.clash.ui.theme.PreviewMihomo
 import com.github.kr328.clash.ui.theme.mihomoDimens
 import com.github.kr328.clash.util.elapsedIntervalString
-import com.github.kr328.clash.util.toBytesString
 import com.github.kr328.clash.util.toDateStr
 import com.github.kr328.clash.util.toString
 import java.util.UUID
 import kotlin.time.Duration.Companion.minutes
+import me.saket.bytesize.binaryBytes
 
 @Composable
 fun ProfilesScreen(
@@ -260,7 +260,7 @@ private fun ProfileItem(
   val showTraffic = profile.download >= 2 && profile.total > 1
   val usageText =
     if (showTraffic) {
-      "${(profile.download + profile.upload).toBytesString()} / ${profile.total.toBytesString()}"
+      "${(profile.download + profile.upload).binaryBytes} / ${profile.total.binaryBytes}"
     } else {
       null
     }

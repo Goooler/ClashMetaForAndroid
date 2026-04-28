@@ -54,21 +54,6 @@ fun Date.format(
   }
 }
 
-fun Long.toBytesString(): String {
-  return when {
-    this > 1024.0 * 1024 * 1024 * 1024 * 1024 * 1024 ->
-      "%.2f EiB".format(this.toDouble() / 1024 / 1024 / 1024 / 1024 / 1024 / 1024)
-    this > 1024.0 * 1024 * 1024 * 1024 * 1024 ->
-      "%.2f PiB".format(this.toDouble() / 1024 / 1024 / 1024 / 1024 / 1024)
-    this > 1024.0 * 1024 * 1024 * 1024 ->
-      "%.2f TiB".format(this.toDouble() / 1024 / 1024 / 1024 / 1024)
-    this > 1024 * 1024 * 1024 -> "%.2f GiB".format(this.toDouble() / 1024 / 1024 / 1024)
-    this > 1024 * 1024 -> "%.2f MiB".format(this.toDouble() / 1024 / 1024)
-    this > 1024 -> "%.2f KiB".format(this.toDouble() / 1024)
-    else -> "$this Bytes"
-  }
-}
-
 fun Long.toDateStr(): String {
   val simpleDateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
   return simpleDateFormat.format(Date(this))

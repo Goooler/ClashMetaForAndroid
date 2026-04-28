@@ -88,6 +88,7 @@ dependencies {
   implementation(projects.common)
 
   implementation(libs.kotlin.coroutine)
+  implementation(libs.bytesize)
 
   implementation(libs.androidx.core)
   implementation(libs.androidx.activity.compose)
