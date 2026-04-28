@@ -7,7 +7,9 @@ fun Traffic.trafficUpload(): String = trafficString(uploadScaled)
 fun Traffic.trafficDownload(): String = trafficString(downloadScaled)
 
 fun Traffic.trafficTotal(): String =
-  trafficTotalString(normalizeScaledToCentiBytes(uploadScaled) + normalizeScaledToCentiBytes(downloadScaled))
+  trafficTotalString(
+    normalizeScaledToCentiBytes(uploadScaled) + normalizeScaledToCentiBytes(downloadScaled)
+  )
 
 private fun normalizeScaledToCentiBytes(scaled: Long): Long {
   return if (scaled < 1024L) scaled * 100 else scaled

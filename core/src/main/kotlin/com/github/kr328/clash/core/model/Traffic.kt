@@ -10,7 +10,10 @@ value class Traffic(val packed: Long) : Parcelable {
    * Upload value in internal scaled units used by native traffic formatting.
    *
    * This is not always raw bytes: for encoded type 0 it is bytes, while for encoded types 1..3 it
-   * is centi-bytes (bytes * 100) after unpacking.
+   * is an approximate centi-byte value reconstructed from native packed data.
+   *
+   * Native packing uses integer division (`value * 100 / 1024^n`), so unpacking restores a
+   * truncated value (typically <= exact `bytes * 100`), not an exact one.
    */
   val uploadScaled: Long
     get() = unpackTrafficScaled(packed ushr 32)
@@ -19,7 +22,10 @@ value class Traffic(val packed: Long) : Parcelable {
    * Download value in internal scaled units used by native traffic formatting.
    *
    * This is not always raw bytes: for encoded type 0 it is bytes, while for encoded types 1..3 it
-   * is centi-bytes (bytes * 100) after unpacking.
+   * is an approximate centi-byte value reconstructed from native packed data.
+   *
+   * Native packing uses integer division (`value * 100 / 1024^n`), so unpacking restores a
+   * truncated value (typically <= exact `bytes * 100`), not an exact one.
    */
   val downloadScaled: Long
     get() = unpackTrafficScaled(packed and 0xFFFFFFFF)
