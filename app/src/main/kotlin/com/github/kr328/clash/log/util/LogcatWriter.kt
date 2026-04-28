@@ -18,8 +18,6 @@ class LogcatWriter(
     withContext(Dispatchers.IO) {
       writer.appendLine(FORMAT.format(message.time.time, message.level.name, message.message))
     }
-
-  private companion object {
-    const val FORMAT = "%d:%s:%s"
-  }
 }
+
+private const val FORMAT = "%d:%s:%s"
