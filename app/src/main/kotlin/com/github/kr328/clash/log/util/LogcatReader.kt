@@ -5,7 +5,6 @@ import com.github.kr328.clash.core.model.LogMessage
 import com.github.kr328.clash.model.LogFile
 import com.github.kr328.clash.util.logsDir
 import java.io.BufferedReader
-import java.io.FileReader
 import java.util.Date
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -13,8 +12,7 @@ import kotlinx.coroutines.withContext
 class LogcatReader(
   context: Context,
   file: LogFile,
-  private val reader: BufferedReader =
-    BufferedReader(FileReader(context.logsDir.resolve(file.fileName))),
+  private val reader: BufferedReader = context.logsDir.resolve(file.fileName).bufferedReader(),
 ) : AutoCloseable by reader {
 
   suspend fun readAll(): List<LogMessage> =
