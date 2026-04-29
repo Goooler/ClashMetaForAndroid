@@ -214,7 +214,7 @@ private fun PropertiesContent(
           summary = {
             Text(
               if (profile.interval == 0L) {
-                stringResource(R.string.at_least_15_minutes)
+                stringResource(R.string.disabled)
               } else {
                 stringResource(
                   R.string.format_minutes,
