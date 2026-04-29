@@ -108,6 +108,7 @@ class LogcatViewModel(app: Application) : AndroidViewModel(app), DefaultLifecycl
           writeLogTo(messages, file, uri)
           EventState.ShowMessage(application.getString(R.string.file_exported))
         } catch (e: Exception) {
+          Log.e("Export log file failed: ${e.message}", e)
           EventState.ShowMessage(e.message ?: application.getString(R.string.unknown))
         }
     }
@@ -155,6 +156,7 @@ class LogcatViewModel(app: Application) : AndroidViewModel(app), DefaultLifecycl
       } catch (e: Exception) {
         Log.e("Bind logcat service failed: ${e.message}", e)
         runCatching { application.stopService(LogcatService::class.intent) }
+          .onFailure { ex -> Log.e("Stop logcat service failed: ${ex.message}", ex) }
         reset()
         eventState.value = EventState.OpenLogs
       }
@@ -187,6 +189,7 @@ class LogcatViewModel(app: Application) : AndroidViewModel(app), DefaultLifecycl
                 ?: run {
                   if (!continuation.isActive) {
                     runCatching { application.unbindService(this) }
+                      .onFailure { e -> Log.e("Unbind logcat service failed: ${e.message}", e) }
                     if (conn === this) {
                       conn = null
                     }
@@ -198,7 +201,9 @@ class LogcatViewModel(app: Application) : AndroidViewModel(app), DefaultLifecycl
                       )
                     }
                     .onFailure {
+                      Log.e("Resume bind failure: ${it.message}", it)
                       runCatching { application.unbindService(this) }
+                        .onFailure { e -> Log.e("Unbind logcat service failed: ${e.message}", e) }
                       if (conn === this) {
                         conn = null
                       }
@@ -209,6 +214,7 @@ class LogcatViewModel(app: Application) : AndroidViewModel(app), DefaultLifecycl
 
             if (!continuation.isActive) {
               runCatching { application.unbindService(this) }
+                .onFailure { e -> Log.e("Unbind logcat service failed: ${e.message}", e) }
               if (conn === this) {
                 conn = null
               }
@@ -217,7 +223,9 @@ class LogcatViewModel(app: Application) : AndroidViewModel(app), DefaultLifecycl
 
             runCatching { continuation.resume(logcatService) }
               .onFailure {
+                Log.e("Resume logcat continuation failed: ${it.message}", it)
                 runCatching { application.unbindService(this) }
+                  .onFailure { e -> Log.e("Unbind logcat service failed: ${e.message}", e) }
                 if (conn === this) {
                   conn = null
                 }
@@ -245,6 +253,7 @@ class LogcatViewModel(app: Application) : AndroidViewModel(app), DefaultLifecycl
 
       continuation.invokeOnCancellation {
         runCatching { application.unbindService(connection) }
+          .onFailure { e -> Log.e("Unbind canceled logcat service failed: ${e.message}", e) }
 
         if (conn === connection) {
           conn = null
@@ -292,7 +301,10 @@ class LogcatViewModel(app: Application) : AndroidViewModel(app), DefaultLifecycl
     }
 
   private fun reset() {
-    conn?.let { connection -> runCatching { application.unbindService(connection) } }
+    conn?.let { connection ->
+      runCatching { application.unbindService(connection) }
+        .onFailure { e -> Log.e("Unbind logcat service failed: ${e.message}", e) }
+    }
     conn = null
     logcat = null
   }

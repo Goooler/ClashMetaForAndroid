@@ -6,6 +6,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.viewModelScope
+import com.github.kr328.clash.common.log.Log
 import com.github.kr328.clash.model.File
 import com.github.kr328.clash.remote.FilesClient
 import com.github.kr328.clash.service.model.Profile
@@ -79,6 +80,7 @@ class FilesViewModel(app: Application) : AndroidViewModel(app), DefaultLifecycle
       try {
         client.deleteDocument(file.id)
       } catch (e: Exception) {
+        Log.e("Delete file failed: ${e.message}", e)
         eventState.value = EventState.ShowMessage(e.message ?: "Unknown error")
       }
       fetch()
@@ -90,6 +92,7 @@ class FilesViewModel(app: Application) : AndroidViewModel(app), DefaultLifecycle
       try {
         client.renameDocument(file.id, newName)
       } catch (e: Exception) {
+        Log.e("Rename file failed: ${e.message}", e)
         eventState.value = EventState.ShowMessage(e.message ?: "Unknown error")
       }
       fetch()
@@ -111,6 +114,7 @@ class FilesViewModel(app: Application) : AndroidViewModel(app), DefaultLifecycle
           client.copyDocument(targetFile.id, uri)
         }
       } catch (e: Exception) {
+        Log.e("Import file failed: ${e.message}", e)
         eventState.value = EventState.ShowMessage(e.message ?: "Unknown error")
       }
       fetch()
@@ -127,6 +131,7 @@ class FilesViewModel(app: Application) : AndroidViewModel(app), DefaultLifecycle
       try {
         client.copyDocument(uri, sourceFile.id)
       } catch (e: Exception) {
+        Log.e("Export file failed: ${e.message}", e)
         eventState.value = EventState.ShowMessage(e.message ?: "Unknown error")
       }
       fetch()
@@ -151,6 +156,7 @@ class FilesViewModel(app: Application) : AndroidViewModel(app), DefaultLifecycle
 
         uiState.update { it.copy(files = files, currentInBaseDir = inBaseDir) }
       } catch (e: Exception) {
+        Log.e("List files failed: ${e.message}", e)
         eventState.value = EventState.ShowMessage(e.message ?: "Unknown error")
       }
     }

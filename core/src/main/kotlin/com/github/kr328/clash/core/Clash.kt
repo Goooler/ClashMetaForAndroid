@@ -1,5 +1,6 @@
 package com.github.kr328.clash.core
 
+import com.github.kr328.clash.common.log.Log
 import com.github.kr328.clash.core.bridge.Bridge
 import com.github.kr328.clash.core.bridge.ClashException
 import com.github.kr328.clash.core.bridge.FetchCallback
@@ -198,6 +199,7 @@ object Clash {
         Bridge.nativeReadOverride(slot.ordinal),
       )
     } catch (e: Exception) {
+      Log.e("Read override failed: ${e.message}", e)
       ConfigurationOverride()
     }
   }

@@ -5,6 +5,7 @@ import android.app.Application
 import android.content.Context
 import android.os.Build
 import android.os.Bundle
+import com.github.kr328.clash.common.log.Log
 import java.io.File
 import java.util.zip.ZipFile
 
@@ -82,7 +83,8 @@ fun Context.verifyApk(): Boolean {
         .toSet()
 
     availableAbi.intersect(apkAbi).isNotEmpty()
-  } catch (_: Exception) {
+  } catch (e: Exception) {
+    Log.e("Verify apk failed: ${e.message}", e)
     false
   }
 }

@@ -8,6 +8,7 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.application
 import androidx.lifecycle.viewModelScope
 import com.github.kr328.clash.R
+import com.github.kr328.clash.common.log.Log
 import com.github.kr328.clash.core.bridge.Bridge
 import com.github.kr328.clash.core.model.TunnelState
 import com.github.kr328.clash.core.util.trafficTotal
@@ -157,7 +158,8 @@ class MainViewModel(app: Application) : AndroidViewModel(app), DefaultLifecycleO
         if (vpnRequest != null) {
           eventState.value = EventState.RequestVpnPermission(vpnRequest)
         }
-      } catch (_: Exception) {
+      } catch (e: Exception) {
+        Log.e("Start clash service failed: ${e.message}", e)
         eventState.value =
           EventState.ShowMessage(application.getString(R.string.unable_to_start_vpn))
       }

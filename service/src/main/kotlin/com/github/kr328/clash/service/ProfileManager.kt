@@ -1,6 +1,7 @@
 package com.github.kr328.clash.service
 
 import android.content.Context
+import com.github.kr328.clash.common.log.Log
 import com.github.kr328.clash.service.data.Database
 import com.github.kr328.clash.service.data.Imported
 import com.github.kr328.clash.service.data.ImportedDao
@@ -204,7 +205,7 @@ class ProfileManager(private val context: Context) :
         // println(response.body!!.string())
       }
     } catch (e: Exception) {
-      println(e)
+      Log.e("Update profile flow failed: ${e.message}", e)
     }
   }
 

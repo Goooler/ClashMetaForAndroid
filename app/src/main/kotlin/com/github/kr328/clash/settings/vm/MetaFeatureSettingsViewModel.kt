@@ -7,6 +7,7 @@ import android.provider.OpenableColumns
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.github.kr328.clash.common.Global
+import com.github.kr328.clash.common.log.Log
 import com.github.kr328.clash.core.Clash
 import com.github.kr328.clash.core.model.ConfigurationOverride
 import com.github.kr328.clash.settings.ui.MetaFeatureSettingsActions
@@ -88,7 +89,8 @@ class MetaFeatureSettingsViewModel(app: Application) :
           inputStream.use { ins -> FileOutputStream(outputFile).use { outs -> ins.copyTo(outs) } }
           return@use ImportResult.Success(displayName)
         }
-      } catch (_: Exception) {
+      } catch (e: Exception) {
+        Log.e("Import geo database failed: ${e.message}", e)
         importResult.value = ImportResult.Failed
       }
     }

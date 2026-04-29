@@ -13,6 +13,7 @@ import com.github.kr328.clash.common.compat.startForegroundCompat
 import com.github.kr328.clash.common.constants.Components
 import com.github.kr328.clash.common.constants.Intents
 import com.github.kr328.clash.common.id.UndefinedIds
+import com.github.kr328.clash.common.log.Log
 import com.github.kr328.clash.common.util.setUUID
 import com.github.kr328.clash.common.util.uuid
 import com.github.kr328.clash.service.data.ImportedDao
@@ -92,6 +93,7 @@ class ProfileWorker : BaseService() {
 
       ProfileReceiver.scheduleNext(this, imported)
     } catch (e: Exception) {
+      Log.e("Update profile ${imported.name} failed: ${e.message}", e)
       failed(imported.uuid, imported.name, e.message ?: "Unknown")
     }
   }

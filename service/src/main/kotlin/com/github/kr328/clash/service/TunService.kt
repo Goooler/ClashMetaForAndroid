@@ -166,11 +166,13 @@ class TunService : VpnService(), CoroutineScope by CoroutineScope(Dispatchers.De
           AccessControlMode.AcceptSelected -> {
             (store.accessControlPackages + packageName).forEach {
               runCatching { addAllowedApplication(it) }
+                .onFailure { e -> Log.e("Add allowed application $it failed: ${e.message}", e) }
             }
           }
           AccessControlMode.DenySelected -> {
             (store.accessControlPackages - packageName).forEach {
               runCatching { addDisallowedApplication(it) }
+                .onFailure { e -> Log.e("Add disallowed application $it failed: ${e.message}", e) }
             }
           }
         }

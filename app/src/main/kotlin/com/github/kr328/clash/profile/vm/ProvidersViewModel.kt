@@ -7,6 +7,7 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.application
 import androidx.lifecycle.viewModelScope
 import com.github.kr328.clash.R
+import com.github.kr328.clash.common.log.Log
 import com.github.kr328.clash.core.model.Provider
 import com.github.kr328.clash.remote.Broadcasts
 import com.github.kr328.clash.remote.Remote
@@ -81,6 +82,7 @@ class ProvidersViewModel(app: Application) : AndroidViewModel(app), DefaultLifec
           it.copy(updating = false, updatedAt = System.currentTimeMillis())
         }
       } catch (e: Exception) {
+        Log.e("Update provider ${provider.name} failed: ${e.message}", e)
         updateProviderState(provider) { it.copy(updating = false) }
         val errorMessage = e.localizedMessage ?: e.message ?: e.toString()
         eventState.value =
