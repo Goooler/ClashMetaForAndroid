@@ -382,10 +382,10 @@ private fun LazyListScope.generalPreferenceItems(
     )
   }
   item(key = "hosts", contentType = "EditTextMapPreference") {
-    OverrideEditTextMapPreferenceItem(
-      title = R.string.hosts,
-      placeholder = R.string.dont_modify,
-      values = configuration.hosts,
+    Preference(
+      modifier = Modifier.fillMaxWidth(),
+      title = { Text(stringResource(R.string.hosts)) },
+      summary = { Text(configuration.hosts.summary(R.string.dont_modify)) },
       onClick = { onOpenEditableTextMap(R.string.hosts, configuration.hosts, actions::updateHosts) },
     )
   }
@@ -605,10 +605,11 @@ private fun LazyListScope.dnsPreferenceItems(
     )
   }
   item(key = "dnsNameserverPolicy", contentType = "EditTextMapPreference") {
-    OverrideEditTextMapPreferenceItem(
-      title = R.string.name_server_policy,
-      placeholder = R.string.dont_modify,
-      values = configuration.dns.nameserverPolicy,
+    Preference(
+      modifier = Modifier.fillMaxWidth(),
+      title = { Text(stringResource(R.string.name_server_policy)) },
+      summary = { Text(configuration.dns.nameserverPolicy.summary(R.string.dont_modify)) },
+      enabled = dnsEnabled != false,
       onClick = {
         onOpenEditableTextMap(
           R.string.name_server_policy,
@@ -616,7 +617,6 @@ private fun LazyListScope.dnsPreferenceItems(
           actions::updateDnsNameserverPolicy,
         )
       },
-      enabled = dnsEnabled != false,
     )
   }
 }
@@ -706,23 +706,6 @@ private fun OverrideEditTextPreferenceItem(
       },
     )
   }
-}
-
-@Composable
-private fun OverrideEditTextMapPreferenceItem(
-  @StringRes title: Int,
-  @StringRes placeholder: Int,
-  values: Map<String, String>?,
-  onClick: () -> Unit,
-  enabled: Boolean = true,
-) {
-  Preference(
-    modifier = Modifier.fillMaxWidth(),
-    title = { Text(stringResource(title)) },
-    summary = { Text(values.summary(placeholder)) },
-    enabled = enabled,
-    onClick = onClick,
-  )
 }
 
 private fun TextFieldValue.filterDigits(): TextFieldValue {
