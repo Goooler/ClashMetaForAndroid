@@ -24,10 +24,10 @@ import com.github.kr328.clash.ui.icon.BaselineStack
 import com.github.kr328.clash.ui.icon.MihomoIcons
 import com.github.kr328.clash.ui.theme.MihomoTheme
 import com.github.kr328.clash.ui.theme.PreviewMihomo
-import me.zhanghai.compose.preference.ListPreference
 import me.zhanghai.compose.preference.ProvidePreferenceLocals
-import me.zhanghai.compose.preference.SwitchPreference
+import me.zhanghai.compose.preference.listPreference
 import me.zhanghai.compose.preference.preferenceCategory
+import me.zhanghai.compose.preference.switchPreference
 
 @Composable
 fun AppSettingsScreen(
@@ -69,65 +69,64 @@ private fun AppSettingsContent(
           key = "cat_behavior",
           title = { Text(stringResource(R.string.behavior)) },
         )
-        item(key = "auto_restart") {
-          SwitchPreference(
-            value = uiState.autoRestart,
-            onValueChange = onAutoRestartChange,
-            icon = { Icon(imageVector = MihomoIcons.BaselineRestore, contentDescription = null) },
-            title = { Text(stringResource(R.string.auto_restart)) },
-            summary = { Text(stringResource(R.string.allow_clash_auto_restart)) },
-          )
-        }
+        switchPreference(
+          key = "auto_restart",
+          defaultValue = uiState.autoRestart,
+          rememberState = {
+            rememberCallbackMutableState(uiState.autoRestart, onAutoRestartChange)
+          },
+          icon = { Icon(imageVector = MihomoIcons.BaselineRestore, contentDescription = null) },
+          title = { Text(stringResource(R.string.auto_restart)) },
+          summary = { Text(stringResource(R.string.allow_clash_auto_restart)) },
+        )
 
         preferenceCategory(
           key = "cat_interface",
           title = { Text(stringResource(R.string.interface_)) },
         )
-        item(key = "dark_mode") {
-          ListPreference(
-            value = uiState.darkMode,
-            onValueChange = onDarkModeChange,
-            values = listOf(DarkMode.Auto, DarkMode.ForceLight, DarkMode.ForceDark),
-            icon = {
-              Icon(imageVector = MihomoIcons.BaselineBrightness4, contentDescription = null)
-            },
-            title = { Text(stringResource(R.string.dark_mode)) },
-            summary = { Text(stringResource(uiState.darkMode.summaryRes)) },
-            valueToText = {
-              androidx.compose.ui.text.AnnotatedString(stringResource(it.summaryRes))
-            },
-          )
-        }
-        item(key = "hide_app_icon") {
-          SwitchPreference(
-            value = uiState.hideAppIcon,
-            onValueChange = onHideAppIconChange,
-            icon = { Icon(imageVector = MihomoIcons.BaselineHide, contentDescription = null) },
-            title = { Text(stringResource(R.string.hide_app_icon_title)) },
-            summary = { Text(stringResource(R.string.hide_app_icon_desc)) },
-          )
-        }
-        item(key = "hide_from_recents") {
-          SwitchPreference(
-            value = uiState.hideFromRecents,
-            onValueChange = onHideFromRecentsChange,
-            icon = { Icon(imageVector = MihomoIcons.BaselineStack, contentDescription = null) },
-            title = { Text(stringResource(R.string.hide_from_recents_title)) },
-            summary = { Text(stringResource(R.string.hide_from_recents_desc)) },
-          )
-        }
+        listPreference(
+          key = "dark_mode",
+          defaultValue = uiState.darkMode,
+          values = listOf(DarkMode.Auto, DarkMode.ForceLight, DarkMode.ForceDark),
+          rememberState = { rememberCallbackMutableState(uiState.darkMode, onDarkModeChange) },
+          icon = { Icon(imageVector = MihomoIcons.BaselineBrightness4, contentDescription = null) },
+          title = { Text(stringResource(R.string.dark_mode)) },
+          summary = { Text(stringResource(it.summaryRes)) },
+          valueToText = { androidx.compose.ui.text.AnnotatedString(stringResource(it.summaryRes)) },
+        )
+        switchPreference(
+          key = "hide_app_icon",
+          defaultValue = uiState.hideAppIcon,
+          rememberState = {
+            rememberCallbackMutableState(uiState.hideAppIcon, onHideAppIconChange)
+          },
+          icon = { Icon(imageVector = MihomoIcons.BaselineHide, contentDescription = null) },
+          title = { Text(stringResource(R.string.hide_app_icon_title)) },
+          summary = { Text(stringResource(R.string.hide_app_icon_desc)) },
+        )
+        switchPreference(
+          key = "hide_from_recents",
+          defaultValue = uiState.hideFromRecents,
+          rememberState = {
+            rememberCallbackMutableState(uiState.hideFromRecents, onHideFromRecentsChange)
+          },
+          icon = { Icon(imageVector = MihomoIcons.BaselineStack, contentDescription = null) },
+          title = { Text(stringResource(R.string.hide_from_recents_title)) },
+          summary = { Text(stringResource(R.string.hide_from_recents_desc)) },
+        )
 
         preferenceCategory(key = "cat_service", title = { Text(stringResource(R.string.service)) })
-        item(key = "show_traffic") {
-          SwitchPreference(
-            value = uiState.dynamicNotification,
-            onValueChange = onDynamicNotificationChange,
-            enabled = !clashRunning,
-            icon = { Icon(imageVector = MihomoIcons.BaselineDomain, contentDescription = null) },
-            title = { Text(stringResource(R.string.show_traffic)) },
-            summary = { Text(stringResource(R.string.show_traffic_summary)) },
-          )
-        }
+        switchPreference(
+          key = "show_traffic",
+          defaultValue = uiState.dynamicNotification,
+          rememberState = {
+            rememberCallbackMutableState(uiState.dynamicNotification, onDynamicNotificationChange)
+          },
+          enabled = { !clashRunning },
+          icon = { Icon(imageVector = MihomoIcons.BaselineDomain, contentDescription = null) },
+          title = { Text(stringResource(R.string.show_traffic)) },
+          summary = { Text(stringResource(R.string.show_traffic_summary)) },
+        )
       }
     }
   }
