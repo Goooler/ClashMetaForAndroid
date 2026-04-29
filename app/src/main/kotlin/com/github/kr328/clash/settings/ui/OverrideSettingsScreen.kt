@@ -209,7 +209,7 @@ private fun LazyListScope.generalPreferenceItems(
   onOpenEditableTextList: (Int, List<String>?, (List<String>?) -> Unit) -> Unit,
 ) {
   preferenceCategory(key = "cat_general", title = { Text(stringResource(R.string.general)) })
-  OverrideEditTextPreferenceItem(
+  overrideEditTextPreferenceItem(
     key = "httpPort",
     title = R.string.http_port,
     placeholder = R.string.dont_modify,
@@ -218,7 +218,7 @@ private fun LazyListScope.generalPreferenceItems(
     onValueChange = { actions.updateHttpPort(parsePort(it)) },
     numericOnly = true,
   )
-  OverrideEditTextPreferenceItem(
+  overrideEditTextPreferenceItem(
     key = "socksPort",
     title = R.string.socks_port,
     placeholder = R.string.dont_modify,
@@ -227,7 +227,7 @@ private fun LazyListScope.generalPreferenceItems(
     onValueChange = { actions.updateSocksPort(parsePort(it)) },
     numericOnly = true,
   )
-  OverrideEditTextPreferenceItem(
+  overrideEditTextPreferenceItem(
     key = "redirectPort",
     title = R.string.redirect_port,
     placeholder = R.string.dont_modify,
@@ -236,7 +236,7 @@ private fun LazyListScope.generalPreferenceItems(
     onValueChange = { actions.updateRedirectPort(parsePort(it)) },
     numericOnly = true,
   )
-  OverrideEditTextPreferenceItem(
+  overrideEditTextPreferenceItem(
     key = "tproxyPort",
     title = R.string.tproxy_port,
     placeholder = R.string.dont_modify,
@@ -245,7 +245,7 @@ private fun LazyListScope.generalPreferenceItems(
     onValueChange = { actions.updateTproxyPort(parsePort(it)) },
     numericOnly = true,
   )
-  OverrideEditTextPreferenceItem(
+  overrideEditTextPreferenceItem(
     key = "mixedPort",
     title = R.string.mixed_port,
     placeholder = R.string.dont_modify,
@@ -287,7 +287,7 @@ private fun LazyListScope.generalPreferenceItems(
     summary = { Text(stringResource(configuration.ipv6.textRes)) },
     valueToText = { AnnotatedString(stringResource(it.textRes)) },
   )
-  OverrideEditTextPreferenceItem(
+  overrideEditTextPreferenceItem(
     key = "bindAddress",
     title = R.string.bind_address,
     placeholder = R.string.dont_modify,
@@ -295,7 +295,7 @@ private fun LazyListScope.generalPreferenceItems(
     value = configuration.bindAddress,
     onValueChange = actions::updateBindAddress,
   )
-  OverrideEditTextPreferenceItem(
+  overrideEditTextPreferenceItem(
     key = "externalController",
     title = R.string.external_controller,
     placeholder = R.string.dont_modify,
@@ -303,7 +303,7 @@ private fun LazyListScope.generalPreferenceItems(
     value = configuration.externalController,
     onValueChange = actions::updateExternalController,
   )
-  OverrideEditTextPreferenceItem(
+  overrideEditTextPreferenceItem(
     key = "externalControllerTls",
     title = R.string.external_controller_tls,
     placeholder = R.string.dont_modify,
@@ -338,7 +338,7 @@ private fun LazyListScope.generalPreferenceItems(
     },
     valueToText = { AnnotatedString(stringResource(it.textRes)) },
   )
-  OverrideEditTextPreferenceItem(
+  overrideEditTextPreferenceItem(
     key = "secret",
     title = R.string.secret,
     placeholder = R.string.dont_modify,
@@ -404,7 +404,7 @@ private fun LazyListScope.dnsPreferenceItems(
     summary = { Text(stringResource(configuration.dns.preferH3.textRes)) },
     valueToText = { AnnotatedString(stringResource(it.textRes)) },
   )
-  OverrideEditTextPreferenceItem(
+  overrideEditTextPreferenceItem(
     key = "dnsListen",
     title = R.string.listen,
     placeholder = R.string.dont_modify,
@@ -535,7 +535,7 @@ private fun LazyListScope.dnsPreferenceItems(
     summary = { Text(stringResource(configuration.dns.fallbackFilter.geoIp.textRes)) },
     valueToText = { AnnotatedString(stringResource(it.textRes)) },
   )
-  OverrideEditTextPreferenceItem(
+  overrideEditTextPreferenceItem(
     key = "dnsGeoIpCode",
     title = R.string.geoip_fallback_code,
     placeholder = R.string.dont_modify,
@@ -588,7 +588,7 @@ private fun LazyListScope.dnsPreferenceItems(
   )
 }
 
-private fun LazyListScope.OverrideEditTextPreferenceItem(
+private fun LazyListScope.overrideEditTextPreferenceItem(
   key: String,
   @StringRes title: Int,
   @StringRes placeholder: Int,
