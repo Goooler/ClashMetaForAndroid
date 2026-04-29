@@ -23,7 +23,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.toMutableStateList
 import androidx.compose.ui.Modifier
@@ -69,7 +68,7 @@ fun EditableTextListScreen(
   onDismiss: () -> Unit,
   onApply: (List<String>?) -> Unit,
 ) {
-  val values = rememberSaveable(initialValues) { initialValues.orEmpty().toMutableStateList() }
+  val values = remember(initialValues) { initialValues.orEmpty().toMutableStateList() }
   var showAddDialog by remember { mutableStateOf(false) }
 
   MihomoScaffold(

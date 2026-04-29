@@ -25,7 +25,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
@@ -73,7 +72,7 @@ fun EditableTextMapScreen(
   onApply: (Map<String, String>?) -> Unit,
 ) {
   val values =
-    rememberSaveable(initialValues) {
+    remember(initialValues) {
       mutableStateMapOf<String, String>().apply { putAll(initialValues.orEmpty()) }
     }
   val items by remember { derivedStateOf { values.entries.toList() } }
