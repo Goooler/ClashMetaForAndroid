@@ -1,7 +1,5 @@
-@file:Suppress(
-  "PackageDirectoryMismatch",
-  "NOTHING_TO_INLINE",
-) // TODO: https://github.com/zhanghai/ComposePreference/pull/34
+// TODO: https://github.com/zhanghai/ComposePreference/pull/34
+@file:Suppress("PackageDirectoryMismatch", "NOTHING_TO_INLINE")
 
 package me.zhanghai.compose.preference
 
