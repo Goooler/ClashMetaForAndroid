@@ -27,7 +27,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.SnackbarDuration
-import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.Text
@@ -113,28 +112,28 @@ fun ProfilesScreen(
     viewModel.consumeEvent()
   }
 
-  Box(modifier = modifier.fillMaxSize()) {
-    ProfilesContent(
-      profiles = uiState.profiles,
-      allUpdating = uiState.allUpdating,
-      hasUpdatableProfile = uiState.hasUpdatableProfile,
-      currentTime = uiState.currentTime,
-      onUpdateAll = viewModel::onUpdateAll,
-      onCreate = viewModel::onOpenCreate,
-      onActivate = viewModel::onActivate,
-      onUpdate = viewModel::onUpdate,
-      onEdit = viewModel::onEdit,
-      onDuplicate = viewModel::onDuplicate,
-      onDelete = viewModel::onDelete,
-    )
-
-    SnackbarHost(hostState = snackbarHostState, modifier = Modifier.align(Alignment.BottomCenter))
-  }
+  ProfilesContent(
+    modifier = modifier,
+    snackbarHostState = snackbarHostState,
+    profiles = uiState.profiles,
+    allUpdating = uiState.allUpdating,
+    hasUpdatableProfile = uiState.hasUpdatableProfile,
+    currentTime = uiState.currentTime,
+    onUpdateAll = viewModel::onUpdateAll,
+    onCreate = viewModel::onOpenCreate,
+    onActivate = viewModel::onActivate,
+    onUpdate = viewModel::onUpdate,
+    onEdit = viewModel::onEdit,
+    onDuplicate = viewModel::onDuplicate,
+    onDelete = viewModel::onDelete,
+  )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun ProfilesContent(
+  modifier: Modifier = Modifier,
+  snackbarHostState: SnackbarHostState,
   profiles: List<Profile>,
   allUpdating: Boolean,
   hasUpdatableProfile: Boolean,
@@ -195,6 +194,8 @@ private fun ProfilesContent(
 
   MihomoScaffold(
     title = stringResource(R.string.profiles),
+    modifier = modifier,
+    snackbarHostState = snackbarHostState,
     actions = {
       if (hasUpdatableProfile) {
         IconButton(onClick = onUpdateAll, enabled = !allUpdating) {
@@ -361,6 +362,7 @@ private fun ProfilesMenuAction(
 @Composable
 private fun ProfilesContentPreview() = MihomoTheme {
   ProfilesContent(
+    snackbarHostState = SnackbarHostState(),
     profiles =
       listOf(
         Profile(

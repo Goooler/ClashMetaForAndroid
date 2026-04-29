@@ -8,6 +8,8 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarScrollBehavior
@@ -27,29 +29,28 @@ fun MihomoScaffold(
   onBackPressedDispatcher: OnBackPressedDispatcher? =
     LocalOnBackPressedDispatcherOwner.current?.onBackPressedDispatcher,
   onBack: () -> Unit = { onBackPressedDispatcher?.onBackPressed() },
-  snackbarHost: @Composable () -> Unit = {},
   actions: @Composable RowScope.() -> Unit = {},
   scrollBehavior: TopAppBarScrollBehavior? = null,
+  topBar: @Composable () -> Unit = {
+    TopAppBar(
+      title = { Text(text = title, maxLines = 1, overflow = TextOverflow.Ellipsis) },
+      navigationIcon = {
+        IconButton(onClick = onBack) {
+          Icon(
+            imageVector = MihomoIcons.BaselineArrowBack,
+            contentDescription = stringResource(R.string.close),
+          )
+        }
+      },
+      actions = actions,
+      scrollBehavior = scrollBehavior,
+    )
+  },
+  snackbarHostState: SnackbarHostState? = null,
+  snackbarHost: @Composable () -> Unit = {
+    snackbarHostState?.let { SnackbarHost(hostState = it) }
+  },
   content: @Composable (PaddingValues) -> Unit,
 ) {
-  Scaffold(
-    modifier = modifier,
-    topBar = {
-      TopAppBar(
-        title = { Text(text = title, maxLines = 1, overflow = TextOverflow.Ellipsis) },
-        navigationIcon = {
-          IconButton(onClick = onBack) {
-            Icon(
-              imageVector = MihomoIcons.BaselineArrowBack,
-              contentDescription = stringResource(R.string.close),
-            )
-          }
-        },
-        actions = actions,
-        scrollBehavior = scrollBehavior,
-      )
-    },
-    snackbarHost = snackbarHost,
-    content = content,
-  )
+  Scaffold(modifier = modifier, topBar = topBar, snackbarHost = snackbarHost, content = content)
 }

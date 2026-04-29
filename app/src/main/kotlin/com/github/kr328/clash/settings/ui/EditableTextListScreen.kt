@@ -60,8 +60,8 @@ fun EntryProviderScope<NavKey>.editableTextListScreenEntry(
   }
 }
 
-@Composable
 @OptIn(ExperimentalMaterial3Api::class)
+@Composable
 fun EditableTextListScreen(
   @StringRes title: Int,
   initialValues: List<String>?,

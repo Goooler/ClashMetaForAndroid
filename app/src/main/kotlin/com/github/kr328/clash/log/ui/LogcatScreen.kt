@@ -20,9 +20,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Snackbar
 import androidx.compose.material3.SnackbarDuration
-import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -137,7 +135,7 @@ fun LogcatScreen(
     messages = uiState.messages,
     listState = listState,
     progressBarState = progressBarState,
-    snackbarHost = { SnackbarHost(hostState = snackbarHostState) { Snackbar(it) } },
+    snackbarHostState = snackbarHostState,
     onClose = viewModel::close,
     onDelete = viewModel::delete,
     onExport = viewModel::requestExport,
@@ -162,17 +160,17 @@ private fun LogcatContent(
   messages: List<LogMessage>,
   listState: LazyListState,
   progressBarState: ModelProgressBarState,
+  snackbarHostState: SnackbarHostState,
   onClose: () -> Unit,
   onDelete: () -> Unit,
   onExport: () -> Unit,
   onCopyMessage: (LogMessage) -> Unit,
   modifier: Modifier = Modifier,
-  snackbarHost: @Composable () -> Unit = {},
 ) {
   MihomoScaffold(
     title = stringResource(R.string.clash_logcat),
     modifier = modifier,
-    snackbarHost = snackbarHost,
+    snackbarHostState = snackbarHostState,
     actions = {
       if (streaming) {
         IconButton(onClick = onClose) {
@@ -264,6 +262,7 @@ private fun LogcatContentPreview() = MihomoTheme {
       ),
     listState = rememberLazyListState(),
     progressBarState = ModelProgressBarState(),
+    snackbarHostState = SnackbarHostState(),
     onClose = {},
     onDelete = {},
     onExport = {},

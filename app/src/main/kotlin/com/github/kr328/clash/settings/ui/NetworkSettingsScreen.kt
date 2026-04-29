@@ -7,12 +7,13 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RadioButton
-import androidx.compose.material3.Snackbar
 import androidx.compose.material3.SnackbarDuration
-import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -31,8 +32,8 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.github.kr328.clash.R
 import com.github.kr328.clash.service.model.AccessControlMode
 import com.github.kr328.clash.settings.vm.NetworkSettingsViewModel
+import com.github.kr328.clash.ui.component.MihomoScaffold
 import com.github.kr328.clash.ui.component.SettingsCategoryTitle
-import com.github.kr328.clash.ui.component.SettingsCommonScreen
 import com.github.kr328.clash.ui.component.SettingsPreferenceClickableItem
 import com.github.kr328.clash.ui.component.SettingsPreferenceSwitchItem
 import com.github.kr328.clash.ui.icon.BaselineVpnLock
@@ -65,6 +66,7 @@ fun NetworkSettingsScreen(
   )
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun NetworkSettingsContent(
   clashRunning: Boolean,
@@ -98,76 +100,80 @@ private fun NetworkSettingsContent(
   val vpnDependenciesEnabled = !clashRunning && uiState.enableVpn
   val tunStackMode = TunStackMode.fromValue(uiState.tunStackMode)
 
-  SettingsCommonScreen(
+  MihomoScaffold(
     title = stringResource(R.string.network),
     modifier = modifier.fillMaxSize(),
-    snackbarHost = { SnackbarHost(hostState = snackbarHostState) { Snackbar(it) } },
-  ) {
-    SettingsPreferenceSwitchItem(
-      icon = MihomoIcons.BaselineVpnLock,
-      titleRes = R.string.route_system_traffic,
-      summaryRes = R.string.routing_via_vpn_service,
-      checked = uiState.enableVpn,
-      enabled = !clashRunning,
-      onCheckedChange = onEnableVpnChange,
-    )
-
-    SettingsCategoryTitle(text = stringResource(R.string.vpn_service_options))
-
-    SettingsPreferenceSwitchItem(
-      titleRes = R.string.bypass_private_network,
-      summaryRes = R.string.bypass_private_network_summary,
-      checked = uiState.bypassPrivateNetwork,
-      enabled = vpnDependenciesEnabled,
-      onCheckedChange = onBypassPrivateNetworkChange,
-    )
-    SettingsPreferenceSwitchItem(
-      titleRes = R.string.dns_hijacking,
-      summaryRes = R.string.dns_hijacking_summary,
-      checked = uiState.dnsHijacking,
-      enabled = vpnDependenciesEnabled,
-      onCheckedChange = onDnsHijackingChange,
-    )
-    SettingsPreferenceSwitchItem(
-      titleRes = R.string.allow_bypass,
-      summaryRes = R.string.allow_bypass_summary,
-      checked = uiState.allowBypass,
-      enabled = vpnDependenciesEnabled,
-      onCheckedChange = onAllowBypassChange,
-    )
-    SettingsPreferenceSwitchItem(
-      titleRes = R.string.allow_ipv6,
-      summaryRes = R.string.allow_ipv6_summary,
-      checked = uiState.allowIpv6,
-      enabled = vpnDependenciesEnabled,
-      onCheckedChange = onAllowIpv6Change,
-    )
-    if (uiState.hasSystemProxyOption) {
+    snackbarHostState = snackbarHostState,
+  ) { innerPadding ->
+    Column(
+      modifier = Modifier.fillMaxSize().padding(innerPadding).verticalScroll(rememberScrollState())
+    ) {
       SettingsPreferenceSwitchItem(
-        titleRes = R.string.system_proxy,
-        summaryRes = R.string.system_proxy_summary,
-        checked = uiState.systemProxy,
+        icon = MihomoIcons.BaselineVpnLock,
+        titleRes = R.string.route_system_traffic,
+        summaryRes = R.string.routing_via_vpn_service,
+        checked = uiState.enableVpn,
+        enabled = !clashRunning,
+        onCheckedChange = onEnableVpnChange,
+      )
+
+      SettingsCategoryTitle(text = stringResource(R.string.vpn_service_options))
+
+      SettingsPreferenceSwitchItem(
+        titleRes = R.string.bypass_private_network,
+        summaryRes = R.string.bypass_private_network_summary,
+        checked = uiState.bypassPrivateNetwork,
         enabled = vpnDependenciesEnabled,
-        onCheckedChange = onSystemProxyChange,
+        onCheckedChange = onBypassPrivateNetworkChange,
+      )
+      SettingsPreferenceSwitchItem(
+        titleRes = R.string.dns_hijacking,
+        summaryRes = R.string.dns_hijacking_summary,
+        checked = uiState.dnsHijacking,
+        enabled = vpnDependenciesEnabled,
+        onCheckedChange = onDnsHijackingChange,
+      )
+      SettingsPreferenceSwitchItem(
+        titleRes = R.string.allow_bypass,
+        summaryRes = R.string.allow_bypass_summary,
+        checked = uiState.allowBypass,
+        enabled = vpnDependenciesEnabled,
+        onCheckedChange = onAllowBypassChange,
+      )
+      SettingsPreferenceSwitchItem(
+        titleRes = R.string.allow_ipv6,
+        summaryRes = R.string.allow_ipv6_summary,
+        checked = uiState.allowIpv6,
+        enabled = vpnDependenciesEnabled,
+        onCheckedChange = onAllowIpv6Change,
+      )
+      if (uiState.hasSystemProxyOption) {
+        SettingsPreferenceSwitchItem(
+          titleRes = R.string.system_proxy,
+          summaryRes = R.string.system_proxy_summary,
+          checked = uiState.systemProxy,
+          enabled = vpnDependenciesEnabled,
+          onCheckedChange = onSystemProxyChange,
+        )
+      }
+      SettingsPreferenceClickableItem(
+        titleRes = R.string.tun_stack_mode,
+        summaryRes = tunStackMode.summaryRes,
+        enabled = vpnDependenciesEnabled,
+        onClick = { showTunStackDialog = true },
+      )
+      SettingsPreferenceClickableItem(
+        titleRes = R.string.access_control_mode,
+        summaryRes = uiState.accessControlMode.summaryRes,
+        enabled = vpnDependenciesEnabled,
+        onClick = { showAccessControlModeDialog = true },
+      )
+      SettingsPreferenceClickableItem(
+        titleRes = R.string.access_control_packages,
+        summaryRes = R.string.access_control_packages_summary,
+        onClick = onAccessControlPackagesClick,
       )
     }
-    SettingsPreferenceClickableItem(
-      titleRes = R.string.tun_stack_mode,
-      summaryRes = tunStackMode.summaryRes,
-      enabled = vpnDependenciesEnabled,
-      onClick = { showTunStackDialog = true },
-    )
-    SettingsPreferenceClickableItem(
-      titleRes = R.string.access_control_mode,
-      summaryRes = uiState.accessControlMode.summaryRes,
-      enabled = vpnDependenciesEnabled,
-      onClick = { showAccessControlModeDialog = true },
-    )
-    SettingsPreferenceClickableItem(
-      titleRes = R.string.access_control_packages,
-      summaryRes = R.string.access_control_packages_summary,
-      onClick = onAccessControlPackagesClick,
-    )
   }
 
   if (showTunStackDialog) {
