@@ -16,10 +16,6 @@ android {
     targetSdk = 35
     versionCode = 212101
     versionName = "2.12.1"
-    resValue("integer", "release_code", versionCode.toString())
-    resValue("string", "release_name", "v$versionName")
-    resValue("string", "launch_name", "@string/launch_name_meta")
-    resValue("string", "application_name", "@string/application_name_meta")
   }
 
   val keystore = rootProject.file("signing.properties")
@@ -45,8 +41,6 @@ android {
       proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
     }
   }
-
-  buildFeatures { resValues = true }
 
   packaging {
     jniLibs { useLegacyPackaging = true }
