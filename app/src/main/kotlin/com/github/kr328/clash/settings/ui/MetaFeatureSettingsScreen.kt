@@ -50,7 +50,7 @@ import kotlinx.serialization.Serializable
 import me.zhanghai.compose.preference.ProvidePreferenceLocals
 import me.zhanghai.compose.preference.preferenceCategory
 
-sealed interface MetaFeatureSettingsRoute : NavKey {
+private sealed interface MetaFeatureSettingsRoute : NavKey {
   @Serializable data object Main : MetaFeatureSettingsRoute
 
   @Serializable

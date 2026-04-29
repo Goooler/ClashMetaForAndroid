@@ -20,7 +20,9 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -49,10 +51,11 @@ fun EditableTextMapScreen(
   onDismiss: () -> Unit,
   onApply: (Map<String, String>?) -> Unit,
 ) {
-  var values by
+  val values =
     remember(initialValues) {
-      mutableStateOf(initialValues?.entries?.map { it.toPair() }.orEmpty())
+      mutableStateMapOf<String, String>().apply { putAll(initialValues.orEmpty()) }
     }
+  val items by remember { derivedStateOf { values.entries.toList() } }
   var showAddDialog by remember { mutableStateOf(false) }
 
   MihomoScaffold(
@@ -72,14 +75,12 @@ fun EditableTextMapScreen(
         EmptyEditorContent(Modifier.weight(1f))
       } else {
         LazyColumn(modifier = Modifier.weight(1f)) {
-          itemsIndexed(values) { index, entry ->
+          itemsIndexed(items = items) { _, (key, value) ->
             ListItem(
-              headlineContent = { Text(entry.first) },
-              supportingContent = { Text(entry.second) },
+              headlineContent = { Text(key) },
+              supportingContent = { Text(value) },
               trailingContent = {
-                IconButton(
-                  onClick = { values = values.toMutableList().apply { removeAt(index) } }
-                ) {
+                IconButton(onClick = { values.remove(key) }) {
                   Icon(
                     imageVector = MihomoIcons.OutlineDelete,
                     contentDescription = stringResource(R.string.delete),
@@ -114,7 +115,7 @@ fun EditableTextMapScreen(
       title = title,
       onDismiss = { showAddDialog = false },
       onConfirm = { key, valueText ->
-        values = values + (key to valueText)
+        values[key] = valueText
         showAddDialog = false
       },
     )

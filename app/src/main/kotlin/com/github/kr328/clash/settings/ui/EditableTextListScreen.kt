@@ -24,6 +24,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.toMutableStateList
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
@@ -48,7 +49,7 @@ fun EditableTextListScreen(
   onDismiss: () -> Unit,
   onApply: (List<String>?) -> Unit,
 ) {
-  var values by remember(initialValues) { mutableStateOf(initialValues.orEmpty()) }
+  val values = remember(initialValues) { initialValues.orEmpty().toMutableStateList() }
   var showAddDialog by remember { mutableStateOf(false) }
 
   MihomoScaffold(
@@ -72,9 +73,7 @@ fun EditableTextListScreen(
             ListItem(
               headlineContent = { Text(value) },
               trailingContent = {
-                IconButton(
-                  onClick = { values = values.toMutableList().apply { removeAt(index) } }
-                ) {
+                IconButton(onClick = { values.removeAt(index) }) {
                   Icon(
                     imageVector = MihomoIcons.OutlineDelete,
                     contentDescription = stringResource(R.string.delete),
@@ -107,11 +106,10 @@ fun EditableTextListScreen(
   if (showAddDialog) {
     SingleTextInputDialog(
       title = title,
-      initialValue = "",
       onDismiss = { showAddDialog = false },
       onConfirm = { newValue ->
         if (newValue.isNotBlank()) {
-          values = values + newValue
+          values.add(newValue)
         }
         showAddDialog = false
       },
@@ -122,11 +120,10 @@ fun EditableTextListScreen(
 @Composable
 private fun SingleTextInputDialog(
   @StringRes title: Int,
-  initialValue: String,
   onDismiss: () -> Unit,
   onConfirm: (String) -> Unit,
 ) {
-  var inputText by remember { mutableStateOf(initialTextFieldValue(initialValue)) }
+  var inputText by remember { mutableStateOf(initialTextFieldValue("")) }
   val focusRequester = remember { FocusRequester() }
   val keyboardController = LocalSoftwareKeyboardController.current
 

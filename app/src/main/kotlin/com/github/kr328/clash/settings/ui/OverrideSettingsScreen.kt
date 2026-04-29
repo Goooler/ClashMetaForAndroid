@@ -55,7 +55,7 @@ import me.zhanghai.compose.preference.Preference
 import me.zhanghai.compose.preference.ProvidePreferenceLocals
 import me.zhanghai.compose.preference.preferenceCategory
 
-sealed interface OverrideSettingsRoute : NavKey {
+private sealed interface OverrideSettingsRoute : NavKey {
   @Serializable data object Main : OverrideSettingsRoute
 
   @Serializable
