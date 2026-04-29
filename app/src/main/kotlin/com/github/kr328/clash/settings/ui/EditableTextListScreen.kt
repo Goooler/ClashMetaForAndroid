@@ -117,7 +117,7 @@ fun EditableTextListScreen(
       ) {
         TextButton(onClick = { onApply(null) }) { Text(stringResource(R.string.reset)) }
         TextButton(onClick = onDismiss) { Text(stringResource(R.string.cancel)) }
-        TextButton(onClick = { onApply(values) }) { Text(stringResource(R.string.ok)) }
+        TextButton(onClick = { onApply(values.toList()) }) { Text(stringResource(R.string.ok)) }
       }
     }
   }
