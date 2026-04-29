@@ -95,7 +95,7 @@ fun ProfilesScreen(
       ProfilesViewModel.EventState.OpenCreate -> onOpenCreate()
       is ProfilesViewModel.EventState.OpenEdit -> onOpenEdit(event.uuid)
       is ProfilesViewModel.EventState.ShowMessage -> {
-        snackbarHostState.showSnackbar(message = event.message, duration = SnackbarDuration.Long)
+        snackbarHostState.showSnackbar(message = event.message)
       }
       is ProfilesViewModel.EventState.ShowEditableMessage -> {
         val result =
@@ -104,6 +104,7 @@ fun ProfilesScreen(
             actionLabel = editText,
             duration = SnackbarDuration.Long,
           )
+
         if (result == SnackbarResult.ActionPerformed) {
           onOpenEdit(event.uuid)
         }

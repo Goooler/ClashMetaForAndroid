@@ -34,6 +34,9 @@ private val DarkColorScheme =
     surfaceContainerHigh = MihomoDarkSurface,
     surfaceContainerHighest = MihomoDarkSurface,
     outline = MihomoDarkControlDisabled,
+    inverseSurface = MihomoLightBackground,
+    inverseOnSurface = MihomoLightControlNormal,
+    inversePrimary = MihomoDarkPrimary,
     error = MihomoError,
     onError = MihomoOnPrimary,
   )
@@ -56,6 +59,9 @@ private val LightColorScheme =
     surfaceContainerHigh = MihomoLightBackground,
     surfaceContainerHighest = MihomoLightBackground,
     outline = MihomoLightControlDisabled,
+    inverseSurface = MihomoDarkSurface,
+    inverseOnSurface = MihomoDarkControlNormal,
+    inversePrimary = MihomoLightPrimary,
     error = MihomoError,
     onError = MihomoOnPrimary,
   )

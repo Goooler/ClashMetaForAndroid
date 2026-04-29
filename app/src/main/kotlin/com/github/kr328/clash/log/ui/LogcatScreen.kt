@@ -20,7 +20,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -53,7 +52,6 @@ import com.github.kr328.clash.ui.theme.MihomoTheme
 import com.github.kr328.clash.ui.theme.PreviewMihomo
 import com.github.kr328.clash.ui.theme.mihomoDimens
 import com.github.kr328.clash.util.format
-import com.github.kr328.clash.util.toast
 import java.util.Date
 import kotlinx.coroutines.launch
 
@@ -75,6 +73,7 @@ fun LogcatScreen(
   val progressBarState = remember { ModelProgressBarState() }
   val scope = rememberCoroutineScope()
   val messageCopied = stringResource(R.string.copied)
+  val invalidFileTip = stringResource(R.string.invalid_log_file)
 
   LaunchedEffect(fileName, viewModel) { viewModel.init(fileName) }
 
@@ -93,17 +92,13 @@ fun LogcatScreen(
       LogcatViewModel.EventState.Idle -> Unit
       LogcatViewModel.EventState.Close -> onClose()
       LogcatViewModel.EventState.InvalidFile -> {
-        context.toast(R.string.invalid_log_file)
+        snackbarHostState.showSnackbar(message = invalidFileTip)
         onInvalidFile()
       }
       LogcatViewModel.EventState.OpenLogs -> onOpenLogs()
       is LogcatViewModel.EventState.RequestExport -> exportLauncher.launch(event.fileName)
       is LogcatViewModel.EventState.ShowMessage -> {
-        snackbarHostState.showSnackbar(
-          message = event.message,
-          withDismissAction = true,
-          duration = SnackbarDuration.Short,
-        )
+        snackbarHostState.showSnackbar(message = event.message, withDismissAction = true)
       }
     }
     viewModel.consumeEvent()
@@ -143,11 +138,7 @@ fun LogcatScreen(
       val data = ClipData.newPlainText("log_message", message.message)
       context.getSystemService<ClipboardManager>()?.setPrimaryClip(data)
       scope.launch {
-        snackbarHostState.showSnackbar(
-          message = messageCopied,
-          withDismissAction = true,
-          duration = SnackbarDuration.Short,
-        )
+        snackbarHostState.showSnackbar(message = messageCopied, withDismissAction = true)
       }
     },
   )

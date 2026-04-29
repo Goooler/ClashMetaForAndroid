@@ -35,7 +35,6 @@ import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -66,7 +65,6 @@ import com.github.kr328.clash.ui.theme.MihomoOnPrimary
 import com.github.kr328.clash.ui.theme.MihomoTheme
 import com.github.kr328.clash.ui.theme.PreviewMihomo
 import com.github.kr328.clash.ui.theme.mihomoDimens
-import kotlinx.coroutines.launch
 
 @Composable
 fun MainScreen(
@@ -84,7 +82,6 @@ fun MainScreen(
   val uiState by viewModel.uiState.collectAsStateWithLifecycle()
   val eventState by viewModel.eventState.collectAsStateWithLifecycle()
   val snackbarHostState = remember { SnackbarHostState() }
-  val scope = rememberCoroutineScope()
 
   val noProfileText = stringResource(R.string.no_profile_selected)
   val profilesActionText = stringResource(R.string.profiles)
@@ -106,20 +103,17 @@ fun MainScreen(
       MainViewModel.EventState.Idle -> Unit
       is MainViewModel.EventState.RequestVpnPermission -> vpnLauncher.launch(event.intent)
       MainViewModel.EventState.ShowNoProfileMessage -> {
-        scope.launch {
-          val result =
-            snackbarHostState.showSnackbar(
-              message = noProfileText,
-              actionLabel = profilesActionText,
-              duration = SnackbarDuration.Long,
-            )
-          if (result == SnackbarResult.ActionPerformed) onOpenProfiles()
-        }
+        val result =
+          snackbarHostState.showSnackbar(
+            message = noProfileText,
+            actionLabel = profilesActionText,
+            duration = SnackbarDuration.Long,
+          )
+
+        if (result == SnackbarResult.ActionPerformed) onOpenProfiles()
       }
       is MainViewModel.EventState.ShowMessage -> {
-        scope.launch {
-          snackbarHostState.showSnackbar(message = event.message, duration = SnackbarDuration.Long)
-        }
+        snackbarHostState.showSnackbar(message = event.message)
       }
     }
     viewModel.consumeEvent()
