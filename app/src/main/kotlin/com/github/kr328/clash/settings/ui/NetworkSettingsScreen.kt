@@ -1,45 +1,35 @@
 package com.github.kr328.clash.settings.ui
 
 import androidx.annotation.StringRes
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.AlertDialog
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.RadioButton
+import androidx.compose.material3.Icon
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.github.kr328.clash.R
 import com.github.kr328.clash.service.model.AccessControlMode
 import com.github.kr328.clash.settings.vm.NetworkSettingsViewModel
 import com.github.kr328.clash.ui.component.MihomoScaffold
-import com.github.kr328.clash.ui.component.SettingsCategoryTitle
-import com.github.kr328.clash.ui.component.SettingsPreferenceClickableItem
-import com.github.kr328.clash.ui.component.SettingsPreferenceSwitchItem
 import com.github.kr328.clash.ui.icon.BaselineVpnLock
 import com.github.kr328.clash.ui.icon.MihomoIcons
 import com.github.kr328.clash.ui.theme.MihomoTheme
 import com.github.kr328.clash.ui.theme.PreviewMihomo
+import me.zhanghai.compose.preference.ListPreference
+import me.zhanghai.compose.preference.Preference
+import me.zhanghai.compose.preference.ProvidePreferenceLocals
+import me.zhanghai.compose.preference.SwitchPreference
+import me.zhanghai.compose.preference.preferenceCategory
 
 @Composable
 fun NetworkSettingsScreen(
@@ -82,8 +72,6 @@ private fun NetworkSettingsContent(
   onAccessControlPackagesClick: () -> Unit,
   modifier: Modifier = Modifier,
 ) {
-  var showTunStackDialog by remember { mutableStateOf(false) }
-  var showAccessControlModeDialog by remember { mutableStateOf(false) }
   val snackbarHostState = remember { SnackbarHostState() }
   val barMessage = stringResource(R.string.options_unavailable)
 
@@ -105,148 +93,112 @@ private fun NetworkSettingsContent(
     modifier = modifier.fillMaxSize(),
     snackbarHostState = snackbarHostState,
   ) { innerPadding ->
-    Column(
-      modifier = Modifier.fillMaxSize().padding(innerPadding).verticalScroll(rememberScrollState())
-    ) {
-      SettingsPreferenceSwitchItem(
-        icon = MihomoIcons.BaselineVpnLock,
-        titleRes = R.string.route_system_traffic,
-        summaryRes = R.string.routing_via_vpn_service,
-        checked = uiState.enableVpn,
-        enabled = !clashRunning,
-        onCheckedChange = onEnableVpnChange,
-      )
+    ProvidePreferenceLocals {
+      LazyColumn(modifier = Modifier.fillMaxSize(), contentPadding = innerPadding) {
+        item(key = "route_system_traffic") {
+          SwitchPreference(
+            value = uiState.enableVpn,
+            onValueChange = onEnableVpnChange,
+            enabled = !clashRunning,
+            icon = { Icon(imageVector = MihomoIcons.BaselineVpnLock, contentDescription = null) },
+            title = { Text(stringResource(R.string.route_system_traffic)) },
+            summary = { Text(stringResource(R.string.routing_via_vpn_service)) },
+          )
+        }
 
-      SettingsCategoryTitle(text = stringResource(R.string.vpn_service_options))
-
-      SettingsPreferenceSwitchItem(
-        titleRes = R.string.bypass_private_network,
-        summaryRes = R.string.bypass_private_network_summary,
-        checked = uiState.bypassPrivateNetwork,
-        enabled = vpnDependenciesEnabled,
-        onCheckedChange = onBypassPrivateNetworkChange,
-      )
-      SettingsPreferenceSwitchItem(
-        titleRes = R.string.dns_hijacking,
-        summaryRes = R.string.dns_hijacking_summary,
-        checked = uiState.dnsHijacking,
-        enabled = vpnDependenciesEnabled,
-        onCheckedChange = onDnsHijackingChange,
-      )
-      SettingsPreferenceSwitchItem(
-        titleRes = R.string.allow_bypass,
-        summaryRes = R.string.allow_bypass_summary,
-        checked = uiState.allowBypass,
-        enabled = vpnDependenciesEnabled,
-        onCheckedChange = onAllowBypassChange,
-      )
-      SettingsPreferenceSwitchItem(
-        titleRes = R.string.allow_ipv6,
-        summaryRes = R.string.allow_ipv6_summary,
-        checked = uiState.allowIpv6,
-        enabled = vpnDependenciesEnabled,
-        onCheckedChange = onAllowIpv6Change,
-      )
-      if (uiState.hasSystemProxyOption) {
-        SettingsPreferenceSwitchItem(
-          titleRes = R.string.system_proxy,
-          summaryRes = R.string.system_proxy_summary,
-          checked = uiState.systemProxy,
-          enabled = vpnDependenciesEnabled,
-          onCheckedChange = onSystemProxyChange,
+        preferenceCategory(
+          key = "cat_vpn_service_options",
+          title = { Text(stringResource(R.string.vpn_service_options)) },
         )
+
+        item(key = "bypass_private_network") {
+          SwitchPreference(
+            value = uiState.bypassPrivateNetwork,
+            onValueChange = onBypassPrivateNetworkChange,
+            enabled = vpnDependenciesEnabled,
+            title = { Text(stringResource(R.string.bypass_private_network)) },
+            summary = { Text(stringResource(R.string.bypass_private_network_summary)) },
+          )
+        }
+        item(key = "dns_hijacking") {
+          SwitchPreference(
+            value = uiState.dnsHijacking,
+            onValueChange = onDnsHijackingChange,
+            enabled = vpnDependenciesEnabled,
+            title = { Text(stringResource(R.string.dns_hijacking)) },
+            summary = { Text(stringResource(R.string.dns_hijacking_summary)) },
+          )
+        }
+        item(key = "allow_bypass") {
+          SwitchPreference(
+            value = uiState.allowBypass,
+            onValueChange = onAllowBypassChange,
+            enabled = vpnDependenciesEnabled,
+            title = { Text(stringResource(R.string.allow_bypass)) },
+            summary = { Text(stringResource(R.string.allow_bypass_summary)) },
+          )
+        }
+        item(key = "allow_ipv6") {
+          SwitchPreference(
+            value = uiState.allowIpv6,
+            onValueChange = onAllowIpv6Change,
+            enabled = vpnDependenciesEnabled,
+            title = { Text(stringResource(R.string.allow_ipv6)) },
+            summary = { Text(stringResource(R.string.allow_ipv6_summary)) },
+          )
+        }
+        if (uiState.hasSystemProxyOption) {
+          item(key = "system_proxy") {
+            SwitchPreference(
+              value = uiState.systemProxy,
+              onValueChange = onSystemProxyChange,
+              enabled = vpnDependenciesEnabled,
+              title = { Text(stringResource(R.string.system_proxy)) },
+              summary = { Text(stringResource(R.string.system_proxy_summary)) },
+            )
+          }
+        }
+        item(key = "tun_stack_mode") {
+          ListPreference(
+            value = tunStackMode,
+            onValueChange = { onTunStackModeChange(it.persistedValue) },
+            values = TunStackMode.entries,
+            enabled = vpnDependenciesEnabled,
+            title = { Text(stringResource(R.string.tun_stack_mode)) },
+            summary = { Text(stringResource(tunStackMode.summaryRes)) },
+            valueToText = {
+              androidx.compose.ui.text.AnnotatedString(stringResource(it.summaryRes))
+            },
+          )
+        }
+        item(key = "access_control_mode") {
+          ListPreference(
+            value = uiState.accessControlMode,
+            onValueChange = onAccessControlModeChange,
+            values =
+              listOf(
+                AccessControlMode.AcceptAll,
+                AccessControlMode.AcceptSelected,
+                AccessControlMode.DenySelected,
+              ),
+            enabled = vpnDependenciesEnabled,
+            title = { Text(stringResource(R.string.access_control_mode)) },
+            summary = { Text(stringResource(uiState.accessControlMode.summaryRes)) },
+            valueToText = {
+              androidx.compose.ui.text.AnnotatedString(stringResource(it.summaryRes))
+            },
+          )
+        }
+        item(key = "access_control_packages") {
+          Preference(
+            modifier = Modifier.fillMaxWidth(),
+            title = { Text(stringResource(R.string.access_control_packages)) },
+            summary = { Text(stringResource(R.string.access_control_packages_summary)) },
+            onClick = onAccessControlPackagesClick,
+          )
+        }
       }
-      SettingsPreferenceClickableItem(
-        titleRes = R.string.tun_stack_mode,
-        summaryRes = tunStackMode.summaryRes,
-        enabled = vpnDependenciesEnabled,
-        onClick = { showTunStackDialog = true },
-      )
-      SettingsPreferenceClickableItem(
-        titleRes = R.string.access_control_mode,
-        summaryRes = uiState.accessControlMode.summaryRes,
-        enabled = vpnDependenciesEnabled,
-        onClick = { showAccessControlModeDialog = true },
-      )
-      SettingsPreferenceClickableItem(
-        titleRes = R.string.access_control_packages,
-        summaryRes = R.string.access_control_packages_summary,
-        onClick = onAccessControlPackagesClick,
-      )
     }
-  }
-
-  if (showTunStackDialog) {
-    AlertDialog(
-      onDismissRequest = { showTunStackDialog = false },
-      title = { Text(text = stringResource(R.string.tun_stack_mode)) },
-      text = {
-        Column {
-          TunStackMode.entries.forEach { value ->
-            Row(
-              modifier =
-                Modifier.fillMaxWidth().clickable {
-                  showTunStackDialog = false
-                  onTunStackModeChange(value.persistedValue)
-                },
-              verticalAlignment = Alignment.CenterVertically,
-            ) {
-              RadioButton(selected = tunStackMode == value, onClick = null)
-              Text(
-                text = stringResource(value.summaryRes),
-                style = MaterialTheme.typography.bodyLarge,
-                modifier = Modifier.padding(start = 8.dp),
-              )
-            }
-          }
-        }
-      },
-      confirmButton = {
-        TextButton(onClick = { showTunStackDialog = false }) {
-          Text(text = stringResource(R.string.ok))
-        }
-      },
-    )
-  }
-
-  if (showAccessControlModeDialog) {
-    val accessControlModeItems =
-      listOf(
-        AccessControlMode.AcceptAll to R.string.allow_all_apps,
-        AccessControlMode.AcceptSelected to R.string.allow_selected_apps,
-        AccessControlMode.DenySelected to R.string.deny_selected_apps,
-      )
-
-    AlertDialog(
-      onDismissRequest = { showAccessControlModeDialog = false },
-      title = { Text(text = stringResource(R.string.access_control_mode)) },
-      text = {
-        Column {
-          accessControlModeItems.forEach { (value, textRes) ->
-            Row(
-              modifier =
-                Modifier.fillMaxWidth().clickable {
-                  showAccessControlModeDialog = false
-                  onAccessControlModeChange(value)
-                },
-              verticalAlignment = Alignment.CenterVertically,
-            ) {
-              RadioButton(selected = uiState.accessControlMode == value, onClick = null)
-              Text(
-                text = stringResource(textRes),
-                style = MaterialTheme.typography.bodyLarge,
-                modifier = Modifier.padding(start = 8.dp),
-              )
-            }
-          }
-        }
-      },
-      confirmButton = {
-        TextButton(onClick = { showAccessControlModeDialog = false }) {
-          Text(text = stringResource(R.string.ok))
-        }
-      },
-    )
   }
 }
 

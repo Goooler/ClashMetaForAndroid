@@ -1,38 +1,21 @@
 package com.github.kr328.clash.settings.ui
 
 import androidx.annotation.StringRes
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.AlertDialog
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.RadioButton
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.github.kr328.clash.R
 import com.github.kr328.clash.model.DarkMode
 import com.github.kr328.clash.settings.vm.AppSettingsViewModel
 import com.github.kr328.clash.ui.component.MihomoScaffold
-import com.github.kr328.clash.ui.component.SettingsCategoryTitle
-import com.github.kr328.clash.ui.component.SettingsPreferenceClickableItem
-import com.github.kr328.clash.ui.component.SettingsPreferenceSwitchItem
 import com.github.kr328.clash.ui.icon.BaselineBrightness4
 import com.github.kr328.clash.ui.icon.BaselineDomain
 import com.github.kr328.clash.ui.icon.BaselineHide
@@ -41,6 +24,10 @@ import com.github.kr328.clash.ui.icon.BaselineStack
 import com.github.kr328.clash.ui.icon.MihomoIcons
 import com.github.kr328.clash.ui.theme.MihomoTheme
 import com.github.kr328.clash.ui.theme.PreviewMihomo
+import me.zhanghai.compose.preference.ListPreference
+import me.zhanghai.compose.preference.ProvidePreferenceLocals
+import me.zhanghai.compose.preference.SwitchPreference
+import me.zhanghai.compose.preference.preferenceCategory
 
 @Composable
 fun AppSettingsScreen(
@@ -74,94 +61,75 @@ private fun AppSettingsContent(
   onDynamicNotificationChange: (Boolean) -> Unit,
   modifier: Modifier = Modifier,
 ) {
-  var showDarkModeDialog by remember { mutableStateOf(false) }
-
   MihomoScaffold(title = stringResource(R.string.app), modifier = modifier.fillMaxSize()) {
     innerPadding ->
-    Column(
-      modifier = Modifier.fillMaxSize().padding(innerPadding).verticalScroll(rememberScrollState())
-    ) {
-      SettingsCategoryTitle(text = stringResource(R.string.behavior))
-      SettingsPreferenceSwitchItem(
-        icon = MihomoIcons.BaselineRestore,
-        titleRes = R.string.auto_restart,
-        summaryRes = R.string.allow_clash_auto_restart,
-        checked = uiState.autoRestart,
-        onCheckedChange = onAutoRestartChange,
-      )
+    ProvidePreferenceLocals {
+      LazyColumn(modifier = Modifier.fillMaxSize(), contentPadding = innerPadding) {
+        preferenceCategory(
+          key = "cat_behavior",
+          title = { Text(stringResource(R.string.behavior)) },
+        )
+        item(key = "auto_restart") {
+          SwitchPreference(
+            value = uiState.autoRestart,
+            onValueChange = onAutoRestartChange,
+            icon = { Icon(imageVector = MihomoIcons.BaselineRestore, contentDescription = null) },
+            title = { Text(stringResource(R.string.auto_restart)) },
+            summary = { Text(stringResource(R.string.allow_clash_auto_restart)) },
+          )
+        }
 
-      SettingsCategoryTitle(text = stringResource(R.string.interface_))
-      SettingsPreferenceClickableItem(
-        icon = MihomoIcons.BaselineBrightness4,
-        titleRes = R.string.dark_mode,
-        summaryRes = uiState.darkMode.summaryRes,
-        onClick = { showDarkModeDialog = true },
-      )
-      SettingsPreferenceSwitchItem(
-        icon = MihomoIcons.BaselineHide,
-        titleRes = R.string.hide_app_icon_title,
-        summaryRes = R.string.hide_app_icon_desc,
-        checked = uiState.hideAppIcon,
-        onCheckedChange = onHideAppIconChange,
-      )
-      SettingsPreferenceSwitchItem(
-        icon = MihomoIcons.BaselineStack,
-        titleRes = R.string.hide_from_recents_title,
-        summaryRes = R.string.hide_from_recents_desc,
-        checked = uiState.hideFromRecents,
-        onCheckedChange = onHideFromRecentsChange,
-      )
+        preferenceCategory(
+          key = "cat_interface",
+          title = { Text(stringResource(R.string.interface_)) },
+        )
+        item(key = "dark_mode") {
+          ListPreference(
+            value = uiState.darkMode,
+            onValueChange = onDarkModeChange,
+            values = listOf(DarkMode.Auto, DarkMode.ForceLight, DarkMode.ForceDark),
+            icon = {
+              Icon(imageVector = MihomoIcons.BaselineBrightness4, contentDescription = null)
+            },
+            title = { Text(stringResource(R.string.dark_mode)) },
+            summary = { Text(stringResource(uiState.darkMode.summaryRes)) },
+            valueToText = {
+              androidx.compose.ui.text.AnnotatedString(stringResource(it.summaryRes))
+            },
+          )
+        }
+        item(key = "hide_app_icon") {
+          SwitchPreference(
+            value = uiState.hideAppIcon,
+            onValueChange = onHideAppIconChange,
+            icon = { Icon(imageVector = MihomoIcons.BaselineHide, contentDescription = null) },
+            title = { Text(stringResource(R.string.hide_app_icon_title)) },
+            summary = { Text(stringResource(R.string.hide_app_icon_desc)) },
+          )
+        }
+        item(key = "hide_from_recents") {
+          SwitchPreference(
+            value = uiState.hideFromRecents,
+            onValueChange = onHideFromRecentsChange,
+            icon = { Icon(imageVector = MihomoIcons.BaselineStack, contentDescription = null) },
+            title = { Text(stringResource(R.string.hide_from_recents_title)) },
+            summary = { Text(stringResource(R.string.hide_from_recents_desc)) },
+          )
+        }
 
-      SettingsCategoryTitle(text = stringResource(R.string.service))
-      SettingsPreferenceSwitchItem(
-        icon = MihomoIcons.BaselineDomain,
-        titleRes = R.string.show_traffic,
-        summaryRes = R.string.show_traffic_summary,
-        checked = uiState.dynamicNotification,
-        enabled = !clashRunning,
-        onCheckedChange = onDynamicNotificationChange,
-      )
+        preferenceCategory(key = "cat_service", title = { Text(stringResource(R.string.service)) })
+        item(key = "show_traffic") {
+          SwitchPreference(
+            value = uiState.dynamicNotification,
+            onValueChange = onDynamicNotificationChange,
+            enabled = !clashRunning,
+            icon = { Icon(imageVector = MihomoIcons.BaselineDomain, contentDescription = null) },
+            title = { Text(stringResource(R.string.show_traffic)) },
+            summary = { Text(stringResource(R.string.show_traffic_summary)) },
+          )
+        }
+      }
     }
-  }
-
-  if (showDarkModeDialog) {
-    val darkModeItems =
-      listOf(
-        DarkMode.Auto to R.string.follow_system_android_10,
-        DarkMode.ForceLight to R.string.always_light,
-        DarkMode.ForceDark to R.string.always_dark,
-      )
-
-    AlertDialog(
-      onDismissRequest = { showDarkModeDialog = false },
-      title = { Text(text = stringResource(R.string.dark_mode)) },
-      text = {
-        Column {
-          darkModeItems.forEach { (value, textRes) ->
-            Row(
-              modifier =
-                Modifier.fillMaxWidth().clickable {
-                  showDarkModeDialog = false
-                  onDarkModeChange(value)
-                },
-              verticalAlignment = Alignment.CenterVertically,
-            ) {
-              RadioButton(selected = uiState.darkMode == value, onClick = null)
-              Text(
-                text = stringResource(textRes),
-                style = MaterialTheme.typography.bodyLarge,
-                modifier = Modifier.padding(start = 8.dp),
-              )
-            }
-          }
-        }
-      },
-      confirmButton = {
-        TextButton(onClick = { showDarkModeDialog = false }) {
-          Text(text = stringResource(R.string.ok))
-        }
-      },
-    )
   }
 }
 

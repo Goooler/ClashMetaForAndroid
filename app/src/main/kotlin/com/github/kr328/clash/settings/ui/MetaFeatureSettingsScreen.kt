@@ -25,6 +25,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.AnnotatedString
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation3.runtime.NavKey
@@ -38,14 +39,13 @@ import com.github.kr328.clash.settings.vm.MetaFeatureSettingsViewModel
 import com.github.kr328.clash.settings.vm.MetaFeatureSettingsViewModel.ImportResult
 import com.github.kr328.clash.settings.vm.MetaFeatureSettingsViewModel.ImportType
 import com.github.kr328.clash.ui.component.MihomoScaffold
-import com.github.kr328.clash.ui.component.SettingsClickablePreferenceItem
-import com.github.kr328.clash.ui.component.SettingsEditTextListPreferenceItem
-import com.github.kr328.clash.ui.component.SettingsListPreferenceItem
 import com.github.kr328.clash.ui.icon.BaselineReplay
 import com.github.kr328.clash.ui.icon.MihomoIcons
 import com.github.kr328.clash.ui.theme.MihomoTheme
 import com.github.kr328.clash.ui.theme.PreviewMihomo
 import kotlinx.serialization.Serializable
+import me.zhanghai.compose.preference.ListPreference
+import me.zhanghai.compose.preference.Preference
 import me.zhanghai.compose.preference.ProvidePreferenceLocals
 import me.zhanghai.compose.preference.preferenceCategory
 
@@ -248,47 +248,47 @@ private fun LazyListScope.metaBasicPreferenceItems(
   preferenceCategory(key = "cat_settings", title = { Text(stringResource(R.string.settings)) })
 
   item(key = "unifiedDelay", contentType = "ListPreference") {
-    SettingsListPreferenceItem(
+    ListPreference(
       value = configuration.unifiedDelay,
       onValueChange = actions::updateUnifiedDelay,
       values = booleanOptions,
       modifier = Modifier.fillMaxWidth(),
-      title = R.string.unified_delay,
-      summary = configuration.unifiedDelay.textRes,
-      valueToText = { it.textRes },
+      title = { Text(stringResource(R.string.unified_delay)) },
+      summary = { Text(stringResource(configuration.unifiedDelay.textRes)) },
+      valueToText = { AnnotatedString(stringResource(it.textRes)) },
     )
   }
   item(key = "geodataMode", contentType = "ListPreference") {
-    SettingsListPreferenceItem(
+    ListPreference(
       value = configuration.geodataMode,
       onValueChange = actions::updateGeodataMode,
       values = booleanOptions,
       modifier = Modifier.fillMaxWidth(),
-      title = R.string.geodata_mode,
-      summary = configuration.geodataMode.textRes,
-      valueToText = { it.textRes },
+      title = { Text(stringResource(R.string.geodata_mode)) },
+      summary = { Text(stringResource(configuration.geodataMode.textRes)) },
+      valueToText = { AnnotatedString(stringResource(it.textRes)) },
     )
   }
   item(key = "tcpConcurrent", contentType = "ListPreference") {
-    SettingsListPreferenceItem(
+    ListPreference(
       value = configuration.tcpConcurrent,
       onValueChange = actions::updateTcpConcurrent,
       values = booleanOptions,
       modifier = Modifier.fillMaxWidth(),
-      title = R.string.tcp_concurrent,
-      summary = configuration.tcpConcurrent.textRes,
-      valueToText = { it.textRes },
+      title = { Text(stringResource(R.string.tcp_concurrent)) },
+      summary = { Text(stringResource(configuration.tcpConcurrent.textRes)) },
+      valueToText = { AnnotatedString(stringResource(it.textRes)) },
     )
   }
   item(key = "findProcessMode", contentType = "ListPreference") {
-    SettingsListPreferenceItem(
+    ListPreference(
       value = configuration.findProcessMode,
       onValueChange = actions::updateFindProcessMode,
       values = ConfigurationOverride.FindProcessMode.entries,
       modifier = Modifier.fillMaxWidth(),
-      title = R.string.find_process_mode,
-      summary = configuration.findProcessMode.textRes,
-      valueToText = { it.textRes },
+      title = { Text(stringResource(R.string.find_process_mode)) },
+      summary = { Text(stringResource(configuration.findProcessMode.textRes)) },
+      valueToText = { AnnotatedString(stringResource(it.textRes)) },
     )
   }
 }
@@ -304,22 +304,23 @@ private fun LazyListScope.metaSnifferPreferenceItems(
   )
 
   item(key = "snifferEnable", contentType = "ListPreference") {
-    SettingsListPreferenceItem(
+    ListPreference(
       value = configuration.sniffer.enable,
       onValueChange = actions::updateSnifferEnable,
       values = booleanOptions,
       modifier = Modifier.fillMaxWidth(),
-      title = R.string.strategy,
-      summary = configuration.sniffer.enable.textRes,
-      valueToText = { it.textRes },
+      title = { Text(stringResource(R.string.strategy)) },
+      summary = { Text(stringResource(configuration.sniffer.enable.textRes)) },
+      valueToText = { AnnotatedString(stringResource(it.textRes)) },
     )
   }
   item(key = "sniffHttpPorts", contentType = "EditTextListPreference") {
     val enabled = configuration.sniffer.enable != false
-    SettingsEditTextListPreferenceItem(
-      title = R.string.sniff_http_ports,
-      placeholder = R.string.dont_modify,
-      values = configuration.sniffer.sniff.http.ports,
+    Preference(
+      modifier = Modifier.fillMaxWidth(),
+      title = { Text(stringResource(R.string.sniff_http_ports)) },
+      summary = { Text(configuration.sniffer.sniff.http.ports.listSummary(R.string.dont_modify)) },
+      enabled = enabled,
       onClick = {
         onOpenEditableTextList(
           R.string.sniff_http_ports,
@@ -327,28 +328,30 @@ private fun LazyListScope.metaSnifferPreferenceItems(
           actions::updateSniffHttpPorts,
         )
       },
-      enabled = enabled,
     )
   }
   item(key = "sniffHttpOverrideDestination", contentType = "ListPreference") {
     val enabled = configuration.sniffer.enable != false
-    SettingsListPreferenceItem(
+    ListPreference(
       value = configuration.sniffer.sniff.http.overrideDestination,
       onValueChange = actions::updateSniffHttpOverrideDestination,
       values = booleanOptions,
       modifier = Modifier.fillMaxWidth(),
       enabled = enabled,
-      title = R.string.sniff_http_override_destination,
-      summary = configuration.sniffer.sniff.http.overrideDestination.textRes,
-      valueToText = { it.textRes },
+      title = { Text(stringResource(R.string.sniff_http_override_destination)) },
+      summary = {
+        Text(stringResource(configuration.sniffer.sniff.http.overrideDestination.textRes))
+      },
+      valueToText = { AnnotatedString(stringResource(it.textRes)) },
     )
   }
   item(key = "sniffTlsPorts", contentType = "EditTextListPreference") {
     val enabled = configuration.sniffer.enable != false
-    SettingsEditTextListPreferenceItem(
-      title = R.string.sniff_tls_ports,
-      placeholder = R.string.dont_modify,
-      values = configuration.sniffer.sniff.tls.ports,
+    Preference(
+      modifier = Modifier.fillMaxWidth(),
+      title = { Text(stringResource(R.string.sniff_tls_ports)) },
+      summary = { Text(configuration.sniffer.sniff.tls.ports.listSummary(R.string.dont_modify)) },
+      enabled = enabled,
       onClick = {
         onOpenEditableTextList(
           R.string.sniff_tls_ports,
@@ -356,28 +359,30 @@ private fun LazyListScope.metaSnifferPreferenceItems(
           actions::updateSniffTlsPorts,
         )
       },
-      enabled = enabled,
     )
   }
   item(key = "sniffTlsOverrideDestination", contentType = "ListPreference") {
     val enabled = configuration.sniffer.enable != false
-    SettingsListPreferenceItem(
+    ListPreference(
       value = configuration.sniffer.sniff.tls.overrideDestination,
       onValueChange = actions::updateSniffTlsOverrideDestination,
       values = booleanOptions,
       modifier = Modifier.fillMaxWidth(),
       enabled = enabled,
-      title = R.string.sniff_tls_override_destination,
-      summary = configuration.sniffer.sniff.tls.overrideDestination.textRes,
-      valueToText = { it.textRes },
+      title = { Text(stringResource(R.string.sniff_tls_override_destination)) },
+      summary = {
+        Text(stringResource(configuration.sniffer.sniff.tls.overrideDestination.textRes))
+      },
+      valueToText = { AnnotatedString(stringResource(it.textRes)) },
     )
   }
   item(key = "sniffQuicPorts", contentType = "EditTextListPreference") {
     val enabled = configuration.sniffer.enable != false
-    SettingsEditTextListPreferenceItem(
-      title = R.string.sniff_quic_ports,
-      placeholder = R.string.dont_modify,
-      values = configuration.sniffer.sniff.quic.ports,
+    Preference(
+      modifier = Modifier.fillMaxWidth(),
+      title = { Text(stringResource(R.string.sniff_quic_ports)) },
+      summary = { Text(configuration.sniffer.sniff.quic.ports.listSummary(R.string.dont_modify)) },
+      enabled = enabled,
       onClick = {
         onOpenEditableTextList(
           R.string.sniff_quic_ports,
@@ -385,67 +390,69 @@ private fun LazyListScope.metaSnifferPreferenceItems(
           actions::updateSniffQuicPorts,
         )
       },
-      enabled = enabled,
     )
   }
   item(key = "sniffQuicOverrideDestination", contentType = "ListPreference") {
     val enabled = configuration.sniffer.enable != false
-    SettingsListPreferenceItem(
+    ListPreference(
       value = configuration.sniffer.sniff.quic.overrideDestination,
       onValueChange = actions::updateSniffQuicOverrideDestination,
       values = booleanOptions,
       modifier = Modifier.fillMaxWidth(),
       enabled = enabled,
-      title = R.string.sniff_quic_override_destination,
-      summary = configuration.sniffer.sniff.quic.overrideDestination.textRes,
-      valueToText = { it.textRes },
+      title = { Text(stringResource(R.string.sniff_quic_override_destination)) },
+      summary = {
+        Text(stringResource(configuration.sniffer.sniff.quic.overrideDestination.textRes))
+      },
+      valueToText = { AnnotatedString(stringResource(it.textRes)) },
     )
   }
   item(key = "forceDnsMapping", contentType = "ListPreference") {
     val enabled = configuration.sniffer.enable != false
-    SettingsListPreferenceItem(
+    ListPreference(
       value = configuration.sniffer.forceDnsMapping,
       onValueChange = actions::updateForceDnsMapping,
       values = booleanOptions,
       modifier = Modifier.fillMaxWidth(),
       enabled = enabled,
-      title = R.string.force_dns_mapping,
-      summary = configuration.sniffer.forceDnsMapping.textRes,
-      valueToText = { it.textRes },
+      title = { Text(stringResource(R.string.force_dns_mapping)) },
+      summary = { Text(stringResource(configuration.sniffer.forceDnsMapping.textRes)) },
+      valueToText = { AnnotatedString(stringResource(it.textRes)) },
     )
   }
   item(key = "parsePureIp", contentType = "ListPreference") {
     val enabled = configuration.sniffer.enable != false
-    SettingsListPreferenceItem(
+    ListPreference(
       value = configuration.sniffer.parsePureIp,
       onValueChange = actions::updateParsePureIp,
       values = booleanOptions,
       modifier = Modifier.fillMaxWidth(),
       enabled = enabled,
-      title = R.string.parse_pure_ip,
-      summary = configuration.sniffer.parsePureIp.textRes,
-      valueToText = { it.textRes },
+      title = { Text(stringResource(R.string.parse_pure_ip)) },
+      summary = { Text(stringResource(configuration.sniffer.parsePureIp.textRes)) },
+      valueToText = { AnnotatedString(stringResource(it.textRes)) },
     )
   }
   item(key = "overrideDestination", contentType = "ListPreference") {
     val enabled = configuration.sniffer.enable != false
-    SettingsListPreferenceItem(
+    ListPreference(
       value = configuration.sniffer.overrideDestination,
       onValueChange = actions::updateOverrideDestination,
       values = booleanOptions,
       modifier = Modifier.fillMaxWidth(),
       enabled = enabled,
-      title = R.string.override_destination,
-      summary = configuration.sniffer.overrideDestination.textRes,
-      valueToText = { it.textRes },
+      title = { Text(stringResource(R.string.override_destination)) },
+      summary = { Text(stringResource(configuration.sniffer.overrideDestination.textRes)) },
+      valueToText = { AnnotatedString(stringResource(it.textRes)) },
     )
   }
   item(key = "forceDomain", contentType = "EditTextListPreference") {
     val enabled = configuration.sniffer.enable != false
-    SettingsEditTextListPreferenceItem(
-      title = R.string.force_domain,
-      placeholder = R.string.dont_modify,
-      values = configuration.sniffer.forceDomain,
+    Preference(
+      modifier = Modifier.fillMaxWidth(),
+      title = { Text(stringResource(R.string.force_domain)) },
+      summary = { Text(configuration.sniffer.forceDomain.listSummary(R.string.dont_modify)) },
+      enabled = enabled,
       onClick = {
         onOpenEditableTextList(
           R.string.force_domain,
@@ -453,15 +460,15 @@ private fun LazyListScope.metaSnifferPreferenceItems(
           actions::updateForceDomain,
         )
       },
-      enabled = enabled,
     )
   }
   item(key = "skipDomain", contentType = "EditTextListPreference") {
     val enabled = configuration.sniffer.enable != false
-    SettingsEditTextListPreferenceItem(
-      title = R.string.skip_domain,
-      placeholder = R.string.dont_modify,
-      values = configuration.sniffer.skipDomain,
+    Preference(
+      modifier = Modifier.fillMaxWidth(),
+      title = { Text(stringResource(R.string.skip_domain)) },
+      summary = { Text(configuration.sniffer.skipDomain.listSummary(R.string.dont_modify)) },
+      enabled = enabled,
       onClick = {
         onOpenEditableTextList(
           R.string.skip_domain,
@@ -469,15 +476,15 @@ private fun LazyListScope.metaSnifferPreferenceItems(
           actions::updateSkipDomain,
         )
       },
-      enabled = enabled,
     )
   }
   item(key = "skipSrcAddress", contentType = "EditTextListPreference") {
     val enabled = configuration.sniffer.enable != false
-    SettingsEditTextListPreferenceItem(
-      title = R.string.skip_src_address,
-      placeholder = R.string.dont_modify,
-      values = configuration.sniffer.skipSrcAddress,
+    Preference(
+      modifier = Modifier.fillMaxWidth(),
+      title = { Text(stringResource(R.string.skip_src_address)) },
+      summary = { Text(configuration.sniffer.skipSrcAddress.listSummary(R.string.dont_modify)) },
+      enabled = enabled,
       onClick = {
         onOpenEditableTextList(
           R.string.skip_src_address,
@@ -485,15 +492,15 @@ private fun LazyListScope.metaSnifferPreferenceItems(
           actions::updateSkipSrcAddress,
         )
       },
-      enabled = enabled,
     )
   }
   item(key = "skipDstAddress", contentType = "EditTextListPreference") {
     val enabled = configuration.sniffer.enable != false
-    SettingsEditTextListPreferenceItem(
-      title = R.string.skip_dst_address,
-      placeholder = R.string.dont_modify,
-      values = configuration.sniffer.skipDstAddress,
+    Preference(
+      modifier = Modifier.fillMaxWidth(),
+      title = { Text(stringResource(R.string.skip_dst_address)) },
+      summary = { Text(configuration.sniffer.skipDstAddress.listSummary(R.string.dont_modify)) },
+      enabled = enabled,
       onClick = {
         onOpenEditableTextList(
           R.string.skip_dst_address,
@@ -501,7 +508,6 @@ private fun LazyListScope.metaSnifferPreferenceItems(
           actions::updateSkipDstAddress,
         )
       },
-      enabled = enabled,
     )
   }
 }
@@ -515,34 +521,46 @@ private fun LazyListScope.metaGeoFileItems(
   preferenceCategory(key = "cat_geox", title = { Text(stringResource(R.string.geox_files)) })
 
   item(key = "importGeoIp", contentType = "ClickablePreference") {
-    SettingsClickablePreferenceItem(
-      title = R.string.import_geoip_file,
-      summary = R.string.press_to_import,
+    Preference(
+      modifier = Modifier.fillMaxWidth(),
+      title = { Text(stringResource(R.string.import_geoip_file)) },
+      summary = { Text(stringResource(R.string.press_to_import)) },
       onClick = onImportGeoIp,
     )
   }
   item(key = "importGeoSite", contentType = "ClickablePreference") {
-    SettingsClickablePreferenceItem(
-      title = R.string.import_geosite_file,
-      summary = R.string.press_to_import,
+    Preference(
+      modifier = Modifier.fillMaxWidth(),
+      title = { Text(stringResource(R.string.import_geosite_file)) },
+      summary = { Text(stringResource(R.string.press_to_import)) },
       onClick = onImportGeoSite,
     )
   }
   item(key = "importCountry", contentType = "ClickablePreference") {
-    SettingsClickablePreferenceItem(
-      title = R.string.import_country_file,
-      summary = R.string.press_to_import,
+    Preference(
+      modifier = Modifier.fillMaxWidth(),
+      title = { Text(stringResource(R.string.import_country_file)) },
+      summary = { Text(stringResource(R.string.press_to_import)) },
       onClick = onImportCountry,
     )
   }
   item(key = "importASN", contentType = "ClickablePreference") {
-    SettingsClickablePreferenceItem(
-      title = R.string.import_asn_file,
-      summary = R.string.press_to_import,
+    Preference(
+      modifier = Modifier.fillMaxWidth(),
+      title = { Text(stringResource(R.string.import_asn_file)) },
+      summary = { Text(stringResource(R.string.press_to_import)) },
       onClick = onImportASN,
     )
   }
 }
+
+@Composable
+private fun List<String>?.listSummary(@StringRes placeholder: Int) =
+  when {
+    this == null -> stringResource(placeholder)
+    isEmpty() -> stringResource(R.string.empty)
+    else -> stringResource(R.string.format_elements, size)
+  }
 
 private val ConfigurationOverride.FindProcessMode?.textRes: Int
   @StringRes
