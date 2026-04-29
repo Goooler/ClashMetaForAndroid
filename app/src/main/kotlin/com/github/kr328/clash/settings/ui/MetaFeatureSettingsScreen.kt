@@ -554,14 +554,6 @@ private fun LazyListScope.metaGeoFileItems(
   }
 }
 
-@Composable
-private fun List<String>?.listSummary(@StringRes placeholder: Int) =
-  when {
-    this == null -> stringResource(placeholder)
-    isEmpty() -> stringResource(R.string.empty)
-    else -> stringResource(R.string.format_elements, size)
-  }
-
 private val ConfigurationOverride.FindProcessMode?.textRes: Int
   @StringRes
   get() =

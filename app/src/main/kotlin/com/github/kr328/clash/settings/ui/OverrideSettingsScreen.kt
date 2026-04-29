@@ -734,14 +734,6 @@ private fun TextFieldValue.filterDigits(): TextFieldValue {
 }
 
 @Composable
-private fun List<String>?.listSummary(@StringRes placeholder: Int) =
-  when {
-    this == null -> stringResource(placeholder)
-    isEmpty() -> stringResource(R.string.empty)
-    else -> stringResource(R.string.format_elements, size)
-  }
-
-@Composable
 private fun Map<String, String>?.summary(@StringRes placeholder: Int) =
   when {
     this == null -> stringResource(placeholder)

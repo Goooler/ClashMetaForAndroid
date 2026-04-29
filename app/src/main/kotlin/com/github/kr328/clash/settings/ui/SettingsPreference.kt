@@ -1,5 +1,6 @@
 package com.github.kr328.clash.settings.ui
 
+import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.Text
@@ -17,6 +18,14 @@ fun EmptyEditorContent(modifier: Modifier = Modifier) {
     Text(stringResource(R.string.empty))
   }
 }
+
+@Composable
+fun List<String>?.listSummary(@StringRes placeholder: Int) =
+  when {
+    this == null -> stringResource(placeholder)
+    isEmpty() -> stringResource(R.string.empty)
+    else -> stringResource(R.string.format_elements, size)
+  }
 
 fun initialTextFieldValue(text: String) =
   TextFieldValue(text = text, selection = TextRange(text.length))
