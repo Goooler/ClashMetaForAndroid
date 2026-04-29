@@ -35,6 +35,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.toClipEntry
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.PreviewWrapper
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -48,7 +49,7 @@ import com.github.kr328.clash.ui.icon.BaselineDelete
 import com.github.kr328.clash.ui.icon.BaselinePublish
 import com.github.kr328.clash.ui.icon.BaselineStop
 import com.github.kr328.clash.ui.icon.MihomoIcons
-import com.github.kr328.clash.ui.theme.MihomoTheme
+import com.github.kr328.clash.ui.theme.MihomoThemeWrapper
 import com.github.kr328.clash.ui.theme.PreviewMihomo
 import com.github.kr328.clash.ui.theme.mihomoDimens
 import com.github.kr328.clash.util.format
@@ -240,9 +241,10 @@ private val LazyListState.isBottom: Boolean
       lastVisibleItem.offset + lastVisibleItem.size <= layoutInfo.viewportEndOffset
   }
 
+@PreviewWrapper(MihomoThemeWrapper::class)
 @PreviewMihomo
 @Composable
-private fun LogcatContentPreview() = MihomoTheme {
+private fun LogcatContentPreview() {
   LogcatContent(
     streaming = false,
     messages =

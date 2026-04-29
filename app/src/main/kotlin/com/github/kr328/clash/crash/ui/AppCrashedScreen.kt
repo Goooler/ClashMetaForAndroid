@@ -12,13 +12,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.PreviewWrapper
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.github.kr328.clash.R
 import com.github.kr328.clash.crash.vm.AppCrashedViewModel
 import com.github.kr328.clash.ui.component.MihomoScaffold
-import com.github.kr328.clash.ui.theme.MihomoTheme
+import com.github.kr328.clash.ui.theme.MihomoThemeWrapper
 import com.github.kr328.clash.ui.theme.PreviewMihomo
 
 @Composable
@@ -51,9 +52,10 @@ private fun AppCrashedContent(modifier: Modifier = Modifier, logs: String) {
   }
 }
 
+@PreviewWrapper(MihomoThemeWrapper::class)
 @PreviewMihomo
 @Composable
-private fun AppCrashedScreenPreview() = MihomoTheme {
+private fun AppCrashedScreenPreview() {
   AppCrashedContent(
     logs =
       "04-20 10:10:10.000 I/App( 1234): App version: 2.0.0\n" +

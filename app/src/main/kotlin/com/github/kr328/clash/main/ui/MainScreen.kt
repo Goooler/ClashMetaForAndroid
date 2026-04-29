@@ -41,6 +41,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.PreviewWrapper
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -62,7 +63,7 @@ import com.github.kr328.clash.ui.icon.OutlineNotInterested
 import com.github.kr328.clash.ui.theme.MihomoDarkSurface
 import com.github.kr328.clash.ui.theme.MihomoLightStopped
 import com.github.kr328.clash.ui.theme.MihomoOnPrimary
-import com.github.kr328.clash.ui.theme.MihomoTheme
+import com.github.kr328.clash.ui.theme.MihomoThemeWrapper
 import com.github.kr328.clash.ui.theme.PreviewMihomo
 import com.github.kr328.clash.ui.theme.mihomoDimens
 
@@ -371,9 +372,10 @@ private fun AboutDialog(versionName: String, onDismiss: () -> Unit) {
   )
 }
 
+@PreviewWrapper(MihomoThemeWrapper::class)
 @PreviewMihomo
 @Composable
-private fun MainContentRunningPreview() = MihomoTheme {
+private fun MainContentRunningPreview() {
   MainContent(
     snackbarHostState = SnackbarHostState(),
     clashRunning = true,
@@ -394,9 +396,10 @@ private fun MainContentRunningPreview() = MihomoTheme {
   )
 }
 
+@PreviewWrapper(MihomoThemeWrapper::class)
 @PreviewMihomo
 @Composable
-private fun MainContentStoppedPreview() = MihomoTheme {
+private fun MainContentStoppedPreview() {
   MainContent(
     snackbarHostState = SnackbarHostState(),
     clashRunning = false,

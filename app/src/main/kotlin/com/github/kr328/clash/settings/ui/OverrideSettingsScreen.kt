@@ -32,6 +32,7 @@ import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.tooling.preview.PreviewWrapper
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation3.runtime.NavKey
@@ -47,7 +48,7 @@ import com.github.kr328.clash.settings.vm.OverrideSettingsViewModel
 import com.github.kr328.clash.ui.component.MihomoScaffold
 import com.github.kr328.clash.ui.icon.BaselineReplay
 import com.github.kr328.clash.ui.icon.MihomoIcons
-import com.github.kr328.clash.ui.theme.MihomoTheme
+import com.github.kr328.clash.ui.theme.MihomoThemeWrapper
 import com.github.kr328.clash.ui.theme.PreviewMihomo
 import kotlinx.serialization.Serializable
 import me.zhanghai.compose.preference.Preference
@@ -838,9 +839,10 @@ interface OverrideSettingsActions {
   fun updateDnsNameserverPolicy(value: Map<String, String>?) = Unit
 }
 
+@PreviewWrapper(MihomoThemeWrapper::class)
 @PreviewMihomo
 @Composable
-private fun OverrideSettingsContentPreview() = MihomoTheme {
+private fun OverrideSettingsContentPreview() {
   OverrideSettingsContent(
     configuration = ConfigurationOverride(),
     actions = object : OverrideSettingsActions {},

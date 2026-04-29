@@ -28,6 +28,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.fromHtml
+import androidx.compose.ui.tooling.preview.PreviewWrapper
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -45,7 +46,7 @@ import com.github.kr328.clash.ui.icon.OutlineInbox
 import com.github.kr328.clash.ui.icon.OutlineInfo
 import com.github.kr328.clash.ui.icon.OutlineLabel
 import com.github.kr328.clash.ui.icon.OutlineUpdate
-import com.github.kr328.clash.ui.theme.MihomoTheme
+import com.github.kr328.clash.ui.theme.MihomoThemeWrapper
 import com.github.kr328.clash.ui.theme.PreviewMihomo
 import com.github.kr328.clash.ui.theme.mihomoDimens
 import com.github.kr328.clash.util.ValidatorAutoUpdateInterval
@@ -318,9 +319,10 @@ private fun ExitWithoutSavingDialog(onConfirm: () -> Unit, onDismiss: () -> Unit
   )
 }
 
+@PreviewWrapper(MihomoThemeWrapper::class)
 @PreviewMihomo
 @Composable
-private fun PropertiesContentPreview() = MihomoTheme {
+private fun PropertiesContentPreview() {
   PropertiesContent(
     snackbarHostState = SnackbarHostState(),
     profile =

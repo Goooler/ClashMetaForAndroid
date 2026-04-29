@@ -36,6 +36,7 @@ import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.PreviewWrapper
 import androidx.core.graphics.drawable.toBitmap
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -46,7 +47,7 @@ import com.github.kr328.clash.profile.vm.NewProfileViewModel
 import com.github.kr328.clash.ui.component.MihomoScaffold
 import com.github.kr328.clash.ui.icon.BaselineExtension
 import com.github.kr328.clash.ui.icon.MihomoIcons
-import com.github.kr328.clash.ui.theme.MihomoTheme
+import com.github.kr328.clash.ui.theme.MihomoThemeWrapper
 import com.github.kr328.clash.ui.theme.PreviewMihomo
 import com.github.kr328.clash.ui.theme.mihomoDimens
 import io.github.g00fy2.quickie.ScanQRCode
@@ -183,9 +184,10 @@ private fun ProfileProviderItem(
   }
 }
 
+@PreviewWrapper(MihomoThemeWrapper::class)
 @PreviewMihomo
 @Composable
-private fun NewProfileContentPreview() = MihomoTheme {
+private fun NewProfileContentPreview() {
   val context = LocalContext.current
   val providers =
     listOf(

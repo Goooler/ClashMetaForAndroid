@@ -26,6 +26,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.tooling.preview.PreviewWrapper
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation3.runtime.NavKey
@@ -41,7 +42,7 @@ import com.github.kr328.clash.settings.vm.MetaFeatureSettingsViewModel.ImportTyp
 import com.github.kr328.clash.ui.component.MihomoScaffold
 import com.github.kr328.clash.ui.icon.BaselineReplay
 import com.github.kr328.clash.ui.icon.MihomoIcons
-import com.github.kr328.clash.ui.theme.MihomoTheme
+import com.github.kr328.clash.ui.theme.MihomoThemeWrapper
 import com.github.kr328.clash.ui.theme.PreviewMihomo
 import kotlinx.serialization.Serializable
 import me.zhanghai.compose.preference.ProvidePreferenceLocals
@@ -564,10 +565,11 @@ interface MetaFeatureSettingsActions {
   fun updateSkipDstAddress(value: List<String>?) = Unit
 }
 
+@PreviewWrapper(MihomoThemeWrapper::class)
 @PreviewMihomo
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
-private fun MetaFeatureSettingsContentPreview() = MihomoTheme {
+private fun MetaFeatureSettingsContentPreview() {
   MetaFeatureSettingsContent(
     configuration = ConfigurationOverride(),
     actions = object : MetaFeatureSettingsActions {},

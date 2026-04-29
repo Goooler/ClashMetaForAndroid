@@ -54,6 +54,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.PreviewWrapper
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -68,7 +69,7 @@ import com.github.kr328.clash.ui.component.MihomoScaffold
 import com.github.kr328.clash.ui.icon.BaselineFlashOn
 import com.github.kr328.clash.ui.icon.BaselineMoreVert
 import com.github.kr328.clash.ui.icon.MihomoIcons
-import com.github.kr328.clash.ui.theme.MihomoTheme
+import com.github.kr328.clash.ui.theme.MihomoThemeWrapper
 import com.github.kr328.clash.ui.theme.PreviewMihomo
 import com.github.kr328.clash.ui.theme.mihomoDimens
 import kotlinx.coroutines.launch
@@ -500,9 +501,10 @@ private fun columnsForProxyLine(proxyLine: Int): Int =
     else -> 3
   }
 
+@PreviewWrapper(MihomoThemeWrapper::class)
 @PreviewMihomo
 @Composable
-private fun ProxyContentPreview() = MihomoTheme {
+private fun ProxyContentPreview() {
   val groups = remember {
     listOf(
       ProxyViewModel.UiState.ProxyGroupUiState(

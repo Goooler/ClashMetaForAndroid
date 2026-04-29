@@ -11,6 +11,7 @@ import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewWrapperProvider
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
@@ -206,6 +207,13 @@ fun MihomoTheme(darkTheme: Boolean = isSystemInDarkTheme(), content: @Composable
     LocalMihomoTypography provides DefaultMihomoTextStyles,
   ) {
     MaterialTheme(colorScheme = colorScheme, typography = Typography, content = content)
+  }
+}
+
+class MihomoThemeWrapper : PreviewWrapperProvider {
+  @Composable
+  override fun Wrap(content: @Composable () -> Unit) {
+    MihomoTheme(content = content)
   }
 }
 

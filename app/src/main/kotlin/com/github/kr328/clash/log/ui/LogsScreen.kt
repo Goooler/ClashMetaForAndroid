@@ -31,6 +31,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.PreviewWrapper
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.github.kr328.clash.R
@@ -40,7 +41,7 @@ import com.github.kr328.clash.ui.component.MihomoScaffold
 import com.github.kr328.clash.ui.icon.BaselineAdb
 import com.github.kr328.clash.ui.icon.BaselineClearAll
 import com.github.kr328.clash.ui.icon.MihomoIcons
-import com.github.kr328.clash.ui.theme.MihomoTheme
+import com.github.kr328.clash.ui.theme.MihomoThemeWrapper
 import com.github.kr328.clash.ui.theme.PreviewMihomo
 import com.github.kr328.clash.ui.theme.mihomoDimens
 import com.github.kr328.clash.util.format
@@ -190,9 +191,10 @@ private fun LogsActionItem(
   }
 }
 
+@PreviewWrapper(MihomoThemeWrapper::class)
 @PreviewMihomo
 @Composable
-private fun LogsScreenPreview() = MihomoTheme {
+private fun LogsScreenPreview() {
   LogsContent(
     logs =
       listOf(

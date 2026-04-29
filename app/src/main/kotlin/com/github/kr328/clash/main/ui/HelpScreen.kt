@@ -13,10 +13,11 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.fromHtml
+import androidx.compose.ui.tooling.preview.PreviewWrapper
 import androidx.core.net.toUri
 import com.github.kr328.clash.R
 import com.github.kr328.clash.ui.component.MihomoScaffold
-import com.github.kr328.clash.ui.theme.MihomoTheme
+import com.github.kr328.clash.ui.theme.MihomoThemeWrapper
 import com.github.kr328.clash.ui.theme.PreviewMihomo
 import me.zhanghai.compose.preference.ProvidePreferenceLocals
 import me.zhanghai.compose.preference.preference
@@ -83,4 +84,9 @@ internal fun Context.openLink(link: String) {
   startActivity(Intent(Intent.ACTION_VIEW).setData(link.toUri()))
 }
 
-@PreviewMihomo @Composable private fun HelpScreenPreview() = MihomoTheme { HelpScreen() }
+@PreviewWrapper(MihomoThemeWrapper::class)
+@PreviewMihomo
+@Composable
+private fun HelpScreenPreview() {
+  HelpScreen()
+}
