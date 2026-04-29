@@ -20,7 +20,6 @@ android {
     resValue("string", "release_name", "v$versionName")
     resValue("string", "launch_name", "@string/launch_name_meta")
     resValue("string", "application_name", "@string/application_name_meta")
-    ndk.abiFilters += listOf("arm64-v8a", "armeabi-v7a", "x86", "x86_64")
   }
 
   val keystore = rootProject.file("signing.properties")
