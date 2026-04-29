@@ -1,7 +1,6 @@
 package com.github.kr328.clash.log.ui
 
 import android.content.ClipData
-import android.content.ClipboardManager
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts.CreateDocument
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -31,10 +30,11 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalClipboard
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.toClipEntry
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.core.content.getSystemService
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -64,8 +64,8 @@ fun LogcatScreen(
   onInvalidFile: () -> Unit,
   onClose: () -> Unit,
 ) {
-  val context = LocalContext.current
   val lifecycleOwner = LocalLifecycleOwner.current
+  val clipboard = LocalClipboard.current
   val uiState by viewModel.uiState.collectAsStateWithLifecycle()
   val evenState by viewModel.eventState.collectAsStateWithLifecycle()
   val listState = rememberLazyListState()
@@ -135,9 +135,9 @@ fun LogcatScreen(
     onDelete = viewModel::delete,
     onExport = viewModel::requestExport,
     onCopyMessage = { message ->
-      val data = ClipData.newPlainText("log_message", message.message)
-      context.getSystemService<ClipboardManager>()?.setPrimaryClip(data)
       scope.launch {
+        val clipEntry = ClipData.newPlainText("log_message", message.message).toClipEntry()
+        clipboard.setClipEntry(clipEntry)
         snackbarHostState.showSnackbar(message = messageCopied, withDismissAction = true)
       }
     },
