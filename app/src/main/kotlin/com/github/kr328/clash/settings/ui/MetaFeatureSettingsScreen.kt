@@ -52,9 +52,6 @@ import me.zhanghai.compose.preference.preferenceCategory
 
 private sealed interface MetaFeatureSettingsRoute : NavKey {
   @Serializable data object Main : MetaFeatureSettingsRoute
-
-  @Serializable
-  data class EditableTextList(val title: Int, val listKey: String) : MetaFeatureSettingsRoute
 }
 
 @Composable
@@ -65,6 +62,9 @@ fun MetaFeatureSettingsScreen(
   onResetCompleted: () -> Unit,
 ) {
   val backStack = rememberNavBackStackBuilder { add(MetaFeatureSettingsRoute.Main) }
+  var currentEditableTextListOnApply by remember {
+    mutableStateOf<((List<String>?) -> Unit)?>(null)
+  }
 
   DisposableEffect(viewModel) { onDispose { viewModel.persistOverride() } }
 
@@ -133,8 +133,9 @@ fun MetaFeatureSettingsScreen(
               pendingImportType = ImportType.ASN
               importLauncher.launch("*/*")
             },
-            onOpenEditableTextList = { title, listKey ->
-              backStack.addIfNotLast(MetaFeatureSettingsRoute.EditableTextList(title, listKey))
+            onOpenEditableTextList = { title, initialValues, onApply ->
+              currentEditableTextListOnApply = onApply
+              backStack.addIfNotLast(EditableTextList(title, initialValues))
             },
           )
 
@@ -155,37 +156,17 @@ fun MetaFeatureSettingsScreen(
             )
           }
         }
-        entry<MetaFeatureSettingsRoute.EditableTextList> { route ->
-          val configuration by viewModel.configuration.collectAsStateWithLifecycle()
-          val values =
-            when (route.listKey) {
-              "sniffHttpPorts" -> configuration.sniffer.sniff.http.ports
-              "sniffTlsPorts" -> configuration.sniffer.sniff.tls.ports
-              "sniffQuicPorts" -> configuration.sniffer.sniff.quic.ports
-              "forceDomain" -> configuration.sniffer.forceDomain
-              "skipDomain" -> configuration.sniffer.skipDomain
-              "skipSrcAddress" -> configuration.sniffer.skipSrcAddress
-              "skipDstAddress" -> configuration.sniffer.skipDstAddress
-              else -> emptyList()
-            }
-          EditableTextListScreen(
-            title = route.title,
-            initialValues = values,
-            onDismiss = { backStack.removeLastOrNull() },
-            onApply = { newValues ->
-              when (route.listKey) {
-                "sniffHttpPorts" -> viewModel.updateSniffHttpPorts(newValues)
-                "sniffTlsPorts" -> viewModel.updateSniffTlsPorts(newValues)
-                "sniffQuicPorts" -> viewModel.updateSniffQuicPorts(newValues)
-                "forceDomain" -> viewModel.updateForceDomain(newValues)
-                "skipDomain" -> viewModel.updateSkipDomain(newValues)
-                "skipSrcAddress" -> viewModel.updateSkipSrcAddress(newValues)
-                "skipDstAddress" -> viewModel.updateSkipDstAddress(newValues)
-              }
-              backStack.removeLastOrNull()
-            },
-          )
-        }
+        editableTextListScreenEntry(
+          onDismiss = {
+            currentEditableTextListOnApply = null
+            backStack.removeLastOrNull()
+          },
+          onApply = { newValues ->
+            currentEditableTextListOnApply?.invoke(newValues)
+            currentEditableTextListOnApply = null
+            backStack.removeLastOrNull()
+          },
+        )
       },
   )
 }
@@ -203,7 +184,7 @@ private fun MetaFeatureSettingsContent(
   onImportGeoSite: () -> Unit,
   onImportCountry: () -> Unit,
   onImportASN: () -> Unit,
-  onOpenEditableTextList: (Int, String) -> Unit,
+  onOpenEditableTextList: (Int, List<String>?, (List<String>?) -> Unit) -> Unit,
 ) {
   val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
   MihomoScaffold(
@@ -312,7 +293,7 @@ private fun LazyListScope.metaBasicPreferenceItems(
 private fun LazyListScope.metaSnifferPreferenceItems(
   configuration: ConfigurationOverride,
   actions: MetaFeatureSettingsActions,
-  onOpenEditableTextList: (Int, String) -> Unit,
+  onOpenEditableTextList: (Int, List<String>?, (List<String>?) -> Unit) -> Unit,
 ) {
   preferenceCategory(
     key = "cat_sniffer",
@@ -336,7 +317,13 @@ private fun LazyListScope.metaSnifferPreferenceItems(
       title = R.string.sniff_http_ports,
       placeholder = R.string.dont_modify,
       values = configuration.sniffer.sniff.http.ports,
-      onClick = { onOpenEditableTextList(R.string.sniff_http_ports, "sniffHttpPorts") },
+      onClick = {
+        onOpenEditableTextList(
+          R.string.sniff_http_ports,
+          configuration.sniffer.sniff.http.ports,
+          actions::updateSniffHttpPorts,
+        )
+      },
       enabled = enabled,
     )
   }
@@ -359,7 +346,13 @@ private fun LazyListScope.metaSnifferPreferenceItems(
       title = R.string.sniff_tls_ports,
       placeholder = R.string.dont_modify,
       values = configuration.sniffer.sniff.tls.ports,
-      onClick = { onOpenEditableTextList(R.string.sniff_tls_ports, "sniffTlsPorts") },
+      onClick = {
+        onOpenEditableTextList(
+          R.string.sniff_tls_ports,
+          configuration.sniffer.sniff.tls.ports,
+          actions::updateSniffTlsPorts,
+        )
+      },
       enabled = enabled,
     )
   }
@@ -382,7 +375,13 @@ private fun LazyListScope.metaSnifferPreferenceItems(
       title = R.string.sniff_quic_ports,
       placeholder = R.string.dont_modify,
       values = configuration.sniffer.sniff.quic.ports,
-      onClick = { onOpenEditableTextList(R.string.sniff_quic_ports, "sniffQuicPorts") },
+      onClick = {
+        onOpenEditableTextList(
+          R.string.sniff_quic_ports,
+          configuration.sniffer.sniff.quic.ports,
+          actions::updateSniffQuicPorts,
+        )
+      },
       enabled = enabled,
     )
   }
@@ -444,7 +443,13 @@ private fun LazyListScope.metaSnifferPreferenceItems(
       title = R.string.force_domain,
       placeholder = R.string.dont_modify,
       values = configuration.sniffer.forceDomain,
-      onClick = { onOpenEditableTextList(R.string.force_domain, "forceDomain") },
+      onClick = {
+        onOpenEditableTextList(
+          R.string.force_domain,
+          configuration.sniffer.forceDomain,
+          actions::updateForceDomain,
+        )
+      },
       enabled = enabled,
     )
   }
@@ -454,7 +459,13 @@ private fun LazyListScope.metaSnifferPreferenceItems(
       title = R.string.skip_domain,
       placeholder = R.string.dont_modify,
       values = configuration.sniffer.skipDomain,
-      onClick = { onOpenEditableTextList(R.string.skip_domain, "skipDomain") },
+      onClick = {
+        onOpenEditableTextList(
+          R.string.skip_domain,
+          configuration.sniffer.skipDomain,
+          actions::updateSkipDomain,
+        )
+      },
       enabled = enabled,
     )
   }
@@ -464,7 +475,13 @@ private fun LazyListScope.metaSnifferPreferenceItems(
       title = R.string.skip_src_address,
       placeholder = R.string.dont_modify,
       values = configuration.sniffer.skipSrcAddress,
-      onClick = { onOpenEditableTextList(R.string.skip_src_address, "skipSrcAddress") },
+      onClick = {
+        onOpenEditableTextList(
+          R.string.skip_src_address,
+          configuration.sniffer.skipSrcAddress,
+          actions::updateSkipSrcAddress,
+        )
+      },
       enabled = enabled,
     )
   }
@@ -474,7 +491,13 @@ private fun LazyListScope.metaSnifferPreferenceItems(
       title = R.string.skip_dst_address,
       placeholder = R.string.dont_modify,
       values = configuration.sniffer.skipDstAddress,
-      onClick = { onOpenEditableTextList(R.string.skip_dst_address, "skipDstAddress") },
+      onClick = {
+        onOpenEditableTextList(
+          R.string.skip_dst_address,
+          configuration.sniffer.skipDstAddress,
+          actions::updateSkipDstAddress,
+        )
+      },
       enabled = enabled,
     )
   }
@@ -580,6 +603,6 @@ private fun MetaFeatureSettingsContentPreview() = MihomoTheme {
     onImportGeoSite = {},
     onImportCountry = {},
     onImportASN = {},
-    onOpenEditableTextList = { _, _ -> },
+    onOpenEditableTextList = { _, _, _ -> },
   )
 }

@@ -57,12 +57,6 @@ import me.zhanghai.compose.preference.preferenceCategory
 
 private sealed interface OverrideSettingsRoute : NavKey {
   @Serializable data object Main : OverrideSettingsRoute
-
-  @Serializable
-  data class EditableTextMap(val title: Int, val mapKey: String) : OverrideSettingsRoute
-
-  @Serializable
-  data class EditableTextList(val title: Int, val listKey: String) : OverrideSettingsRoute
 }
 
 @Composable
@@ -73,6 +67,12 @@ fun OverrideSettingsScreen(
   onResetCompleted: () -> Unit,
 ) {
   val backStack = rememberNavBackStackBuilder { add(OverrideSettingsRoute.Main) }
+  var currentEditableTextMapOnApply by remember {
+    mutableStateOf<((Map<String, String>?) -> Unit)?>(null)
+  }
+  var currentEditableTextListOnApply by remember {
+    mutableStateOf<((List<String>?) -> Unit)?>(null)
+  }
 
   DisposableEffect(viewModel) { onDispose { viewModel.persistOverride() } }
 
@@ -94,68 +94,38 @@ fun OverrideSettingsScreen(
               viewModel.resetOverride()
               onResetCompleted()
             },
-            onOpenEditableTextMap = { title, mapKey ->
-              backStack.addIfNotLast(OverrideSettingsRoute.EditableTextMap(title, mapKey))
+            onOpenEditableTextMap = { title, initialValues, onApply ->
+              currentEditableTextMapOnApply = onApply
+              backStack.addIfNotLast(EditableTextMap(title, initialValues))
             },
-            onOpenEditableTextList = { title, listKey ->
-              backStack.addIfNotLast(OverrideSettingsRoute.EditableTextList(title, listKey))
-            },
-          )
-        }
-        entry<OverrideSettingsRoute.EditableTextMap> { route ->
-          val configuration by viewModel.configuration.collectAsStateWithLifecycle()
-          val values =
-            when (route.mapKey) {
-              "hosts" -> configuration.hosts
-              "dnsNameserverPolicy" -> configuration.dns.nameserverPolicy
-              else -> emptyMap()
-            }
-          EditableTextMapScreen(
-            title = route.title,
-            initialValues = values,
-            onDismiss = { backStack.removeLastOrNull() },
-            onApply = { newValues ->
-              when (route.mapKey) {
-                "hosts" -> viewModel.updateHosts(newValues)
-                "dnsNameserverPolicy" -> viewModel.updateDnsNameserverPolicy(newValues)
-              }
-              backStack.removeLastOrNull()
+            onOpenEditableTextList = { title, initialValues, onApply ->
+              currentEditableTextListOnApply = onApply
+              backStack.addIfNotLast(EditableTextList(title, initialValues))
             },
           )
         }
-        entry<OverrideSettingsRoute.EditableTextList> { route ->
-          val configuration by viewModel.configuration.collectAsStateWithLifecycle()
-          val values =
-            when (route.listKey) {
-              "authentication" -> configuration.authentication
-              "allowOrigins" -> configuration.externalControllerCors.allowOrigins
-              "dnsNameServer" -> configuration.dns.nameServer
-              "dnsFallback" -> configuration.dns.fallback
-              "dnsDefaultServer" -> configuration.dns.defaultServer
-              "dnsFakeIpFilter" -> configuration.dns.fakeIpFilter
-              "dnsDomainFallback" -> configuration.dns.fallbackFilter.domain
-              "dnsIpcidrFallback" -> configuration.dns.fallbackFilter.ipcidr
-              else -> emptyList()
-            }
-          EditableTextListScreen(
-            title = route.title,
-            initialValues = values,
-            onDismiss = { backStack.removeLastOrNull() },
-            onApply = { newValues ->
-              when (route.listKey) {
-                "authentication" -> viewModel.updateAuthentication(newValues)
-                "allowOrigins" -> viewModel.updateAllowOrigins(newValues)
-                "dnsNameServer" -> viewModel.updateDnsNameServer(newValues)
-                "dnsFallback" -> viewModel.updateDnsFallback(newValues)
-                "dnsDefaultServer" -> viewModel.updateDnsDefaultServer(newValues)
-                "dnsFakeIpFilter" -> viewModel.updateDnsFakeIpFilter(newValues)
-                "dnsDomainFallback" -> viewModel.updateDnsDomainFallback(newValues)
-                "dnsIpcidrFallback" -> viewModel.updateDnsIpcidrFallback(newValues)
-              }
-              backStack.removeLastOrNull()
-            },
-          )
-        }
+        editableTextMapScreenEntry(
+          onDismiss = {
+            currentEditableTextMapOnApply = null
+            backStack.removeLastOrNull()
+          },
+          onApply = { newValues ->
+            currentEditableTextMapOnApply?.invoke(newValues)
+            currentEditableTextMapOnApply = null
+            backStack.removeLastOrNull()
+          },
+        )
+        editableTextListScreenEntry(
+          onDismiss = {
+            currentEditableTextListOnApply = null
+            backStack.removeLastOrNull()
+          },
+          onApply = { newValues ->
+            currentEditableTextListOnApply?.invoke(newValues)
+            currentEditableTextListOnApply = null
+            backStack.removeLastOrNull()
+          },
+        )
       },
   )
 }
@@ -169,8 +139,8 @@ private fun OverrideSettingsContent(
   showResetConfirmDialog: Boolean,
   onShowResetConfirmDialogChange: (Boolean) -> Unit,
   onResetConfirmed: () -> Unit,
-  onOpenEditableTextMap: (Int, String) -> Unit,
-  onOpenEditableTextList: (Int, String) -> Unit,
+  onOpenEditableTextMap: (Int, Map<String, String>?, (Map<String, String>?) -> Unit) -> Unit,
+  onOpenEditableTextList: (Int, List<String>?, (List<String>?) -> Unit) -> Unit,
 ) {
   val dnsEnabled = configuration.dns.enable
 
@@ -234,8 +204,8 @@ private fun OverrideSettingsContent(
 private fun LazyListScope.generalPreferenceItems(
   configuration: ConfigurationOverride,
   actions: OverrideSettingsActions,
-  onOpenEditableTextMap: (Int, String) -> Unit,
-  onOpenEditableTextList: (Int, String) -> Unit,
+  onOpenEditableTextMap: (Int, Map<String, String>?, (Map<String, String>?) -> Unit) -> Unit,
+  onOpenEditableTextList: (Int, List<String>?, (List<String>?) -> Unit) -> Unit,
 ) {
   preferenceCategory(key = "cat_general", title = { Text(stringResource(R.string.general)) })
   item(key = "httpPort", contentType = "EditTextPreference") {
@@ -293,7 +263,13 @@ private fun LazyListScope.generalPreferenceItems(
       title = R.string.authentication,
       placeholder = R.string.dont_modify,
       values = configuration.authentication,
-      onClick = { onOpenEditableTextList(R.string.authentication, "authentication") },
+      onClick = {
+        onOpenEditableTextList(
+          R.string.authentication,
+          configuration.authentication,
+          actions::updateAuthentication,
+        )
+      },
     )
   }
   item(key = "allowLan", contentType = "ListPreference") {
@@ -350,7 +326,13 @@ private fun LazyListScope.generalPreferenceItems(
       title = R.string.allow_origins,
       placeholder = R.string.dont_modify,
       values = configuration.externalControllerCors.allowOrigins,
-      onClick = { onOpenEditableTextList(R.string.allow_origins, "allowOrigins") },
+      onClick = {
+        onOpenEditableTextList(
+          R.string.allow_origins,
+          configuration.externalControllerCors.allowOrigins,
+          actions::updateAllowOrigins,
+        )
+      },
     )
   }
   item(key = "allowPrivateNetwork", contentType = "ListPreference") {
@@ -400,7 +382,7 @@ private fun LazyListScope.generalPreferenceItems(
       title = R.string.hosts,
       placeholder = R.string.dont_modify,
       values = configuration.hosts,
-      onClick = { onOpenEditableTextMap(R.string.hosts, "hosts") },
+      onClick = { onOpenEditableTextMap(R.string.hosts, configuration.hosts, actions::updateHosts) },
     )
   }
 }
@@ -409,8 +391,8 @@ private fun LazyListScope.dnsPreferenceItems(
   configuration: ConfigurationOverride,
   actions: OverrideSettingsActions,
   dnsEnabled: Boolean?,
-  onOpenEditableTextMap: (Int, String) -> Unit,
-  onOpenEditableTextList: (Int, String) -> Unit,
+  onOpenEditableTextMap: (Int, Map<String, String>?, (Map<String, String>?) -> Unit) -> Unit,
+  onOpenEditableTextList: (Int, List<String>?, (List<String>?) -> Unit) -> Unit,
 ) {
   preferenceCategory(key = "cat_dns", title = { Text(stringResource(R.string.dns)) })
   item(key = "dnsStrategy", contentType = "ListPreference") {
@@ -499,7 +481,13 @@ private fun LazyListScope.dnsPreferenceItems(
       title = R.string.name_server,
       placeholder = R.string.dont_modify,
       values = configuration.dns.nameServer,
-      onClick = { onOpenEditableTextList(R.string.name_server, "dnsNameServer") },
+      onClick = {
+        onOpenEditableTextList(
+          R.string.name_server,
+          configuration.dns.nameServer,
+          actions::updateDnsNameServer,
+        )
+      },
       enabled = dnsEnabled != false,
     )
   }
@@ -508,7 +496,13 @@ private fun LazyListScope.dnsPreferenceItems(
       title = R.string.fallback,
       placeholder = R.string.dont_modify,
       values = configuration.dns.fallback,
-      onClick = { onOpenEditableTextList(R.string.fallback, "dnsFallback") },
+      onClick = {
+        onOpenEditableTextList(
+          R.string.fallback,
+          configuration.dns.fallback,
+          actions::updateDnsFallback,
+        )
+      },
       enabled = dnsEnabled != false,
     )
   }
@@ -517,7 +511,13 @@ private fun LazyListScope.dnsPreferenceItems(
       title = R.string.default_name_server,
       placeholder = R.string.dont_modify,
       values = configuration.dns.defaultServer,
-      onClick = { onOpenEditableTextList(R.string.default_name_server, "dnsDefaultServer") },
+      onClick = {
+        onOpenEditableTextList(
+          R.string.default_name_server,
+          configuration.dns.defaultServer,
+          actions::updateDnsDefaultServer,
+        )
+      },
       enabled = dnsEnabled != false,
     )
   }
@@ -526,7 +526,13 @@ private fun LazyListScope.dnsPreferenceItems(
       title = R.string.fakeip_filter,
       placeholder = R.string.dont_modify,
       values = configuration.dns.fakeIpFilter,
-      onClick = { onOpenEditableTextList(R.string.fakeip_filter, "dnsFakeIpFilter") },
+      onClick = {
+        onOpenEditableTextList(
+          R.string.fakeip_filter,
+          configuration.dns.fakeIpFilter,
+          actions::updateDnsFakeIpFilter,
+        )
+      },
       enabled = dnsEnabled != false,
     )
   }
@@ -569,7 +575,13 @@ private fun LazyListScope.dnsPreferenceItems(
       title = R.string.domain_fallback,
       placeholder = R.string.dont_modify,
       values = configuration.dns.fallbackFilter.domain,
-      onClick = { onOpenEditableTextList(R.string.domain_fallback, "dnsDomainFallback") },
+      onClick = {
+        onOpenEditableTextList(
+          R.string.domain_fallback,
+          configuration.dns.fallbackFilter.domain,
+          actions::updateDnsDomainFallback,
+        )
+      },
       enabled = dnsEnabled != false,
     )
   }
@@ -578,7 +590,13 @@ private fun LazyListScope.dnsPreferenceItems(
       title = R.string.ipcidr_fallback,
       placeholder = R.string.dont_modify,
       values = configuration.dns.fallbackFilter.ipcidr,
-      onClick = { onOpenEditableTextList(R.string.ipcidr_fallback, "dnsIpcidrFallback") },
+      onClick = {
+        onOpenEditableTextList(
+          R.string.ipcidr_fallback,
+          configuration.dns.fallbackFilter.ipcidr,
+          actions::updateDnsIpcidrFallback,
+        )
+      },
       enabled = dnsEnabled != false,
     )
   }
@@ -587,7 +605,13 @@ private fun LazyListScope.dnsPreferenceItems(
       title = R.string.name_server_policy,
       placeholder = R.string.dont_modify,
       values = configuration.dns.nameserverPolicy,
-      onClick = { onOpenEditableTextMap(R.string.name_server_policy, "dnsNameserverPolicy") },
+      onClick = {
+        onOpenEditableTextMap(
+          R.string.name_server_policy,
+          configuration.dns.nameserverPolicy,
+          actions::updateDnsNameserverPolicy,
+        )
+      },
       enabled = dnsEnabled != false,
     )
   }
@@ -867,7 +891,7 @@ private fun OverrideSettingsContentPreview() = MihomoTheme {
     showResetConfirmDialog = false,
     onShowResetConfirmDialogChange = {},
     onResetConfirmed = {},
-    onOpenEditableTextMap = { _, _ -> },
-    onOpenEditableTextList = { _, _ -> },
+    onOpenEditableTextMap = { _, _, _ -> },
+    onOpenEditableTextList = { _, _, _ -> },
   )
 }
