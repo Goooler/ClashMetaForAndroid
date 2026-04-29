@@ -17,6 +17,7 @@ import androidx.activity.viewModels
 import androidx.compose.runtime.mutableStateListOf
 import androidx.core.content.ContextCompat
 import androidx.core.content.getSystemService
+import androidx.core.view.ViewCompat
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -69,6 +70,10 @@ class MainActivity : ComponentActivity() {
     intent.handleAction(backStack)
 
     enableEdgeToEdge()
+    // TODO: https://issuetracker.google.com/issues/298296168
+    //  Fix for three-button nav not properly going edge-to-edge.
+    ViewCompat.setOnApplyWindowInsetsListener(window.decorView) { _, insets -> insets }
+
     setContent {
       MihomoTheme {
         MihomoNavDisplay(
