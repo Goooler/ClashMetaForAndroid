@@ -44,9 +44,9 @@ import com.github.kr328.clash.ui.icon.MihomoIcons
 import com.github.kr328.clash.ui.theme.MihomoTheme
 import com.github.kr328.clash.ui.theme.PreviewMihomo
 import kotlinx.serialization.Serializable
-import me.zhanghai.compose.preference.ListPreference
-import me.zhanghai.compose.preference.Preference
 import me.zhanghai.compose.preference.ProvidePreferenceLocals
+import me.zhanghai.compose.preference.listPreference
+import me.zhanghai.compose.preference.preference
 import me.zhanghai.compose.preference.preferenceCategory
 
 private sealed interface MetaFeatureSettingsRoute : NavKey {
@@ -247,50 +247,46 @@ private fun LazyListScope.metaBasicPreferenceItems(
 ) {
   preferenceCategory(key = "cat_settings", title = { Text(stringResource(R.string.settings)) })
 
-  item(key = "unifiedDelay", contentType = "ListPreference") {
-    ListPreference(
-      value = configuration.unifiedDelay,
-      onValueChange = actions::updateUnifiedDelay,
-      values = booleanOptions,
-      modifier = Modifier.fillMaxWidth(),
-      title = { Text(stringResource(R.string.unified_delay)) },
-      summary = { Text(stringResource(configuration.unifiedDelay.textRes)) },
-      valueToText = { AnnotatedString(stringResource(it.textRes)) },
-    )
-  }
-  item(key = "geodataMode", contentType = "ListPreference") {
-    ListPreference(
-      value = configuration.geodataMode,
-      onValueChange = actions::updateGeodataMode,
-      values = booleanOptions,
-      modifier = Modifier.fillMaxWidth(),
-      title = { Text(stringResource(R.string.geodata_mode)) },
-      summary = { Text(stringResource(configuration.geodataMode.textRes)) },
-      valueToText = { AnnotatedString(stringResource(it.textRes)) },
-    )
-  }
-  item(key = "tcpConcurrent", contentType = "ListPreference") {
-    ListPreference(
-      value = configuration.tcpConcurrent,
-      onValueChange = actions::updateTcpConcurrent,
-      values = booleanOptions,
-      modifier = Modifier.fillMaxWidth(),
-      title = { Text(stringResource(R.string.tcp_concurrent)) },
-      summary = { Text(stringResource(configuration.tcpConcurrent.textRes)) },
-      valueToText = { AnnotatedString(stringResource(it.textRes)) },
-    )
-  }
-  item(key = "findProcessMode", contentType = "ListPreference") {
-    ListPreference(
-      value = configuration.findProcessMode,
-      onValueChange = actions::updateFindProcessMode,
-      values = ConfigurationOverride.FindProcessMode.entries,
-      modifier = Modifier.fillMaxWidth(),
-      title = { Text(stringResource(R.string.find_process_mode)) },
-      summary = { Text(stringResource(configuration.findProcessMode.textRes)) },
-      valueToText = { AnnotatedString(stringResource(it.textRes)) },
-    )
-  }
+  listPreference(
+    key = "unifiedDelay",
+    value = configuration.unifiedDelay,
+    onValueChange = actions::updateUnifiedDelay,
+    values = booleanOptions,
+    modifier = Modifier.fillMaxWidth(),
+    title = { Text(stringResource(R.string.unified_delay)) },
+    summary = { Text(stringResource(configuration.unifiedDelay.textRes)) },
+    valueToText = { AnnotatedString(stringResource(it.textRes)) },
+  )
+  listPreference(
+    key = "geodataMode",
+    value = configuration.geodataMode,
+    onValueChange = actions::updateGeodataMode,
+    values = booleanOptions,
+    modifier = Modifier.fillMaxWidth(),
+    title = { Text(stringResource(R.string.geodata_mode)) },
+    summary = { Text(stringResource(configuration.geodataMode.textRes)) },
+    valueToText = { AnnotatedString(stringResource(it.textRes)) },
+  )
+  listPreference(
+    key = "tcpConcurrent",
+    value = configuration.tcpConcurrent,
+    onValueChange = actions::updateTcpConcurrent,
+    values = booleanOptions,
+    modifier = Modifier.fillMaxWidth(),
+    title = { Text(stringResource(R.string.tcp_concurrent)) },
+    summary = { Text(stringResource(configuration.tcpConcurrent.textRes)) },
+    valueToText = { AnnotatedString(stringResource(it.textRes)) },
+  )
+  listPreference(
+    key = "findProcessMode",
+    value = configuration.findProcessMode,
+    onValueChange = actions::updateFindProcessMode,
+    values = ConfigurationOverride.FindProcessMode.entries,
+    modifier = Modifier.fillMaxWidth(),
+    title = { Text(stringResource(R.string.find_process_mode)) },
+    summary = { Text(stringResource(configuration.findProcessMode.textRes)) },
+    valueToText = { AnnotatedString(stringResource(it.textRes)) },
+  )
 }
 
 private fun LazyListScope.metaSnifferPreferenceItems(
@@ -302,214 +298,184 @@ private fun LazyListScope.metaSnifferPreferenceItems(
     key = "cat_sniffer",
     title = { Text(stringResource(R.string.sniffer_setting)) },
   )
-
-  item(key = "snifferEnable", contentType = "ListPreference") {
-    ListPreference(
-      value = configuration.sniffer.enable,
-      onValueChange = actions::updateSnifferEnable,
-      values = booleanOptions,
-      modifier = Modifier.fillMaxWidth(),
-      title = { Text(stringResource(R.string.strategy)) },
-      summary = { Text(stringResource(configuration.sniffer.enable.textRes)) },
-      valueToText = { AnnotatedString(stringResource(it.textRes)) },
-    )
-  }
-  item(key = "sniffHttpPorts", contentType = "EditTextListPreference") {
-    val enabled = configuration.sniffer.enable != false
-    Preference(
-      modifier = Modifier.fillMaxWidth(),
-      title = { Text(stringResource(R.string.sniff_http_ports)) },
-      summary = { Text(configuration.sniffer.sniff.http.ports.listSummary(R.string.dont_modify)) },
-      enabled = enabled,
-      onClick = {
-        onOpenEditableTextList(
-          R.string.sniff_http_ports,
-          configuration.sniffer.sniff.http.ports,
-          actions::updateSniffHttpPorts,
-        )
-      },
-    )
-  }
-  item(key = "sniffHttpOverrideDestination", contentType = "ListPreference") {
-    val enabled = configuration.sniffer.enable != false
-    ListPreference(
-      value = configuration.sniffer.sniff.http.overrideDestination,
-      onValueChange = actions::updateSniffHttpOverrideDestination,
-      values = booleanOptions,
-      modifier = Modifier.fillMaxWidth(),
-      enabled = enabled,
-      title = { Text(stringResource(R.string.sniff_http_override_destination)) },
-      summary = {
-        Text(stringResource(configuration.sniffer.sniff.http.overrideDestination.textRes))
-      },
-      valueToText = { AnnotatedString(stringResource(it.textRes)) },
-    )
-  }
-  item(key = "sniffTlsPorts", contentType = "EditTextListPreference") {
-    val enabled = configuration.sniffer.enable != false
-    Preference(
-      modifier = Modifier.fillMaxWidth(),
-      title = { Text(stringResource(R.string.sniff_tls_ports)) },
-      summary = { Text(configuration.sniffer.sniff.tls.ports.listSummary(R.string.dont_modify)) },
-      enabled = enabled,
-      onClick = {
-        onOpenEditableTextList(
-          R.string.sniff_tls_ports,
-          configuration.sniffer.sniff.tls.ports,
-          actions::updateSniffTlsPorts,
-        )
-      },
-    )
-  }
-  item(key = "sniffTlsOverrideDestination", contentType = "ListPreference") {
-    val enabled = configuration.sniffer.enable != false
-    ListPreference(
-      value = configuration.sniffer.sniff.tls.overrideDestination,
-      onValueChange = actions::updateSniffTlsOverrideDestination,
-      values = booleanOptions,
-      modifier = Modifier.fillMaxWidth(),
-      enabled = enabled,
-      title = { Text(stringResource(R.string.sniff_tls_override_destination)) },
-      summary = {
-        Text(stringResource(configuration.sniffer.sniff.tls.overrideDestination.textRes))
-      },
-      valueToText = { AnnotatedString(stringResource(it.textRes)) },
-    )
-  }
-  item(key = "sniffQuicPorts", contentType = "EditTextListPreference") {
-    val enabled = configuration.sniffer.enable != false
-    Preference(
-      modifier = Modifier.fillMaxWidth(),
-      title = { Text(stringResource(R.string.sniff_quic_ports)) },
-      summary = { Text(configuration.sniffer.sniff.quic.ports.listSummary(R.string.dont_modify)) },
-      enabled = enabled,
-      onClick = {
-        onOpenEditableTextList(
-          R.string.sniff_quic_ports,
-          configuration.sniffer.sniff.quic.ports,
-          actions::updateSniffQuicPorts,
-        )
-      },
-    )
-  }
-  item(key = "sniffQuicOverrideDestination", contentType = "ListPreference") {
-    val enabled = configuration.sniffer.enable != false
-    ListPreference(
-      value = configuration.sniffer.sniff.quic.overrideDestination,
-      onValueChange = actions::updateSniffQuicOverrideDestination,
-      values = booleanOptions,
-      modifier = Modifier.fillMaxWidth(),
-      enabled = enabled,
-      title = { Text(stringResource(R.string.sniff_quic_override_destination)) },
-      summary = {
-        Text(stringResource(configuration.sniffer.sniff.quic.overrideDestination.textRes))
-      },
-      valueToText = { AnnotatedString(stringResource(it.textRes)) },
-    )
-  }
-  item(key = "forceDnsMapping", contentType = "ListPreference") {
-    val enabled = configuration.sniffer.enable != false
-    ListPreference(
-      value = configuration.sniffer.forceDnsMapping,
-      onValueChange = actions::updateForceDnsMapping,
-      values = booleanOptions,
-      modifier = Modifier.fillMaxWidth(),
-      enabled = enabled,
-      title = { Text(stringResource(R.string.force_dns_mapping)) },
-      summary = { Text(stringResource(configuration.sniffer.forceDnsMapping.textRes)) },
-      valueToText = { AnnotatedString(stringResource(it.textRes)) },
-    )
-  }
-  item(key = "parsePureIp", contentType = "ListPreference") {
-    val enabled = configuration.sniffer.enable != false
-    ListPreference(
-      value = configuration.sniffer.parsePureIp,
-      onValueChange = actions::updateParsePureIp,
-      values = booleanOptions,
-      modifier = Modifier.fillMaxWidth(),
-      enabled = enabled,
-      title = { Text(stringResource(R.string.parse_pure_ip)) },
-      summary = { Text(stringResource(configuration.sniffer.parsePureIp.textRes)) },
-      valueToText = { AnnotatedString(stringResource(it.textRes)) },
-    )
-  }
-  item(key = "overrideDestination", contentType = "ListPreference") {
-    val enabled = configuration.sniffer.enable != false
-    ListPreference(
-      value = configuration.sniffer.overrideDestination,
-      onValueChange = actions::updateOverrideDestination,
-      values = booleanOptions,
-      modifier = Modifier.fillMaxWidth(),
-      enabled = enabled,
-      title = { Text(stringResource(R.string.override_destination)) },
-      summary = { Text(stringResource(configuration.sniffer.overrideDestination.textRes)) },
-      valueToText = { AnnotatedString(stringResource(it.textRes)) },
-    )
-  }
-  item(key = "forceDomain", contentType = "EditTextListPreference") {
-    val enabled = configuration.sniffer.enable != false
-    Preference(
-      modifier = Modifier.fillMaxWidth(),
-      title = { Text(stringResource(R.string.force_domain)) },
-      summary = { Text(configuration.sniffer.forceDomain.listSummary(R.string.dont_modify)) },
-      enabled = enabled,
-      onClick = {
-        onOpenEditableTextList(
-          R.string.force_domain,
-          configuration.sniffer.forceDomain,
-          actions::updateForceDomain,
-        )
-      },
-    )
-  }
-  item(key = "skipDomain", contentType = "EditTextListPreference") {
-    val enabled = configuration.sniffer.enable != false
-    Preference(
-      modifier = Modifier.fillMaxWidth(),
-      title = { Text(stringResource(R.string.skip_domain)) },
-      summary = { Text(configuration.sniffer.skipDomain.listSummary(R.string.dont_modify)) },
-      enabled = enabled,
-      onClick = {
-        onOpenEditableTextList(
-          R.string.skip_domain,
-          configuration.sniffer.skipDomain,
-          actions::updateSkipDomain,
-        )
-      },
-    )
-  }
-  item(key = "skipSrcAddress", contentType = "EditTextListPreference") {
-    val enabled = configuration.sniffer.enable != false
-    Preference(
-      modifier = Modifier.fillMaxWidth(),
-      title = { Text(stringResource(R.string.skip_src_address)) },
-      summary = { Text(configuration.sniffer.skipSrcAddress.listSummary(R.string.dont_modify)) },
-      enabled = enabled,
-      onClick = {
-        onOpenEditableTextList(
-          R.string.skip_src_address,
-          configuration.sniffer.skipSrcAddress,
-          actions::updateSkipSrcAddress,
-        )
-      },
-    )
-  }
-  item(key = "skipDstAddress", contentType = "EditTextListPreference") {
-    val enabled = configuration.sniffer.enable != false
-    Preference(
-      modifier = Modifier.fillMaxWidth(),
-      title = { Text(stringResource(R.string.skip_dst_address)) },
-      summary = { Text(configuration.sniffer.skipDstAddress.listSummary(R.string.dont_modify)) },
-      enabled = enabled,
-      onClick = {
-        onOpenEditableTextList(
-          R.string.skip_dst_address,
-          configuration.sniffer.skipDstAddress,
-          actions::updateSkipDstAddress,
-        )
-      },
-    )
-  }
+  listPreference(
+    key = "snifferEnable",
+    value = configuration.sniffer.enable,
+    onValueChange = actions::updateSnifferEnable,
+    values = booleanOptions,
+    modifier = Modifier.fillMaxWidth(),
+    title = { Text(stringResource(R.string.strategy)) },
+    summary = { Text(stringResource(configuration.sniffer.enable.textRes)) },
+    valueToText = { AnnotatedString(stringResource(it.textRes)) },
+  )
+  preference(
+    key = "sniffHttpPorts",
+    modifier = Modifier.fillMaxWidth(),
+    title = { Text(stringResource(R.string.sniff_http_ports)) },
+    summary = { Text(configuration.sniffer.sniff.http.ports.listSummary(R.string.dont_modify)) },
+    enabled = configuration.sniffer.enable != false,
+    onClick = {
+      onOpenEditableTextList(
+        R.string.sniff_http_ports,
+        configuration.sniffer.sniff.http.ports,
+        actions::updateSniffHttpPorts,
+      )
+    },
+  )
+  listPreference(
+    key = "sniffHttpOverrideDestination",
+    value = configuration.sniffer.sniff.http.overrideDestination,
+    onValueChange = actions::updateSniffHttpOverrideDestination,
+    values = booleanOptions,
+    modifier = Modifier.fillMaxWidth(),
+    enabled = configuration.sniffer.enable != false,
+    title = { Text(stringResource(R.string.sniff_http_override_destination)) },
+    summary = {
+      Text(stringResource(configuration.sniffer.sniff.http.overrideDestination.textRes))
+    },
+    valueToText = { AnnotatedString(stringResource(it.textRes)) },
+  )
+  preference(
+    key = "sniffTlsPorts",
+    modifier = Modifier.fillMaxWidth(),
+    title = { Text(stringResource(R.string.sniff_tls_ports)) },
+    summary = { Text(configuration.sniffer.sniff.tls.ports.listSummary(R.string.dont_modify)) },
+    enabled = configuration.sniffer.enable != false,
+    onClick = {
+      onOpenEditableTextList(
+        R.string.sniff_tls_ports,
+        configuration.sniffer.sniff.tls.ports,
+        actions::updateSniffTlsPorts,
+      )
+    },
+  )
+  listPreference(
+    key = "sniffTlsOverrideDestination",
+    value = configuration.sniffer.sniff.tls.overrideDestination,
+    onValueChange = actions::updateSniffTlsOverrideDestination,
+    values = booleanOptions,
+    modifier = Modifier.fillMaxWidth(),
+    enabled = configuration.sniffer.enable != false,
+    title = { Text(stringResource(R.string.sniff_tls_override_destination)) },
+    summary = { Text(stringResource(configuration.sniffer.sniff.tls.overrideDestination.textRes)) },
+    valueToText = { AnnotatedString(stringResource(it.textRes)) },
+  )
+  preference(
+    key = "sniffQuicPorts",
+    modifier = Modifier.fillMaxWidth(),
+    title = { Text(stringResource(R.string.sniff_quic_ports)) },
+    summary = { Text(configuration.sniffer.sniff.quic.ports.listSummary(R.string.dont_modify)) },
+    enabled = configuration.sniffer.enable != false,
+    onClick = {
+      onOpenEditableTextList(
+        R.string.sniff_quic_ports,
+        configuration.sniffer.sniff.quic.ports,
+        actions::updateSniffQuicPorts,
+      )
+    },
+  )
+  listPreference(
+    key = "sniffQuicOverrideDestination",
+    value = configuration.sniffer.sniff.quic.overrideDestination,
+    onValueChange = actions::updateSniffQuicOverrideDestination,
+    values = booleanOptions,
+    modifier = Modifier.fillMaxWidth(),
+    enabled = configuration.sniffer.enable != false,
+    title = { Text(stringResource(R.string.sniff_quic_override_destination)) },
+    summary = {
+      Text(stringResource(configuration.sniffer.sniff.quic.overrideDestination.textRes))
+    },
+    valueToText = { AnnotatedString(stringResource(it.textRes)) },
+  )
+  listPreference(
+    key = "forceDnsMapping",
+    value = configuration.sniffer.forceDnsMapping,
+    onValueChange = actions::updateForceDnsMapping,
+    values = booleanOptions,
+    modifier = Modifier.fillMaxWidth(),
+    enabled = configuration.sniffer.enable != false,
+    title = { Text(stringResource(R.string.force_dns_mapping)) },
+    summary = { Text(stringResource(configuration.sniffer.forceDnsMapping.textRes)) },
+    valueToText = { AnnotatedString(stringResource(it.textRes)) },
+  )
+  listPreference(
+    key = "parsePureIp",
+    value = configuration.sniffer.parsePureIp,
+    onValueChange = actions::updateParsePureIp,
+    values = booleanOptions,
+    modifier = Modifier.fillMaxWidth(),
+    enabled = configuration.sniffer.enable != false,
+    title = { Text(stringResource(R.string.parse_pure_ip)) },
+    summary = { Text(stringResource(configuration.sniffer.parsePureIp.textRes)) },
+    valueToText = { AnnotatedString(stringResource(it.textRes)) },
+  )
+  listPreference(
+    key = "overrideDestination",
+    value = configuration.sniffer.overrideDestination,
+    onValueChange = actions::updateOverrideDestination,
+    values = booleanOptions,
+    modifier = Modifier.fillMaxWidth(),
+    enabled = configuration.sniffer.enable != false,
+    title = { Text(stringResource(R.string.override_destination)) },
+    summary = { Text(stringResource(configuration.sniffer.overrideDestination.textRes)) },
+    valueToText = { AnnotatedString(stringResource(it.textRes)) },
+  )
+  preference(
+    key = "forceDomain",
+    modifier = Modifier.fillMaxWidth(),
+    title = { Text(stringResource(R.string.force_domain)) },
+    summary = { Text(configuration.sniffer.forceDomain.listSummary(R.string.dont_modify)) },
+    enabled = configuration.sniffer.enable != false,
+    onClick = {
+      onOpenEditableTextList(
+        R.string.force_domain,
+        configuration.sniffer.forceDomain,
+        actions::updateForceDomain,
+      )
+    },
+  )
+  preference(
+    key = "skipDomain",
+    modifier = Modifier.fillMaxWidth(),
+    title = { Text(stringResource(R.string.skip_domain)) },
+    summary = { Text(configuration.sniffer.skipDomain.listSummary(R.string.dont_modify)) },
+    enabled = configuration.sniffer.enable != false,
+    onClick = {
+      onOpenEditableTextList(
+        R.string.skip_domain,
+        configuration.sniffer.skipDomain,
+        actions::updateSkipDomain,
+      )
+    },
+  )
+  preference(
+    key = "skipSrcAddress",
+    modifier = Modifier.fillMaxWidth(),
+    title = { Text(stringResource(R.string.skip_src_address)) },
+    summary = { Text(configuration.sniffer.skipSrcAddress.listSummary(R.string.dont_modify)) },
+    enabled = configuration.sniffer.enable != false,
+    onClick = {
+      onOpenEditableTextList(
+        R.string.skip_src_address,
+        configuration.sniffer.skipSrcAddress,
+        actions::updateSkipSrcAddress,
+      )
+    },
+  )
+  preference(
+    key = "skipDstAddress",
+    modifier = Modifier.fillMaxWidth(),
+    title = { Text(stringResource(R.string.skip_dst_address)) },
+    summary = { Text(configuration.sniffer.skipDstAddress.listSummary(R.string.dont_modify)) },
+    enabled = configuration.sniffer.enable != false,
+    onClick = {
+      onOpenEditableTextList(
+        R.string.skip_dst_address,
+        configuration.sniffer.skipDstAddress,
+        actions::updateSkipDstAddress,
+      )
+    },
+  )
 }
 
 private fun LazyListScope.metaGeoFileItems(
@@ -520,38 +486,34 @@ private fun LazyListScope.metaGeoFileItems(
 ) {
   preferenceCategory(key = "cat_geox", title = { Text(stringResource(R.string.geox_files)) })
 
-  item(key = "importGeoIp", contentType = "ClickablePreference") {
-    Preference(
-      modifier = Modifier.fillMaxWidth(),
-      title = { Text(stringResource(R.string.import_geoip_file)) },
-      summary = { Text(stringResource(R.string.press_to_import)) },
-      onClick = onImportGeoIp,
-    )
-  }
-  item(key = "importGeoSite", contentType = "ClickablePreference") {
-    Preference(
-      modifier = Modifier.fillMaxWidth(),
-      title = { Text(stringResource(R.string.import_geosite_file)) },
-      summary = { Text(stringResource(R.string.press_to_import)) },
-      onClick = onImportGeoSite,
-    )
-  }
-  item(key = "importCountry", contentType = "ClickablePreference") {
-    Preference(
-      modifier = Modifier.fillMaxWidth(),
-      title = { Text(stringResource(R.string.import_country_file)) },
-      summary = { Text(stringResource(R.string.press_to_import)) },
-      onClick = onImportCountry,
-    )
-  }
-  item(key = "importASN", contentType = "ClickablePreference") {
-    Preference(
-      modifier = Modifier.fillMaxWidth(),
-      title = { Text(stringResource(R.string.import_asn_file)) },
-      summary = { Text(stringResource(R.string.press_to_import)) },
-      onClick = onImportASN,
-    )
-  }
+  preference(
+    key = "importGeoIp",
+    modifier = Modifier.fillMaxWidth(),
+    title = { Text(stringResource(R.string.import_geoip_file)) },
+    summary = { Text(stringResource(R.string.press_to_import)) },
+    onClick = onImportGeoIp,
+  )
+  preference(
+    key = "importGeoSite",
+    modifier = Modifier.fillMaxWidth(),
+    title = { Text(stringResource(R.string.import_geosite_file)) },
+    summary = { Text(stringResource(R.string.press_to_import)) },
+    onClick = onImportGeoSite,
+  )
+  preference(
+    key = "importCountry",
+    modifier = Modifier.fillMaxWidth(),
+    title = { Text(stringResource(R.string.import_country_file)) },
+    summary = { Text(stringResource(R.string.press_to_import)) },
+    onClick = onImportCountry,
+  )
+  preference(
+    key = "importASN",
+    modifier = Modifier.fillMaxWidth(),
+    title = { Text(stringResource(R.string.import_asn_file)) },
+    summary = { Text(stringResource(R.string.press_to_import)) },
+    onClick = onImportASN,
+  )
 }
 
 private val ConfigurationOverride.FindProcessMode?.textRes: Int

@@ -15,8 +15,8 @@ import com.github.kr328.clash.main.ui.openLink
 import com.github.kr328.clash.ui.component.MihomoScaffold
 import com.github.kr328.clash.ui.theme.MihomoTheme
 import com.github.kr328.clash.ui.theme.PreviewMihomo
-import me.zhanghai.compose.preference.Preference
 import me.zhanghai.compose.preference.ProvidePreferenceLocals
+import me.zhanghai.compose.preference.preference
 import me.zhanghai.compose.preference.preferenceCategory
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -26,26 +26,24 @@ fun ApkBrokenScreen() {
     ProvidePreferenceLocals {
       val context = LocalContext.current
       LazyColumn(modifier = Modifier.fillMaxSize(), contentPadding = innerPadding) {
-        item(key = "tips_application_broken") {
-          Preference(
-            modifier = Modifier.fillMaxWidth(),
-            title = { Text(stringResource(R.string.application_broken)) },
-            summary = { Text(stringResource(R.string.application_broken_tips)) },
-            enabled = false,
-          )
-        }
+        preference(
+          key = "tips_application_broken",
+          modifier = Modifier.fillMaxWidth(),
+          title = { Text(stringResource(R.string.application_broken)) },
+          summary = { Text(stringResource(R.string.application_broken_tips)) },
+          enabled = false,
+        )
         preferenceCategory(
           key = "cat_reinstall",
           title = { Text(stringResource(R.string.reinstall)) },
         )
-        item(key = "github_releases") {
-          Preference(
-            modifier = Modifier.fillMaxWidth(),
-            title = { Text(stringResource(R.string.github_releases)) },
-            summary = { Text(CMFA_GITHUB) },
-            onClick = { context.openLink(CMFA_GITHUB) },
-          )
-        }
+        preference(
+          key = "github_releases",
+          modifier = Modifier.fillMaxWidth(),
+          title = { Text(stringResource(R.string.github_releases)) },
+          summary = { Text(CMFA_GITHUB) },
+          onClick = { context.openLink(CMFA_GITHUB) },
+        )
       }
     }
   }

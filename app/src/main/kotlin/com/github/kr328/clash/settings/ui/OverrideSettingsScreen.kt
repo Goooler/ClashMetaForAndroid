@@ -50,9 +50,10 @@ import com.github.kr328.clash.ui.icon.MihomoIcons
 import com.github.kr328.clash.ui.theme.MihomoTheme
 import com.github.kr328.clash.ui.theme.PreviewMihomo
 import kotlinx.serialization.Serializable
-import me.zhanghai.compose.preference.ListPreference
 import me.zhanghai.compose.preference.Preference
 import me.zhanghai.compose.preference.ProvidePreferenceLocals
+import me.zhanghai.compose.preference.listPreference
+import me.zhanghai.compose.preference.preference
 import me.zhanghai.compose.preference.preferenceCategory
 
 private sealed interface OverrideSettingsRoute : NavKey {
@@ -208,187 +209,170 @@ private fun LazyListScope.generalPreferenceItems(
   onOpenEditableTextList: (Int, List<String>?, (List<String>?) -> Unit) -> Unit,
 ) {
   preferenceCategory(key = "cat_general", title = { Text(stringResource(R.string.general)) })
-  item(key = "httpPort", contentType = "EditTextPreference") {
-    OverrideEditTextPreferenceItem(
-      title = R.string.http_port,
-      placeholder = R.string.dont_modify,
-      emptyLabel = R.string.disabled,
-      value = portText(configuration.httpPort),
-      onValueChange = { actions.updateHttpPort(parsePort(it)) },
-      numericOnly = true,
-    )
-  }
-  item(key = "socksPort", contentType = "EditTextPreference") {
-    OverrideEditTextPreferenceItem(
-      title = R.string.socks_port,
-      placeholder = R.string.dont_modify,
-      emptyLabel = R.string.disabled,
-      value = portText(configuration.socksPort),
-      onValueChange = { actions.updateSocksPort(parsePort(it)) },
-      numericOnly = true,
-    )
-  }
-  item(key = "redirectPort", contentType = "EditTextPreference") {
-    OverrideEditTextPreferenceItem(
-      title = R.string.redirect_port,
-      placeholder = R.string.dont_modify,
-      emptyLabel = R.string.disabled,
-      value = portText(configuration.redirectPort),
-      onValueChange = { actions.updateRedirectPort(parsePort(it)) },
-      numericOnly = true,
-    )
-  }
-  item(key = "tproxyPort", contentType = "EditTextPreference") {
-    OverrideEditTextPreferenceItem(
-      title = R.string.tproxy_port,
-      placeholder = R.string.dont_modify,
-      emptyLabel = R.string.disabled,
-      value = portText(configuration.tproxyPort),
-      onValueChange = { actions.updateTproxyPort(parsePort(it)) },
-      numericOnly = true,
-    )
-  }
-  item(key = "mixedPort", contentType = "EditTextPreference") {
-    OverrideEditTextPreferenceItem(
-      title = R.string.mixed_port,
-      placeholder = R.string.dont_modify,
-      emptyLabel = R.string.disabled,
-      value = portText(configuration.mixedPort),
-      onValueChange = { actions.updateMixedPort(parsePort(it)) },
-      numericOnly = true,
-    )
-  }
-  item(key = "authentication", contentType = "EditTextListPreference") {
-    Preference(
-      modifier = Modifier.fillMaxWidth(),
-      title = { Text(stringResource(R.string.authentication)) },
-      summary = { Text(configuration.authentication.listSummary(R.string.dont_modify)) },
-      onClick = {
-        onOpenEditableTextList(
-          R.string.authentication,
-          configuration.authentication,
-          actions::updateAuthentication,
-        )
-      },
-    )
-  }
-  item(key = "allowLan", contentType = "ListPreference") {
-    ListPreference(
-      value = configuration.allowLan,
-      onValueChange = actions::updateAllowLan,
-      values = booleanOptions,
-      modifier = Modifier.fillMaxWidth(),
-      title = { Text(stringResource(R.string.allow_lan)) },
-      summary = { Text(stringResource(configuration.allowLan.textRes)) },
-      valueToText = { AnnotatedString(stringResource(it.textRes)) },
-    )
-  }
-  item(key = "ipv6", contentType = "ListPreference") {
-    ListPreference(
-      value = configuration.ipv6,
-      onValueChange = actions::updateIpv6,
-      values = booleanOptions,
-      modifier = Modifier.fillMaxWidth(),
-      title = { Text(stringResource(R.string.ipv6)) },
-      summary = { Text(stringResource(configuration.ipv6.textRes)) },
-      valueToText = { AnnotatedString(stringResource(it.textRes)) },
-    )
-  }
-  item(key = "bindAddress", contentType = "EditTextPreference") {
-    OverrideEditTextPreferenceItem(
-      title = R.string.bind_address,
-      placeholder = R.string.dont_modify,
-      emptyLabel = R.string.default_,
-      value = configuration.bindAddress,
-      onValueChange = actions::updateBindAddress,
-    )
-  }
-  item(key = "externalController", contentType = "EditTextPreference") {
-    OverrideEditTextPreferenceItem(
-      title = R.string.external_controller,
-      placeholder = R.string.dont_modify,
-      emptyLabel = R.string.default_,
-      value = configuration.externalController,
-      onValueChange = actions::updateExternalController,
-    )
-  }
-  item(key = "externalControllerTls", contentType = "EditTextPreference") {
-    OverrideEditTextPreferenceItem(
-      title = R.string.external_controller_tls,
-      placeholder = R.string.dont_modify,
-      emptyLabel = R.string.default_,
-      value = configuration.externalControllerTLS,
-      onValueChange = actions::updateExternalControllerTls,
-    )
-  }
-  item(key = "allowOrigins", contentType = "EditTextListPreference") {
-    Preference(
-      modifier = Modifier.fillMaxWidth(),
-      title = { Text(stringResource(R.string.allow_origins)) },
-      summary = {
-        Text(configuration.externalControllerCors.allowOrigins.listSummary(R.string.dont_modify))
-      },
-      onClick = {
-        onOpenEditableTextList(
-          R.string.allow_origins,
-          configuration.externalControllerCors.allowOrigins,
-          actions::updateAllowOrigins,
-        )
-      },
-    )
-  }
-  item(key = "allowPrivateNetwork", contentType = "ListPreference") {
-    ListPreference(
-      value = configuration.externalControllerCors.allowPrivateNetwork,
-      onValueChange = actions::updateAllowPrivateNetwork,
-      values = booleanOptions,
-      modifier = Modifier.fillMaxWidth(),
-      title = { Text(stringResource(R.string.allow_private_network)) },
-      summary = {
-        Text(stringResource(configuration.externalControllerCors.allowPrivateNetwork.textRes))
-      },
-      valueToText = { AnnotatedString(stringResource(it.textRes)) },
-    )
-  }
-  item(key = "secret", contentType = "EditTextPreference") {
-    OverrideEditTextPreferenceItem(
-      title = R.string.secret,
-      placeholder = R.string.dont_modify,
-      emptyLabel = R.string.default_,
-      value = configuration.secret,
-      onValueChange = actions::updateSecret,
-    )
-  }
-  item(key = "mode", contentType = "ListPreference") {
-    ListPreference(
-      value = configuration.mode,
-      onValueChange = actions::updateMode,
-      values = TunnelState.Mode.entries,
-      modifier = Modifier.fillMaxWidth(),
-      title = { Text(stringResource(R.string.mode)) },
-      summary = { Text(stringResource(configuration.mode.textRes)) },
-      valueToText = { AnnotatedString(stringResource(it.textRes)) },
-    )
-  }
-  item(key = "logLevel", contentType = "ListPreference") {
-    ListPreference(
-      value = configuration.logLevel,
-      onValueChange = actions::updateLogLevel,
-      values = LogMessage.Level.entries,
-      modifier = Modifier.fillMaxWidth(),
-      title = { Text(stringResource(R.string.log_level)) },
-      summary = { Text(stringResource(configuration.logLevel.textRes)) },
-      valueToText = { AnnotatedString(stringResource(it.textRes)) },
-    )
-  }
-  item(key = "hosts", contentType = "EditTextMapPreference") {
-    Preference(
-      modifier = Modifier.fillMaxWidth(),
-      title = { Text(stringResource(R.string.hosts)) },
-      summary = { Text(configuration.hosts.summary(R.string.dont_modify)) },
-      onClick = { onOpenEditableTextMap(R.string.hosts, configuration.hosts, actions::updateHosts) },
-    )
-  }
+  overrideEditTextPreferenceItem(
+    key = "httpPort",
+    title = R.string.http_port,
+    placeholder = R.string.dont_modify,
+    emptyLabel = R.string.disabled,
+    value = portText(configuration.httpPort),
+    onValueChange = { actions.updateHttpPort(parsePort(it)) },
+    numericOnly = true,
+  )
+  overrideEditTextPreferenceItem(
+    key = "socksPort",
+    title = R.string.socks_port,
+    placeholder = R.string.dont_modify,
+    emptyLabel = R.string.disabled,
+    value = portText(configuration.socksPort),
+    onValueChange = { actions.updateSocksPort(parsePort(it)) },
+    numericOnly = true,
+  )
+  overrideEditTextPreferenceItem(
+    key = "redirectPort",
+    title = R.string.redirect_port,
+    placeholder = R.string.dont_modify,
+    emptyLabel = R.string.disabled,
+    value = portText(configuration.redirectPort),
+    onValueChange = { actions.updateRedirectPort(parsePort(it)) },
+    numericOnly = true,
+  )
+  overrideEditTextPreferenceItem(
+    key = "tproxyPort",
+    title = R.string.tproxy_port,
+    placeholder = R.string.dont_modify,
+    emptyLabel = R.string.disabled,
+    value = portText(configuration.tproxyPort),
+    onValueChange = { actions.updateTproxyPort(parsePort(it)) },
+    numericOnly = true,
+  )
+  overrideEditTextPreferenceItem(
+    key = "mixedPort",
+    title = R.string.mixed_port,
+    placeholder = R.string.dont_modify,
+    emptyLabel = R.string.disabled,
+    value = portText(configuration.mixedPort),
+    onValueChange = { actions.updateMixedPort(parsePort(it)) },
+    numericOnly = true,
+  )
+  preference(
+    key = "authentication",
+    modifier = Modifier.fillMaxWidth(),
+    title = { Text(stringResource(R.string.authentication)) },
+    summary = { Text(configuration.authentication.listSummary(R.string.dont_modify)) },
+    onClick = {
+      onOpenEditableTextList(
+        R.string.authentication,
+        configuration.authentication,
+        actions::updateAuthentication,
+      )
+    },
+  )
+  listPreference(
+    key = "allowLan",
+    value = configuration.allowLan,
+    onValueChange = actions::updateAllowLan,
+    values = booleanOptions,
+    modifier = Modifier.fillMaxWidth(),
+    title = { Text(stringResource(R.string.allow_lan)) },
+    summary = { Text(stringResource(configuration.allowLan.textRes)) },
+    valueToText = { AnnotatedString(stringResource(it.textRes)) },
+  )
+  listPreference(
+    key = "ipv6",
+    value = configuration.ipv6,
+    onValueChange = actions::updateIpv6,
+    values = booleanOptions,
+    modifier = Modifier.fillMaxWidth(),
+    title = { Text(stringResource(R.string.ipv6)) },
+    summary = { Text(stringResource(configuration.ipv6.textRes)) },
+    valueToText = { AnnotatedString(stringResource(it.textRes)) },
+  )
+  overrideEditTextPreferenceItem(
+    key = "bindAddress",
+    title = R.string.bind_address,
+    placeholder = R.string.dont_modify,
+    emptyLabel = R.string.default_,
+    value = configuration.bindAddress,
+    onValueChange = actions::updateBindAddress,
+  )
+  overrideEditTextPreferenceItem(
+    key = "externalController",
+    title = R.string.external_controller,
+    placeholder = R.string.dont_modify,
+    emptyLabel = R.string.default_,
+    value = configuration.externalController,
+    onValueChange = actions::updateExternalController,
+  )
+  overrideEditTextPreferenceItem(
+    key = "externalControllerTls",
+    title = R.string.external_controller_tls,
+    placeholder = R.string.dont_modify,
+    emptyLabel = R.string.default_,
+    value = configuration.externalControllerTLS,
+    onValueChange = actions::updateExternalControllerTls,
+  )
+  preference(
+    key = "allowOrigins",
+    modifier = Modifier.fillMaxWidth(),
+    title = { Text(stringResource(R.string.allow_origins)) },
+    summary = {
+      Text(configuration.externalControllerCors.allowOrigins.listSummary(R.string.dont_modify))
+    },
+    onClick = {
+      onOpenEditableTextList(
+        R.string.allow_origins,
+        configuration.externalControllerCors.allowOrigins,
+        actions::updateAllowOrigins,
+      )
+    },
+  )
+  listPreference(
+    key = "allowPrivateNetwork",
+    value = configuration.externalControllerCors.allowPrivateNetwork,
+    onValueChange = actions::updateAllowPrivateNetwork,
+    values = booleanOptions,
+    modifier = Modifier.fillMaxWidth(),
+    title = { Text(stringResource(R.string.allow_private_network)) },
+    summary = {
+      Text(stringResource(configuration.externalControllerCors.allowPrivateNetwork.textRes))
+    },
+    valueToText = { AnnotatedString(stringResource(it.textRes)) },
+  )
+  overrideEditTextPreferenceItem(
+    key = "secret",
+    title = R.string.secret,
+    placeholder = R.string.dont_modify,
+    emptyLabel = R.string.default_,
+    value = configuration.secret,
+    onValueChange = actions::updateSecret,
+  )
+  listPreference(
+    key = "mode",
+    value = configuration.mode,
+    onValueChange = actions::updateMode,
+    values = TunnelState.Mode.entries,
+    modifier = Modifier.fillMaxWidth(),
+    title = { Text(stringResource(R.string.mode)) },
+    summary = { Text(stringResource(configuration.mode.textRes)) },
+    valueToText = { AnnotatedString(stringResource(it.textRes)) },
+  )
+  listPreference(
+    key = "logLevel",
+    value = configuration.logLevel,
+    onValueChange = actions::updateLogLevel,
+    values = LogMessage.Level.entries,
+    modifier = Modifier.fillMaxWidth(),
+    title = { Text(stringResource(R.string.log_level)) },
+    summary = { Text(stringResource(configuration.logLevel.textRes)) },
+    valueToText = { AnnotatedString(stringResource(it.textRes)) },
+  )
+  preference(
+    key = "hosts",
+    modifier = Modifier.fillMaxWidth(),
+    title = { Text(stringResource(R.string.hosts)) },
+    summary = { Text(configuration.hosts.summary(R.string.dont_modify)) },
+    onClick = { onOpenEditableTextMap(R.string.hosts, configuration.hosts, actions::updateHosts) },
+  )
 }
 
 private fun LazyListScope.dnsPreferenceItems(
@@ -399,230 +383,213 @@ private fun LazyListScope.dnsPreferenceItems(
   onOpenEditableTextList: (Int, List<String>?, (List<String>?) -> Unit) -> Unit,
 ) {
   preferenceCategory(key = "cat_dns", title = { Text(stringResource(R.string.dns)) })
-  item(key = "dnsStrategy", contentType = "ListPreference") {
-    ListPreference(
-      value = dnsEnabled,
-      onValueChange = actions::updateDnsEnable,
-      values = booleanOptions,
-      modifier = Modifier.fillMaxWidth(),
-      title = { Text(stringResource(R.string.strategy)) },
-      summary = { Text(stringResource(dnsEnabled.dnsStrategyTextRes)) },
-      valueToText = { AnnotatedString(stringResource(it.dnsStrategyTextRes)) },
-    )
-  }
-  item(key = "dnsPreferH3", contentType = "ListPreference") {
-    ListPreference(
-      value = configuration.dns.preferH3,
-      onValueChange = actions::updateDnsPreferH3,
-      values = booleanOptions,
-      modifier = Modifier.fillMaxWidth(),
-      enabled = dnsEnabled != false,
-      title = { Text(stringResource(R.string.prefer_h3)) },
-      summary = { Text(stringResource(configuration.dns.preferH3.textRes)) },
-      valueToText = { AnnotatedString(stringResource(it.textRes)) },
-    )
-  }
-  item(key = "dnsListen", contentType = "EditTextPreference") {
-    OverrideEditTextPreferenceItem(
-      title = R.string.listen,
-      placeholder = R.string.dont_modify,
-      emptyLabel = R.string.disabled,
-      value = configuration.dns.listen,
-      onValueChange = actions::updateDnsListen,
-      enabled = dnsEnabled != false,
-    )
-  }
-  item(key = "appendSystemDns", contentType = "ListPreference") {
-    ListPreference(
-      value = configuration.app.appendSystemDns,
-      onValueChange = actions::updateAppendSystemDns,
-      values = booleanOptions,
-      modifier = Modifier.fillMaxWidth(),
-      enabled = dnsEnabled != false,
-      title = { Text(stringResource(R.string.append_system_dns)) },
-      summary = { Text(stringResource(configuration.app.appendSystemDns.textRes)) },
-      valueToText = { AnnotatedString(stringResource(it.textRes)) },
-    )
-  }
-  item(key = "dnsIpv6", contentType = "ListPreference") {
-    ListPreference(
-      value = configuration.dns.ipv6,
-      onValueChange = actions::updateDnsIpv6,
-      values = booleanOptions,
-      modifier = Modifier.fillMaxWidth(),
-      enabled = dnsEnabled != false,
-      title = { Text(stringResource(R.string.ipv6)) },
-      summary = { Text(stringResource(configuration.dns.ipv6.textRes)) },
-      valueToText = { AnnotatedString(stringResource(it.textRes)) },
-    )
-  }
-  item(key = "dnsUseHosts", contentType = "ListPreference") {
-    ListPreference(
-      value = configuration.dns.useHosts,
-      onValueChange = actions::updateDnsUseHosts,
-      values = booleanOptions,
-      modifier = Modifier.fillMaxWidth(),
-      enabled = dnsEnabled != false,
-      title = { Text(stringResource(R.string.use_hosts)) },
-      summary = { Text(stringResource(configuration.dns.useHosts.textRes)) },
-      valueToText = { AnnotatedString(stringResource(it.textRes)) },
-    )
-  }
-  item(key = "dnsEnhancedMode", contentType = "ListPreference") {
-    ListPreference(
-      value = configuration.dns.enhancedMode,
-      onValueChange = actions::updateDnsEnhancedMode,
-      values = ConfigurationOverride.DnsEnhancedMode.entries,
-      modifier = Modifier.fillMaxWidth(),
-      enabled = dnsEnabled != false,
-      title = { Text(stringResource(R.string.enhanced_mode)) },
-      summary = { Text(stringResource(configuration.dns.enhancedMode.textRes)) },
-      valueToText = { AnnotatedString(stringResource(it.textRes)) },
-    )
-  }
-  item(key = "dnsNameServer", contentType = "EditTextListPreference") {
-    Preference(
-      modifier = Modifier.fillMaxWidth(),
-      title = { Text(stringResource(R.string.name_server)) },
-      summary = { Text(configuration.dns.nameServer.listSummary(R.string.dont_modify)) },
-      enabled = dnsEnabled != false,
-      onClick = {
-        onOpenEditableTextList(
-          R.string.name_server,
-          configuration.dns.nameServer,
-          actions::updateDnsNameServer,
-        )
-      },
-    )
-  }
-  item(key = "dnsFallback", contentType = "EditTextListPreference") {
-    Preference(
-      modifier = Modifier.fillMaxWidth(),
-      title = { Text(stringResource(R.string.fallback)) },
-      summary = { Text(configuration.dns.fallback.listSummary(R.string.dont_modify)) },
-      enabled = dnsEnabled != false,
-      onClick = {
-        onOpenEditableTextList(
-          R.string.fallback,
-          configuration.dns.fallback,
-          actions::updateDnsFallback,
-        )
-      },
-    )
-  }
-  item(key = "dnsDefaultServer", contentType = "EditTextListPreference") {
-    Preference(
-      modifier = Modifier.fillMaxWidth(),
-      title = { Text(stringResource(R.string.default_name_server)) },
-      summary = { Text(configuration.dns.defaultServer.listSummary(R.string.dont_modify)) },
-      enabled = dnsEnabled != false,
-      onClick = {
-        onOpenEditableTextList(
-          R.string.default_name_server,
-          configuration.dns.defaultServer,
-          actions::updateDnsDefaultServer,
-        )
-      },
-    )
-  }
-  item(key = "dnsFakeIpFilter", contentType = "EditTextListPreference") {
-    Preference(
-      modifier = Modifier.fillMaxWidth(),
-      title = { Text(stringResource(R.string.fakeip_filter)) },
-      summary = { Text(configuration.dns.fakeIpFilter.listSummary(R.string.dont_modify)) },
-      enabled = dnsEnabled != false,
-      onClick = {
-        onOpenEditableTextList(
-          R.string.fakeip_filter,
-          configuration.dns.fakeIpFilter,
-          actions::updateDnsFakeIpFilter,
-        )
-      },
-    )
-  }
-  item(key = "dnsFakeIpFilterMode", contentType = "ListPreference") {
-    ListPreference(
-      value = configuration.dns.fakeIPFilterMode,
-      onValueChange = actions::updateDnsFakeIpFilterMode,
-      values = ConfigurationOverride.FilterMode.entries,
-      modifier = Modifier.fillMaxWidth(),
-      enabled = dnsEnabled != false,
-      title = { Text(stringResource(R.string.fakeip_filter_mode)) },
-      summary = { Text(stringResource(configuration.dns.fakeIPFilterMode.textRes)) },
-      valueToText = { AnnotatedString(stringResource(it.textRes)) },
-    )
-  }
-  item(key = "dnsGeoIpFallback", contentType = "ListPreference") {
-    ListPreference(
-      value = configuration.dns.fallbackFilter.geoIp,
-      onValueChange = actions::updateDnsGeoIpFallback,
-      values = booleanOptions,
-      modifier = Modifier.fillMaxWidth(),
-      enabled = dnsEnabled != false,
-      title = { Text(stringResource(R.string.geoip_fallback)) },
-      summary = { Text(stringResource(configuration.dns.fallbackFilter.geoIp.textRes)) },
-      valueToText = { AnnotatedString(stringResource(it.textRes)) },
-    )
-  }
-  item(key = "dnsGeoIpCode", contentType = "EditTextPreference") {
-    OverrideEditTextPreferenceItem(
-      title = R.string.geoip_fallback_code,
-      placeholder = R.string.dont_modify,
-      emptyLabel = R.string.raw_cn,
-      value = configuration.dns.fallbackFilter.geoIpCode,
-      onValueChange = actions::updateDnsGeoIpCode,
-      enabled = dnsEnabled != false,
-    )
-  }
-  item(key = "dnsDomainFallback", contentType = "EditTextListPreference") {
-    Preference(
-      modifier = Modifier.fillMaxWidth(),
-      title = { Text(stringResource(R.string.domain_fallback)) },
-      summary = { Text(configuration.dns.fallbackFilter.domain.listSummary(R.string.dont_modify)) },
-      enabled = dnsEnabled != false,
-      onClick = {
-        onOpenEditableTextList(
-          R.string.domain_fallback,
-          configuration.dns.fallbackFilter.domain,
-          actions::updateDnsDomainFallback,
-        )
-      },
-    )
-  }
-  item(key = "dnsIpcidrFallback", contentType = "EditTextListPreference") {
-    Preference(
-      modifier = Modifier.fillMaxWidth(),
-      title = { Text(stringResource(R.string.ipcidr_fallback)) },
-      summary = { Text(configuration.dns.fallbackFilter.ipcidr.listSummary(R.string.dont_modify)) },
-      enabled = dnsEnabled != false,
-      onClick = {
-        onOpenEditableTextList(
-          R.string.ipcidr_fallback,
-          configuration.dns.fallbackFilter.ipcidr,
-          actions::updateDnsIpcidrFallback,
-        )
-      },
-    )
-  }
-  item(key = "dnsNameserverPolicy", contentType = "EditTextMapPreference") {
-    Preference(
-      modifier = Modifier.fillMaxWidth(),
-      title = { Text(stringResource(R.string.name_server_policy)) },
-      summary = { Text(configuration.dns.nameserverPolicy.summary(R.string.dont_modify)) },
-      enabled = dnsEnabled != false,
-      onClick = {
-        onOpenEditableTextMap(
-          R.string.name_server_policy,
-          configuration.dns.nameserverPolicy,
-          actions::updateDnsNameserverPolicy,
-        )
-      },
-    )
-  }
+  listPreference(
+    key = "dnsStrategy",
+    value = dnsEnabled,
+    onValueChange = actions::updateDnsEnable,
+    values = booleanOptions,
+    modifier = Modifier.fillMaxWidth(),
+    title = { Text(stringResource(R.string.strategy)) },
+    summary = { Text(stringResource(dnsEnabled.dnsStrategyTextRes)) },
+    valueToText = { AnnotatedString(stringResource(it.dnsStrategyTextRes)) },
+  )
+  listPreference(
+    key = "dnsPreferH3",
+    value = configuration.dns.preferH3,
+    onValueChange = actions::updateDnsPreferH3,
+    values = booleanOptions,
+    modifier = Modifier.fillMaxWidth(),
+    enabled = dnsEnabled != false,
+    title = { Text(stringResource(R.string.prefer_h3)) },
+    summary = { Text(stringResource(configuration.dns.preferH3.textRes)) },
+    valueToText = { AnnotatedString(stringResource(it.textRes)) },
+  )
+  overrideEditTextPreferenceItem(
+    key = "dnsListen",
+    title = R.string.listen,
+    placeholder = R.string.dont_modify,
+    emptyLabel = R.string.disabled,
+    value = configuration.dns.listen,
+    onValueChange = actions::updateDnsListen,
+    enabled = dnsEnabled != false,
+  )
+  listPreference(
+    key = "appendSystemDns",
+    value = configuration.app.appendSystemDns,
+    onValueChange = actions::updateAppendSystemDns,
+    values = booleanOptions,
+    modifier = Modifier.fillMaxWidth(),
+    enabled = dnsEnabled != false,
+    title = { Text(stringResource(R.string.append_system_dns)) },
+    summary = { Text(stringResource(configuration.app.appendSystemDns.textRes)) },
+    valueToText = { AnnotatedString(stringResource(it.textRes)) },
+  )
+  listPreference(
+    key = "dnsIpv6",
+    value = configuration.dns.ipv6,
+    onValueChange = actions::updateDnsIpv6,
+    values = booleanOptions,
+    modifier = Modifier.fillMaxWidth(),
+    enabled = dnsEnabled != false,
+    title = { Text(stringResource(R.string.ipv6)) },
+    summary = { Text(stringResource(configuration.dns.ipv6.textRes)) },
+    valueToText = { AnnotatedString(stringResource(it.textRes)) },
+  )
+  listPreference(
+    key = "dnsUseHosts",
+    value = configuration.dns.useHosts,
+    onValueChange = actions::updateDnsUseHosts,
+    values = booleanOptions,
+    modifier = Modifier.fillMaxWidth(),
+    enabled = dnsEnabled != false,
+    title = { Text(stringResource(R.string.use_hosts)) },
+    summary = { Text(stringResource(configuration.dns.useHosts.textRes)) },
+    valueToText = { AnnotatedString(stringResource(it.textRes)) },
+  )
+  listPreference(
+    key = "dnsEnhancedMode",
+    value = configuration.dns.enhancedMode,
+    onValueChange = actions::updateDnsEnhancedMode,
+    values = ConfigurationOverride.DnsEnhancedMode.entries,
+    modifier = Modifier.fillMaxWidth(),
+    enabled = dnsEnabled != false,
+    title = { Text(stringResource(R.string.enhanced_mode)) },
+    summary = { Text(stringResource(configuration.dns.enhancedMode.textRes)) },
+    valueToText = { AnnotatedString(stringResource(it.textRes)) },
+  )
+  preference(
+    key = "dnsNameServer",
+    modifier = Modifier.fillMaxWidth(),
+    title = { Text(stringResource(R.string.name_server)) },
+    summary = { Text(configuration.dns.nameServer.listSummary(R.string.dont_modify)) },
+    enabled = dnsEnabled != false,
+    onClick = {
+      onOpenEditableTextList(
+        R.string.name_server,
+        configuration.dns.nameServer,
+        actions::updateDnsNameServer,
+      )
+    },
+  )
+  preference(
+    key = "dnsFallback",
+    modifier = Modifier.fillMaxWidth(),
+    title = { Text(stringResource(R.string.fallback)) },
+    summary = { Text(configuration.dns.fallback.listSummary(R.string.dont_modify)) },
+    enabled = dnsEnabled != false,
+    onClick = {
+      onOpenEditableTextList(
+        R.string.fallback,
+        configuration.dns.fallback,
+        actions::updateDnsFallback,
+      )
+    },
+  )
+  preference(
+    key = "dnsDefaultServer",
+    modifier = Modifier.fillMaxWidth(),
+    title = { Text(stringResource(R.string.default_name_server)) },
+    summary = { Text(configuration.dns.defaultServer.listSummary(R.string.dont_modify)) },
+    enabled = dnsEnabled != false,
+    onClick = {
+      onOpenEditableTextList(
+        R.string.default_name_server,
+        configuration.dns.defaultServer,
+        actions::updateDnsDefaultServer,
+      )
+    },
+  )
+  preference(
+    key = "dnsFakeIpFilter",
+    modifier = Modifier.fillMaxWidth(),
+    title = { Text(stringResource(R.string.fakeip_filter)) },
+    summary = { Text(configuration.dns.fakeIpFilter.listSummary(R.string.dont_modify)) },
+    enabled = dnsEnabled != false,
+    onClick = {
+      onOpenEditableTextList(
+        R.string.fakeip_filter,
+        configuration.dns.fakeIpFilter,
+        actions::updateDnsFakeIpFilter,
+      )
+    },
+  )
+  listPreference(
+    key = "dnsFakeIpFilterMode",
+    value = configuration.dns.fakeIPFilterMode,
+    onValueChange = actions::updateDnsFakeIpFilterMode,
+    values = ConfigurationOverride.FilterMode.entries,
+    modifier = Modifier.fillMaxWidth(),
+    enabled = dnsEnabled != false,
+    title = { Text(stringResource(R.string.fakeip_filter_mode)) },
+    summary = { Text(stringResource(configuration.dns.fakeIPFilterMode.textRes)) },
+    valueToText = { AnnotatedString(stringResource(it.textRes)) },
+  )
+  listPreference(
+    key = "dnsGeoIpFallback",
+    value = configuration.dns.fallbackFilter.geoIp,
+    onValueChange = actions::updateDnsGeoIpFallback,
+    values = booleanOptions,
+    modifier = Modifier.fillMaxWidth(),
+    enabled = dnsEnabled != false,
+    title = { Text(stringResource(R.string.geoip_fallback)) },
+    summary = { Text(stringResource(configuration.dns.fallbackFilter.geoIp.textRes)) },
+    valueToText = { AnnotatedString(stringResource(it.textRes)) },
+  )
+  overrideEditTextPreferenceItem(
+    key = "dnsGeoIpCode",
+    title = R.string.geoip_fallback_code,
+    placeholder = R.string.dont_modify,
+    emptyLabel = R.string.raw_cn,
+    value = configuration.dns.fallbackFilter.geoIpCode,
+    onValueChange = actions::updateDnsGeoIpCode,
+    enabled = dnsEnabled != false,
+  )
+  preference(
+    key = "dnsDomainFallback",
+    modifier = Modifier.fillMaxWidth(),
+    title = { Text(stringResource(R.string.domain_fallback)) },
+    summary = { Text(configuration.dns.fallbackFilter.domain.listSummary(R.string.dont_modify)) },
+    enabled = dnsEnabled != false,
+    onClick = {
+      onOpenEditableTextList(
+        R.string.domain_fallback,
+        configuration.dns.fallbackFilter.domain,
+        actions::updateDnsDomainFallback,
+      )
+    },
+  )
+  preference(
+    key = "dnsIpcidrFallback",
+    modifier = Modifier.fillMaxWidth(),
+    title = { Text(stringResource(R.string.ipcidr_fallback)) },
+    summary = { Text(configuration.dns.fallbackFilter.ipcidr.listSummary(R.string.dont_modify)) },
+    enabled = dnsEnabled != false,
+    onClick = {
+      onOpenEditableTextList(
+        R.string.ipcidr_fallback,
+        configuration.dns.fallbackFilter.ipcidr,
+        actions::updateDnsIpcidrFallback,
+      )
+    },
+  )
+  preference(
+    key = "dnsNameserverPolicy",
+    modifier = Modifier.fillMaxWidth(),
+    title = { Text(stringResource(R.string.name_server_policy)) },
+    summary = { Text(configuration.dns.nameserverPolicy.summary(R.string.dont_modify)) },
+    enabled = dnsEnabled != false,
+    onClick = {
+      onOpenEditableTextMap(
+        R.string.name_server_policy,
+        configuration.dns.nameserverPolicy,
+        actions::updateDnsNameserverPolicy,
+      )
+    },
+  )
 }
 
-@Composable
-private fun OverrideEditTextPreferenceItem(
+private fun LazyListScope.overrideEditTextPreferenceItem(
+  key: String,
   @StringRes title: Int,
   @StringRes placeholder: Int,
   @StringRes emptyLabel: Int,
@@ -631,80 +598,82 @@ private fun OverrideEditTextPreferenceItem(
   enabled: Boolean = true,
   numericOnly: Boolean = false,
 ) {
-  var showDialog by remember { mutableStateOf(false) }
-  val summary =
-    when {
-      value == null -> stringResource(placeholder)
-      value.isEmpty() -> stringResource(emptyLabel)
-      else -> value
-    }
-  Preference(
-    modifier = Modifier.fillMaxWidth(),
-    title = { Text(stringResource(title)) },
-    summary = { Text(summary) },
-    enabled = enabled,
-    onClick = { showDialog = true },
-  )
-  if (showDialog) {
-    var inputText by
-      remember(value) {
-        mutableStateOf(
-          TextFieldValue(text = value.orEmpty(), selection = TextRange(value.orEmpty().length))
-        )
+  item(key = key, contentType = "EditTextPreference") {
+    var showDialog by remember { mutableStateOf(false) }
+    val summary =
+      when {
+        value == null -> stringResource(placeholder)
+        value.isEmpty() -> stringResource(emptyLabel)
+        else -> value
       }
-    val focusRequester = remember { FocusRequester() }
-    val keyboardController = LocalSoftwareKeyboardController.current
-    LaunchedEffect(Unit) {
-      focusRequester.requestFocus()
-      keyboardController?.show()
-    }
-    AlertDialog(
-      onDismissRequest = { showDialog = false },
+    Preference(
+      modifier = Modifier.fillMaxWidth(),
       title = { Text(stringResource(title)) },
-      text = {
-        OutlinedTextField(
-          value = inputText,
-          onValueChange = { inputText = if (numericOnly) it.filterDigits() else it },
-          keyboardOptions =
-            if (numericOnly) {
-              KeyboardOptions(keyboardType = KeyboardType.Number)
-            } else {
-              KeyboardOptions.Default
-            },
-          singleLine = true,
-          modifier = Modifier.fillMaxWidth().focusRequester(focusRequester),
-        )
-      },
-      confirmButton = {
-        TextButton(
-          onClick = {
-            onValueChange(
-              if (numericOnly) {
-                portText(parsePort(inputText.text))
-              } else {
-                inputText.text
-              }
-            )
-            showDialog = false
-          }
-        ) {
-          Text(stringResource(R.string.ok))
+      summary = { Text(summary) },
+      enabled = enabled,
+      onClick = { showDialog = true },
+    )
+    if (showDialog) {
+      var inputText by
+        remember(value) {
+          mutableStateOf(
+            TextFieldValue(text = value.orEmpty(), selection = TextRange(value.orEmpty().length))
+          )
         }
-      },
-      dismissButton = {
-        Row {
+      val focusRequester = remember { FocusRequester() }
+      val keyboardController = LocalSoftwareKeyboardController.current
+      LaunchedEffect(Unit) {
+        focusRequester.requestFocus()
+        keyboardController?.show()
+      }
+      AlertDialog(
+        onDismissRequest = { showDialog = false },
+        title = { Text(stringResource(title)) },
+        text = {
+          OutlinedTextField(
+            value = inputText,
+            onValueChange = { inputText = if (numericOnly) it.filterDigits() else it },
+            keyboardOptions =
+              if (numericOnly) {
+                KeyboardOptions(keyboardType = KeyboardType.Number)
+              } else {
+                KeyboardOptions.Default
+              },
+            singleLine = true,
+            modifier = Modifier.fillMaxWidth().focusRequester(focusRequester),
+          )
+        },
+        confirmButton = {
           TextButton(
             onClick = {
-              onValueChange(null)
+              onValueChange(
+                if (numericOnly) {
+                  portText(parsePort(inputText.text))
+                } else {
+                  inputText.text
+                }
+              )
               showDialog = false
             }
           ) {
-            Text(stringResource(R.string.reset))
+            Text(stringResource(R.string.ok))
           }
-          TextButton(onClick = { showDialog = false }) { Text(stringResource(R.string.cancel)) }
-        }
-      },
-    )
+        },
+        dismissButton = {
+          Row {
+            TextButton(
+              onClick = {
+                onValueChange(null)
+                showDialog = false
+              }
+            ) {
+              Text(stringResource(R.string.reset))
+            }
+            TextButton(onClick = { showDialog = false }) { Text(stringResource(R.string.cancel)) }
+          }
+        },
+      )
+    }
   }
 }
 
