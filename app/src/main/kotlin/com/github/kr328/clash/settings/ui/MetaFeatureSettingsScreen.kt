@@ -11,6 +11,7 @@ import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBarDefaults
@@ -23,7 +24,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -45,7 +45,6 @@ import com.github.kr328.clash.ui.icon.BaselineReplay
 import com.github.kr328.clash.ui.icon.MihomoIcons
 import com.github.kr328.clash.ui.theme.MihomoTheme
 import com.github.kr328.clash.ui.theme.PreviewMihomo
-import com.github.kr328.clash.util.toast
 import kotlinx.serialization.Serializable
 import me.zhanghai.compose.preference.ProvidePreferenceLocals
 import me.zhanghai.compose.preference.preferenceCategory
@@ -73,10 +72,11 @@ fun MetaFeatureSettingsScreen(
     entryProvider =
       entryProvider {
         entry<MetaFeatureSettingsRoute.Main> {
-          val context = LocalContext.current
           val configuration by viewModel.configuration.collectAsStateWithLifecycle()
           val importResult by viewModel.importResult.collectAsStateWithLifecycle()
+          val snackbarHostState = remember { SnackbarHostState() }
           val importedText = stringResource(R.string.geofile_imported)
+          val importFailedText = stringResource(R.string.geofile_import_failed)
           var pendingImportType by remember { mutableStateOf<ImportType?>(null) }
           var showUnsupportedFormatDialog by remember { mutableStateOf(false) }
           var validExtensionsSummary by remember { mutableStateOf("") }
@@ -88,7 +88,7 @@ fun MetaFeatureSettingsScreen(
               ImportResult.InProgress -> Unit
 
               is ImportResult.Success -> {
-                context.toast(importedText.format(result.displayName))
+                snackbarHostState.showSnackbar(message = importedText.format(result.displayName))
               }
 
               is ImportResult.UnsupportedFormat -> {
@@ -96,7 +96,7 @@ fun MetaFeatureSettingsScreen(
                 showUnsupportedFormatDialog = true
               }
 
-              ImportResult.Failed -> context.toast(R.string.geofile_import_failed)
+              ImportResult.Failed -> snackbarHostState.showSnackbar(message = importFailedText)
             }
           }
 
@@ -110,6 +110,7 @@ fun MetaFeatureSettingsScreen(
           MetaFeatureSettingsContent(
             configuration = configuration,
             actions = viewModel,
+            snackbarHostState = snackbarHostState,
             modifier = modifier,
             showResetConfirmDialog = showResetConfirmDialog,
             onShowResetConfirmDialogChange = { showResetConfirmDialog = it },
@@ -176,6 +177,7 @@ fun MetaFeatureSettingsScreen(
 private fun MetaFeatureSettingsContent(
   configuration: ConfigurationOverride,
   actions: MetaFeatureSettingsActions,
+  snackbarHostState: SnackbarHostState,
   modifier: Modifier = Modifier,
   showResetConfirmDialog: Boolean,
   onShowResetConfirmDialogChange: (Boolean) -> Unit,
@@ -190,6 +192,7 @@ private fun MetaFeatureSettingsContent(
   MihomoScaffold(
     title = stringResource(R.string.meta_features),
     modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
+    snackbarHostState = snackbarHostState,
     scrollBehavior = scrollBehavior,
     actions = {
       IconButton(onClick = { onShowResetConfirmDialogChange(true) }) {
@@ -596,6 +599,7 @@ private fun MetaFeatureSettingsContentPreview() = MihomoTheme {
   MetaFeatureSettingsContent(
     configuration = ConfigurationOverride(),
     actions = object : MetaFeatureSettingsActions {},
+    snackbarHostState = SnackbarHostState(),
     showResetConfirmDialog = false,
     onShowResetConfirmDialogChange = {},
     onResetConfirmed = {},

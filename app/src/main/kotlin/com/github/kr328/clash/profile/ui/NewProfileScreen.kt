@@ -21,7 +21,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -90,7 +89,7 @@ fun NewProfileScreen(
           Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).setData(event.uri)
         )
       is NewProfileViewModel.EventState.ShowMessage ->
-        snackbarHostState.showSnackbar(message = event.message, duration = SnackbarDuration.Long)
+        snackbarHostState.showSnackbar(message = event.message)
       NewProfileViewModel.EventState.Finish -> onFinish()
     }
     viewModel.consumeEvent()

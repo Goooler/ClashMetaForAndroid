@@ -34,6 +34,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.PrimaryScrollableTabRow
 import androidx.compose.material3.RadioButton
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -49,7 +50,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontWeight
@@ -71,7 +71,6 @@ import com.github.kr328.clash.ui.icon.MihomoIcons
 import com.github.kr328.clash.ui.theme.MihomoTheme
 import com.github.kr328.clash.ui.theme.PreviewMihomo
 import com.github.kr328.clash.ui.theme.mihomoDimens
-import com.github.kr328.clash.util.toast
 import kotlinx.coroutines.launch
 
 @Composable
@@ -84,7 +83,8 @@ fun ProxyScreen(
   val uiState by viewModel.uiState.collectAsStateWithLifecycle()
   val selectedProxies by viewModel.selectedProxies.collectAsStateWithLifecycle()
   val eventState by viewModel.eventState.collectAsStateWithLifecycle()
-  val context = LocalContext.current
+  val snackbarHostState = remember { SnackbarHostState() }
+  val modeSwitchTips = stringResource(R.string.mode_switch_tips)
 
   DisposableEffect(lifecycleOwner, viewModel) {
     lifecycleOwner.lifecycle.addObserver(viewModel)
@@ -98,7 +98,7 @@ fun ProxyScreen(
         onReLaunch()
       }
       ProxyViewModel.EventState.ShowModeSwitchTips -> {
-        context.toast(R.string.mode_switch_tips)
+        snackbarHostState.showSnackbar(message = modeSwitchTips)
       }
     }
     viewModel.consumeEvent()
@@ -106,6 +106,7 @@ fun ProxyScreen(
 
   ProxyContent(
     modifier = modifier,
+    snackbarHostState = snackbarHostState,
     uiState = uiState,
     selectedProxies = selectedProxies,
     onPageChanged = viewModel::onPageChanged,
@@ -122,6 +123,7 @@ fun ProxyScreen(
 @Composable
 private fun ProxyContent(
   modifier: Modifier = Modifier,
+  snackbarHostState: SnackbarHostState,
   uiState: ProxyViewModel.UiState,
   selectedProxies: List<SelectedProxy>,
   onPageChanged: (Int) -> Unit,
@@ -165,6 +167,7 @@ private fun ProxyContent(
 
   MihomoScaffold(
     modifier = modifier,
+    snackbarHostState = snackbarHostState,
     title = stringResource(R.string.proxy),
     actions = {
       if (showUrlTestAction) {
@@ -534,6 +537,7 @@ private fun ProxyContentPreview() = MihomoTheme {
   }
 
   ProxyContent(
+    snackbarHostState = SnackbarHostState(),
     selectedProxies = listOf(SelectedProxy("auto"), SelectedProxy("hk-01")),
     uiState =
       ProxyViewModel.UiState(

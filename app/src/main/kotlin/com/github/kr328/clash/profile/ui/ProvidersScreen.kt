@@ -18,7 +18,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -65,7 +64,7 @@ fun ProvidersScreen(modifier: Modifier = Modifier, viewModel: ProvidersViewModel
     when (val event = eventState) {
       ProvidersViewModel.EventState.Idle -> Unit
       is ProvidersViewModel.EventState.ShowMessage -> {
-        snackbarHostState.showSnackbar(message = event.message, duration = SnackbarDuration.Long)
+        snackbarHostState.showSnackbar(message = event.message)
       }
     }
     viewModel.consumeEvent()

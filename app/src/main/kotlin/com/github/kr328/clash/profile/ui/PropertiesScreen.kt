@@ -19,6 +19,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -33,7 +34,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.fromHtml
@@ -61,7 +61,6 @@ import com.github.kr328.clash.ui.theme.mihomoDimens
 import com.github.kr328.clash.util.ValidatorAutoUpdateInterval
 import com.github.kr328.clash.util.ValidatorHttpUrl
 import com.github.kr328.clash.util.ValidatorNotBlank
-import com.github.kr328.clash.util.toast
 import java.util.UUID
 import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.minutes
@@ -77,7 +76,7 @@ fun PropertiesScreen(
   val lifecycleOwner = LocalLifecycleOwner.current
   val uiState by viewModel.uiState.collectAsStateWithLifecycle()
   val eventState by viewModel.eventState.collectAsStateWithLifecycle()
-  val context = LocalContext.current
+  val snackbarHostState = remember { SnackbarHostState() }
 
   LaunchedEffect(uuid) { viewModel.init(uuid = uuid) }
 
@@ -96,7 +95,7 @@ fun PropertiesScreen(
         onFinish(event.success)
       }
       is PropertiesViewModel.EventState.ShowMessage -> {
-        context.toast(event.message)
+        snackbarHostState.showSnackbar(message = event.message)
       }
     }
     viewModel.consumeEvent()
@@ -106,6 +105,7 @@ fun PropertiesScreen(
   if (profile != null) {
     PropertiesContent(
       modifier = modifier,
+      snackbarHostState = snackbarHostState,
       profile = profile,
       processing = uiState.processing,
       progressState = uiState.progress,
@@ -124,6 +124,7 @@ fun PropertiesScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 private fun PropertiesContent(
   modifier: Modifier = Modifier,
+  snackbarHostState: SnackbarHostState,
   profile: Profile,
   processing: Boolean,
   progressState: PropertiesViewModel.ProgressState,
@@ -165,6 +166,7 @@ private fun PropertiesContent(
 
   MihomoScaffold(
     modifier = modifier,
+    snackbarHostState = snackbarHostState,
     title = stringResource(R.string.properties),
     onBack = onBack,
     actions = {
@@ -362,6 +364,7 @@ private fun PropertiesActionItem(
 @Composable
 private fun PropertiesContentPreview() = MihomoTheme {
   PropertiesContent(
+    snackbarHostState = SnackbarHostState(),
     profile =
       Profile(
         uuid = UUID(0, 0),

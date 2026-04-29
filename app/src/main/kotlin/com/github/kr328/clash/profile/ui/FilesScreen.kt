@@ -25,6 +25,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
@@ -64,7 +65,6 @@ import com.github.kr328.clash.ui.theme.MihomoTheme
 import com.github.kr328.clash.ui.theme.PreviewMihomo
 import com.github.kr328.clash.util.ValidatorFileName
 import com.github.kr328.clash.util.elapsedIntervalString
-import com.github.kr328.clash.util.toast
 import java.util.UUID
 import kotlin.time.Duration.Companion.minutes
 import kotlinx.coroutines.delay
@@ -80,7 +80,7 @@ fun FilesScreen(
   val lifecycleOwner = LocalLifecycleOwner.current
   val uiState by viewModel.uiState.collectAsStateWithLifecycle()
   val eventState by viewModel.eventState.collectAsStateWithLifecycle()
-  val context = LocalContext.current
+  val snackbarHostState = remember { SnackbarHostState() }
 
   var pendingImportTarget by remember { mutableStateOf<File?>(null) }
   var pendingExportSource by remember { mutableStateOf<File?>(null) }
@@ -126,7 +126,7 @@ fun FilesScreen(
         exportLauncher.launch(event.sourceFile.name)
       }
       is FilesViewModel.EventState.ShowMessage -> {
-        context.toast(event.message)
+        snackbarHostState.showSnackbar(message = event.message)
       }
     }
     viewModel.consumeEvent()
@@ -134,6 +134,7 @@ fun FilesScreen(
 
   FilesContent(
     modifier = modifier,
+    snackbarHostState = snackbarHostState,
     uiState = uiState,
     onBack = viewModel::onBack,
     onOpen = viewModel::onOpen,
@@ -149,6 +150,7 @@ fun FilesScreen(
 @Composable
 private fun FilesContent(
   modifier: Modifier = Modifier,
+  snackbarHostState: SnackbarHostState,
   uiState: FilesViewModel.UiState,
   onBack: () -> Unit,
   onOpen: (File) -> Unit,
@@ -215,6 +217,7 @@ private fun FilesContent(
 
   MihomoScaffold(
     modifier = modifier,
+    snackbarHostState = snackbarHostState,
     title = stringResource(R.string.files),
     onBack = onBack,
     actions = {
@@ -352,6 +355,7 @@ private fun FilesMenuAction(
 @Composable
 private fun FilesContentPreview() = MihomoTheme {
   FilesContent(
+    snackbarHostState = SnackbarHostState(),
     uiState =
       FilesViewModel.UiState(
         files =
