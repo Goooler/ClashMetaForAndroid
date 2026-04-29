@@ -249,50 +249,42 @@ private fun LazyListScope.metaBasicPreferenceItems(
 
   listPreference(
     key = "unifiedDelay",
-    defaultValue = configuration.unifiedDelay,
+    value = configuration.unifiedDelay,
+    onValueChange = actions::updateUnifiedDelay,
     values = booleanOptions,
-    rememberState = {
-      rememberCallbackMutableState(configuration.unifiedDelay, actions::updateUnifiedDelay)
-    },
     modifier = Modifier.fillMaxWidth(),
     title = { Text(stringResource(R.string.unified_delay)) },
-    summary = { Text(stringResource(it.textRes)) },
+    summary = { Text(stringResource(configuration.unifiedDelay.textRes)) },
     valueToText = { AnnotatedString(stringResource(it.textRes)) },
   )
   listPreference(
     key = "geodataMode",
-    defaultValue = configuration.geodataMode,
+    value = configuration.geodataMode,
+    onValueChange = actions::updateGeodataMode,
     values = booleanOptions,
-    rememberState = {
-      rememberCallbackMutableState(configuration.geodataMode, actions::updateGeodataMode)
-    },
     modifier = Modifier.fillMaxWidth(),
     title = { Text(stringResource(R.string.geodata_mode)) },
-    summary = { Text(stringResource(it.textRes)) },
+    summary = { Text(stringResource(configuration.geodataMode.textRes)) },
     valueToText = { AnnotatedString(stringResource(it.textRes)) },
   )
   listPreference(
     key = "tcpConcurrent",
-    defaultValue = configuration.tcpConcurrent,
+    value = configuration.tcpConcurrent,
+    onValueChange = actions::updateTcpConcurrent,
     values = booleanOptions,
-    rememberState = {
-      rememberCallbackMutableState(configuration.tcpConcurrent, actions::updateTcpConcurrent)
-    },
     modifier = Modifier.fillMaxWidth(),
     title = { Text(stringResource(R.string.tcp_concurrent)) },
-    summary = { Text(stringResource(it.textRes)) },
+    summary = { Text(stringResource(configuration.tcpConcurrent.textRes)) },
     valueToText = { AnnotatedString(stringResource(it.textRes)) },
   )
   listPreference(
     key = "findProcessMode",
-    defaultValue = configuration.findProcessMode,
+    value = configuration.findProcessMode,
+    onValueChange = actions::updateFindProcessMode,
     values = ConfigurationOverride.FindProcessMode.entries,
-    rememberState = {
-      rememberCallbackMutableState(configuration.findProcessMode, actions::updateFindProcessMode)
-    },
     modifier = Modifier.fillMaxWidth(),
     title = { Text(stringResource(R.string.find_process_mode)) },
-    summary = { Text(stringResource(it.textRes)) },
+    summary = { Text(stringResource(configuration.findProcessMode.textRes)) },
     valueToText = { AnnotatedString(stringResource(it.textRes)) },
   )
 }
@@ -308,14 +300,12 @@ private fun LazyListScope.metaSnifferPreferenceItems(
   )
   listPreference(
     key = "snifferEnable",
-    defaultValue = configuration.sniffer.enable,
+    value = configuration.sniffer.enable,
+    onValueChange = actions::updateSnifferEnable,
     values = booleanOptions,
-    rememberState = {
-      rememberCallbackMutableState(configuration.sniffer.enable, actions::updateSnifferEnable)
-    },
     modifier = Modifier.fillMaxWidth(),
     title = { Text(stringResource(R.string.strategy)) },
-    summary = { Text(stringResource(it.textRes)) },
+    summary = { Text(stringResource(configuration.sniffer.enable.textRes)) },
     valueToText = { AnnotatedString(stringResource(it.textRes)) },
   )
   preference(
@@ -334,18 +324,15 @@ private fun LazyListScope.metaSnifferPreferenceItems(
   )
   listPreference(
     key = "sniffHttpOverrideDestination",
-    defaultValue = configuration.sniffer.sniff.http.overrideDestination,
+    value = configuration.sniffer.sniff.http.overrideDestination,
+    onValueChange = actions::updateSniffHttpOverrideDestination,
     values = booleanOptions,
-    rememberState = {
-      rememberCallbackMutableState(
-        configuration.sniffer.sniff.http.overrideDestination,
-        actions::updateSniffHttpOverrideDestination,
-      )
-    },
     modifier = Modifier.fillMaxWidth(),
-    enabled = { configuration.sniffer.enable != false },
+    enabled = configuration.sniffer.enable != false,
     title = { Text(stringResource(R.string.sniff_http_override_destination)) },
-    summary = { Text(stringResource(it.textRes)) },
+    summary = {
+      Text(stringResource(configuration.sniffer.sniff.http.overrideDestination.textRes))
+    },
     valueToText = { AnnotatedString(stringResource(it.textRes)) },
   )
   preference(
@@ -364,18 +351,13 @@ private fun LazyListScope.metaSnifferPreferenceItems(
   )
   listPreference(
     key = "sniffTlsOverrideDestination",
-    defaultValue = configuration.sniffer.sniff.tls.overrideDestination,
+    value = configuration.sniffer.sniff.tls.overrideDestination,
+    onValueChange = actions::updateSniffTlsOverrideDestination,
     values = booleanOptions,
-    rememberState = {
-      rememberCallbackMutableState(
-        configuration.sniffer.sniff.tls.overrideDestination,
-        actions::updateSniffTlsOverrideDestination,
-      )
-    },
     modifier = Modifier.fillMaxWidth(),
-    enabled = { configuration.sniffer.enable != false },
+    enabled = configuration.sniffer.enable != false,
     title = { Text(stringResource(R.string.sniff_tls_override_destination)) },
-    summary = { Text(stringResource(it.textRes)) },
+    summary = { Text(stringResource(configuration.sniffer.sniff.tls.overrideDestination.textRes)) },
     valueToText = { AnnotatedString(stringResource(it.textRes)) },
   )
   preference(
@@ -394,63 +376,48 @@ private fun LazyListScope.metaSnifferPreferenceItems(
   )
   listPreference(
     key = "sniffQuicOverrideDestination",
-    defaultValue = configuration.sniffer.sniff.quic.overrideDestination,
+    value = configuration.sniffer.sniff.quic.overrideDestination,
+    onValueChange = actions::updateSniffQuicOverrideDestination,
     values = booleanOptions,
-    rememberState = {
-      rememberCallbackMutableState(
-        configuration.sniffer.sniff.quic.overrideDestination,
-        actions::updateSniffQuicOverrideDestination,
-      )
-    },
     modifier = Modifier.fillMaxWidth(),
-    enabled = { configuration.sniffer.enable != false },
+    enabled = configuration.sniffer.enable != false,
     title = { Text(stringResource(R.string.sniff_quic_override_destination)) },
-    summary = { Text(stringResource(it.textRes)) },
+    summary = {
+      Text(stringResource(configuration.sniffer.sniff.quic.overrideDestination.textRes))
+    },
     valueToText = { AnnotatedString(stringResource(it.textRes)) },
   )
   listPreference(
     key = "forceDnsMapping",
-    defaultValue = configuration.sniffer.forceDnsMapping,
+    value = configuration.sniffer.forceDnsMapping,
+    onValueChange = actions::updateForceDnsMapping,
     values = booleanOptions,
-    rememberState = {
-      rememberCallbackMutableState(
-        configuration.sniffer.forceDnsMapping,
-        actions::updateForceDnsMapping,
-      )
-    },
     modifier = Modifier.fillMaxWidth(),
-    enabled = { configuration.sniffer.enable != false },
+    enabled = configuration.sniffer.enable != false,
     title = { Text(stringResource(R.string.force_dns_mapping)) },
-    summary = { Text(stringResource(it.textRes)) },
+    summary = { Text(stringResource(configuration.sniffer.forceDnsMapping.textRes)) },
     valueToText = { AnnotatedString(stringResource(it.textRes)) },
   )
   listPreference(
     key = "parsePureIp",
-    defaultValue = configuration.sniffer.parsePureIp,
+    value = configuration.sniffer.parsePureIp,
+    onValueChange = actions::updateParsePureIp,
     values = booleanOptions,
-    rememberState = {
-      rememberCallbackMutableState(configuration.sniffer.parsePureIp, actions::updateParsePureIp)
-    },
     modifier = Modifier.fillMaxWidth(),
-    enabled = { configuration.sniffer.enable != false },
+    enabled = configuration.sniffer.enable != false,
     title = { Text(stringResource(R.string.parse_pure_ip)) },
-    summary = { Text(stringResource(it.textRes)) },
+    summary = { Text(stringResource(configuration.sniffer.parsePureIp.textRes)) },
     valueToText = { AnnotatedString(stringResource(it.textRes)) },
   )
   listPreference(
     key = "overrideDestination",
-    defaultValue = configuration.sniffer.overrideDestination,
+    value = configuration.sniffer.overrideDestination,
+    onValueChange = actions::updateOverrideDestination,
     values = booleanOptions,
-    rememberState = {
-      rememberCallbackMutableState(
-        configuration.sniffer.overrideDestination,
-        actions::updateOverrideDestination,
-      )
-    },
     modifier = Modifier.fillMaxWidth(),
-    enabled = { configuration.sniffer.enable != false },
+    enabled = configuration.sniffer.enable != false,
     title = { Text(stringResource(R.string.override_destination)) },
-    summary = { Text(stringResource(it.textRes)) },
+    summary = { Text(stringResource(configuration.sniffer.overrideDestination.textRes)) },
     valueToText = { AnnotatedString(stringResource(it.textRes)) },
   )
   preference(

@@ -97,9 +97,9 @@ private fun NetworkSettingsContent(
       LazyColumn(modifier = Modifier.fillMaxSize(), contentPadding = innerPadding) {
         switchPreference(
           key = "route_system_traffic",
-          defaultValue = uiState.enableVpn,
-          rememberState = { rememberCallbackMutableState(uiState.enableVpn, onEnableVpnChange) },
-          enabled = { !clashRunning },
+          value = uiState.enableVpn,
+          onValueChange = onEnableVpnChange,
+          enabled = !clashRunning,
           icon = { Icon(imageVector = MihomoIcons.BaselineVpnLock, contentDescription = null) },
           title = { Text(stringResource(R.string.route_system_traffic)) },
           summary = { Text(stringResource(R.string.routing_via_vpn_service)) },
@@ -112,81 +112,69 @@ private fun NetworkSettingsContent(
 
         switchPreference(
           key = "bypass_private_network",
-          defaultValue = uiState.bypassPrivateNetwork,
-          rememberState = {
-            rememberCallbackMutableState(uiState.bypassPrivateNetwork, onBypassPrivateNetworkChange)
-          },
-          enabled = { vpnDependenciesEnabled },
+          value = uiState.bypassPrivateNetwork,
+          onValueChange = onBypassPrivateNetworkChange,
+          enabled = vpnDependenciesEnabled,
           title = { Text(stringResource(R.string.bypass_private_network)) },
           summary = { Text(stringResource(R.string.bypass_private_network_summary)) },
         )
         switchPreference(
           key = "dns_hijacking",
-          defaultValue = uiState.dnsHijacking,
-          rememberState = {
-            rememberCallbackMutableState(uiState.dnsHijacking, onDnsHijackingChange)
-          },
-          enabled = { vpnDependenciesEnabled },
+          value = uiState.dnsHijacking,
+          onValueChange = onDnsHijackingChange,
+          enabled = vpnDependenciesEnabled,
           title = { Text(stringResource(R.string.dns_hijacking)) },
           summary = { Text(stringResource(R.string.dns_hijacking_summary)) },
         )
         switchPreference(
           key = "allow_bypass",
-          defaultValue = uiState.allowBypass,
-          rememberState = {
-            rememberCallbackMutableState(uiState.allowBypass, onAllowBypassChange)
-          },
-          enabled = { vpnDependenciesEnabled },
+          value = uiState.allowBypass,
+          onValueChange = onAllowBypassChange,
+          enabled = vpnDependenciesEnabled,
           title = { Text(stringResource(R.string.allow_bypass)) },
           summary = { Text(stringResource(R.string.allow_bypass_summary)) },
         )
         switchPreference(
           key = "allow_ipv6",
-          defaultValue = uiState.allowIpv6,
-          rememberState = { rememberCallbackMutableState(uiState.allowIpv6, onAllowIpv6Change) },
-          enabled = { vpnDependenciesEnabled },
+          value = uiState.allowIpv6,
+          onValueChange = onAllowIpv6Change,
+          enabled = vpnDependenciesEnabled,
           title = { Text(stringResource(R.string.allow_ipv6)) },
           summary = { Text(stringResource(R.string.allow_ipv6_summary)) },
         )
         if (uiState.hasSystemProxyOption) {
           switchPreference(
             key = "system_proxy",
-            defaultValue = uiState.systemProxy,
-            rememberState = {
-              rememberCallbackMutableState(uiState.systemProxy, onSystemProxyChange)
-            },
-            enabled = { vpnDependenciesEnabled },
+            value = uiState.systemProxy,
+            onValueChange = onSystemProxyChange,
+            enabled = vpnDependenciesEnabled,
             title = { Text(stringResource(R.string.system_proxy)) },
             summary = { Text(stringResource(R.string.system_proxy_summary)) },
           )
         }
         listPreference(
           key = "tun_stack_mode",
-          defaultValue = tunStackMode,
+          value = tunStackMode,
+          onValueChange = { onTunStackModeChange(it.persistedValue) },
           values = TunStackMode.entries,
-          rememberState = {
-            rememberCallbackMutableState(tunStackMode) { onTunStackModeChange(it.persistedValue) }
-          },
-          enabled = { vpnDependenciesEnabled },
+          enabled = vpnDependenciesEnabled,
           title = { Text(stringResource(R.string.tun_stack_mode)) },
-          summary = { Text(stringResource(it.summaryRes)) },
+          summary = { Text(stringResource(tunStackMode.summaryRes)) },
           valueToText = { androidx.compose.ui.text.AnnotatedString(stringResource(it.summaryRes)) },
         )
         listPreference(
           key = "access_control_mode",
-          defaultValue = uiState.accessControlMode,
+          value = uiState.accessControlMode,
+          onValueChange = onAccessControlModeChange,
           values =
             listOf(
               AccessControlMode.AcceptAll,
               AccessControlMode.AcceptSelected,
               AccessControlMode.DenySelected,
             ),
-          rememberState = {
-            rememberCallbackMutableState(uiState.accessControlMode, onAccessControlModeChange)
-          },
-          enabled = { vpnDependenciesEnabled },
+          enabled = vpnDependenciesEnabled,
           title = { Text(stringResource(R.string.access_control_mode)) },
-          summary = { Text(stringResource(it.summaryRes)) },
+          summary = { Text(stringResource(uiState.accessControlMode.summaryRes)) },
           valueToText = { androidx.compose.ui.text.AnnotatedString(stringResource(it.summaryRes)) },
         )
         preference(

@@ -269,24 +269,22 @@ private fun LazyListScope.generalPreferenceItems(
   )
   listPreference(
     key = "allowLan",
-    defaultValue = configuration.allowLan,
+    value = configuration.allowLan,
+    onValueChange = actions::updateAllowLan,
     values = booleanOptions,
-    rememberState = {
-      rememberCallbackMutableState(configuration.allowLan, actions::updateAllowLan)
-    },
     modifier = Modifier.fillMaxWidth(),
     title = { Text(stringResource(R.string.allow_lan)) },
-    summary = { Text(stringResource(it.textRes)) },
+    summary = { Text(stringResource(configuration.allowLan.textRes)) },
     valueToText = { AnnotatedString(stringResource(it.textRes)) },
   )
   listPreference(
     key = "ipv6",
-    defaultValue = configuration.ipv6,
+    value = configuration.ipv6,
+    onValueChange = actions::updateIpv6,
     values = booleanOptions,
-    rememberState = { rememberCallbackMutableState(configuration.ipv6, actions::updateIpv6) },
     modifier = Modifier.fillMaxWidth(),
     title = { Text(stringResource(R.string.ipv6)) },
-    summary = { Text(stringResource(it.textRes)) },
+    summary = { Text(stringResource(configuration.ipv6.textRes)) },
     valueToText = { AnnotatedString(stringResource(it.textRes)) },
   )
   OverrideEditTextPreferenceItem(
@@ -330,17 +328,14 @@ private fun LazyListScope.generalPreferenceItems(
   )
   listPreference(
     key = "allowPrivateNetwork",
-    defaultValue = configuration.externalControllerCors.allowPrivateNetwork,
+    value = configuration.externalControllerCors.allowPrivateNetwork,
+    onValueChange = actions::updateAllowPrivateNetwork,
     values = booleanOptions,
-    rememberState = {
-      rememberCallbackMutableState(
-        configuration.externalControllerCors.allowPrivateNetwork,
-        actions::updateAllowPrivateNetwork,
-      )
-    },
     modifier = Modifier.fillMaxWidth(),
     title = { Text(stringResource(R.string.allow_private_network)) },
-    summary = { Text(stringResource(it.textRes)) },
+    summary = {
+      Text(stringResource(configuration.externalControllerCors.allowPrivateNetwork.textRes))
+    },
     valueToText = { AnnotatedString(stringResource(it.textRes)) },
   )
   OverrideEditTextPreferenceItem(
@@ -353,24 +348,22 @@ private fun LazyListScope.generalPreferenceItems(
   )
   listPreference(
     key = "mode",
-    defaultValue = configuration.mode,
+    value = configuration.mode,
+    onValueChange = actions::updateMode,
     values = TunnelState.Mode.entries,
-    rememberState = { rememberCallbackMutableState(configuration.mode, actions::updateMode) },
     modifier = Modifier.fillMaxWidth(),
     title = { Text(stringResource(R.string.mode)) },
-    summary = { Text(stringResource(it.textRes)) },
+    summary = { Text(stringResource(configuration.mode.textRes)) },
     valueToText = { AnnotatedString(stringResource(it.textRes)) },
   )
   listPreference(
     key = "logLevel",
-    defaultValue = configuration.logLevel,
+    value = configuration.logLevel,
+    onValueChange = actions::updateLogLevel,
     values = LogMessage.Level.entries,
-    rememberState = {
-      rememberCallbackMutableState(configuration.logLevel, actions::updateLogLevel)
-    },
     modifier = Modifier.fillMaxWidth(),
     title = { Text(stringResource(R.string.log_level)) },
-    summary = { Text(stringResource(it.textRes)) },
+    summary = { Text(stringResource(configuration.logLevel.textRes)) },
     valueToText = { AnnotatedString(stringResource(it.textRes)) },
   )
   preference(
@@ -392,25 +385,23 @@ private fun LazyListScope.dnsPreferenceItems(
   preferenceCategory(key = "cat_dns", title = { Text(stringResource(R.string.dns)) })
   listPreference(
     key = "dnsStrategy",
-    defaultValue = dnsEnabled,
+    value = dnsEnabled,
+    onValueChange = actions::updateDnsEnable,
     values = booleanOptions,
-    rememberState = { rememberCallbackMutableState(dnsEnabled, actions::updateDnsEnable) },
     modifier = Modifier.fillMaxWidth(),
     title = { Text(stringResource(R.string.strategy)) },
-    summary = { Text(stringResource(it.dnsStrategyTextRes)) },
+    summary = { Text(stringResource(dnsEnabled.dnsStrategyTextRes)) },
     valueToText = { AnnotatedString(stringResource(it.dnsStrategyTextRes)) },
   )
   listPreference(
     key = "dnsPreferH3",
-    defaultValue = configuration.dns.preferH3,
+    value = configuration.dns.preferH3,
+    onValueChange = actions::updateDnsPreferH3,
     values = booleanOptions,
-    rememberState = {
-      rememberCallbackMutableState(configuration.dns.preferH3, actions::updateDnsPreferH3)
-    },
     modifier = Modifier.fillMaxWidth(),
-    enabled = { dnsEnabled != false },
+    enabled = dnsEnabled != false,
     title = { Text(stringResource(R.string.prefer_h3)) },
-    summary = { Text(stringResource(it.textRes)) },
+    summary = { Text(stringResource(configuration.dns.preferH3.textRes)) },
     valueToText = { AnnotatedString(stringResource(it.textRes)) },
   )
   OverrideEditTextPreferenceItem(
@@ -424,57 +415,46 @@ private fun LazyListScope.dnsPreferenceItems(
   )
   listPreference(
     key = "appendSystemDns",
-    defaultValue = configuration.app.appendSystemDns,
+    value = configuration.app.appendSystemDns,
+    onValueChange = actions::updateAppendSystemDns,
     values = booleanOptions,
-    rememberState = {
-      rememberCallbackMutableState(
-        configuration.app.appendSystemDns,
-        actions::updateAppendSystemDns,
-      )
-    },
     modifier = Modifier.fillMaxWidth(),
-    enabled = { dnsEnabled != false },
+    enabled = dnsEnabled != false,
     title = { Text(stringResource(R.string.append_system_dns)) },
-    summary = { Text(stringResource(it.textRes)) },
+    summary = { Text(stringResource(configuration.app.appendSystemDns.textRes)) },
     valueToText = { AnnotatedString(stringResource(it.textRes)) },
   )
   listPreference(
     key = "dnsIpv6",
-    defaultValue = configuration.dns.ipv6,
+    value = configuration.dns.ipv6,
+    onValueChange = actions::updateDnsIpv6,
     values = booleanOptions,
-    rememberState = {
-      rememberCallbackMutableState(configuration.dns.ipv6, actions::updateDnsIpv6)
-    },
     modifier = Modifier.fillMaxWidth(),
-    enabled = { dnsEnabled != false },
+    enabled = dnsEnabled != false,
     title = { Text(stringResource(R.string.ipv6)) },
-    summary = { Text(stringResource(it.textRes)) },
+    summary = { Text(stringResource(configuration.dns.ipv6.textRes)) },
     valueToText = { AnnotatedString(stringResource(it.textRes)) },
   )
   listPreference(
     key = "dnsUseHosts",
-    defaultValue = configuration.dns.useHosts,
+    value = configuration.dns.useHosts,
+    onValueChange = actions::updateDnsUseHosts,
     values = booleanOptions,
-    rememberState = {
-      rememberCallbackMutableState(configuration.dns.useHosts, actions::updateDnsUseHosts)
-    },
     modifier = Modifier.fillMaxWidth(),
-    enabled = { dnsEnabled != false },
+    enabled = dnsEnabled != false,
     title = { Text(stringResource(R.string.use_hosts)) },
-    summary = { Text(stringResource(it.textRes)) },
+    summary = { Text(stringResource(configuration.dns.useHosts.textRes)) },
     valueToText = { AnnotatedString(stringResource(it.textRes)) },
   )
   listPreference(
     key = "dnsEnhancedMode",
-    defaultValue = configuration.dns.enhancedMode,
+    value = configuration.dns.enhancedMode,
+    onValueChange = actions::updateDnsEnhancedMode,
     values = ConfigurationOverride.DnsEnhancedMode.entries,
-    rememberState = {
-      rememberCallbackMutableState(configuration.dns.enhancedMode, actions::updateDnsEnhancedMode)
-    },
     modifier = Modifier.fillMaxWidth(),
-    enabled = { dnsEnabled != false },
+    enabled = dnsEnabled != false,
     title = { Text(stringResource(R.string.enhanced_mode)) },
-    summary = { Text(stringResource(it.textRes)) },
+    summary = { Text(stringResource(configuration.dns.enhancedMode.textRes)) },
     valueToText = { AnnotatedString(stringResource(it.textRes)) },
   )
   preference(
@@ -535,34 +515,24 @@ private fun LazyListScope.dnsPreferenceItems(
   )
   listPreference(
     key = "dnsFakeIpFilterMode",
-    defaultValue = configuration.dns.fakeIPFilterMode,
+    value = configuration.dns.fakeIPFilterMode,
+    onValueChange = actions::updateDnsFakeIpFilterMode,
     values = ConfigurationOverride.FilterMode.entries,
-    rememberState = {
-      rememberCallbackMutableState(
-        configuration.dns.fakeIPFilterMode,
-        actions::updateDnsFakeIpFilterMode,
-      )
-    },
     modifier = Modifier.fillMaxWidth(),
-    enabled = { dnsEnabled != false },
+    enabled = dnsEnabled != false,
     title = { Text(stringResource(R.string.fakeip_filter_mode)) },
-    summary = { Text(stringResource(it.textRes)) },
+    summary = { Text(stringResource(configuration.dns.fakeIPFilterMode.textRes)) },
     valueToText = { AnnotatedString(stringResource(it.textRes)) },
   )
   listPreference(
     key = "dnsGeoIpFallback",
-    defaultValue = configuration.dns.fallbackFilter.geoIp,
+    value = configuration.dns.fallbackFilter.geoIp,
+    onValueChange = actions::updateDnsGeoIpFallback,
     values = booleanOptions,
-    rememberState = {
-      rememberCallbackMutableState(
-        configuration.dns.fallbackFilter.geoIp,
-        actions::updateDnsGeoIpFallback,
-      )
-    },
     modifier = Modifier.fillMaxWidth(),
-    enabled = { dnsEnabled != false },
+    enabled = dnsEnabled != false,
     title = { Text(stringResource(R.string.geoip_fallback)) },
-    summary = { Text(stringResource(it.textRes)) },
+    summary = { Text(stringResource(configuration.dns.fallbackFilter.geoIp.textRes)) },
     valueToText = { AnnotatedString(stringResource(it.textRes)) },
   )
   OverrideEditTextPreferenceItem(
