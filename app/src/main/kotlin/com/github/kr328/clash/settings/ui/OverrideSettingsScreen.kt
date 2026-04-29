@@ -28,6 +28,7 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
@@ -44,13 +45,12 @@ import com.github.kr328.clash.nav.addIfNotLast
 import com.github.kr328.clash.nav.rememberNavBackStackBuilder
 import com.github.kr328.clash.settings.vm.OverrideSettingsViewModel
 import com.github.kr328.clash.ui.component.MihomoScaffold
-import com.github.kr328.clash.ui.component.SettingsEditTextListPreferenceItem
-import com.github.kr328.clash.ui.component.SettingsListPreferenceItem
 import com.github.kr328.clash.ui.icon.BaselineReplay
 import com.github.kr328.clash.ui.icon.MihomoIcons
 import com.github.kr328.clash.ui.theme.MihomoTheme
 import com.github.kr328.clash.ui.theme.PreviewMihomo
 import kotlinx.serialization.Serializable
+import me.zhanghai.compose.preference.ListPreference
 import me.zhanghai.compose.preference.Preference
 import me.zhanghai.compose.preference.ProvidePreferenceLocals
 import me.zhanghai.compose.preference.preferenceCategory
@@ -259,10 +259,10 @@ private fun LazyListScope.generalPreferenceItems(
     )
   }
   item(key = "authentication", contentType = "EditTextListPreference") {
-    SettingsEditTextListPreferenceItem(
-      title = R.string.authentication,
-      placeholder = R.string.dont_modify,
-      values = configuration.authentication,
+    Preference(
+      modifier = Modifier.fillMaxWidth(),
+      title = { Text(stringResource(R.string.authentication)) },
+      summary = { Text(configuration.authentication.listSummary(R.string.dont_modify)) },
       onClick = {
         onOpenEditableTextList(
           R.string.authentication,
@@ -273,25 +273,25 @@ private fun LazyListScope.generalPreferenceItems(
     )
   }
   item(key = "allowLan", contentType = "ListPreference") {
-    SettingsListPreferenceItem(
+    ListPreference(
       value = configuration.allowLan,
       onValueChange = actions::updateAllowLan,
       values = booleanOptions,
       modifier = Modifier.fillMaxWidth(),
-      title = R.string.allow_lan,
-      summary = configuration.allowLan.textRes,
-      valueToText = { it.textRes },
+      title = { Text(stringResource(R.string.allow_lan)) },
+      summary = { Text(stringResource(configuration.allowLan.textRes)) },
+      valueToText = { AnnotatedString(stringResource(it.textRes)) },
     )
   }
   item(key = "ipv6", contentType = "ListPreference") {
-    SettingsListPreferenceItem(
+    ListPreference(
       value = configuration.ipv6,
       onValueChange = actions::updateIpv6,
       values = booleanOptions,
       modifier = Modifier.fillMaxWidth(),
-      title = R.string.ipv6,
-      summary = configuration.ipv6.textRes,
-      valueToText = { it.textRes },
+      title = { Text(stringResource(R.string.ipv6)) },
+      summary = { Text(stringResource(configuration.ipv6.textRes)) },
+      valueToText = { AnnotatedString(stringResource(it.textRes)) },
     )
   }
   item(key = "bindAddress", contentType = "EditTextPreference") {
@@ -322,10 +322,12 @@ private fun LazyListScope.generalPreferenceItems(
     )
   }
   item(key = "allowOrigins", contentType = "EditTextListPreference") {
-    SettingsEditTextListPreferenceItem(
-      title = R.string.allow_origins,
-      placeholder = R.string.dont_modify,
-      values = configuration.externalControllerCors.allowOrigins,
+    Preference(
+      modifier = Modifier.fillMaxWidth(),
+      title = { Text(stringResource(R.string.allow_origins)) },
+      summary = {
+        Text(configuration.externalControllerCors.allowOrigins.listSummary(R.string.dont_modify))
+      },
       onClick = {
         onOpenEditableTextList(
           R.string.allow_origins,
@@ -336,14 +338,16 @@ private fun LazyListScope.generalPreferenceItems(
     )
   }
   item(key = "allowPrivateNetwork", contentType = "ListPreference") {
-    SettingsListPreferenceItem(
+    ListPreference(
       value = configuration.externalControllerCors.allowPrivateNetwork,
       onValueChange = actions::updateAllowPrivateNetwork,
       values = booleanOptions,
       modifier = Modifier.fillMaxWidth(),
-      title = R.string.allow_private_network,
-      summary = configuration.externalControllerCors.allowPrivateNetwork.textRes,
-      valueToText = { it.textRes },
+      title = { Text(stringResource(R.string.allow_private_network)) },
+      summary = {
+        Text(stringResource(configuration.externalControllerCors.allowPrivateNetwork.textRes))
+      },
+      valueToText = { AnnotatedString(stringResource(it.textRes)) },
     )
   }
   item(key = "secret", contentType = "EditTextPreference") {
@@ -356,25 +360,25 @@ private fun LazyListScope.generalPreferenceItems(
     )
   }
   item(key = "mode", contentType = "ListPreference") {
-    SettingsListPreferenceItem(
+    ListPreference(
       value = configuration.mode,
       onValueChange = actions::updateMode,
       values = TunnelState.Mode.entries,
       modifier = Modifier.fillMaxWidth(),
-      title = R.string.mode,
-      summary = configuration.mode.textRes,
-      valueToText = { it.textRes },
+      title = { Text(stringResource(R.string.mode)) },
+      summary = { Text(stringResource(configuration.mode.textRes)) },
+      valueToText = { AnnotatedString(stringResource(it.textRes)) },
     )
   }
   item(key = "logLevel", contentType = "ListPreference") {
-    SettingsListPreferenceItem(
+    ListPreference(
       value = configuration.logLevel,
       onValueChange = actions::updateLogLevel,
       values = LogMessage.Level.entries,
       modifier = Modifier.fillMaxWidth(),
-      title = R.string.log_level,
-      summary = configuration.logLevel.textRes,
-      valueToText = { it.textRes },
+      title = { Text(stringResource(R.string.log_level)) },
+      summary = { Text(stringResource(configuration.logLevel.textRes)) },
+      valueToText = { AnnotatedString(stringResource(it.textRes)) },
     )
   }
   item(key = "hosts", contentType = "EditTextMapPreference") {
@@ -396,26 +400,26 @@ private fun LazyListScope.dnsPreferenceItems(
 ) {
   preferenceCategory(key = "cat_dns", title = { Text(stringResource(R.string.dns)) })
   item(key = "dnsStrategy", contentType = "ListPreference") {
-    SettingsListPreferenceItem(
+    ListPreference(
       value = dnsEnabled,
       onValueChange = actions::updateDnsEnable,
       values = booleanOptions,
       modifier = Modifier.fillMaxWidth(),
-      title = R.string.strategy,
-      summary = dnsEnabled.dnsStrategyTextRes,
-      valueToText = { it.dnsStrategyTextRes },
+      title = { Text(stringResource(R.string.strategy)) },
+      summary = { Text(stringResource(dnsEnabled.dnsStrategyTextRes)) },
+      valueToText = { AnnotatedString(stringResource(it.dnsStrategyTextRes)) },
     )
   }
   item(key = "dnsPreferH3", contentType = "ListPreference") {
-    SettingsListPreferenceItem(
+    ListPreference(
       value = configuration.dns.preferH3,
       onValueChange = actions::updateDnsPreferH3,
       values = booleanOptions,
       modifier = Modifier.fillMaxWidth(),
       enabled = dnsEnabled != false,
-      title = R.string.prefer_h3,
-      summary = configuration.dns.preferH3.textRes,
-      valueToText = { it.textRes },
+      title = { Text(stringResource(R.string.prefer_h3)) },
+      summary = { Text(stringResource(configuration.dns.preferH3.textRes)) },
+      valueToText = { AnnotatedString(stringResource(it.textRes)) },
     )
   }
   item(key = "dnsListen", contentType = "EditTextPreference") {
@@ -429,58 +433,59 @@ private fun LazyListScope.dnsPreferenceItems(
     )
   }
   item(key = "appendSystemDns", contentType = "ListPreference") {
-    SettingsListPreferenceItem(
+    ListPreference(
       value = configuration.app.appendSystemDns,
       onValueChange = actions::updateAppendSystemDns,
       values = booleanOptions,
       modifier = Modifier.fillMaxWidth(),
       enabled = dnsEnabled != false,
-      title = R.string.append_system_dns,
-      summary = configuration.app.appendSystemDns.textRes,
-      valueToText = { it.textRes },
+      title = { Text(stringResource(R.string.append_system_dns)) },
+      summary = { Text(stringResource(configuration.app.appendSystemDns.textRes)) },
+      valueToText = { AnnotatedString(stringResource(it.textRes)) },
     )
   }
   item(key = "dnsIpv6", contentType = "ListPreference") {
-    SettingsListPreferenceItem(
+    ListPreference(
       value = configuration.dns.ipv6,
       onValueChange = actions::updateDnsIpv6,
       values = booleanOptions,
       modifier = Modifier.fillMaxWidth(),
       enabled = dnsEnabled != false,
-      title = R.string.ipv6,
-      summary = configuration.dns.ipv6.textRes,
-      valueToText = { it.textRes },
+      title = { Text(stringResource(R.string.ipv6)) },
+      summary = { Text(stringResource(configuration.dns.ipv6.textRes)) },
+      valueToText = { AnnotatedString(stringResource(it.textRes)) },
     )
   }
   item(key = "dnsUseHosts", contentType = "ListPreference") {
-    SettingsListPreferenceItem(
+    ListPreference(
       value = configuration.dns.useHosts,
       onValueChange = actions::updateDnsUseHosts,
       values = booleanOptions,
       modifier = Modifier.fillMaxWidth(),
       enabled = dnsEnabled != false,
-      title = R.string.use_hosts,
-      summary = configuration.dns.useHosts.textRes,
-      valueToText = { it.textRes },
+      title = { Text(stringResource(R.string.use_hosts)) },
+      summary = { Text(stringResource(configuration.dns.useHosts.textRes)) },
+      valueToText = { AnnotatedString(stringResource(it.textRes)) },
     )
   }
   item(key = "dnsEnhancedMode", contentType = "ListPreference") {
-    SettingsListPreferenceItem(
+    ListPreference(
       value = configuration.dns.enhancedMode,
       onValueChange = actions::updateDnsEnhancedMode,
       values = ConfigurationOverride.DnsEnhancedMode.entries,
       modifier = Modifier.fillMaxWidth(),
       enabled = dnsEnabled != false,
-      title = R.string.enhanced_mode,
-      summary = configuration.dns.enhancedMode.textRes,
-      valueToText = { it.textRes },
+      title = { Text(stringResource(R.string.enhanced_mode)) },
+      summary = { Text(stringResource(configuration.dns.enhancedMode.textRes)) },
+      valueToText = { AnnotatedString(stringResource(it.textRes)) },
     )
   }
   item(key = "dnsNameServer", contentType = "EditTextListPreference") {
-    SettingsEditTextListPreferenceItem(
-      title = R.string.name_server,
-      placeholder = R.string.dont_modify,
-      values = configuration.dns.nameServer,
+    Preference(
+      modifier = Modifier.fillMaxWidth(),
+      title = { Text(stringResource(R.string.name_server)) },
+      summary = { Text(configuration.dns.nameServer.listSummary(R.string.dont_modify)) },
+      enabled = dnsEnabled != false,
       onClick = {
         onOpenEditableTextList(
           R.string.name_server,
@@ -488,14 +493,14 @@ private fun LazyListScope.dnsPreferenceItems(
           actions::updateDnsNameServer,
         )
       },
-      enabled = dnsEnabled != false,
     )
   }
   item(key = "dnsFallback", contentType = "EditTextListPreference") {
-    SettingsEditTextListPreferenceItem(
-      title = R.string.fallback,
-      placeholder = R.string.dont_modify,
-      values = configuration.dns.fallback,
+    Preference(
+      modifier = Modifier.fillMaxWidth(),
+      title = { Text(stringResource(R.string.fallback)) },
+      summary = { Text(configuration.dns.fallback.listSummary(R.string.dont_modify)) },
+      enabled = dnsEnabled != false,
       onClick = {
         onOpenEditableTextList(
           R.string.fallback,
@@ -503,14 +508,14 @@ private fun LazyListScope.dnsPreferenceItems(
           actions::updateDnsFallback,
         )
       },
-      enabled = dnsEnabled != false,
     )
   }
   item(key = "dnsDefaultServer", contentType = "EditTextListPreference") {
-    SettingsEditTextListPreferenceItem(
-      title = R.string.default_name_server,
-      placeholder = R.string.dont_modify,
-      values = configuration.dns.defaultServer,
+    Preference(
+      modifier = Modifier.fillMaxWidth(),
+      title = { Text(stringResource(R.string.default_name_server)) },
+      summary = { Text(configuration.dns.defaultServer.listSummary(R.string.dont_modify)) },
+      enabled = dnsEnabled != false,
       onClick = {
         onOpenEditableTextList(
           R.string.default_name_server,
@@ -518,14 +523,14 @@ private fun LazyListScope.dnsPreferenceItems(
           actions::updateDnsDefaultServer,
         )
       },
-      enabled = dnsEnabled != false,
     )
   }
   item(key = "dnsFakeIpFilter", contentType = "EditTextListPreference") {
-    SettingsEditTextListPreferenceItem(
-      title = R.string.fakeip_filter,
-      placeholder = R.string.dont_modify,
-      values = configuration.dns.fakeIpFilter,
+    Preference(
+      modifier = Modifier.fillMaxWidth(),
+      title = { Text(stringResource(R.string.fakeip_filter)) },
+      summary = { Text(configuration.dns.fakeIpFilter.listSummary(R.string.dont_modify)) },
+      enabled = dnsEnabled != false,
       onClick = {
         onOpenEditableTextList(
           R.string.fakeip_filter,
@@ -533,31 +538,30 @@ private fun LazyListScope.dnsPreferenceItems(
           actions::updateDnsFakeIpFilter,
         )
       },
-      enabled = dnsEnabled != false,
     )
   }
   item(key = "dnsFakeIpFilterMode", contentType = "ListPreference") {
-    SettingsListPreferenceItem(
+    ListPreference(
       value = configuration.dns.fakeIPFilterMode,
       onValueChange = actions::updateDnsFakeIpFilterMode,
       values = ConfigurationOverride.FilterMode.entries,
       modifier = Modifier.fillMaxWidth(),
       enabled = dnsEnabled != false,
-      title = R.string.fakeip_filter_mode,
-      summary = configuration.dns.fakeIPFilterMode.textRes,
-      valueToText = { it.textRes },
+      title = { Text(stringResource(R.string.fakeip_filter_mode)) },
+      summary = { Text(stringResource(configuration.dns.fakeIPFilterMode.textRes)) },
+      valueToText = { AnnotatedString(stringResource(it.textRes)) },
     )
   }
   item(key = "dnsGeoIpFallback", contentType = "ListPreference") {
-    SettingsListPreferenceItem(
+    ListPreference(
       value = configuration.dns.fallbackFilter.geoIp,
       onValueChange = actions::updateDnsGeoIpFallback,
       values = booleanOptions,
       modifier = Modifier.fillMaxWidth(),
       enabled = dnsEnabled != false,
-      title = R.string.geoip_fallback,
-      summary = configuration.dns.fallbackFilter.geoIp.textRes,
-      valueToText = { it.textRes },
+      title = { Text(stringResource(R.string.geoip_fallback)) },
+      summary = { Text(stringResource(configuration.dns.fallbackFilter.geoIp.textRes)) },
+      valueToText = { AnnotatedString(stringResource(it.textRes)) },
     )
   }
   item(key = "dnsGeoIpCode", contentType = "EditTextPreference") {
@@ -571,10 +575,11 @@ private fun LazyListScope.dnsPreferenceItems(
     )
   }
   item(key = "dnsDomainFallback", contentType = "EditTextListPreference") {
-    SettingsEditTextListPreferenceItem(
-      title = R.string.domain_fallback,
-      placeholder = R.string.dont_modify,
-      values = configuration.dns.fallbackFilter.domain,
+    Preference(
+      modifier = Modifier.fillMaxWidth(),
+      title = { Text(stringResource(R.string.domain_fallback)) },
+      summary = { Text(configuration.dns.fallbackFilter.domain.listSummary(R.string.dont_modify)) },
+      enabled = dnsEnabled != false,
       onClick = {
         onOpenEditableTextList(
           R.string.domain_fallback,
@@ -582,14 +587,14 @@ private fun LazyListScope.dnsPreferenceItems(
           actions::updateDnsDomainFallback,
         )
       },
-      enabled = dnsEnabled != false,
     )
   }
   item(key = "dnsIpcidrFallback", contentType = "EditTextListPreference") {
-    SettingsEditTextListPreferenceItem(
-      title = R.string.ipcidr_fallback,
-      placeholder = R.string.dont_modify,
-      values = configuration.dns.fallbackFilter.ipcidr,
+    Preference(
+      modifier = Modifier.fillMaxWidth(),
+      title = { Text(stringResource(R.string.ipcidr_fallback)) },
+      summary = { Text(configuration.dns.fallbackFilter.ipcidr.listSummary(R.string.dont_modify)) },
+      enabled = dnsEnabled != false,
       onClick = {
         onOpenEditableTextList(
           R.string.ipcidr_fallback,
@@ -597,7 +602,6 @@ private fun LazyListScope.dnsPreferenceItems(
           actions::updateDnsIpcidrFallback,
         )
       },
-      enabled = dnsEnabled != false,
     )
   }
   item(key = "dnsNameserverPolicy", contentType = "EditTextMapPreference") {
