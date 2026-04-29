@@ -61,7 +61,7 @@ class MainApplication : Application() {
         .setIcon(icon)
         .setIntent(
           Intent(Intents.ACTION_TOGGLE_CLASH)
-            .setClassName(this, ExternalControlActivity::class.java.name)
+            .setClassName(this, MainActivity::class.java.name)
             .addFlags(flags)
         )
         .setRank(0)
@@ -74,7 +74,7 @@ class MainApplication : Application() {
         .setIcon(icon)
         .setIntent(
           Intent(Intents.ACTION_START_CLASH)
-            .setClassName(this, ExternalControlActivity::class.java.name)
+            .setClassName(this, MainActivity::class.java.name)
             .addFlags(flags)
         )
         .setRank(1)
@@ -87,7 +87,7 @@ class MainApplication : Application() {
         .setIcon(icon)
         .setIntent(
           Intent(Intents.ACTION_STOP_CLASH)
-            .setClassName(this, ExternalControlActivity::class.java.name)
+            .setClassName(this, MainActivity::class.java.name)
             .addFlags(flags)
         )
         .setRank(2)
