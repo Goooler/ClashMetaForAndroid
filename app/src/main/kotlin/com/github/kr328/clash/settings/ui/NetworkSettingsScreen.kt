@@ -15,6 +15,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.PreviewWrapper
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.github.kr328.clash.R
@@ -23,7 +24,7 @@ import com.github.kr328.clash.settings.vm.NetworkSettingsViewModel
 import com.github.kr328.clash.ui.component.MihomoScaffold
 import com.github.kr328.clash.ui.icon.BaselineVpnLock
 import com.github.kr328.clash.ui.icon.MihomoIcons
-import com.github.kr328.clash.ui.theme.MihomoTheme
+import com.github.kr328.clash.ui.theme.MihomoThemeWrapper
 import com.github.kr328.clash.ui.theme.PreviewMihomo
 import me.zhanghai.compose.preference.ProvidePreferenceLocals
 import me.zhanghai.compose.preference.listPreference
@@ -219,64 +220,62 @@ private val AccessControlMode.summaryRes: Int
       AccessControlMode.DenySelected -> R.string.deny_selected_apps
     }
 
+@PreviewWrapper(MihomoThemeWrapper::class)
 @PreviewMihomo
 @Composable
 private fun NetworkSettingsScreenPreview() {
-  MihomoTheme {
-    NetworkSettingsContent(
-      clashRunning = false,
-      uiState =
-        NetworkSettingsViewModel.UiState(
-          hasSystemProxyOption = true,
-          enableVpn = true,
-          bypassPrivateNetwork = true,
-          dnsHijacking = true,
-          allowBypass = true,
-          allowIpv6 = false,
-          systemProxy = true,
-          tunStackMode = "system",
-          accessControlMode = AccessControlMode.AcceptAll,
-        ),
-      onEnableVpnChange = {},
-      onBypassPrivateNetworkChange = {},
-      onDnsHijackingChange = {},
-      onAllowBypassChange = {},
-      onAllowIpv6Change = {},
-      onSystemProxyChange = {},
-      onTunStackModeChange = {},
-      onAccessControlModeChange = {},
-      onAccessControlPackagesClick = {},
-    )
-  }
+  NetworkSettingsContent(
+    clashRunning = false,
+    uiState =
+      NetworkSettingsViewModel.UiState(
+        hasSystemProxyOption = true,
+        enableVpn = true,
+        bypassPrivateNetwork = true,
+        dnsHijacking = true,
+        allowBypass = true,
+        allowIpv6 = false,
+        systemProxy = true,
+        tunStackMode = "system",
+        accessControlMode = AccessControlMode.AcceptAll,
+      ),
+    onEnableVpnChange = {},
+    onBypassPrivateNetworkChange = {},
+    onDnsHijackingChange = {},
+    onAllowBypassChange = {},
+    onAllowIpv6Change = {},
+    onSystemProxyChange = {},
+    onTunStackModeChange = {},
+    onAccessControlModeChange = {},
+    onAccessControlPackagesClick = {},
+  )
 }
 
+@PreviewWrapper(MihomoThemeWrapper::class)
 @PreviewMihomo
 @Composable
 private fun NetworkSettingsScreenRunningPreview() {
-  MihomoTheme {
-    NetworkSettingsContent(
-      clashRunning = true,
-      uiState =
-        NetworkSettingsViewModel.UiState(
-          hasSystemProxyOption = true,
-          enableVpn = true,
-          bypassPrivateNetwork = true,
-          dnsHijacking = true,
-          allowBypass = true,
-          allowIpv6 = false,
-          systemProxy = true,
-          tunStackMode = "mixed",
-          accessControlMode = AccessControlMode.DenySelected,
-        ),
-      onEnableVpnChange = {},
-      onBypassPrivateNetworkChange = {},
-      onDnsHijackingChange = {},
-      onAllowBypassChange = {},
-      onAllowIpv6Change = {},
-      onSystemProxyChange = {},
-      onTunStackModeChange = {},
-      onAccessControlModeChange = {},
-      onAccessControlPackagesClick = {},
-    )
-  }
+  NetworkSettingsContent(
+    clashRunning = true,
+    uiState =
+      NetworkSettingsViewModel.UiState(
+        hasSystemProxyOption = true,
+        enableVpn = true,
+        bypassPrivateNetwork = true,
+        dnsHijacking = true,
+        allowBypass = true,
+        allowIpv6 = false,
+        systemProxy = true,
+        tunStackMode = "mixed",
+        accessControlMode = AccessControlMode.DenySelected,
+      ),
+    onEnableVpnChange = {},
+    onBypassPrivateNetworkChange = {},
+    onDnsHijackingChange = {},
+    onAllowBypassChange = {},
+    onAllowIpv6Change = {},
+    onSystemProxyChange = {},
+    onTunStackModeChange = {},
+    onAccessControlModeChange = {},
+    onAccessControlPackagesClick = {},
+  )
 }

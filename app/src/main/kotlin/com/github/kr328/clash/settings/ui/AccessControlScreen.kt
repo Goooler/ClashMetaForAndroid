@@ -47,6 +47,7 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.PreviewWrapper
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.graphics.drawable.toDrawable
@@ -60,7 +61,7 @@ import com.github.kr328.clash.ui.component.MihomoScaffold
 import com.github.kr328.clash.ui.icon.BaselineMoreVert
 import com.github.kr328.clash.ui.icon.BaselineSearch
 import com.github.kr328.clash.ui.icon.MihomoIcons
-import com.github.kr328.clash.ui.theme.MihomoTheme
+import com.github.kr328.clash.ui.theme.MihomoThemeWrapper
 import com.github.kr328.clash.ui.theme.PreviewMihomo
 import com.github.kr328.clash.ui.theme.mihomoDimens
 import kotlin.time.Duration.Companion.milliseconds
@@ -424,9 +425,10 @@ interface AccessControlActions {
   fun updateShowSystemApps(show: Boolean) = Unit
 }
 
+@PreviewWrapper(MihomoThemeWrapper::class)
 @PreviewMihomo
 @Composable
-private fun AccessControlContentPreview() = MihomoTheme {
+private fun AccessControlContentPreview() {
   AccessControlContent(
     apps =
       listOf(
@@ -453,9 +455,10 @@ private fun AccessControlContentPreview() = MihomoTheme {
   )
 }
 
+@PreviewWrapper(MihomoThemeWrapper::class)
 @PreviewMihomo
 @Composable
-private fun AccessControlMenuSheetPreview() = MihomoTheme {
+private fun AccessControlMenuSheetPreview() {
   Surface {
     Column {
       AccessControlMenuContent(
@@ -475,9 +478,10 @@ private fun AccessControlMenuSheetPreview() = MihomoTheme {
   }
 }
 
+@PreviewWrapper(MihomoThemeWrapper::class)
 @PreviewMihomo
 @Composable
-private fun AccessControlSearchSheetPreview() = MihomoTheme {
+private fun AccessControlSearchSheetPreview() {
   Surface {
     Column {
       AccessControlSearchContent(

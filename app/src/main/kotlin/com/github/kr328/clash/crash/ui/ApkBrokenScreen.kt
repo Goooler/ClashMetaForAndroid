@@ -9,11 +9,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.PreviewWrapper
 import com.github.kr328.clash.R
 import com.github.kr328.clash.main.ui.CMFA_GITHUB
 import com.github.kr328.clash.main.ui.openLink
 import com.github.kr328.clash.ui.component.MihomoScaffold
-import com.github.kr328.clash.ui.theme.MihomoTheme
+import com.github.kr328.clash.ui.theme.MihomoThemeWrapper
 import com.github.kr328.clash.ui.theme.PreviewMihomo
 import me.zhanghai.compose.preference.ProvidePreferenceLocals
 import me.zhanghai.compose.preference.preference
@@ -49,4 +50,9 @@ fun ApkBrokenScreen() {
   }
 }
 
-@PreviewMihomo @Composable private fun ApkBrokenScreenPreview() = MihomoTheme { ApkBrokenScreen() }
+@PreviewWrapper(MihomoThemeWrapper::class)
+@PreviewMihomo
+@Composable
+private fun ApkBrokenScreenPreview() {
+  ApkBrokenScreen()
+}

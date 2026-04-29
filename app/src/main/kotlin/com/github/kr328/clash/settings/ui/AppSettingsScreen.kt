@@ -10,6 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.PreviewWrapper
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.github.kr328.clash.R
@@ -22,7 +23,7 @@ import com.github.kr328.clash.ui.icon.BaselineHide
 import com.github.kr328.clash.ui.icon.BaselineRestore
 import com.github.kr328.clash.ui.icon.BaselineStack
 import com.github.kr328.clash.ui.icon.MihomoIcons
-import com.github.kr328.clash.ui.theme.MihomoTheme
+import com.github.kr328.clash.ui.theme.MihomoThemeWrapper
 import com.github.kr328.clash.ui.theme.PreviewMihomo
 import me.zhanghai.compose.preference.ProvidePreferenceLocals
 import me.zhanghai.compose.preference.listPreference
@@ -133,48 +134,46 @@ private val DarkMode.summaryRes: Int
       DarkMode.ForceDark -> R.string.always_dark
     }
 
+@PreviewWrapper(MihomoThemeWrapper::class)
 @PreviewMihomo
 @Composable
 private fun AppSettingsScreenPreview() {
-  MihomoTheme {
-    AppSettingsContent(
-      clashRunning = false,
-      uiState =
-        AppSettingsViewModel.UiState(
-          autoRestart = true,
-          darkMode = DarkMode.Auto,
-          hideAppIcon = false,
-          hideFromRecents = false,
-          dynamicNotification = true,
-        ),
-      onAutoRestartChange = {},
-      onDarkModeChange = {},
-      onHideAppIconChange = {},
-      onHideFromRecentsChange = {},
-      onDynamicNotificationChange = {},
-    )
-  }
+  AppSettingsContent(
+    clashRunning = false,
+    uiState =
+      AppSettingsViewModel.UiState(
+        autoRestart = true,
+        darkMode = DarkMode.Auto,
+        hideAppIcon = false,
+        hideFromRecents = false,
+        dynamicNotification = true,
+      ),
+    onAutoRestartChange = {},
+    onDarkModeChange = {},
+    onHideAppIconChange = {},
+    onHideFromRecentsChange = {},
+    onDynamicNotificationChange = {},
+  )
 }
 
+@PreviewWrapper(MihomoThemeWrapper::class)
 @PreviewMihomo
 @Composable
 private fun AppSettingsScreenRunningPreview() {
-  MihomoTheme {
-    AppSettingsContent(
-      clashRunning = true,
-      uiState =
-        AppSettingsViewModel.UiState(
-          autoRestart = true,
-          darkMode = DarkMode.ForceDark,
-          hideAppIcon = true,
-          hideFromRecents = true,
-          dynamicNotification = true,
-        ),
-      onAutoRestartChange = {},
-      onDarkModeChange = {},
-      onHideAppIconChange = {},
-      onHideFromRecentsChange = {},
-      onDynamicNotificationChange = {},
-    )
-  }
+  AppSettingsContent(
+    clashRunning = true,
+    uiState =
+      AppSettingsViewModel.UiState(
+        autoRestart = true,
+        darkMode = DarkMode.ForceDark,
+        hideAppIcon = true,
+        hideFromRecents = true,
+        dynamicNotification = true,
+      ),
+    onAutoRestartChange = {},
+    onDarkModeChange = {},
+    onHideAppIconChange = {},
+    onHideFromRecentsChange = {},
+    onDynamicNotificationChange = {},
+  )
 }

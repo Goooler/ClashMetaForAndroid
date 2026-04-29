@@ -30,6 +30,7 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.PreviewWrapper
 import androidx.navigation3.runtime.EntryProviderScope
 import androidx.navigation3.runtime.NavKey
 import com.github.kr328.clash.R
@@ -37,7 +38,7 @@ import com.github.kr328.clash.ui.component.MihomoScaffold
 import com.github.kr328.clash.ui.icon.BaselineAdd
 import com.github.kr328.clash.ui.icon.MihomoIcons
 import com.github.kr328.clash.ui.icon.OutlineDelete
-import com.github.kr328.clash.ui.theme.MihomoTheme
+import com.github.kr328.clash.ui.theme.MihomoThemeWrapper
 import com.github.kr328.clash.ui.theme.PreviewMihomo
 import com.github.kr328.clash.ui.theme.mihomoDimens
 import kotlinx.serialization.Serializable
@@ -167,9 +168,10 @@ private fun SingleTextInputDialog(
   )
 }
 
+@PreviewWrapper(MihomoThemeWrapper::class)
 @PreviewMihomo
 @Composable
-private fun EditableTextListScreenPreview() = MihomoTheme {
+private fun EditableTextListScreenPreview() {
   EditableTextListScreen(
     title = R.string.sniff_http_ports,
     initialValues = listOf("80", "8080"),

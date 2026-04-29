@@ -22,6 +22,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.PreviewWrapper
 import com.github.kr328.clash.R
 import com.github.kr328.clash.ui.component.MihomoScaffold
 import com.github.kr328.clash.ui.icon.BaselineDns
@@ -29,7 +30,7 @@ import com.github.kr328.clash.ui.icon.BaselineExtension
 import com.github.kr328.clash.ui.icon.BaselineMeta
 import com.github.kr328.clash.ui.icon.BaselineSettings
 import com.github.kr328.clash.ui.icon.MihomoIcons
-import com.github.kr328.clash.ui.theme.MihomoTheme
+import com.github.kr328.clash.ui.theme.MihomoThemeWrapper
 import com.github.kr328.clash.ui.theme.PreviewMihomo
 import com.github.kr328.clash.ui.theme.mihomoDimens
 
@@ -106,9 +107,10 @@ private fun SettingsEntryItem(
   }
 }
 
+@PreviewWrapper(MihomoThemeWrapper::class)
 @PreviewMihomo
 @Composable
-private fun SettingsScreenPreview() = MihomoTheme {
+private fun SettingsScreenPreview() {
   SettingsScreen(
     onOpenAppSettings = {},
     onOpenNetworkSettings = {},
