@@ -63,8 +63,8 @@ fun EntryProviderScope<NavKey>.editableTextMapScreenEntry(
   }
 }
 
-@Composable
 @OptIn(ExperimentalMaterial3Api::class)
+@Composable
 fun EditableTextMapScreen(
   @StringRes title: Int,
   initialValues: Map<String, String>?,

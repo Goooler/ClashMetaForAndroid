@@ -19,7 +19,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarDuration
-import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -72,21 +71,21 @@ fun ProvidersScreen(modifier: Modifier = Modifier, viewModel: ProvidersViewModel
     viewModel.consumeEvent()
   }
 
-  Box(modifier = modifier.fillMaxSize()) {
-    ProvidersContent(
-      providers = uiState.providers,
-      currentTime = uiState.currentTime,
-      onUpdateAll = viewModel::onUpdateAll,
-      onUpdate = { _, provider -> viewModel.onUpdate(provider) },
-    )
-
-    SnackbarHost(hostState = snackbarHostState, modifier = Modifier.align(Alignment.BottomCenter))
-  }
+  ProvidersContent(
+    modifier = modifier,
+    snackbarHostState = snackbarHostState,
+    providers = uiState.providers,
+    currentTime = uiState.currentTime,
+    onUpdateAll = viewModel::onUpdateAll,
+    onUpdate = { _, provider -> viewModel.onUpdate(provider) },
+  )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun ProvidersContent(
+  modifier: Modifier = Modifier,
+  snackbarHostState: SnackbarHostState,
   providers: List<ProviderItemState>,
   currentTime: Long,
   onUpdateAll: () -> Unit,
@@ -94,6 +93,8 @@ private fun ProvidersContent(
 ) {
   MihomoScaffold(
     title = stringResource(R.string.providers),
+    modifier = modifier,
+    snackbarHostState = snackbarHostState,
     actions = {
       IconButton(onClick = onUpdateAll) {
         Icon(
@@ -175,6 +176,7 @@ private fun ProviderItem(state: ProviderItemState, currentTime: Long, onUpdate: 
 @Composable
 private fun ProvidersContentPreview() = MihomoTheme {
   ProvidersContent(
+    snackbarHostState = SnackbarHostState(),
     providers =
       listOf(
         ProviderItemState(

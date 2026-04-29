@@ -7,7 +7,10 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
@@ -26,8 +29,8 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.github.kr328.clash.R
 import com.github.kr328.clash.model.DarkMode
 import com.github.kr328.clash.settings.vm.AppSettingsViewModel
+import com.github.kr328.clash.ui.component.MihomoScaffold
 import com.github.kr328.clash.ui.component.SettingsCategoryTitle
-import com.github.kr328.clash.ui.component.SettingsCommonScreen
 import com.github.kr328.clash.ui.component.SettingsPreferenceClickableItem
 import com.github.kr328.clash.ui.component.SettingsPreferenceSwitchItem
 import com.github.kr328.clash.ui.icon.BaselineBrightness4
@@ -59,6 +62,7 @@ fun AppSettingsScreen(
   )
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun AppSettingsContent(
   clashRunning: Boolean,
@@ -72,47 +76,52 @@ private fun AppSettingsContent(
 ) {
   var showDarkModeDialog by remember { mutableStateOf(false) }
 
-  SettingsCommonScreen(title = stringResource(R.string.app), modifier = modifier.fillMaxSize()) {
-    SettingsCategoryTitle(text = stringResource(R.string.behavior))
-    SettingsPreferenceSwitchItem(
-      icon = MihomoIcons.BaselineRestore,
-      titleRes = R.string.auto_restart,
-      summaryRes = R.string.allow_clash_auto_restart,
-      checked = uiState.autoRestart,
-      onCheckedChange = onAutoRestartChange,
-    )
+  MihomoScaffold(title = stringResource(R.string.app), modifier = modifier.fillMaxSize()) {
+    innerPadding ->
+    Column(
+      modifier = Modifier.fillMaxSize().padding(innerPadding).verticalScroll(rememberScrollState())
+    ) {
+      SettingsCategoryTitle(text = stringResource(R.string.behavior))
+      SettingsPreferenceSwitchItem(
+        icon = MihomoIcons.BaselineRestore,
+        titleRes = R.string.auto_restart,
+        summaryRes = R.string.allow_clash_auto_restart,
+        checked = uiState.autoRestart,
+        onCheckedChange = onAutoRestartChange,
+      )
 
-    SettingsCategoryTitle(text = stringResource(R.string.interface_))
-    SettingsPreferenceClickableItem(
-      icon = MihomoIcons.BaselineBrightness4,
-      titleRes = R.string.dark_mode,
-      summaryRes = uiState.darkMode.summaryRes,
-      onClick = { showDarkModeDialog = true },
-    )
-    SettingsPreferenceSwitchItem(
-      icon = MihomoIcons.BaselineHide,
-      titleRes = R.string.hide_app_icon_title,
-      summaryRes = R.string.hide_app_icon_desc,
-      checked = uiState.hideAppIcon,
-      onCheckedChange = onHideAppIconChange,
-    )
-    SettingsPreferenceSwitchItem(
-      icon = MihomoIcons.BaselineStack,
-      titleRes = R.string.hide_from_recents_title,
-      summaryRes = R.string.hide_from_recents_desc,
-      checked = uiState.hideFromRecents,
-      onCheckedChange = onHideFromRecentsChange,
-    )
+      SettingsCategoryTitle(text = stringResource(R.string.interface_))
+      SettingsPreferenceClickableItem(
+        icon = MihomoIcons.BaselineBrightness4,
+        titleRes = R.string.dark_mode,
+        summaryRes = uiState.darkMode.summaryRes,
+        onClick = { showDarkModeDialog = true },
+      )
+      SettingsPreferenceSwitchItem(
+        icon = MihomoIcons.BaselineHide,
+        titleRes = R.string.hide_app_icon_title,
+        summaryRes = R.string.hide_app_icon_desc,
+        checked = uiState.hideAppIcon,
+        onCheckedChange = onHideAppIconChange,
+      )
+      SettingsPreferenceSwitchItem(
+        icon = MihomoIcons.BaselineStack,
+        titleRes = R.string.hide_from_recents_title,
+        summaryRes = R.string.hide_from_recents_desc,
+        checked = uiState.hideFromRecents,
+        onCheckedChange = onHideFromRecentsChange,
+      )
 
-    SettingsCategoryTitle(text = stringResource(R.string.service))
-    SettingsPreferenceSwitchItem(
-      icon = MihomoIcons.BaselineDomain,
-      titleRes = R.string.show_traffic,
-      summaryRes = R.string.show_traffic_summary,
-      checked = uiState.dynamicNotification,
-      enabled = !clashRunning,
-      onCheckedChange = onDynamicNotificationChange,
-    )
+      SettingsCategoryTitle(text = stringResource(R.string.service))
+      SettingsPreferenceSwitchItem(
+        icon = MihomoIcons.BaselineDomain,
+        titleRes = R.string.show_traffic,
+        summaryRes = R.string.show_traffic_summary,
+        checked = uiState.dynamicNotification,
+        enabled = !clashRunning,
+        onCheckedChange = onDynamicNotificationChange,
+      )
+    }
   }
 
   if (showDarkModeDialog) {

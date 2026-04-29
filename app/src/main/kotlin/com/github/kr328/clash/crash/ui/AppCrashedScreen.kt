@@ -21,7 +21,6 @@ import com.github.kr328.clash.ui.component.MihomoScaffold
 import com.github.kr328.clash.ui.theme.MihomoTheme
 import com.github.kr328.clash.ui.theme.PreviewMihomo
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AppCrashedScreen(modifier: Modifier = Modifier, viewModel: AppCrashedViewModel = viewModel()) {
   val logs by viewModel.logs.collectAsStateWithLifecycle()

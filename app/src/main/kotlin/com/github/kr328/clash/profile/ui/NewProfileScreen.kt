@@ -8,7 +8,6 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -23,7 +22,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarDuration
-import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -98,24 +96,29 @@ fun NewProfileScreen(
     viewModel.consumeEvent()
   }
 
-  Box(modifier = modifier.fillMaxSize()) {
-    NewProfileContent(
-      providers = uiState.providers,
-      onCreate = viewModel::onCreate,
-      onDetail = viewModel::onDetail,
-    )
-    SnackbarHost(hostState = snackbarHostState, modifier = Modifier.align(Alignment.BottomCenter))
-  }
+  NewProfileContent(
+    modifier = modifier,
+    snackbarHostState = snackbarHostState,
+    providers = uiState.providers,
+    onCreate = viewModel::onCreate,
+    onDetail = viewModel::onDetail,
+  )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun NewProfileContent(
+  modifier: Modifier = Modifier,
+  snackbarHostState: SnackbarHostState,
   providers: List<ProfileProvider>,
   onCreate: (ProfileProvider) -> Unit,
   onDetail: (ProfileProvider.External) -> Unit,
 ) {
-  MihomoScaffold(title = stringResource(R.string.new_profile)) { innerPadding ->
+  MihomoScaffold(
+    title = stringResource(R.string.new_profile),
+    modifier = modifier,
+    snackbarHostState = snackbarHostState,
+  ) { innerPadding ->
     LazyColumn(modifier = Modifier.fillMaxSize().padding(innerPadding)) {
       items(items = providers) { provider ->
         ProfileProviderItem(
@@ -198,5 +201,10 @@ private fun NewProfileContentPreview() = MihomoTheme {
       ),
     )
 
-  NewProfileContent(providers = providers, onCreate = {}, onDetail = {})
+  NewProfileContent(
+    snackbarHostState = SnackbarHostState(),
+    providers = providers,
+    onCreate = {},
+    onDetail = {},
+  )
 }

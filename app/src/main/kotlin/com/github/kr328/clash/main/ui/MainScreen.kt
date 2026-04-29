@@ -7,32 +7,27 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarDuration
-import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -53,6 +48,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.github.kr328.clash.R
 import com.github.kr328.clash.main.vm.MainViewModel
+import com.github.kr328.clash.ui.component.MihomoScaffold
 import com.github.kr328.clash.ui.icon.BaselineApps
 import com.github.kr328.clash.ui.icon.BaselineAssignment
 import com.github.kr328.clash.ui.icon.BaselineHelpCenter
@@ -129,30 +125,32 @@ fun MainScreen(
     viewModel.consumeEvent()
   }
 
-  Box(modifier = modifier.fillMaxSize()) {
-    MainContent(
-      clashRunning = clashRunning,
-      forwarded = uiState.forwarded,
-      mode = uiState.mode,
-      profileName = uiState.profileName,
-      hasProviders = uiState.hasProviders,
-      aboutVersionName = uiState.aboutVersionName,
-      onDismissAbout = viewModel::dismissAbout,
-      onToggleStatus = viewModel::toggleStatus,
-      onOpenProxy = onOpenProxy,
-      onOpenProfiles = onOpenProfiles,
-      onOpenProviders = onOpenProviders,
-      onOpenLogs = onOpenLogs,
-      onOpenSettings = onOpenSettings,
-      onOpenHelp = onOpenHelp,
-      onOpenAbout = viewModel::showAbout,
-    )
-    SnackbarHost(hostState = snackbarHostState, modifier = Modifier.align(Alignment.BottomCenter))
-  }
+  MainContent(
+    modifier = modifier,
+    snackbarHostState = snackbarHostState,
+    clashRunning = clashRunning,
+    forwarded = uiState.forwarded,
+    mode = uiState.mode,
+    profileName = uiState.profileName,
+    hasProviders = uiState.hasProviders,
+    aboutVersionName = uiState.aboutVersionName,
+    onDismissAbout = viewModel::dismissAbout,
+    onToggleStatus = viewModel::toggleStatus,
+    onOpenProxy = onOpenProxy,
+    onOpenProfiles = onOpenProfiles,
+    onOpenProviders = onOpenProviders,
+    onOpenLogs = onOpenLogs,
+    onOpenSettings = onOpenSettings,
+    onOpenHelp = onOpenHelp,
+    onOpenAbout = viewModel::showAbout,
+  )
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun MainContent(
+  modifier: Modifier = Modifier,
+  snackbarHostState: SnackbarHostState,
   clashRunning: Boolean,
   forwarded: String?,
   mode: String?,
@@ -169,15 +167,20 @@ private fun MainContent(
   onOpenHelp: () -> Unit,
   onOpenAbout: () -> Unit,
 ) {
-  Surface(modifier = Modifier.fillMaxSize()) {
-    val darkTheme = isSystemInDarkTheme()
-    val dimens = mihomoDimens
-    val stoppedColor = if (darkTheme) MihomoDarkSurface else MihomoLightStopped
+  val darkTheme = isSystemInDarkTheme()
+  val dimens = mihomoDimens
+  val stoppedColor = if (darkTheme) MihomoDarkSurface else MihomoLightStopped
 
+  MihomoScaffold(
+    title = "",
+    modifier = modifier,
+    topBar = {},
+    snackbarHostState = snackbarHostState,
+  ) { innerPadding ->
     Column(
       modifier =
         Modifier.fillMaxSize()
-          .windowInsetsPadding(WindowInsets.safeDrawing)
+          .padding(innerPadding)
           .padding(horizontal = dimens.mainPaddingHorizontal)
           .verticalScroll(rememberScrollState())
     ) {
@@ -378,6 +381,7 @@ private fun AboutDialog(versionName: String, onDismiss: () -> Unit) {
 @Composable
 private fun MainContentRunningPreview() = MihomoTheme {
   MainContent(
+    snackbarHostState = SnackbarHostState(),
     clashRunning = true,
     forwarded = "1.23 GB",
     mode = "Rule",
@@ -400,6 +404,7 @@ private fun MainContentRunningPreview() = MihomoTheme {
 @Composable
 private fun MainContentStoppedPreview() = MihomoTheme {
   MainContent(
+    snackbarHostState = SnackbarHostState(),
     clashRunning = false,
     forwarded = null,
     mode = null,
