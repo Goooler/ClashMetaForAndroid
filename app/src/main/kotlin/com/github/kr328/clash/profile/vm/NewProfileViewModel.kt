@@ -12,7 +12,6 @@ import com.github.kr328.clash.common.constants.Intents
 import com.github.kr328.clash.model.ProfileProvider
 import com.github.kr328.clash.service.model.Profile
 import com.github.kr328.clash.util.withProfile
-import io.github.g00fy2.quickie.QRResult
 import java.util.UUID
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -67,34 +66,34 @@ class NewProfileViewModel(app: Application) : AndroidViewModel(app) {
     }
   }
 
-  fun onQRResult(result: QRResult) {
-    when (result) {
-      is QRResult.QRSuccess -> {
-        val url = result.content.rawValue ?: result.content.rawBytes?.let { String(it) }.orEmpty()
-        viewModelScope.launch {
-          try {
-            val uuid = withProfile {
-              create(
-                type = Profile.Type.Url,
-                name = application.getString(R.string.new_profile),
-                url,
-              )
-            }
-            eventState.value = EventState.LaunchProperties(uuid)
-          } catch (e: Exception) {
-            eventState.value =
-              EventState.ShowMessage(e.message ?: application.getString(R.string.unknown))
-          }
+  fun onQRResult(result: String) {
+    viewModelScope.launch {
+      try {
+        val uuid = withProfile {
+          create(
+            type = Profile.Type.Url,
+            name = application.getString(R.string.new_profile),
+            result,
+          )
         }
+        eventState.value = EventState.LaunchProperties(uuid)
+      } catch (e: Exception) {
+        eventState.value =
+          EventState.ShowMessage(e.message ?: application.getString(R.string.unknown))
       }
-      QRResult.QRUserCanceled -> Unit
-      QRResult.QRMissingPermission ->
-        eventState.value =
-          EventState.ShowMessage(application.getString(R.string.import_from_qr_no_permission))
-      is QRResult.QRError ->
-        eventState.value =
-          EventState.ShowMessage(application.getString(R.string.import_from_qr_exception))
     }
+    //    when (result) {
+    //      is QRResult.QRSuccess -> {
+    //
+    //      }
+    //      QRResult.QRUserCanceled -> Unit
+    //      QRResult.QRMissingPermission ->
+    //        eventState.value =
+    //          EventState.ShowMessage(application.getString(R.string.import_from_qr_no_permission))
+    //      is QRResult.QRError ->
+    //        eventState.value =
+    //          EventState.ShowMessage(application.getString(R.string.import_from_qr_exception))
+    //    }
   }
 
   private fun createProfile(type: Profile.Type) {

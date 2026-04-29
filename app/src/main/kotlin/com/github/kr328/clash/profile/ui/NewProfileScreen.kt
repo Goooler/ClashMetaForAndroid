@@ -26,7 +26,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.asImageBitmap
@@ -49,9 +51,10 @@ import com.github.kr328.clash.ui.icon.MihomoIcons
 import com.github.kr328.clash.ui.theme.MihomoTheme
 import com.github.kr328.clash.ui.theme.PreviewMihomo
 import com.github.kr328.clash.ui.theme.mihomoDimens
-import io.github.g00fy2.quickie.ScanQRCode
 import java.util.UUID
 import kotlin.math.roundToInt
+import org.publicvalue.multiplatform.qrcode.CodeType
+import org.publicvalue.multiplatform.qrcode.ScannerWithPermissions
 
 @Composable
 fun NewProfileScreen(
@@ -64,9 +67,7 @@ fun NewProfileScreen(
   val uiState by viewModel.uiState.collectAsStateWithLifecycle()
   val eventState by viewModel.eventState.collectAsStateWithLifecycle()
   val snackbarHostState = remember { SnackbarHostState() }
-
-  val qrLauncher =
-    rememberLauncherForActivityResult(ScanQRCode()) { result -> viewModel.onQRResult(result) }
+  var scanCode by remember { mutableStateOf(false) }
 
   val externalProviderLauncher =
     rememberLauncherForActivityResult(StartActivityForResult()) { result ->
@@ -80,7 +81,9 @@ fun NewProfileScreen(
   LaunchedEffect(eventState) {
     when (val event = eventState) {
       NewProfileViewModel.EventState.Idle -> Unit
-      NewProfileViewModel.EventState.LaunchQRScanner -> qrLauncher.launch(null)
+      NewProfileViewModel.EventState.LaunchQRScanner -> {
+        scanCode = true
+      }
       is NewProfileViewModel.EventState.LaunchExternalProvider ->
         externalProviderLauncher.launch(event.intent)
       is NewProfileViewModel.EventState.LaunchProperties -> onProperties(event.uuid)
@@ -102,6 +105,17 @@ fun NewProfileScreen(
     onCreate = viewModel::onCreate,
     onDetail = viewModel::onDetail,
   )
+
+  if (scanCode) {
+    ScannerWithPermissions(
+      onScanned = {
+        viewModel.onQRResult(it)
+        true
+      },
+      types = listOf(CodeType.QR),
+      enableTorch = false,
+    )
+  }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)

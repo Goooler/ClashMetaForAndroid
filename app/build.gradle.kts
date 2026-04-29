@@ -106,8 +106,7 @@ dependencies {
   implementation(libs.androidx.navigation3.ui)
 
   implementation(libs.composePreference)
-
-  implementation(libs.quickie.bundled)
+  implementation(libs.easyqrscan)
 }
 
 val downloadGeoFiles by
