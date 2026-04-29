@@ -20,7 +20,10 @@ allprojects {
     extensions.configure<CommonExtension> {
       namespace = "com.github.kr328.clash.${project.name}"
       compileSdk = 37
-      defaultConfig.apply { minSdk = 28 }
+      defaultConfig.apply {
+        minSdk = 28
+        ndk.abiFilters += listOf("arm64-v8a", "x86_64")
+      }
       ndkVersion = "29.0.14206865"
       compileOptions.apply {
         sourceCompatibility(libs.versions.jvmTarget.get())
