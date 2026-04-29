@@ -102,9 +102,7 @@ class MainActivity : ComponentActivity() {
 
   override fun onNewIntent(intent: Intent) {
     super.onNewIntent(intent)
-    if (intent.handleExternalQuickAction()) {
-      return
-    }
+    if (intent.handleExternalQuickAction()) return
     intent.handleAction(backStack)
   }
 
