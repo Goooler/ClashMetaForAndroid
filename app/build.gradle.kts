@@ -130,7 +130,9 @@ val downloadGeoFiles by
         rootProject.file("local.properties").takeIf { it.exists() }
           ?: rootProject.file("gradle.properties")
       val properties = Properties().apply { propsFile.inputStream().use { load(it) } }
-      properties.getProperty("skip.downloadGeoFiles").toBoolean()
+      properties.getProperty("skip.downloadGeoFiles").toBoolean() &&
+        dest.exists() &&
+        dest.listFiles().orEmpty().size == 3
     }
     // Skip the task when the flag is set.
     onlyIf { !skipDownloadGeoFiles.get() }
