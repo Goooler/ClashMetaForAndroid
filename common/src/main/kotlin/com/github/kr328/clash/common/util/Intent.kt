@@ -17,9 +17,7 @@ fun Intent.grantPermissions(read: Boolean = true, write: Boolean = true): Intent
 }
 
 var Intent.uuid: Uuid?
-  get() {
-    return data?.takeIf { it.scheme == "uuid" }?.schemeSpecificPart?.let { Uuid.parse(it) }
-  }
+  get() = data?.takeIf { it.scheme == "uuid" }?.schemeSpecificPart?.let(Uuid::parse)
   set(value) {
     data =
       if (value == null) {
