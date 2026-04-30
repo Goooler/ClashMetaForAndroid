@@ -20,9 +20,6 @@ gradle-app.setting
 *.iml
 .idea
 
-# Ignore builtin geofiles
-app/src/main/assets
-
 # clion cmake build
 cmake-build-*
 

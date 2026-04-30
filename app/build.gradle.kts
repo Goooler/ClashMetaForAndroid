@@ -58,6 +58,12 @@ android {
 }
 
 androidComponents {
+  onVariants { variant ->
+    variant.sources.assets?.addGeneratedSourceDirectory(downloadGeoFiles) {
+      objects.directoryProperty().fileValue(it.dest)
+    }
+  }
+
   onVariants(selector().withBuildType("release")) { variant ->
     variant.outputs.forEach { output ->
       with(output) {
@@ -117,7 +123,7 @@ val downloadGeoFiles by
         "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@release/GeoLite2-ASN.mmdb",
       )
     )
-    dest("src/main/assets")
+    dest("build/assets-geo-files")
     onlyIfModified(true)
     eachFile {
       if (name == "GeoLite2-ASN.mmdb") {
@@ -137,7 +143,3 @@ val downloadGeoFiles by
     // Skip the task when the flag is set.
     onlyIf { !skipDownloadGeoFiles.get() }
   }
-
-tasks.preBuild { dependsOn(downloadGeoFiles) }
-
-tasks.clean { delete(downloadGeoFiles) }
