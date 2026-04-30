@@ -52,18 +52,18 @@ import com.github.kr328.clash.ui.theme.mihomoDimens
 import com.github.kr328.clash.util.ValidatorAutoUpdateInterval
 import com.github.kr328.clash.util.ValidatorHttpUrl
 import com.github.kr328.clash.util.ValidatorNotBlank
-import java.util.UUID
 import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.minutes
+import kotlin.uuid.Uuid
 import me.zhanghai.compose.preference.Preference
 import me.zhanghai.compose.preference.ProvidePreferenceLocals
 
 @Composable
 fun PropertiesScreen(
-  uuid: UUID,
+  uuid: Uuid,
   modifier: Modifier = Modifier,
   viewModel: PropertiesViewModel = viewModel(),
-  onBrowseFiles: (UUID) -> Unit,
+  onBrowseFiles: (Uuid) -> Unit,
   onFinish: (Boolean) -> Unit,
 ) {
   val lifecycleOwner = LocalLifecycleOwner.current
@@ -327,7 +327,7 @@ private fun PropertiesContentPreview() {
     snackbarHostState = SnackbarHostState(),
     profile =
       Profile(
-        uuid = UUID(0, 0),
+        uuid = Uuid.fromLongs(0, 0),
         name = "Meta Profile",
         type = Profile.Type.Url,
         source = "https://example.com/config.yaml",

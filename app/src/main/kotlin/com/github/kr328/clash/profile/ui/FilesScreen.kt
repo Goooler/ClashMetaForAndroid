@@ -66,14 +66,14 @@ import com.github.kr328.clash.ui.theme.MihomoThemeWrapper
 import com.github.kr328.clash.ui.theme.PreviewMihomo
 import com.github.kr328.clash.util.ValidatorFileName
 import com.github.kr328.clash.util.elapsedIntervalString
-import java.util.UUID
 import kotlin.time.Duration.Companion.minutes
+import kotlin.uuid.Uuid
 import kotlinx.coroutines.delay
 import me.saket.bytesize.binaryBytes
 
 @Composable
 fun FilesScreen(
-  uuid: UUID,
+  uuid: Uuid,
   modifier: Modifier = Modifier,
   viewModel: FilesViewModel = viewModel(),
   onFinish: () -> Unit,

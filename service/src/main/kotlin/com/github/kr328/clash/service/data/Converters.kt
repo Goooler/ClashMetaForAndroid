@@ -2,17 +2,17 @@ package com.github.kr328.clash.service.data
 
 import androidx.room.TypeConverter
 import com.github.kr328.clash.service.model.Profile
-import java.util.UUID
+import kotlin.uuid.Uuid
 
 class Converters {
   @TypeConverter
-  fun fromUUID(uuid: UUID): String {
+  fun fromUUID(uuid: Uuid): String {
     return uuid.toString()
   }
 
   @TypeConverter
-  fun toUUID(uuid: String): UUID {
-    return UUID.fromString(uuid)
+  fun toUUID(uuid: String): Uuid {
+    return Uuid.parse(uuid)
   }
 
   @TypeConverter

@@ -14,7 +14,7 @@ import com.github.kr328.clash.model.ProfileProvider
 import com.github.kr328.clash.service.model.Profile
 import com.github.kr328.clash.util.withProfile
 import io.github.g00fy2.quickie.QRResult
-import java.util.UUID
+import kotlin.uuid.Uuid
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -151,7 +151,7 @@ class NewProfileViewModel(app: Application) : AndroidViewModel(app) {
 
     data class LaunchExternalProvider(val intent: Intent) : EventState
 
-    data class LaunchProperties(val uuid: UUID) : EventState
+    data class LaunchProperties(val uuid: Uuid) : EventState
 
     data class OpenAppSettings(val uri: Uri) : EventState
 

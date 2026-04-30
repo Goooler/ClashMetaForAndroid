@@ -8,7 +8,8 @@ import android.content.IntentFilter
 import com.github.kr328.clash.common.compat.registerReceiverCompat
 import com.github.kr328.clash.common.constants.Intents
 import com.github.kr328.clash.common.log.Log
-import java.util.UUID
+import com.github.kr328.clash.common.util.getSerializableCompat
+import kotlin.uuid.Uuid
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -24,9 +25,9 @@ class Broadcasts(private val context: Application) {
 
     data object ProfileChanged : Event
 
-    data class ProfileUpdateCompleted(val uuid: UUID?) : Event
+    data class ProfileUpdateCompleted(val uuid: Uuid?) : Event
 
-    data class ProfileUpdateFailed(val uuid: UUID?, val reason: String?) : Event
+    data class ProfileUpdateFailed(val uuid: Uuid?, val reason: String?) : Event
 
     data object ProfileLoaded : Event
   }
@@ -65,14 +66,12 @@ class Broadcasts(private val context: Application) {
           Intents.ACTION_PROFILE_CHANGED -> event.tryEmit(Event.ProfileChanged)
           Intents.ACTION_PROFILE_UPDATE_COMPLETED ->
             event.tryEmit(
-              Event.ProfileUpdateCompleted(
-                UUID.fromString(intent.getStringExtra(Intents.EXTRA_UUID))
-              )
+              Event.ProfileUpdateCompleted(intent.getSerializableCompat(Intents.EXTRA_UUID))
             )
           Intents.ACTION_PROFILE_UPDATE_FAILED ->
             event.tryEmit(
               Event.ProfileUpdateFailed(
-                UUID.fromString(intent.getStringExtra(Intents.EXTRA_UUID)),
+                intent.getSerializableCompat(Intents.EXTRA_UUID),
                 intent.getStringExtra(Intents.EXTRA_FAIL_REASON),
               )
             )

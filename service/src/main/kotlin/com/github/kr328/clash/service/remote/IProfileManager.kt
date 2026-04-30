@@ -2,25 +2,25 @@ package com.github.kr328.clash.service.remote
 
 import com.github.kr328.clash.service.model.Profile
 import com.github.kr328.kaidl.BinderInterface
-import java.util.UUID
+import kotlin.uuid.Uuid
 
 @BinderInterface
 interface IProfileManager {
-  suspend fun create(type: Profile.Type, name: String, source: String = ""): UUID
+  suspend fun create(type: Profile.Type, name: String, source: String = ""): Uuid
 
-  suspend fun clone(uuid: UUID): UUID
+  suspend fun clone(uuid: Uuid): Uuid
 
-  suspend fun commit(uuid: UUID, callback: IFetchObserver? = null)
+  suspend fun commit(uuid: Uuid, callback: IFetchObserver? = null)
 
-  suspend fun release(uuid: UUID)
+  suspend fun release(uuid: Uuid)
 
-  suspend fun delete(uuid: UUID)
+  suspend fun delete(uuid: Uuid)
 
-  suspend fun patch(uuid: UUID, name: String, source: String, interval: Long)
+  suspend fun patch(uuid: Uuid, name: String, source: String, interval: Long)
 
-  suspend fun update(uuid: UUID)
+  suspend fun update(uuid: Uuid)
 
-  suspend fun queryByUUID(uuid: UUID): Profile?
+  suspend fun queryByUUID(uuid: Uuid): Profile?
 
   suspend fun queryAll(): List<Profile>
 

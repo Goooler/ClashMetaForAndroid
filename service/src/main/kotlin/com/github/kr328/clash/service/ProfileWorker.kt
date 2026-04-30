@@ -19,8 +19,8 @@ import com.github.kr328.clash.common.util.uuid
 import com.github.kr328.clash.service.data.ImportedDao
 import com.github.kr328.clash.service.util.sendProfileUpdateCompleted
 import com.github.kr328.clash.service.util.sendProfileUpdateFailed
-import java.util.UUID
 import kotlin.time.Duration.Companion.seconds
+import kotlin.uuid.Uuid
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.delay
@@ -83,7 +83,7 @@ class ProfileWorker : BaseService() {
     return START_NOT_STICKY
   }
 
-  private suspend fun run(uuid: UUID) {
+  private suspend fun run(uuid: Uuid) {
     val imported = ImportedDao().queryByUUID(uuid) ?: return
 
     try {
@@ -160,7 +160,7 @@ class ProfileWorker : BaseService() {
     }
   }
 
-  private fun resultBuilder(id: Int, uuid: UUID): NotificationCompat.Builder {
+  private fun resultBuilder(id: Int, uuid: Uuid): NotificationCompat.Builder {
     val intent =
       PendingIntent.getActivity(
         this,
@@ -181,7 +181,7 @@ class ProfileWorker : BaseService() {
       .setGroup(RESULT_CHANNEL)
   }
 
-  private fun completed(uuid: UUID, name: String) {
+  private fun completed(uuid: Uuid, name: String) {
     val id = UndefinedIds.next()
 
     val notification =
@@ -195,7 +195,7 @@ class ProfileWorker : BaseService() {
     sendProfileUpdateCompleted(uuid)
   }
 
-  private fun failed(uuid: UUID, name: String, reason: String) {
+  private fun failed(uuid: Uuid, name: String, reason: String) {
     val id = UndefinedIds.next()
 
     val content = getString(R.string.format_update_failure, name, reason)

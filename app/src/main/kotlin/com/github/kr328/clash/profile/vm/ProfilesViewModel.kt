@@ -11,8 +11,8 @@ import com.github.kr328.clash.remote.Broadcasts
 import com.github.kr328.clash.remote.Remote
 import com.github.kr328.clash.service.model.Profile
 import com.github.kr328.clash.util.withProfile
-import java.util.UUID
 import kotlin.time.Duration.Companion.minutes
+import kotlin.uuid.Uuid
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -159,13 +159,13 @@ class ProfilesViewModel(app: Application) : AndroidViewModel(app), DefaultLifecy
     }
   }
 
-  private suspend fun showProfileUpdateCompleted(uuid: UUID) {
+  private suspend fun showProfileUpdateCompleted(uuid: Uuid) {
     val name = withProfile { queryByUUID(uuid)?.name }
     eventState.value =
       EventState.ShowMessage(application.getString(R.string.toast_profile_updated_complete, name))
   }
 
-  private suspend fun showProfileUpdateFailed(uuid: UUID, reason: String?) {
+  private suspend fun showProfileUpdateFailed(uuid: Uuid, reason: String?) {
     val name = withProfile { queryByUUID(uuid)?.name }
     val displayReason =
       reason?.takeUnless { it.isBlank() } ?: application.getString(R.string.unknown)
@@ -188,10 +188,10 @@ class ProfilesViewModel(app: Application) : AndroidViewModel(app), DefaultLifecy
 
     data object OpenCreate : EventState
 
-    data class OpenEdit(val uuid: UUID) : EventState
+    data class OpenEdit(val uuid: Uuid) : EventState
 
     data class ShowMessage(val message: String) : EventState
 
-    data class ShowEditableMessage(val message: String, val uuid: UUID) : EventState
+    data class ShowEditableMessage(val message: String, val uuid: Uuid) : EventState
   }
 }

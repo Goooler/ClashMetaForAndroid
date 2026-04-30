@@ -4,7 +4,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.TypeConverters
-import java.util.UUID
+import kotlin.uuid.Uuid
 
 @Entity(
   tableName = "selections",
@@ -22,7 +22,7 @@ import java.util.UUID
 )
 @TypeConverters(Converters::class)
 data class Selection(
-  @ColumnInfo(name = "uuid") val uuid: UUID,
+  @ColumnInfo(name = "uuid") val uuid: Uuid,
   @ColumnInfo(name = "proxy") val proxy: String,
   @ColumnInfo(name = "selected") val selected: String,
 )

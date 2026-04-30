@@ -51,14 +51,14 @@ import com.github.kr328.clash.ui.theme.MihomoThemeWrapper
 import com.github.kr328.clash.ui.theme.PreviewMihomo
 import com.github.kr328.clash.ui.theme.mihomoDimens
 import io.github.g00fy2.quickie.ScanQRCode
-import java.util.UUID
 import kotlin.math.roundToInt
+import kotlin.uuid.Uuid
 
 @Composable
 fun NewProfileScreen(
   modifier: Modifier = Modifier,
   viewModel: NewProfileViewModel = viewModel(),
-  onProperties: (UUID) -> Unit,
+  onProperties: (Uuid) -> Unit,
   onFinish: () -> Unit,
 ) {
   val context = LocalContext.current

@@ -1,18 +1,14 @@
-@file:UseSerializers(UUIDSerializer::class)
-
 package com.github.kr328.clash.service.model
 
 import android.os.Parcelable
-import com.github.kr328.clash.service.util.UUIDSerializer
-import java.util.UUID
+import kotlin.uuid.Uuid
 import kotlinx.parcelize.Parcelize
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.UseSerializers
 
 @Parcelize
 @Serializable
 data class Profile(
-  val uuid: UUID,
+  val uuid: Uuid,
   val name: String,
   val type: Type,
   val source: String,

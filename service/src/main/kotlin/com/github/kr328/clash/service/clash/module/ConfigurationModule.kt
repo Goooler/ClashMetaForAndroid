@@ -3,6 +3,7 @@ package com.github.kr328.clash.service.clash.module
 import android.app.Service
 import com.github.kr328.clash.common.constants.Intents
 import com.github.kr328.clash.common.log.Log
+import com.github.kr328.clash.common.util.getSerializableCompat
 import com.github.kr328.clash.core.Clash
 import com.github.kr328.clash.service.StatusProvider
 import com.github.kr328.clash.service.data.ImportedDao
@@ -10,7 +11,7 @@ import com.github.kr328.clash.service.data.SelectionDao
 import com.github.kr328.clash.service.store.ServiceStore
 import com.github.kr328.clash.service.util.importedDir
 import com.github.kr328.clash.service.util.sendProfileLoaded
-import java.util.UUID
+import kotlin.uuid.Uuid
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.selects.select
 
@@ -26,15 +27,15 @@ class ConfigurationModule(service: Service) : Module<ConfigurationModule.LoadExc
       addAction(Intents.ACTION_OVERRIDE_CHANGED)
     }
 
-    var loaded: UUID? = null
+    var loaded: Uuid? = null
 
     reload.trySend(Unit)
 
     while (true) {
-      val changed: UUID? = select {
+      val changed: Uuid? = select {
         broadcasts.onReceive {
           if (it.action == Intents.ACTION_PROFILE_CHANGED)
-            UUID.fromString(it.getStringExtra(Intents.EXTRA_UUID))
+            it.getSerializableCompat(Intents.EXTRA_UUID)
           else null
         }
         reload.onReceive { null }

@@ -12,7 +12,7 @@ import com.github.kr328.clash.remote.FilesClient
 import com.github.kr328.clash.service.model.Profile
 import com.github.kr328.clash.util.fileName
 import com.github.kr328.clash.util.withProfile
-import java.util.UUID
+import kotlin.uuid.Uuid
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -31,7 +31,7 @@ class FilesViewModel(app: Application) : AndroidViewModel(app), DefaultLifecycle
   val eventState: StateFlow<EventState>
     field = MutableStateFlow<EventState>(EventState.Idle)
 
-  fun init(uuid: UUID) {
+  fun init(uuid: Uuid) {
     if (root.isNotEmpty()) return
     root = uuid.toString()
 

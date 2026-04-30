@@ -4,35 +4,34 @@ import android.content.Context
 import android.content.Intent
 import com.github.kr328.clash.common.constants.Intents
 import com.github.kr328.clash.common.constants.Permissions
-import java.util.UUID
+import kotlin.uuid.Uuid
 
 fun Context.sendBroadcastSelf(intent: Intent) {
   sendBroadcast(intent.setPackage(this.packageName), Permissions.RECEIVE_SELF_BROADCASTS)
 }
 
-fun Context.sendProfileChanged(uuid: UUID) {
-  val intent = Intent(Intents.ACTION_PROFILE_CHANGED).putExtra(Intents.EXTRA_UUID, uuid.toString())
+fun Context.sendProfileChanged(uuid: Uuid) {
+  val intent = Intent(Intents.ACTION_PROFILE_CHANGED).putExtra(Intents.EXTRA_UUID, uuid)
 
   sendBroadcastSelf(intent)
 }
 
-fun Context.sendProfileLoaded(uuid: UUID) {
-  val intent = Intent(Intents.ACTION_PROFILE_LOADED).putExtra(Intents.EXTRA_UUID, uuid.toString())
+fun Context.sendProfileLoaded(uuid: Uuid) {
+  val intent = Intent(Intents.ACTION_PROFILE_LOADED).putExtra(Intents.EXTRA_UUID, uuid)
 
   sendBroadcastSelf(intent)
 }
 
-fun Context.sendProfileUpdateCompleted(uuid: UUID) {
-  val intent =
-    Intent(Intents.ACTION_PROFILE_UPDATE_COMPLETED).putExtra(Intents.EXTRA_UUID, uuid.toString())
+fun Context.sendProfileUpdateCompleted(uuid: Uuid) {
+  val intent = Intent(Intents.ACTION_PROFILE_UPDATE_COMPLETED).putExtra(Intents.EXTRA_UUID, uuid)
 
   sendBroadcastSelf(intent)
 }
 
-fun Context.sendProfileUpdateFailed(uuid: UUID, reason: String) {
+fun Context.sendProfileUpdateFailed(uuid: Uuid, reason: String) {
   val intent =
     Intent(Intents.ACTION_PROFILE_UPDATE_FAILED)
-      .putExtra(Intents.EXTRA_UUID, uuid.toString())
+      .putExtra(Intents.EXTRA_UUID, uuid)
       .putExtra(Intents.EXTRA_FAIL_REASON, reason)
 
   sendBroadcastSelf(intent)

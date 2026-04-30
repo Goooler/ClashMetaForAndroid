@@ -1,5 +1,3 @@
-@file:UseSerializers(UUIDSerializer::class)
-
 package com.github.kr328.clash.profile
 
 import androidx.navigation3.runtime.EntryProviderScope
@@ -13,22 +11,20 @@ import com.github.kr328.clash.profile.ui.NewProfileScreen
 import com.github.kr328.clash.profile.ui.ProfilesScreen
 import com.github.kr328.clash.profile.ui.PropertiesScreen
 import com.github.kr328.clash.profile.ui.ProvidersScreen
-import com.github.kr328.clash.service.util.UUIDSerializer
-import java.util.UUID
+import kotlin.uuid.Uuid
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.UseSerializers
 
 sealed interface ProfilesRoute : NavKey {
-  @Serializable data class Profiles(val openPropertyUuid: UUID? = null) : ProfilesRoute
+  @Serializable data class Profiles(val openPropertyUuid: Uuid? = null) : ProfilesRoute
 
   @Serializable data object Providers : ProfilesRoute
 }
 
 @Serializable private data object NewProfiles : ProfilesRoute
 
-@Serializable private data class Files(val uuid: UUID) : ProfilesRoute
+@Serializable private data class Files(val uuid: Uuid) : ProfilesRoute
 
-@Serializable private data class Properties(val uuid: UUID) : ProfilesRoute
+@Serializable private data class Properties(val uuid: Uuid) : ProfilesRoute
 
 fun EntryProviderScope<NavKey>.profilesEntries() {
   entry<ProfilesRoute.Profiles> { key ->
