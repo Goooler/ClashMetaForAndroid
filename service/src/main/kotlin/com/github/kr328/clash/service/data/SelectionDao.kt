@@ -8,7 +8,7 @@ import androidx.room.TypeConverters
 import kotlin.uuid.Uuid
 
 @Dao
-@TypeConverters(Converters::class)
+@TypeConverters(RoomTypeConverters::class)
 interface SelectionDao {
   @Insert(onConflict = OnConflictStrategy.REPLACE) fun setSelected(selection: Selection)
 

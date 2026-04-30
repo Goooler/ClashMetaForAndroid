@@ -9,7 +9,7 @@ import androidx.room.Update
 import kotlin.uuid.Uuid
 
 @Dao
-@TypeConverters(Converters::class)
+@TypeConverters(RoomTypeConverters::class)
 interface ImportedDao {
   @Query("SELECT * FROM imported WHERE uuid = :uuid") suspend fun queryByUUID(uuid: Uuid): Imported?
 

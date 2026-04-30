@@ -20,7 +20,7 @@ import kotlin.uuid.Uuid
     ],
   primaryKeys = ["uuid", "proxy"],
 )
-@TypeConverters(Converters::class)
+@TypeConverters(RoomTypeConverters::class)
 data class Selection(
   @ColumnInfo(name = "uuid") val uuid: Uuid,
   @ColumnInfo(name = "proxy") val proxy: String,

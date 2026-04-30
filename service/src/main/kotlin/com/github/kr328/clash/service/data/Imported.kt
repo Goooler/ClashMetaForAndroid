@@ -7,7 +7,7 @@ import com.github.kr328.clash.service.model.Profile
 import kotlin.uuid.Uuid
 
 @Entity(tableName = "imported", primaryKeys = ["uuid"])
-@TypeConverters(Converters::class)
+@TypeConverters(RoomTypeConverters::class)
 data class Imported(
   @ColumnInfo(name = "uuid") val uuid: Uuid,
   @ColumnInfo(name = "name") val name: String,

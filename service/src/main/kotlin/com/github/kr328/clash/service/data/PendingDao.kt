@@ -9,7 +9,7 @@ import androidx.room.Update
 import kotlin.uuid.Uuid
 
 @Dao
-@TypeConverters(Converters::class)
+@TypeConverters(RoomTypeConverters::class)
 interface PendingDao {
   @Query("SELECT * FROM pending WHERE uuid = :uuid") suspend fun queryByUUID(uuid: Uuid): Pending?
 

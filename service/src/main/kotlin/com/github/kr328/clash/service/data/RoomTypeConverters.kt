@@ -4,7 +4,7 @@ import androidx.room.TypeConverter
 import com.github.kr328.clash.service.model.Profile
 import kotlin.uuid.Uuid
 
-class Converters {
+object RoomTypeConverters {
   @TypeConverter
   fun fromUUID(uuid: Uuid): String {
     return uuid.toString()
