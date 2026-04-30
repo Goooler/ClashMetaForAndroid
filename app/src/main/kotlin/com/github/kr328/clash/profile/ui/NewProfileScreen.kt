@@ -6,7 +6,6 @@ import android.graphics.drawable.Drawable
 import android.provider.Settings
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -18,7 +17,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHostState
@@ -105,7 +103,6 @@ fun NewProfileScreen(
   )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun NewProfileContent(
   modifier: Modifier = Modifier,
@@ -131,7 +128,6 @@ private fun NewProfileContent(
   }
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun ProfileProviderItem(
   provider: ProfileProvider,

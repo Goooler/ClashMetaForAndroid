@@ -4,7 +4,6 @@ import androidx.activity.OnBackPressedDispatcher
 import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.RowScope
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
@@ -21,7 +20,6 @@ import com.github.kr328.clash.R
 import com.github.kr328.clash.ui.icon.BaselineArrowBack
 import com.github.kr328.clash.ui.icon.MihomoIcons
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MihomoScaffold(
   title: String,

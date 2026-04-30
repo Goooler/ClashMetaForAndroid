@@ -3,7 +3,6 @@ package com.github.kr328.clash.settings.ui
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -50,7 +49,6 @@ fun AppSettingsScreen(
   )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun AppSettingsContent(
   clashRunning: Boolean,

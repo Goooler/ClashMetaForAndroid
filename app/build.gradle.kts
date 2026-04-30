@@ -73,6 +73,15 @@ androidComponents {
 
 composeCompiler { stabilityConfigurationFiles.add(layout.projectDirectory.file("stability.conf")) }
 
+kotlin {
+  compilerOptions.freeCompilerArgs.addAll(
+    "-Xexplicit-backing-fields",
+    "-opt-in=androidx.compose.foundation.ExperimentalFoundationApi",
+    "-opt-in=androidx.compose.material3.ExperimentalMaterial3Api",
+    "-opt-in=kotlin.uuid.ExperimentalUuidApi",
+  )
+}
+
 dependencies {
   implementation(projects.core)
   implementation(projects.service)

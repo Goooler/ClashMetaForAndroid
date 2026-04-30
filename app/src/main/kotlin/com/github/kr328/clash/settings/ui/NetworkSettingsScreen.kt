@@ -4,7 +4,6 @@ import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHostState
@@ -57,7 +56,6 @@ fun NetworkSettingsScreen(
   )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun NetworkSettingsContent(
   clashRunning: Boolean,

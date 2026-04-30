@@ -1,6 +1,5 @@
 package com.github.kr328.clash.proxy.ui
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -26,7 +25,6 @@ import androidx.compose.foundation.selection.toggleable
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -120,7 +118,6 @@ fun ProxyScreen(
   )
 }
 
-@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @Composable
 private fun ProxyContent(
   modifier: Modifier = Modifier,
@@ -215,7 +212,6 @@ private fun ProxyContent(
   }
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun ProxyPagerContent(
   uiState: ProxyViewModel.UiState,
