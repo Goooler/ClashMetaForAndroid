@@ -4,5 +4,8 @@ import android.content.Context
 import android.content.ServiceConnection
 
 fun Context.unbindServiceSilent(connection: ServiceConnection) {
-  runCatching { unbindService(connection) }
+  try {
+    unbindService(connection)
+  } catch (e: Exception) {
+  }
 }
