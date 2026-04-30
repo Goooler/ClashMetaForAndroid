@@ -1,6 +1,7 @@
 import com.android.build.api.dsl.CommonExtension
 import com.android.build.gradle.api.AndroidBasePlugin
 import com.diffplug.gradle.spotless.SpotlessExtension
+import kotlin.collections.addAll
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
@@ -44,6 +45,7 @@ allprojects {
     compilerOptions {
       allWarningsAsErrors = true
       jvmTarget = JvmTarget.fromTarget(libs.versions.jvmTarget.get())
+      compilerOptions { freeCompilerArgs.addAll("-opt-in=kotlin.uuid.ExperimentalUuidApi") }
     }
   }
 

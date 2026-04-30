@@ -5,16 +5,16 @@ import com.github.kr328.clash.common.store.Store
 import com.github.kr328.clash.common.store.asStoreProvider
 import com.github.kr328.clash.service.PreferenceProvider
 import com.github.kr328.clash.service.model.AccessControlMode
-import java.util.UUID
+import kotlin.uuid.Uuid
 
 class ServiceStore(context: Context) {
   private val store =
     Store(PreferenceProvider.createSharedPreferencesFromContext(context).asStoreProvider())
 
-  var activeProfile: UUID? by
+  var activeProfile: Uuid? by
     store.typedString(
       key = "active_profile",
-      from = { if (it.isBlank()) null else UUID.fromString(it) },
+      from = { if (it.isBlank()) null else Uuid.parse(it) },
       to = { it?.toString() ?: "" },
     )
 

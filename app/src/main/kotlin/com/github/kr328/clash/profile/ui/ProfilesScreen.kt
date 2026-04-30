@@ -68,8 +68,8 @@ import com.github.kr328.clash.ui.theme.mihomoDimens
 import com.github.kr328.clash.util.elapsedIntervalString
 import com.github.kr328.clash.util.toDateStr
 import com.github.kr328.clash.util.toString
-import java.util.UUID
 import kotlin.time.Duration.Companion.minutes
+import kotlin.uuid.Uuid
 import me.saket.bytesize.binaryBytes
 
 @Composable
@@ -77,7 +77,7 @@ fun ProfilesScreen(
   modifier: Modifier = Modifier,
   viewModel: ProfilesViewModel = viewModel(),
   onOpenCreate: () -> Unit,
-  onOpenEdit: (UUID) -> Unit,
+  onOpenEdit: (Uuid) -> Unit,
 ) {
   val lifecycleOwner = LocalLifecycleOwner.current
   val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -369,7 +369,7 @@ private fun ProfilesContentPreview() {
     profiles =
       listOf(
         Profile(
-          uuid = UUID(0, 0),
+          uuid = Uuid.fromLongs(0, 0),
           name = "Main Profile",
           type = Profile.Type.Url,
           source = "https://example.com/config.yaml",
@@ -384,7 +384,7 @@ private fun ProfilesContentPreview() {
           pending = false,
         ),
         Profile(
-          uuid = UUID(0, 1),
+          uuid = Uuid.fromLongs(0, 1),
           name = "Draft Profile",
           type = Profile.Type.File,
           source = "",

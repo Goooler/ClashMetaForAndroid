@@ -1,8 +1,8 @@
 package com.github.kr328.clash.service.document
 
-import java.util.UUID
+import kotlin.uuid.Uuid
 
-data class Path(val uuid: UUID?, val scope: Scope?, val relative: List<String>?) {
+data class Path(val uuid: Uuid?, val scope: Scope?, val relative: List<String>?) {
   enum class Scope {
     Configuration,
     Providers,

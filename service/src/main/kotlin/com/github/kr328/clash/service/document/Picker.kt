@@ -10,7 +10,7 @@ import com.github.kr328.clash.service.model.Profile
 import com.github.kr328.clash.service.util.importedDir
 import com.github.kr328.clash.service.util.pendingDir
 import java.io.FileNotFoundException
-import java.util.UUID
+import kotlin.uuid.Uuid
 
 class Picker(private val context: Context) {
   suspend fun list(path: Path): List<Document> {
@@ -116,7 +116,7 @@ class Picker(private val context: Context) {
     )
   }
 
-  private suspend fun cloneToPending(uuid: UUID) {
+  private suspend fun cloneToPending(uuid: Uuid) {
     if (PendingDao().queryByUUID(uuid) != null) return
 
     val imported =

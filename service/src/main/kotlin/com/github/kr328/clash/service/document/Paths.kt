@@ -1,6 +1,6 @@
 package com.github.kr328.clash.service.document
 
-import java.util.UUID
+import kotlin.uuid.Uuid
 
 object Paths {
   const val CONFIGURATION_ID = "config.yaml"
@@ -11,10 +11,10 @@ object Paths {
 
     return when (segments.size) {
       0 -> Path(uuid = null, scope = null, relative = null)
-      1 -> Path(uuid = UUID.fromString(segments[0]), scope = null, relative = null)
+      1 -> Path(uuid = Uuid.parse(segments[0]), scope = null, relative = null)
       2 ->
         Path(
-          uuid = UUID.fromString(segments[0]),
+          uuid = Uuid.parse(segments[0]),
           scope =
             when (segments[1]) {
               CONFIGURATION_ID -> Path.Scope.Configuration
@@ -25,7 +25,7 @@ object Paths {
         )
       else ->
         Path(
-          uuid = UUID.fromString(segments[0]),
+          uuid = Uuid.parse(segments[0]),
           scope =
             when (segments[1]) {
               CONFIGURATION_ID -> Path.Scope.Configuration

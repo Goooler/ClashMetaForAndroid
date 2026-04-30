@@ -18,7 +18,7 @@ import com.github.kr328.clash.service.util.pendingDir
 import com.github.kr328.clash.service.util.sendProfileChanged
 import java.io.FileNotFoundException
 import java.math.BigDecimal
-import java.util.UUID
+import kotlin.uuid.Uuid
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -38,7 +38,7 @@ class ProfileManager(private val context: Context) :
     }
   }
 
-  override suspend fun create(type: Profile.Type, name: String, source: String): UUID {
+  override suspend fun create(type: Profile.Type, name: String, source: String): Uuid {
     val uuid = generateProfileUUID()
     val pending =
       Pending(
@@ -66,7 +66,7 @@ class ProfileManager(private val context: Context) :
     return uuid
   }
 
-  override suspend fun clone(uuid: UUID): UUID {
+  override suspend fun clone(uuid: Uuid): Uuid {
     val newUUID = generateProfileUUID()
 
     val imported =
@@ -92,7 +92,7 @@ class ProfileManager(private val context: Context) :
     return newUUID
   }
 
-  override suspend fun patch(uuid: UUID, name: String, source: String, interval: Long) {
+  override suspend fun patch(uuid: Uuid, name: String, source: String, interval: Long) {
     val pending = PendingDao().queryByUUID(uuid)
 
     if (pending == null) {
@@ -131,7 +131,7 @@ class ProfileManager(private val context: Context) :
     }
   }
 
-  override suspend fun update(uuid: UUID) {
+  override suspend fun update(uuid: Uuid) {
     scheduleUpdate(uuid, true)
     ImportedDao().queryByUUID(uuid)?.let {
       if (it.type == Profile.Type.Url && it.source.startsWith("https://", true)) {
@@ -209,23 +209,23 @@ class ProfileManager(private val context: Context) :
     }
   }
 
-  override suspend fun commit(uuid: UUID, callback: IFetchObserver?) {
+  override suspend fun commit(uuid: Uuid, callback: IFetchObserver?) {
     ProfileProcessor.apply(context, uuid, callback)
 
     scheduleUpdate(uuid, false)
   }
 
-  override suspend fun release(uuid: UUID) {
+  override suspend fun release(uuid: Uuid) {
     ProfileProcessor.release(context, uuid)
   }
 
-  override suspend fun delete(uuid: UUID) {
+  override suspend fun delete(uuid: Uuid) {
     ImportedDao().queryByUUID(uuid)?.also { ProfileReceiver.cancelNext(context, it) }
 
     ProfileProcessor.delete(context, uuid)
   }
 
-  override suspend fun queryByUUID(uuid: UUID): Profile? {
+  override suspend fun queryByUUID(uuid: Uuid): Profile? {
     return resolveProfile(uuid)
   }
 
@@ -252,7 +252,7 @@ class ProfileManager(private val context: Context) :
     ProfileProcessor.active(context, profile.uuid)
   }
 
-  private suspend fun resolveProfile(uuid: UUID): Profile? {
+  private suspend fun resolveProfile(uuid: Uuid): Profile? {
     val imported = ImportedDao().queryByUUID(uuid)
     val pending = PendingDao().queryByUUID(uuid)
 
@@ -283,13 +283,13 @@ class ProfileManager(private val context: Context) :
     )
   }
 
-  private fun resolveUpdatedAt(uuid: UUID): Long {
+  private fun resolveUpdatedAt(uuid: Uuid): Long {
     return context.pendingDir.resolve(uuid.toString()).directoryLastModified
       ?: context.importedDir.resolve(uuid.toString()).directoryLastModified
       ?: -1
   }
 
-  private fun cloneImportedFiles(source: UUID, target: UUID = source) {
+  private fun cloneImportedFiles(source: Uuid, target: Uuid = source) {
     val s = context.importedDir.resolve(source.toString())
     val t = context.pendingDir.resolve(target.toString())
 
@@ -300,7 +300,7 @@ class ProfileManager(private val context: Context) :
     s.copyRecursively(t)
   }
 
-  private suspend fun scheduleUpdate(uuid: UUID, startImmediately: Boolean) {
+  private suspend fun scheduleUpdate(uuid: Uuid, startImmediately: Boolean) {
     val imported = ImportedDao().queryByUUID(uuid) ?: return
 
     if (startImmediately) {

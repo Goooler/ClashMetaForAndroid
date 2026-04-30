@@ -17,8 +17,8 @@ import com.github.kr328.clash.service.util.processingDir
 import com.github.kr328.clash.service.util.sendProfileChanged
 import java.math.BigDecimal
 import java.util.Locale
-import java.util.UUID
 import kotlin.time.Duration.Companion.milliseconds
+import kotlin.uuid.Uuid
 import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
@@ -30,7 +30,7 @@ object ProfileProcessor {
   private val profileLock = Mutex()
   private val processLock = Mutex()
 
-  suspend fun apply(context: Context, uuid: UUID, callback: IFetchObserver? = null) {
+  suspend fun apply(context: Context, uuid: Uuid, callback: IFetchObserver? = null) {
     withContext(NonCancellable) {
       processLock.withLock {
         val snapshot = profileLock.withLock {
@@ -166,7 +166,7 @@ object ProfileProcessor {
     }
   }
 
-  suspend fun update(context: Context, uuid: UUID, callback: IFetchObserver?) {
+  suspend fun update(context: Context, uuid: Uuid, callback: IFetchObserver?) {
     withContext(NonCancellable) {
       processLock.withLock {
         val snapshot = profileLock.withLock {
@@ -211,7 +211,7 @@ object ProfileProcessor {
     }
   }
 
-  suspend fun delete(context: Context, uuid: UUID) {
+  suspend fun delete(context: Context, uuid: Uuid) {
     withContext(NonCancellable) {
       profileLock.withLock {
         ImportedDao().remove(uuid)
@@ -228,7 +228,7 @@ object ProfileProcessor {
     }
   }
 
-  suspend fun release(context: Context, uuid: UUID): Boolean {
+  suspend fun release(context: Context, uuid: Uuid): Boolean {
     return withContext(NonCancellable) {
       profileLock.withLock {
         PendingDao().remove(uuid)
@@ -238,7 +238,7 @@ object ProfileProcessor {
     }
   }
 
-  suspend fun active(context: Context, uuid: UUID) {
+  suspend fun active(context: Context, uuid: Uuid) {
     withContext(NonCancellable) {
       profileLock.withLock {
         if (ImportedDao().exists(uuid)) {

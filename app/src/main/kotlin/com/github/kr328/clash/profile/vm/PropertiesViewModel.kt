@@ -12,7 +12,7 @@ import com.github.kr328.clash.common.log.Log
 import com.github.kr328.clash.core.model.FetchStatus
 import com.github.kr328.clash.service.model.Profile
 import com.github.kr328.clash.util.withProfile
-import java.util.UUID
+import kotlin.uuid.Uuid
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -22,7 +22,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class PropertiesViewModel(app: Application) : AndroidViewModel(app), DefaultLifecycleObserver {
-  private var rootUuid: UUID? = null
+  private var rootUuid: Uuid? = null
   private var canceled = false
 
   val uiState: StateFlow<UiState>
@@ -31,7 +31,7 @@ class PropertiesViewModel(app: Application) : AndroidViewModel(app), DefaultLife
   val eventState: StateFlow<EventState>
     field = MutableStateFlow<EventState>(EventState.Idle)
 
-  fun init(uuid: UUID) {
+  fun init(uuid: Uuid) {
     if (rootUuid != null) return
     rootUuid = uuid
 
@@ -244,7 +244,7 @@ class PropertiesViewModel(app: Application) : AndroidViewModel(app), DefaultLife
 
     data class Finish(val success: Boolean) : EventState
 
-    data class BrowseFiles(val uuid: UUID) : EventState
+    data class BrowseFiles(val uuid: Uuid) : EventState
 
     data class ShowMessage(val message: String) : EventState
   }
