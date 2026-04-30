@@ -3,7 +3,6 @@ package com.github.kr328.clash.crash.ui
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -20,7 +19,6 @@ import me.zhanghai.compose.preference.ProvidePreferenceLocals
 import me.zhanghai.compose.preference.preference
 import me.zhanghai.compose.preference.preferenceCategory
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ApkBrokenScreen() {
   MihomoScaffold(title = stringResource(R.string.application_broken)) { innerPadding ->

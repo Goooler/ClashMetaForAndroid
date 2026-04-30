@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.SnackbarHostState
@@ -55,7 +54,6 @@ private sealed interface MetaFeatureSettingsRoute : NavKey {
 }
 
 @Composable
-@OptIn(ExperimentalMaterial3Api::class)
 fun MetaFeatureSettingsScreen(
   modifier: Modifier = Modifier,
   viewModel: MetaFeatureSettingsViewModel = viewModel(),
@@ -174,7 +172,6 @@ fun MetaFeatureSettingsScreen(
 }
 
 @Composable
-@OptIn(ExperimentalMaterial3Api::class)
 private fun MetaFeatureSettingsContent(
   configuration: ConfigurationOverride,
   actions: MetaFeatureSettingsActions,
@@ -568,7 +565,6 @@ interface MetaFeatureSettingsActions {
 @PreviewWrapper(MihomoThemeWrapper::class)
 @PreviewMihomo
 @Composable
-@OptIn(ExperimentalMaterial3Api::class)
 private fun MetaFeatureSettingsContentPreview() {
   MetaFeatureSettingsContent(
     configuration = ConfigurationOverride(),

@@ -3,7 +3,6 @@ package com.github.kr328.clash.log.ui
 import android.content.ClipData
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts.CreateDocument
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -15,7 +14,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -145,7 +143,6 @@ fun LogcatScreen(
   )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun LogcatContent(
   streaming: Boolean,
@@ -195,7 +192,6 @@ private fun LogcatContent(
   ModelProgressBarDialog(progressBarState)
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun LogcatMessageItem(message: LogMessage, onCopyMessage: (LogMessage) -> Unit) {
   val context = LocalContext.current
