@@ -45,7 +45,10 @@ allprojects {
     compilerOptions {
       allWarningsAsErrors = true
       jvmTarget = JvmTarget.fromTarget(libs.versions.jvmTarget.get())
-      compilerOptions { freeCompilerArgs.addAll("-opt-in=kotlin.uuid.ExperimentalUuidApi") }
+      freeCompilerArgs.addAll(
+        "-Xexplicit-backing-fields",
+        "-opt-in=kotlin.uuid.ExperimentalUuidApi",
+      )
     }
   }
 

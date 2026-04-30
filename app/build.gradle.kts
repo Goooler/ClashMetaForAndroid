@@ -73,8 +73,6 @@ androidComponents {
 
 composeCompiler { stabilityConfigurationFiles.add(layout.projectDirectory.file("stability.conf")) }
 
-kotlin { compilerOptions { freeCompilerArgs.addAll("-Xexplicit-backing-fields") } }
-
 dependencies {
   implementation(projects.core)
   implementation(projects.service)
