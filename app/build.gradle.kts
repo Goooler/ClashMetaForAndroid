@@ -86,6 +86,7 @@ dependencies {
   implementation(projects.common)
 
   implementation(libs.kotlin.coroutine)
+  implementation(libs.kotlin.serialization.json)
   implementation(libs.bytesize)
 
   implementation(libs.androidx.core)

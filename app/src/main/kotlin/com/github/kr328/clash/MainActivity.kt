@@ -6,7 +6,6 @@ import android.app.Application
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -27,9 +26,10 @@ import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entryProvider
 import com.github.kr328.clash.common.constants.Intents
 import com.github.kr328.clash.common.util.unsafeLazy
-import com.github.kr328.clash.common.util.uuid
-import com.github.kr328.clash.crash.CrashRoute
 import com.github.kr328.clash.crash.crashEntries
+import com.github.kr328.clash.deeplink.InstallConfigDeepLink
+import com.github.kr328.clash.deeplink.MainDeepLinkParser
+import com.github.kr328.clash.deeplink.MainNavigationAction
 import com.github.kr328.clash.log.LogRoute
 import com.github.kr328.clash.log.logsEntries
 import com.github.kr328.clash.main.MainRoute
@@ -50,7 +50,6 @@ import com.github.kr328.clash.util.startClashService
 import com.github.kr328.clash.util.stopClashService
 import com.github.kr328.clash.util.toast
 import com.github.kr328.clash.util.withProfile
-import java.util.Locale
 import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
@@ -67,7 +66,7 @@ class MainActivity : ComponentActivity() {
       finish()
       return
     }
-    intent.handleAction(backStack)
+    intent.handleNavigationAction(backStack)
 
     enableEdgeToEdge()
     // TODO: https://issuetracker.google.com/issues/298296168
@@ -108,29 +107,21 @@ class MainActivity : ComponentActivity() {
   override fun onNewIntent(intent: Intent) {
     super.onNewIntent(intent)
     if (intent.handleExternalQuickAction()) return
-    intent.handleAction(backStack)
+    intent.handleNavigationAction(backStack)
   }
 
-  private fun Intent.handleAction(backStack: MutableList<NavKey>) {
-    when (action) {
-      Intent.ACTION_VIEW -> {
-        val uri = data ?: return
-        viewModel.handleInstallConfigUri(uri)
-      }
-      Intents.ACTION_PROPERTIES -> {
-        uuid?.let { uuid ->
-          backStack.addIfNotLast(ProfilesRoute.Profiles(openPropertyUuid = uuid))
+  private fun Intent.handleNavigationAction(backStack: MutableList<NavKey>) {
+    when (val route = MainDeepLinkParser.parse(this)) {
+      is MainNavigationAction.InstallConfig -> viewModel.handleInstallConfigDeepLink(route.deepLink)
+      is MainNavigationAction.Navigate -> {
+        if (route.resetBackStack) {
+          backStack.clear()
+          backStack.add(route.key)
+        } else {
+          backStack.addIfNotLast(route.key)
         }
       }
-      Intents.ACTION_LOGCAT -> backStack.addIfNotLast(LogRoute.Root)
-      Intents.ACTION_APP_CRASHED -> {
-        backStack.clear()
-        backStack.add(CrashRoute.AppCrashed)
-      }
-      Intents.ACTION_APK_BROKEN -> {
-        backStack.clear()
-        backStack.add(CrashRoute.ApkBroken)
-      }
+      null -> Unit
     }
   }
 
@@ -188,18 +179,17 @@ class MainActivity : ComponentActivity() {
   private class ActivityViewModel(application: Application) : AndroidViewModel(application) {
     val backStack = mutableStateListOf<NavKey>(MainRoute.Main)
 
-    fun handleInstallConfigUri(uri: Uri) {
-      val url = uri.getQueryParameter("url") ?: return
+    fun handleInstallConfigDeepLink(deepLink: InstallConfigDeepLink) {
       viewModelScope.launch {
         val uuid = withProfile {
           val type =
-            when (uri.getQueryParameter("type")?.lowercase(Locale.getDefault())) {
+            when (deepLink.type?.lowercase()) {
               "url" -> Profile.Type.Url
               "file" -> Profile.Type.File
               else -> Profile.Type.Url
             }
-          val name = uri.getQueryParameter("name") ?: application.getString(R.string.new_profile)
-          create(type, name).also { patch(it, name, url, 0) }
+          val name = deepLink.name ?: application.getString(R.string.new_profile)
+          create(type, name).also { patch(it, name, deepLink.url, 0) }
         }
         backStack.addIfNotLast(ProfilesRoute.Profiles(openPropertyUuid = uuid))
       }
