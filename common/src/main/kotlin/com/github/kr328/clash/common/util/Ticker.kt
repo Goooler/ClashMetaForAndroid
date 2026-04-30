@@ -23,6 +23,7 @@ fun CoroutineScope.ticker(duration: Duration): Channel<Long> {
       if (e !is CancellationException) {
         Log.e("Ticker stopped unexpectedly: ${e.message}", e)
       }
+      throw e
     }
   }
 
