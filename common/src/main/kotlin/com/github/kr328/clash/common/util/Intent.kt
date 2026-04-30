@@ -21,7 +21,12 @@ var Intent.uuid: Uuid?
     return data?.takeIf { it.scheme == "uuid" }?.schemeSpecificPart?.let { Uuid.parse(it) }
   }
   set(value) {
-    data = Uri.fromParts("uuid", value.toString(), null)
+    data =
+      if (value == null) {
+        null
+      } else {
+        Uri.fromParts("uuid", value.toString(), null)
+      }
   }
 
 fun Intent.setUUID(uuid: Uuid): Intent = apply { this.uuid = uuid }
