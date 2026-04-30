@@ -42,6 +42,7 @@ class Service(private val context: Application, val crashed: () -> Unit) {
     try {
       context.bindService(RemoteService::class.intent, connection, Context.BIND_AUTO_CREATE)
     } catch (e: Exception) {
+      Log.e("Bind remote service failed: ${e.message}", e)
       unbind()
 
       crashed()

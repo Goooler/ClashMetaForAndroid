@@ -66,6 +66,7 @@ class ConfigurationModule(service: Service) : Module<ConfigurationModule.LoadExc
 
         Log.d("Profile ${active.name} loaded")
       } catch (e: Exception) {
+        Log.e("Load profile failed: ${e.message}", e)
         return enqueueEvent(LoadException(e.message ?: "Unknown"))
       }
     }

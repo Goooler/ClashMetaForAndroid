@@ -9,6 +9,7 @@ import androidx.lifecycle.application
 import androidx.lifecycle.viewModelScope
 import com.github.kr328.clash.R
 import com.github.kr328.clash.common.constants.Intents
+import com.github.kr328.clash.common.log.Log
 import com.github.kr328.clash.model.ProfileProvider
 import com.github.kr328.clash.service.model.Profile
 import com.github.kr328.clash.util.withProfile
@@ -61,6 +62,7 @@ class NewProfileViewModel(app: Application) : AndroidViewModel(app) {
         }
         eventState.value = EventState.LaunchProperties(uuid)
       } catch (e: Exception) {
+        Log.e("Create external profile failed: ${e.message}", e)
         eventState.value =
           EventState.ShowMessage(e.message ?: application.getString(R.string.unknown))
       }
@@ -82,6 +84,7 @@ class NewProfileViewModel(app: Application) : AndroidViewModel(app) {
             }
             eventState.value = EventState.LaunchProperties(uuid)
           } catch (e: Exception) {
+            Log.e("Create QR profile failed: ${e.message}", e)
             eventState.value =
               EventState.ShowMessage(e.message ?: application.getString(R.string.unknown))
           }
@@ -104,6 +107,7 @@ class NewProfileViewModel(app: Application) : AndroidViewModel(app) {
         val uuid = withProfile { create(type, name) }
         eventState.value = EventState.LaunchProperties(uuid)
       } catch (e: Exception) {
+        Log.e("Create profile failed: ${e.message}", e)
         eventState.value =
           EventState.ShowMessage(e.message ?: application.getString(R.string.unknown))
       }

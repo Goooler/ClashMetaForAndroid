@@ -8,6 +8,7 @@ import androidx.lifecycle.application
 import androidx.lifecycle.viewModelScope
 import com.github.kr328.clash.R
 import com.github.kr328.clash.common.Global
+import com.github.kr328.clash.common.log.Log
 import com.github.kr328.clash.core.model.FetchStatus
 import com.github.kr328.clash.service.model.Profile
 import com.github.kr328.clash.util.withProfile
@@ -55,6 +56,7 @@ class PropertiesViewModel(app: Application) : AndroidViewModel(app), DefaultLife
         runCatching {
             withProfile { patch(profile.uuid, profile.name, profile.source, profile.interval) }
           }
+          .onFailure { e -> Log.e("Auto save profile failed: ${e.message}", e) }
           .onSuccess {
             uiState.update { state ->
               state.copy(originalProfile = profile.copy(), hasUnsavedChanges = false)
@@ -70,7 +72,7 @@ class PropertiesViewModel(app: Application) : AndroidViewModel(app), DefaultLife
         try {
           withProfile { release(uuid) }
         } catch (e: Exception) {
-          // ignore
+          Log.e("Release profile failed: ${e.message}", e)
         }
       }
     }
@@ -140,6 +142,7 @@ class PropertiesViewModel(app: Application) : AndroidViewModel(app), DefaultLife
         canceled = true
         eventState.value = EventState.Finish(true)
       } catch (e: Exception) {
+        Log.e("Commit profile failed: ${e.message}", e)
         eventState.value =
           EventState.ShowMessage(e.message ?: application.getString(R.string.unknown))
       }
