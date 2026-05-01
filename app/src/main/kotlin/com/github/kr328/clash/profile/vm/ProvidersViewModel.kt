@@ -9,7 +9,6 @@ import androidx.lifecycle.viewModelScope
 import com.github.kr328.clash.R
 import com.github.kr328.clash.common.log.Log
 import com.github.kr328.clash.core.model.Provider
-import com.github.kr328.clash.remote.Broadcasts
 import com.github.kr328.clash.remote.Remote
 import com.github.kr328.clash.util.withClash
 import kotlin.time.Duration.Companion.minutes
@@ -37,7 +36,7 @@ class ProvidersViewModel(app: Application) : AndroidViewModel(app), DefaultLifec
     broadcastEventsJob = viewModelScope.launch {
       Remote.broadcasts.event.collect { event ->
         when (event) {
-          Broadcasts.Event.ProfileLoaded -> fetch()
+          ProfileLoaded -> fetch()
           else -> Unit
         }
       }
@@ -66,8 +65,7 @@ class ProvidersViewModel(app: Application) : AndroidViewModel(app), DefaultLifec
 
   fun onUpdateAll() {
     uiState.value.providers.forEach { state ->
-      if (state.updating || state.provider.vehicleType == Provider.VehicleType.Inline)
-        return@forEach
+      if (state.updating || state.provider.vehicleType == Inline) return@forEach
       onUpdate(state.provider)
     }
   }

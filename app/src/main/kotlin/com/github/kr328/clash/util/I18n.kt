@@ -14,25 +14,25 @@ private const val DATE_ALL = "$DATE_DATE_ONLY $DATE_TIME_ONLY"
 
 fun Profile.Type.toString(context: Context): String {
   return when (this) {
-    Profile.Type.File -> context.getString(R.string.file)
-    Profile.Type.Url -> context.getString(R.string.url)
-    Profile.Type.External -> context.getString(R.string.external)
+    File -> context.getString(R.string.file)
+    Url -> context.getString(R.string.url)
+    External -> context.getString(R.string.external)
   }
 }
 
 fun Provider.type(context: Context): String {
   val type =
     when (type) {
-      Provider.Type.Proxy -> context.getString(R.string.proxy)
-      Provider.Type.Rule -> context.getString(R.string.rule)
+      Proxy -> context.getString(R.string.proxy)
+      Rule -> context.getString(R.string.rule)
     }
 
   val vehicle =
     when (vehicleType) {
-      Provider.VehicleType.HTTP -> context.getString(R.string.http)
-      Provider.VehicleType.File -> context.getString(R.string.file)
-      Provider.VehicleType.Inline -> context.getString(R.string.inline)
-      Provider.VehicleType.Compatible -> context.getString(R.string.compatible)
+      HTTP -> context.getString(R.string.http)
+      File -> context.getString(R.string.file)
+      Inline -> context.getString(R.string.inline)
+      Compatible -> context.getString(R.string.compatible)
     }
 
   return context.getString(R.string.format_provider_type, type, vehicle)

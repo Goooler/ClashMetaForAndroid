@@ -18,7 +18,6 @@ import com.github.kr328.clash.service.clash.module.StaticNotificationModule
 import com.github.kr328.clash.service.clash.module.SuspendModule
 import com.github.kr328.clash.service.clash.module.TimeZoneModule
 import com.github.kr328.clash.service.clash.module.TunModule
-import com.github.kr328.clash.service.model.AccessControlMode
 import com.github.kr328.clash.service.store.ServiceStore
 import com.github.kr328.clash.service.util.cancelAndJoinBlocking
 import com.github.kr328.clash.service.util.parseCIDR
@@ -162,14 +161,14 @@ class TunService : VpnService(), CoroutineScope by CoroutineScope(Dispatchers.De
 
         // Access Control
         when (store.accessControlMode) {
-          AccessControlMode.AcceptAll -> Unit
-          AccessControlMode.AcceptSelected -> {
+          AcceptAll -> Unit
+          AcceptSelected -> {
             (store.accessControlPackages + packageName).forEach {
               runCatching { addAllowedApplication(it) }
                 .onFailure { e -> Log.e("Add allowed application $it failed: ${e.message}", e) }
             }
           }
-          AccessControlMode.DenySelected -> {
+          DenySelected -> {
             (store.accessControlPackages - packageName).forEach {
               runCatching { addDisallowedApplication(it) }
                 .onFailure { e -> Log.e("Add disallowed application $it failed: ${e.message}", e) }

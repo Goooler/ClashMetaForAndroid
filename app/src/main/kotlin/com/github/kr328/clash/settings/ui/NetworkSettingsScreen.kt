@@ -165,12 +165,7 @@ private fun NetworkSettingsContent(
           key = "access_control_mode",
           value = uiState.accessControlMode,
           onValueChange = onAccessControlModeChange,
-          values =
-            listOf(
-              AccessControlMode.AcceptAll,
-              AccessControlMode.AcceptSelected,
-              AccessControlMode.DenySelected,
-            ),
+          values = listOf(AcceptAll, AcceptSelected, DenySelected),
           enabled = vpnDependenciesEnabled,
           title = { Text(stringResource(R.string.access_control_mode)) },
           summary = { Text(stringResource(uiState.accessControlMode.summaryRes)) },
@@ -205,17 +200,17 @@ private val TunStackMode.summaryRes: Int
   get() =
     when (this) {
       TunStackMode.System -> R.string.tun_stack_system
-      TunStackMode.Gvisor -> R.string.tun_stack_gvisor
-      TunStackMode.Mixed -> R.string.tun_stack_mixed
+      Gvisor -> R.string.tun_stack_gvisor
+      Mixed -> R.string.tun_stack_mixed
     }
 
 private val AccessControlMode.summaryRes: Int
   @StringRes
   get() =
     when (this) {
-      AccessControlMode.AcceptAll -> R.string.allow_all_apps
-      AccessControlMode.AcceptSelected -> R.string.allow_selected_apps
-      AccessControlMode.DenySelected -> R.string.deny_selected_apps
+      AcceptAll -> R.string.allow_all_apps
+      AcceptSelected -> R.string.allow_selected_apps
+      DenySelected -> R.string.deny_selected_apps
     }
 
 @PreviewWrapper(MihomoThemeWrapper::class)
@@ -234,7 +229,7 @@ private fun NetworkSettingsScreenPreview() {
         allowIpv6 = false,
         systemProxy = true,
         tunStackMode = "system",
-        accessControlMode = AccessControlMode.AcceptAll,
+        accessControlMode = AcceptAll,
       ),
     onEnableVpnChange = {},
     onBypassPrivateNetworkChange = {},
@@ -264,7 +259,7 @@ private fun NetworkSettingsScreenRunningPreview() {
         allowIpv6 = false,
         systemProxy = true,
         tunStackMode = "mixed",
-        accessControlMode = AccessControlMode.DenySelected,
+        accessControlMode = DenySelected,
       ),
     onEnableVpnChange = {},
     onBypassPrivateNetworkChange = {},

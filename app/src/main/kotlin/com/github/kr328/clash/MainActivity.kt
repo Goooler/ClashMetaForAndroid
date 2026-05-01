@@ -35,7 +35,6 @@ import com.github.kr328.clash.log.LogRoute
 import com.github.kr328.clash.log.logsEntries
 import com.github.kr328.clash.main.MainRoute
 import com.github.kr328.clash.main.mainEntries
-import com.github.kr328.clash.model.DarkMode
 import com.github.kr328.clash.nav.MihomoNavDisplay
 import com.github.kr328.clash.nav.addIfNotLast
 import com.github.kr328.clash.profile.ProfilesRoute
@@ -73,9 +72,9 @@ class MainActivity : ComponentActivity() {
 
     val systemBars =
       when (uiStore.darkMode) {
-        DarkMode.ForceDark -> SystemBarStyle.auto(TRANSPARENT, TRANSPARENT) { true }
-        DarkMode.ForceLight -> SystemBarStyle.auto(TRANSPARENT, TRANSPARENT) { false }
-        DarkMode.Auto -> SystemBarStyle.auto(TRANSPARENT, TRANSPARENT)
+        ForceDark -> SystemBarStyle.auto(TRANSPARENT, TRANSPARENT) { true }
+        ForceLight -> SystemBarStyle.auto(TRANSPARENT, TRANSPARENT) { false }
+        Auto -> SystemBarStyle.auto(TRANSPARENT, TRANSPARENT)
       }
     enableEdgeToEdge(statusBarStyle = systemBars, navigationBarStyle = systemBars)
     // TODO: https://issuetracker.google.com/issues/298296168

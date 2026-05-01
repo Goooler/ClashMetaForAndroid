@@ -274,23 +274,23 @@ private fun ColumnScope.AccessControlMenuContent(
     AccessControlMenuSectionTitle(text = stringResource(R.string.sort))
     AccessControlMenuSortAction(
       text = stringResource(R.string.name),
-      checked = sort == AppInfoSort.Label,
-      onClick = { onUpdateSort(AppInfoSort.Label) },
+      checked = sort == Label,
+      onClick = { onUpdateSort(Label) },
     )
     AccessControlMenuSortAction(
       text = stringResource(R.string.package_name),
-      checked = sort == AppInfoSort.PackageName,
-      onClick = { onUpdateSort(AppInfoSort.PackageName) },
+      checked = sort == PackageName,
+      onClick = { onUpdateSort(PackageName) },
     )
     AccessControlMenuSortAction(
       text = stringResource(R.string.install_time),
-      checked = sort == AppInfoSort.InstallTime,
-      onClick = { onUpdateSort(AppInfoSort.InstallTime) },
+      checked = sort == InstallTime,
+      onClick = { onUpdateSort(InstallTime) },
     )
     AccessControlMenuSortAction(
       text = stringResource(R.string.update_time),
-      checked = sort == AppInfoSort.UpdateTime,
-      onClick = { onUpdateSort(AppInfoSort.UpdateTime) },
+      checked = sort == UpdateTime,
+      onClick = { onUpdateSort(UpdateTime) },
     )
     AccessControlMenuCheckAction(
       text = stringResource(R.string.reverse),
@@ -446,7 +446,7 @@ private fun AccessControlContentPreview() {
         ),
       ),
     selected = setOf("com.example.alpha"),
-    sort = AppInfoSort.Label,
+    sort = Label,
     reverse = false,
     showSystemApps = true,
     actions = object : AccessControlActions {},
@@ -460,7 +460,7 @@ private fun AccessControlMenuSheetPreview() {
   Surface {
     Column {
       AccessControlMenuContent(
-        sort = AppInfoSort.Label,
+        sort = Label,
         reverse = false,
         showSystemApps = true,
         onSelectAll = {},

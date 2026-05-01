@@ -11,7 +11,6 @@ import com.github.kr328.clash.common.log.Log
 import com.github.kr328.clash.common.util.PatternFileName
 import com.github.kr328.clash.service.document.Document
 import com.github.kr328.clash.service.document.FileDocument
-import com.github.kr328.clash.service.document.Flag
 import com.github.kr328.clash.service.document.Paths
 import com.github.kr328.clash.service.document.Picker
 import java.io.FileNotFoundException
@@ -177,9 +176,9 @@ class FilesProvider : DocumentsProvider() {
     document.flags.forEach {
       flags =
         when (it) {
-          Flag.Writable -> flags or D.FLAG_SUPPORTS_WRITE
-          Flag.Deletable -> flags or D.FLAG_SUPPORTS_DELETE
-          Flag.Virtual -> flags or FLAG_VIRTUAL
+          Writable -> flags or D.FLAG_SUPPORTS_WRITE
+          Deletable -> flags or D.FLAG_SUPPORTS_DELETE
+          Virtual -> flags or FLAG_VIRTUAL
         }
     }
 

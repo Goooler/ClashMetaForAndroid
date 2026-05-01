@@ -713,9 +713,9 @@ private val TunnelState.Mode?.textRes: Int
   @StringRes
   get() =
     when (this) {
-      TunnelState.Mode.Direct -> R.string.direct_mode
-      TunnelState.Mode.Global -> R.string.global_mode
-      TunnelState.Mode.Rule -> R.string.rule_mode
+      Direct -> R.string.direct_mode
+      Global -> R.string.global_mode
+      Rule -> R.string.rule_mode
       null -> R.string.dont_modify
     }
 
@@ -723,12 +723,12 @@ private val LogMessage.Level?.textRes: Int
   @StringRes
   get() =
     when (this) {
-      LogMessage.Level.Info -> R.string.info
-      LogMessage.Level.Warning -> R.string.warning
+      Info -> R.string.info
+      Warning -> R.string.warning
       LogMessage.Level.Error -> R.string.error
-      LogMessage.Level.Debug -> R.string.debug
-      LogMessage.Level.Silent -> R.string.silent
-      LogMessage.Level.Unknown -> R.string.unknown
+      Debug -> R.string.debug
+      Silent -> R.string.silent
+      Unknown -> R.string.unknown
       null -> R.string.dont_modify
     }
 
@@ -736,9 +736,9 @@ private val ConfigurationOverride.DnsEnhancedMode?.textRes: Int
   @StringRes
   get() =
     when (this) {
-      ConfigurationOverride.DnsEnhancedMode.None -> R.string.disabled
-      ConfigurationOverride.DnsEnhancedMode.FakeIp -> R.string.fakeip
-      ConfigurationOverride.DnsEnhancedMode.Mapping -> R.string.mapping
+      None -> R.string.disabled
+      FakeIp -> R.string.fakeip
+      Mapping -> R.string.mapping
       null -> R.string.dont_modify
     }
 
@@ -746,8 +746,8 @@ private val ConfigurationOverride.FilterMode?.textRes: Int
   @StringRes
   get() =
     when (this) {
-      ConfigurationOverride.FilterMode.BlackList -> R.string.blacklist
-      ConfigurationOverride.FilterMode.WhiteList -> R.string.whitelist
+      BlackList -> R.string.blacklist
+      WhiteList -> R.string.whitelist
       null -> R.string.dont_modify
     }
 

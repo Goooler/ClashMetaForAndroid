@@ -100,9 +100,9 @@ fun MainScreen(
 
   LaunchedEffect(eventState) {
     when (val event = eventState) {
-      MainViewModel.EventState.Idle -> Unit
-      is MainViewModel.EventState.RequestVpnPermission -> vpnLauncher.launch(event.intent)
-      MainViewModel.EventState.ShowNoProfileMessage -> {
+      Idle -> Unit
+      is RequestVpnPermission -> vpnLauncher.launch(event.intent)
+      ShowNoProfileMessage -> {
         val result =
           snackbarHostState.showSnackbar(
             message = noProfileText,
@@ -112,7 +112,7 @@ fun MainScreen(
 
         if (result == SnackbarResult.ActionPerformed) onOpenProfiles()
       }
-      is MainViewModel.EventState.ShowMessage -> {
+      is ShowMessage -> {
         snackbarHostState.showSnackbar(message = event.message)
       }
     }

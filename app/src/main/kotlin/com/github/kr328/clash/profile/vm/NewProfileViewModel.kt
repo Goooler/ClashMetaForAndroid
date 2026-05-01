@@ -39,11 +39,10 @@ class NewProfileViewModel(app: Application) : AndroidViewModel(app) {
 
   fun onCreate(provider: ProfileProvider) {
     when (provider) {
-      is ProfileProvider.QR -> eventState.value = EventState.LaunchQRScanner
-      is ProfileProvider.External ->
-        eventState.value = EventState.LaunchExternalProvider(provider.intent)
-      is ProfileProvider.File -> createProfile(Profile.Type.File)
-      is ProfileProvider.Url -> createProfile(Profile.Type.Url)
+      is QR -> eventState.value = EventState.LaunchQRScanner
+      is External -> eventState.value = EventState.LaunchExternalProvider(provider.intent)
+      is File -> createProfile(File)
+      is Url -> createProfile(Url)
     }
   }
 
@@ -57,9 +56,7 @@ class NewProfileViewModel(app: Application) : AndroidViewModel(app) {
     viewModelScope.launch {
       try {
         val profileName = application.getString(R.string.new_profile)
-        val uuid = withProfile {
-          create(Profile.Type.External, name ?: profileName, uri.toString())
-        }
+        val uuid = withProfile { create(External, name ?: profileName, uri.toString()) }
         eventState.value = EventState.LaunchProperties(uuid)
       } catch (e: Exception) {
         Log.e("Create external profile failed: ${e.message}", e)
@@ -71,16 +68,12 @@ class NewProfileViewModel(app: Application) : AndroidViewModel(app) {
 
   fun onQRResult(result: QRResult) {
     when (result) {
-      is QRResult.QRSuccess -> {
+      is QRSuccess -> {
         val url = result.content.rawValue ?: result.content.rawBytes?.let { String(it) }.orEmpty()
         viewModelScope.launch {
           try {
             val uuid = withProfile {
-              create(
-                type = Profile.Type.Url,
-                name = application.getString(R.string.new_profile),
-                url,
-              )
+              create(type = Url, name = application.getString(R.string.new_profile), url)
             }
             eventState.value = EventState.LaunchProperties(uuid)
           } catch (e: Exception) {
@@ -90,11 +83,11 @@ class NewProfileViewModel(app: Application) : AndroidViewModel(app) {
           }
         }
       }
-      QRResult.QRUserCanceled -> Unit
-      QRResult.QRMissingPermission ->
+      QRUserCanceled -> Unit
+      QRMissingPermission ->
         eventState.value =
           EventState.ShowMessage(application.getString(R.string.import_from_qr_no_permission))
-      is QRResult.QRError ->
+      is QRError ->
         eventState.value =
           EventState.ShowMessage(application.getString(R.string.import_from_qr_exception))
     }
