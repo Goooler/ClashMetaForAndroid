@@ -28,8 +28,8 @@ class Picker(private val context: Context) {
 
     if (parent !is FileDocument) return emptyList()
 
-    return (parent.file.list() ?: emptyArray()).map {
-      pick(path.copy(relative = (path.relative ?: emptyList()) + it), false)
+    return parent.file.list().orEmpty().map {
+      pick(path.copy(relative = path.relative.orEmpty() + it), false)
     }
   }
 

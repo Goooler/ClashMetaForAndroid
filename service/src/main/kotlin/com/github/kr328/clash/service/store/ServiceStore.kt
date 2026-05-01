@@ -15,7 +15,7 @@ class ServiceStore(context: Context) {
     store.typedString(
       key = "active_profile",
       from = { if (it.isBlank()) null else Uuid.parse(it) },
-      to = { it?.toString() ?: "" },
+      to = { it?.toString().orEmpty() },
     )
 
   var bypassPrivateNetwork: Boolean by

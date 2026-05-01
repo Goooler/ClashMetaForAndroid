@@ -80,7 +80,7 @@ class FilesProvider : DocumentsProvider() {
   }
 
   override fun renameDocument(documentId: String?, displayName: String?): String {
-    val name = displayName ?: ""
+    val name = displayName.orEmpty()
 
     if (!PatternFileName.matches(name)) throw IllegalArgumentException("invalid name $displayName")
 

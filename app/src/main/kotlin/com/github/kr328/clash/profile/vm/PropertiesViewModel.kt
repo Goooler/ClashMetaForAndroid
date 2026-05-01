@@ -186,7 +186,7 @@ class PropertiesViewModel(app: Application) : AndroidViewModel(app), DefaultLife
               text =
                 application.getString(
                   R.string.format_fetching_configuration,
-                  status.args.getOrNull(0) ?: "",
+                  status.args.getOrNull(0).orEmpty(),
                 ),
               isIndeterminate = true,
             )
@@ -196,7 +196,7 @@ class PropertiesViewModel(app: Application) : AndroidViewModel(app), DefaultLife
               text =
                 application.getString(
                   R.string.format_fetching_provider,
-                  status.args.getOrNull(0) ?: "",
+                  status.args.getOrNull(0).orEmpty(),
                 ),
               isIndeterminate = false,
               max = status.max,

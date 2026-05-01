@@ -130,7 +130,12 @@ class NetworkObserveModule(service: Service) : Module<Network>(service) {
 
   private fun notifyDnsChange() {
     val dnsList =
-      (networkInfos.asSequence().minByOrNull { networkToInt(it) }?.value?.dnsList ?: emptyList())
+      networkInfos
+        .asSequence()
+        .minByOrNull { networkToInt(it) }
+        ?.value
+        ?.dnsList
+        .orEmpty()
         .map { x -> x.asSocketAddressText(53) }
     val prevDnsList = curDnsList
     if (dnsList.isNotEmpty() && prevDnsList != dnsList) {

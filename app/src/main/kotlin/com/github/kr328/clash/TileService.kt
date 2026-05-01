@@ -49,7 +49,7 @@ class TileService : TileService() {
     val name = StatusClient(this).currentProfile()
 
     clashRunning = name != null
-    currentProfile = name ?: ""
+    currentProfile = name.orEmpty()
 
     updateTile()
   }
@@ -89,7 +89,7 @@ class TileService : TileService() {
             currentProfile = ""
           }
           Intents.ACTION_PROFILE_LOADED -> {
-            currentProfile = StatusClient(this@TileService).currentProfile() ?: ""
+            currentProfile = StatusClient(this@TileService).currentProfile().orEmpty()
           }
         }
 
