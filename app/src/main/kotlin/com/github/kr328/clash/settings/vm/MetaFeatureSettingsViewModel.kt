@@ -76,10 +76,10 @@ class MetaFeatureSettingsViewModel(app: Application) :
 
           val outputFileName =
             when (importType) {
-              ImportType.GeoIp -> "geoip$ext"
-              ImportType.GeoSite -> "geosite$ext"
-              ImportType.Country -> "country$ext"
-              ImportType.ASN -> "ASN$ext"
+              GeoIp -> "geoip$ext"
+              GeoSite -> "geosite$ext"
+              Country -> "country$ext"
+              ASN -> "ASN$ext"
             }
 
           val outputFile = appContext.clashDir.resolve(outputFileName)

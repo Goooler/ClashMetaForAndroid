@@ -92,11 +92,11 @@ fun ProxyScreen(
 
   LaunchedEffect(eventState) {
     when (eventState) {
-      ProxyViewModel.EventState.Idle -> Unit
-      ProxyViewModel.EventState.ReLaunch -> {
+      Idle -> Unit
+      ReLaunch -> {
         onReLaunch()
       }
-      ProxyViewModel.EventState.ShowModeSwitchTips -> {
+      ShowModeSwitchTips -> {
         snackbarHostState.showSnackbar(message = modeSwitchTips)
       }
     }

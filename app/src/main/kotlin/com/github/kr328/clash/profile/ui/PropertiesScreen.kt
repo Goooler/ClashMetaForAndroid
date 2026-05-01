@@ -79,14 +79,14 @@ fun PropertiesScreen(
 
   LaunchedEffect(eventState) {
     when (val event = eventState) {
-      PropertiesViewModel.EventState.Idle -> Unit
-      is PropertiesViewModel.EventState.BrowseFiles -> {
+      Idle -> Unit
+      is BrowseFiles -> {
         onBrowseFiles(event.uuid)
       }
-      is PropertiesViewModel.EventState.Finish -> {
+      is Finish -> {
         onFinish(event.success)
       }
-      is PropertiesViewModel.EventState.ShowMessage -> {
+      is ShowMessage -> {
         snackbarHostState.showSnackbar(message = event.message)
       }
     }
@@ -204,7 +204,7 @@ private fun PropertiesContent(
             Text(profile.source.ifBlank { stringResource(R.string.accept_http_content) })
           },
           icon = { Icon(imageVector = MihomoIcons.OutlineInbox, contentDescription = null) },
-          enabled = profile.type != Profile.Type.File && profile.type != Profile.Type.External,
+          enabled = profile.type != File && profile.type != External,
           onClick = { showInputUrlDialog = true },
         )
         Preference(
@@ -223,7 +223,7 @@ private fun PropertiesContent(
             )
           },
           icon = { Icon(imageVector = MihomoIcons.OutlineUpdate, contentDescription = null) },
-          enabled = profile.type != Profile.Type.File,
+          enabled = profile.type != File,
           onClick = { showInputIntervalDialog = true },
         )
         Preference(
@@ -327,7 +327,7 @@ private fun PropertiesContentPreview() {
       Profile(
         uuid = Uuid.fromLongs(0, 0),
         name = "Meta Profile",
-        type = Profile.Type.Url,
+        type = Url,
         source = "https://example.com/config.yaml",
         active = false,
         interval = 60.minutes.inWholeMilliseconds,

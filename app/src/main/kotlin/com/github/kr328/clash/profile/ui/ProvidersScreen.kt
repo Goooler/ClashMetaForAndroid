@@ -62,8 +62,8 @@ fun ProvidersScreen(modifier: Modifier = Modifier, viewModel: ProvidersViewModel
 
   LaunchedEffect(eventState) {
     when (val event = eventState) {
-      ProvidersViewModel.EventState.Idle -> Unit
-      is ProvidersViewModel.EventState.ShowMessage -> {
+      Idle -> Unit
+      is ShowMessage -> {
         snackbarHostState.showSnackbar(message = event.message)
       }
     }
@@ -126,7 +126,7 @@ private fun ProviderItem(state: ProviderItemState, currentTime: Long, onUpdate: 
   val itemTextMargin = dimens.itemTextMargin
   val itemMiddleMargin = dimens.itemMiddleMargin
 
-  val canUpdate = state.provider.vehicleType != Provider.VehicleType.Inline
+  val canUpdate = state.provider.vehicleType != Inline
 
   Row(
     modifier =
@@ -182,8 +182,8 @@ private fun ProvidersContentPreview() {
           provider =
             Provider(
               name = "Proxy Provider",
-              type = Provider.Type.Proxy,
-              vehicleType = Provider.VehicleType.HTTP,
+              type = Proxy,
+              vehicleType = HTTP,
               updatedAt = System.currentTimeMillis() - 10 * 60 * 1000,
             ),
           updatedAt = System.currentTimeMillis() - 10 * 60 * 1000,
@@ -193,8 +193,8 @@ private fun ProvidersContentPreview() {
           provider =
             Provider(
               name = "Inline Rules",
-              type = Provider.Type.Rule,
-              vehicleType = Provider.VehicleType.Inline,
+              type = Rule,
+              vehicleType = Inline,
               updatedAt = System.currentTimeMillis() - 60 * 60 * 1000,
             ),
           updatedAt = System.currentTimeMillis() - 60 * 60 * 1000,

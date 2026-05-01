@@ -133,9 +133,9 @@ private val DarkMode.summaryRes: Int
   @StringRes
   get() =
     when (this) {
-      DarkMode.Auto -> R.string.follow_system_android_10
-      DarkMode.ForceLight -> R.string.always_light
-      DarkMode.ForceDark -> R.string.always_dark
+      Auto -> R.string.follow_system_android_10
+      ForceLight -> R.string.always_light
+      ForceDark -> R.string.always_dark
     }
 
 @PreviewWrapper(MihomoThemeWrapper::class)

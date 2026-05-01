@@ -10,9 +10,7 @@ import androidx.lifecycle.viewModelScope
 import com.github.kr328.clash.R
 import com.github.kr328.clash.common.log.Log
 import com.github.kr328.clash.core.bridge.Bridge
-import com.github.kr328.clash.core.model.TunnelState
 import com.github.kr328.clash.core.util.trafficTotal
-import com.github.kr328.clash.remote.Broadcasts
 import com.github.kr328.clash.remote.Remote
 import com.github.kr328.clash.util.startClashService
 import com.github.kr328.clash.util.stopClashService
@@ -47,16 +45,16 @@ class MainViewModel(app: Application) : AndroidViewModel(app), DefaultLifecycleO
     broadcastEventsJob = viewModelScope.launch {
       Remote.broadcasts.event.collect { event ->
         when (event) {
-          Broadcasts.Event.ServiceRecreated,
-          Broadcasts.Event.Started,
-          Broadcasts.Event.ProfileChanged,
-          Broadcasts.Event.ProfileLoaded -> fetch()
-          is Broadcasts.Event.Stopped -> {
+          ServiceRecreated,
+          Started,
+          ProfileChanged,
+          ProfileLoaded -> fetch()
+          is Stopped -> {
             event.cause?.let { message -> eventState.update { EventState.ShowMessage(message) } }
             fetch()
           }
-          is Broadcasts.Event.ProfileUpdateCompleted,
-          is Broadcasts.Event.ProfileUpdateFailed -> Unit
+          is ProfileUpdateCompleted,
+          is ProfileUpdateFailed -> Unit
         }
       }
     }
@@ -115,9 +113,9 @@ class MainViewModel(app: Application) : AndroidViewModel(app), DefaultLifecycleO
       val providers = withClash { queryProviders() }
       val mode =
         when (state.mode) {
-          TunnelState.Mode.Direct -> application.getString(R.string.direct_mode)
-          TunnelState.Mode.Global -> application.getString(R.string.global_mode)
-          TunnelState.Mode.Rule -> application.getString(R.string.rule_mode)
+          Direct -> application.getString(R.string.direct_mode)
+          Global -> application.getString(R.string.global_mode)
+          Rule -> application.getString(R.string.rule_mode)
         }
       val profileName = withProfile { queryActive()?.name }
 

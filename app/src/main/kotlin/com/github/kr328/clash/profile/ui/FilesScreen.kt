@@ -108,24 +108,24 @@ fun FilesScreen(
 
   LaunchedEffect(eventState) {
     when (val event = eventState) {
-      FilesViewModel.EventState.Idle -> Unit
-      FilesViewModel.EventState.Finish -> {
+      Idle -> Unit
+      Finish -> {
         onFinish()
       }
-      is FilesViewModel.EventState.OpenFile -> {
+      is OpenFile -> {
         openFileLauncher.launch(
           Intent(Intent.ACTION_VIEW).setDataAndType(event.uri, "text/plain").grantPermissions()
         )
       }
-      is FilesViewModel.EventState.RequestImport -> {
+      is RequestImport -> {
         pendingImportTarget = event.targetFile
         importLauncher.launch("*/*")
       }
-      is FilesViewModel.EventState.RequestExport -> {
+      is RequestExport -> {
         pendingExportSource = event.sourceFile
         exportLauncher.launch(event.sourceFile.name)
       }
-      is FilesViewModel.EventState.ShowMessage -> {
+      is ShowMessage -> {
         snackbarHostState.showSnackbar(message = event.message)
       }
     }

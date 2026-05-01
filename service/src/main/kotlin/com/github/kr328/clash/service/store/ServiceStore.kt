@@ -24,7 +24,7 @@ class ServiceStore(context: Context) {
   var accessControlMode: AccessControlMode by
     store.enum(
       key = "access_control_mode",
-      defaultValue = AccessControlMode.AcceptAll,
+      defaultValue = AcceptAll,
       values = AccessControlMode.entries.toTypedArray(),
     )
 

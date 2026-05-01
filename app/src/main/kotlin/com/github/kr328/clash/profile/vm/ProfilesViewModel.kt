@@ -7,7 +7,6 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.application
 import androidx.lifecycle.viewModelScope
 import com.github.kr328.clash.R
-import com.github.kr328.clash.remote.Broadcasts
 import com.github.kr328.clash.remote.Remote
 import com.github.kr328.clash.service.model.Profile
 import com.github.kr328.clash.util.withProfile
@@ -39,17 +38,17 @@ class ProfilesViewModel(app: Application) : AndroidViewModel(app), DefaultLifecy
     broadcastEventsJob = viewModelScope.launch {
       Remote.broadcasts.event.collect { event ->
         when (event) {
-          Broadcasts.Event.ServiceRecreated,
-          Broadcasts.Event.Started,
-          Broadcasts.Event.ProfileChanged,
-          Broadcasts.Event.ProfileLoaded -> fetch()
-          is Broadcasts.Event.Stopped -> Unit
-          is Broadcasts.Event.ProfileUpdateCompleted -> {
+          ServiceRecreated,
+          Started,
+          ProfileChanged,
+          ProfileLoaded -> fetch()
+          is Stopped -> Unit
+          is ProfileUpdateCompleted -> {
             if (event.uuid != null) {
               showProfileUpdateCompleted(event.uuid)
             }
           }
-          is Broadcasts.Event.ProfileUpdateFailed -> {
+          is ProfileUpdateFailed -> {
             if (event.uuid != null) {
               showProfileUpdateFailed(event.uuid, event.reason)
             }
@@ -105,7 +104,7 @@ class ProfilesViewModel(app: Application) : AndroidViewModel(app), DefaultLifecy
       try {
         withProfile {
           queryAll().forEach { profile ->
-            if (profile.imported && profile.type != Profile.Type.File) {
+            if (profile.imported && profile.type != File) {
               update(profile.uuid)
             }
           }
@@ -140,9 +139,7 @@ class ProfilesViewModel(app: Application) : AndroidViewModel(app), DefaultLifecy
     fetchJob = viewModelScope.launch {
       val profiles = withProfile { queryAll() }
       val hasUpdatableProfile =
-        withContext(Dispatchers.Default) {
-          profiles.any { it.imported && it.type != Profile.Type.File }
-        }
+        withContext(Dispatchers.Default) { profiles.any { it.imported && it.type != File } }
 
       uiState.update { it.copy(profiles = profiles, hasUpdatableProfile = hasUpdatableProfile) }
     }

@@ -9,7 +9,6 @@ import androidx.lifecycle.viewModelScope
 import com.github.kr328.clash.common.log.Log
 import com.github.kr328.clash.model.File
 import com.github.kr328.clash.remote.FilesClient
-import com.github.kr328.clash.service.model.Profile
 import com.github.kr328.clash.util.fileName
 import com.github.kr328.clash.util.withProfile
 import kotlin.uuid.Uuid
@@ -41,7 +40,7 @@ class FilesViewModel(app: Application) : AndroidViewModel(app), DefaultLifecycle
         eventState.value = EventState.Finish
         return@launch
       }
-      uiState.update { it.copy(configurationEditable = profile.type == Profile.Type.Url) }
+      uiState.update { it.copy(configurationEditable = profile.type == Url) }
       fetch()
     }
   }

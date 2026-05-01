@@ -10,7 +10,6 @@ import com.github.kr328.clash.core.Clash
 import com.github.kr328.clash.core.model.Proxy
 import com.github.kr328.clash.core.model.ProxySort
 import com.github.kr328.clash.core.model.TunnelState
-import com.github.kr328.clash.remote.Broadcasts
 import com.github.kr328.clash.remote.Remote
 import com.github.kr328.clash.store.UiStore
 import com.github.kr328.clash.util.withClash
@@ -56,7 +55,7 @@ class ProxyViewModel(app: Application) : AndroidViewModel(app), DefaultLifecycle
     broadcastEventsJob = viewModelScope.launch {
       Remote.broadcasts.event.collect { event ->
         when (event) {
-          Broadcasts.Event.ProfileLoaded -> {
+          ProfileLoaded -> {
             if (!initialized) return@collect
             val newNames = withClash { queryProxyGroupNames(uiStore.proxyExcludeNotSelectable) }
             if (newNames != uiState.value.groupNames) {

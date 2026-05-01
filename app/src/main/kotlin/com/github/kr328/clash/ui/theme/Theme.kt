@@ -19,7 +19,6 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.github.kr328.clash.model.DarkMode
 import com.github.kr328.clash.store.UiStore
 
 private val DarkColorScheme =
@@ -207,9 +206,9 @@ fun MihomoTheme(
   uiStore: UiStore = remember { UiStore(context = context) },
   darkTheme: Boolean =
     when (uiStore.darkMode) {
-      DarkMode.ForceDark -> true
-      DarkMode.ForceLight -> false
-      DarkMode.Auto -> isSystemInDarkTheme()
+      ForceDark -> true
+      ForceLight -> false
+      Auto -> isSystemInDarkTheme()
     },
   content: @Composable () -> Unit,
 ) {

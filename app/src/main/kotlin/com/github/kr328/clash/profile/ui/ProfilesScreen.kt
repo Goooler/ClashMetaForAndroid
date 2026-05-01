@@ -91,13 +91,13 @@ fun ProfilesScreen(
 
   LaunchedEffect(eventState) {
     when (val event = eventState) {
-      ProfilesViewModel.EventState.Idle -> Unit
-      ProfilesViewModel.EventState.OpenCreate -> onOpenCreate()
-      is ProfilesViewModel.EventState.OpenEdit -> onOpenEdit(event.uuid)
-      is ProfilesViewModel.EventState.ShowMessage -> {
+      Idle -> Unit
+      OpenCreate -> onOpenCreate()
+      is OpenEdit -> onOpenEdit(event.uuid)
+      is ShowMessage -> {
         snackbarHostState.showSnackbar(message = event.message)
       }
-      is ProfilesViewModel.EventState.ShowEditableMessage -> {
+      is ShowEditableMessage -> {
         val result =
           snackbarHostState.showSnackbar(
             message = event.message,
@@ -151,7 +151,7 @@ private fun ProfilesContent(
 
   menuProfile?.let { profile ->
     ModalBottomSheet(onDismissRequest = { menuProfile = null }, sheetState = sheetState) {
-      if (profile.imported && profile.type != Profile.Type.File) {
+      if (profile.imported && profile.type != File) {
         ProfilesMenuAction(
           icon = MihomoIcons.BaselineUpdate,
           text = stringResource(R.string.update),
@@ -369,7 +369,7 @@ private fun ProfilesContentPreview() {
         Profile(
           uuid = Uuid.fromLongs(0, 0),
           name = "Main Profile",
-          type = Profile.Type.Url,
+          type = Url,
           source = "https://example.com/config.yaml",
           active = true,
           interval = 30.minutes.inWholeMilliseconds,
@@ -384,7 +384,7 @@ private fun ProfilesContentPreview() {
         Profile(
           uuid = Uuid.fromLongs(0, 1),
           name = "Draft Profile",
-          type = Profile.Type.File,
+          type = File,
           source = "",
           active = false,
           interval = 0,

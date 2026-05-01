@@ -126,7 +126,7 @@ class PropertiesViewModel(app: Application) : AndroidViewModel(app), DefaultLife
       return
     }
 
-    if (profile.type != Profile.Type.File && profile.source.isBlank()) {
+    if (profile.type != File && profile.source.isBlank()) {
       eventState.value = EventState.ShowMessage(application.getString(R.string.invalid_url))
       return
     }
@@ -181,7 +181,7 @@ class PropertiesViewModel(app: Application) : AndroidViewModel(app), DefaultLife
     uiState.update { current ->
       val newProgress =
         when (status.action) {
-          FetchStatus.Action.FetchConfiguration -> {
+          FetchConfiguration -> {
             current.progress.copy(
               text =
                 application.getString(
@@ -191,7 +191,7 @@ class PropertiesViewModel(app: Application) : AndroidViewModel(app), DefaultLife
               isIndeterminate = true,
             )
           }
-          FetchStatus.Action.FetchProviders -> {
+          FetchProviders -> {
             current.progress.copy(
               text =
                 application.getString(
@@ -203,7 +203,7 @@ class PropertiesViewModel(app: Application) : AndroidViewModel(app), DefaultLife
               progress = status.progress,
             )
           }
-          FetchStatus.Action.Verifying -> {
+          Verifying -> {
             current.progress.copy(
               text = application.getString(R.string.verifying),
               isIndeterminate = false,

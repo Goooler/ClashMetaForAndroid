@@ -15,8 +15,8 @@ data class Path(val uuid: Uuid?, val scope: Scope?, val relative: List<String>?)
 
     val sc =
       when (scope) {
-        Scope.Configuration -> Paths.CONFIGURATION_ID
-        Scope.Providers -> Paths.PROVIDERS_ID
+        Configuration -> Paths.CONFIGURATION_ID
+        Providers -> Paths.PROVIDERS_ID
       }
 
     if (relative == null) return "/$uuid/$sc"

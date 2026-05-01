@@ -36,7 +36,6 @@ import com.github.kr328.clash.nav.MihomoNavDisplay
 import com.github.kr328.clash.nav.addIfNotLast
 import com.github.kr328.clash.nav.rememberNavBackStackBuilder
 import com.github.kr328.clash.settings.vm.MetaFeatureSettingsViewModel
-import com.github.kr328.clash.settings.vm.MetaFeatureSettingsViewModel.ImportResult
 import com.github.kr328.clash.settings.vm.MetaFeatureSettingsViewModel.ImportType
 import com.github.kr328.clash.ui.component.MihomoScaffold
 import com.github.kr328.clash.ui.icon.BaselineReplay
@@ -83,19 +82,19 @@ fun MetaFeatureSettingsScreen(
 
           LaunchedEffect(importResult) {
             when (val result = importResult) {
-              ImportResult.Idle,
-              ImportResult.InProgress -> Unit
+              Idle,
+              InProgress -> Unit
 
-              is ImportResult.Success -> {
+              is Success -> {
                 snackbarHostState.showSnackbar(message = importedText.format(result.displayName))
               }
 
-              is ImportResult.UnsupportedFormat -> {
+              is UnsupportedFormat -> {
                 validExtensionsSummary = result.summary
                 showUnsupportedFormatDialog = true
               }
 
-              ImportResult.Failed -> snackbarHostState.showSnackbar(message = importFailedText)
+              Failed -> snackbarHostState.showSnackbar(message = importFailedText)
             }
           }
 
@@ -118,19 +117,19 @@ fun MetaFeatureSettingsScreen(
               onResetCompleted()
             },
             onImportGeoIp = {
-              pendingImportType = ImportType.GeoIp
+              pendingImportType = GeoIp
               importLauncher.launch("*/*")
             },
             onImportGeoSite = {
-              pendingImportType = ImportType.GeoSite
+              pendingImportType = GeoSite
               importLauncher.launch("*/*")
             },
             onImportCountry = {
-              pendingImportType = ImportType.Country
+              pendingImportType = Country
               importLauncher.launch("*/*")
             },
             onImportASN = {
-              pendingImportType = ImportType.ASN
+              pendingImportType = ASN
               importLauncher.launch("*/*")
             },
             onOpenEditableTextList = { title, initialValues, onApply ->
@@ -518,9 +517,9 @@ private val ConfigurationOverride.FindProcessMode?.textRes: Int
   @StringRes
   get() =
     when (this) {
-      ConfigurationOverride.FindProcessMode.Off -> R.string.off
-      ConfigurationOverride.FindProcessMode.Strict -> R.string.strict
-      ConfigurationOverride.FindProcessMode.Always -> R.string.always
+      Off -> R.string.off
+      Strict -> R.string.strict
+      Always -> R.string.always
       null -> R.string.dont_modify
     }
 
