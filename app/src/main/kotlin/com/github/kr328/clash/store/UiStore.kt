@@ -101,20 +101,6 @@ class UiStore(context: Context) {
 
   companion object {
     private const val PREFERENCE_NAME = "ui"
-    private val preferenceKeys =
-      setOf(
-        "enable_vpn",
-        "dark_mode",
-        "hide_app_icon",
-        "hide_from_recents",
-        "proxy_exclude_not_selectable",
-        "proxy_line",
-        "proxy_sort",
-        "proxy_last_group",
-        "access_control_sort",
-        "access_control_reverse",
-        "access_control_system_app",
-      )
 
     val Context.mainActivityAlias: ComponentName
       get() = ComponentName(this, "com.github.kr328.clash.MainActivityAlias")
