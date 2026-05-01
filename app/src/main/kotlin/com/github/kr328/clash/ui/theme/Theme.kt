@@ -62,7 +62,7 @@ private val LightColorScheme =
     outline = MihomoLightControlDisabled,
     inverseSurface = MihomoDarkSurface,
     inverseOnSurface = MihomoDarkControlNormal,
-    inversePrimary = MihomoLightPrimary,
+    inversePrimary = MihomoDarkPrimary,
     error = MihomoError,
     onError = MihomoOnPrimary,
   )
