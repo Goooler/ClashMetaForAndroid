@@ -5,13 +5,24 @@ import android.content.Context
 import android.content.pm.PackageManager
 import com.github.kr328.clash.common.store.Store
 import com.github.kr328.clash.common.store.asStoreProvider
+import com.github.kr328.clash.common.util.unsafeLazy
 import com.github.kr328.clash.core.model.ProxySort
 import com.github.kr328.clash.model.AppInfoSort
 import com.github.kr328.clash.model.DarkMode
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 
 class UiStore(context: Context) {
-  private val store =
-    Store(context.getSharedPreferences(PREFERENCE_NAME, Context.MODE_PRIVATE).asStoreProvider())
+  private val preferences = context.getSharedPreferences(PREFERENCE_NAME, Context.MODE_PRIVATE)
+  private val store = Store(preferences.asStoreProvider())
+
+  private val _valueState by unsafeLazy {
+    val flow = MutableStateFlow(readValueState())
+    preferences.registerOnSharedPreferenceChangeListener { _, _ -> flow.value = readValueState() }
+    flow
+  }
+  val valueState: StateFlow<ValueState>
+    get() = _valueState
 
   var enableVpn: Boolean by store.boolean(key = "enable_vpn", defaultValue = true)
 
@@ -56,6 +67,35 @@ class UiStore(context: Context) {
 
   var accessControlSystemApp: Boolean by
     store.boolean(key = "access_control_system_app", defaultValue = false)
+
+  private fun readValueState() =
+    ValueState(
+      enableVpn = enableVpn,
+      darkMode = darkMode,
+      hideAppIcon = hideAppIcon,
+      hideFromRecents = hideFromRecents,
+      proxyExcludeNotSelectable = proxyExcludeNotSelectable,
+      proxyLine = proxyLine,
+      proxySort = proxySort,
+      proxyLastGroup = proxyLastGroup,
+      accessControlSort = accessControlSort,
+      accessControlReverse = accessControlReverse,
+      accessControlSystemApp = accessControlSystemApp,
+    )
+
+  data class ValueState(
+    val enableVpn: Boolean,
+    val darkMode: DarkMode,
+    val hideAppIcon: Boolean,
+    val hideFromRecents: Boolean,
+    val proxyExcludeNotSelectable: Boolean,
+    val proxyLine: Int,
+    val proxySort: ProxySort,
+    val proxyLastGroup: String,
+    val accessControlSort: AppInfoSort,
+    val accessControlReverse: Boolean,
+    val accessControlSystemApp: Boolean,
+  )
 
   companion object {
     private const val PREFERENCE_NAME = "ui"
