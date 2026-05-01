@@ -13,7 +13,6 @@ import com.github.kr328.clash.core.model.ConfigurationOverride
 import com.github.kr328.clash.settings.ui.MetaFeatureSettingsActions
 import com.github.kr328.clash.util.clashDir
 import com.github.kr328.clash.util.withClash
-import java.io.FileOutputStream
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -86,7 +85,7 @@ class MetaFeatureSettingsViewModel(app: Application) :
           val outputFile = appContext.clashDir.resolve(outputFileName)
           outputFile.parentFile?.mkdirs()
           val inputStream = resolver.openInputStream(uri) ?: return@use ImportResult.Failed
-          inputStream.use { ins -> FileOutputStream(outputFile).use { outs -> ins.copyTo(outs) } }
+          inputStream.use { ins -> outputFile.outputStream().use { outs -> ins.copyTo(outs) } }
           return@use ImportResult.Success(displayName)
         }
       } catch (e: Exception) {

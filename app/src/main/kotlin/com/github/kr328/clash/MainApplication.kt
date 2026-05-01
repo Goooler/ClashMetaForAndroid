@@ -14,7 +14,6 @@ import com.github.kr328.clash.service.util.sendServiceRecreated
 import com.github.kr328.clash.store.UiStore
 import com.github.kr328.clash.util.clashDir
 import java.io.File
-import java.io.FileOutputStream
 
 class MainApplication : Application() {
   private val uiStore by lazy(LazyThreadSafetyMode.NONE) { UiStore(this) }
@@ -105,7 +104,7 @@ class MainApplication : Application() {
       geoipFile.delete()
     }
     if (!geoipFile.exists()) {
-      FileOutputStream(geoipFile).use { assets.open("geoip.metadb").copyTo(it) }
+      geoipFile.outputStream().use { assets.open("geoip.metadb").copyTo(it) }
     }
 
     val geositeFile = File(clashDir, "geosite.dat")
@@ -113,7 +112,7 @@ class MainApplication : Application() {
       geositeFile.delete()
     }
     if (!geositeFile.exists()) {
-      FileOutputStream(geositeFile).use { assets.open("geosite.dat").copyTo(it) }
+      geositeFile.outputStream().use { assets.open("geosite.dat").copyTo(it) }
     }
 
     val asnFile = File(clashDir, "ASN.mmdb")
@@ -121,7 +120,7 @@ class MainApplication : Application() {
       asnFile.delete()
     }
     if (!asnFile.exists()) {
-      FileOutputStream(asnFile).use { assets.open("ASN.mmdb").copyTo(it) }
+      asnFile.outputStream().use { assets.open("ASN.mmdb").copyTo(it) }
     }
   }
 
