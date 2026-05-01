@@ -1,6 +1,5 @@
 package com.github.kr328.clash.ui.theme
 
-import android.content.Context
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
@@ -10,16 +9,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.ReadOnlyComposable
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.staticCompositionLocalOf
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewWrapperProvider
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.github.kr328.clash.store.UiStore
+import com.github.kr328.clash.model.DarkMode
 
 private val DarkColorScheme =
   darkColorScheme(
@@ -202,10 +199,9 @@ val mihomoDimens: MihomoDimens
 
 @Composable
 fun MihomoTheme(
-  context: Context = LocalContext.current,
-  uiStore: UiStore = remember { UiStore(context = context) },
+  darkModeInSettings: DarkMode = DarkMode.Auto,
   darkTheme: Boolean =
-    when (uiStore.darkMode) {
+    when (darkModeInSettings) {
       ForceDark -> true
       ForceLight -> false
       Auto -> isSystemInDarkTheme()
@@ -227,7 +223,7 @@ fun MihomoTheme(
 class MihomoThemeWrapper : PreviewWrapperProvider {
   @Composable
   override fun Wrap(content: @Composable () -> Unit) {
-    MihomoTheme(darkTheme = isSystemInDarkTheme(), content = content)
+    MihomoTheme(content = content)
   }
 }
 

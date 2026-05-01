@@ -16,6 +16,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts.RequestPermission
 import androidx.activity.viewModels
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.core.content.ContextCompat
 import androidx.core.content.getSystemService
@@ -23,6 +24,7 @@ import androidx.core.view.ViewCompat
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.application
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entryProvider
@@ -82,7 +84,9 @@ class MainActivity : ComponentActivity() {
     ViewCompat.setOnApplyWindowInsetsListener(window.decorView) { _, insets -> insets }
 
     setContent {
-      MihomoTheme(uiStore = uiStore) {
+      val uiValueState by uiStore.valueState.collectAsStateWithLifecycle()
+
+      MihomoTheme(darkModeInSettings = uiValueState.darkMode) {
         MihomoNavDisplay(
           backStack = backStack,
           entryProvider =
