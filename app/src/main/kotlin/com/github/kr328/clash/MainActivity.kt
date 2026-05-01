@@ -16,6 +16,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts.RequestPermission
 import androidx.activity.viewModels
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.core.content.ContextCompat
@@ -37,6 +38,7 @@ import com.github.kr328.clash.log.LogRoute
 import com.github.kr328.clash.log.logsEntries
 import com.github.kr328.clash.main.MainRoute
 import com.github.kr328.clash.main.mainEntries
+import com.github.kr328.clash.model.DarkMode
 import com.github.kr328.clash.nav.MihomoNavDisplay
 import com.github.kr328.clash.nav.addIfNotLast
 import com.github.kr328.clash.profile.ProfilesRoute
@@ -72,21 +74,13 @@ class MainActivity : ComponentActivity() {
     }
     intent.handleAction(backStack)
 
-    val systemBars =
-      when (uiStore.darkMode) {
-        ForceDark -> SystemBarStyle.auto(TRANSPARENT, TRANSPARENT) { true }
-        ForceLight -> SystemBarStyle.auto(TRANSPARENT, TRANSPARENT) { false }
-        Auto -> SystemBarStyle.auto(TRANSPARENT, TRANSPARENT)
-      }
-    enableEdgeToEdge(statusBarStyle = systemBars, navigationBarStyle = systemBars)
-    // TODO: https://issuetracker.google.com/issues/298296168
-    //  Fix for three-button nav not properly going edge-to-edge.
-    ViewCompat.setOnApplyWindowInsetsListener(window.decorView) { _, insets -> insets }
-
     setContent {
       val uiValueState by uiStore.valueState.collectAsStateWithLifecycle()
+      val darkMode = uiValueState.darkMode
 
-      MihomoTheme(darkModeInSettings = uiValueState.darkMode) {
+      LaunchedEffect(darkMode) { edgeToEdge(darkMode) }
+
+      MihomoTheme(darkModeInSettings = darkMode) {
         MihomoNavDisplay(
           backStack = backStack,
           entryProvider =
@@ -194,6 +188,19 @@ class MainActivity : ComponentActivity() {
     checkNotNull(getSystemService<ActivityManager>()).appTasks.forEach { task ->
       task.setExcludeFromRecents(uiStore.hideFromRecents)
     }
+  }
+
+  private fun edgeToEdge(darkMode: DarkMode) {
+    val systemBars =
+      when (darkMode) {
+        ForceDark -> SystemBarStyle.auto(TRANSPARENT, TRANSPARENT) { true }
+        ForceLight -> SystemBarStyle.auto(TRANSPARENT, TRANSPARENT) { false }
+        Auto -> SystemBarStyle.auto(TRANSPARENT, TRANSPARENT)
+      }
+    enableEdgeToEdge(statusBarStyle = systemBars, navigationBarStyle = systemBars)
+    // TODO: https://issuetracker.google.com/issues/298296168
+    //  Fix for three-button nav not properly going edge-to-edge.
+    ViewCompat.setOnApplyWindowInsetsListener(window.decorView) { _, insets -> insets }
   }
 
   private class ViewModel(application: Application) : AndroidViewModel(application) {
