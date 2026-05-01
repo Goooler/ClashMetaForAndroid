@@ -19,7 +19,6 @@ import androidx.core.content.ContextCompat
 import androidx.core.content.getSystemService
 import androidx.core.view.ViewCompat
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.application
 import androidx.lifecycle.viewModelScope
@@ -55,8 +54,8 @@ import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
   private val uiStore by unsafeLazy { UiStore(this) }
-  private val viewModel: ActivityViewModel by
-    viewModels(factoryProducer = { ActivityViewModel.Factory(this@MainActivity) })
+  private val viewModel: ViewModel by
+    viewModels(factoryProducer = { ViewModel.Factory(this@MainActivity) })
   private inline val backStack
     get() = viewModel.backStack
 
@@ -185,7 +184,7 @@ class MainActivity : ComponentActivity() {
     }
   }
 
-  private class ActivityViewModel(application: Application) : AndroidViewModel(application) {
+  private class ViewModel(application: Application) : AndroidViewModel(application) {
     val backStack = mutableStateListOf<NavKey>(MainRoute.Main)
 
     fun handleInstallConfigUri(uri: Uri) {
@@ -207,8 +206,8 @@ class MainActivity : ComponentActivity() {
 
     class Factory(private val context: Context) : ViewModelProvider.Factory {
       @Suppress("UNCHECKED_CAST")
-      override fun <T : ViewModel> create(modelClass: Class<T>): T =
-        ActivityViewModel(application = context.applicationContext as Application) as T
+      override fun <T : androidx.lifecycle.ViewModel> create(modelClass: Class<T>): T =
+        ViewModel(application = context.applicationContext as Application) as T
     }
   }
 
