@@ -1,5 +1,6 @@
 package com.github.kr328.clash.settings.ui
 
+import androidx.activity.compose.LocalActivity
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
@@ -34,6 +35,7 @@ fun AppSettingsScreen(
   modifier: Modifier = Modifier,
   viewModel: AppSettingsViewModel = viewModel(),
 ) {
+  val activity = LocalActivity.current
   val clashRunning by viewModel.clashRunning.collectAsStateWithLifecycle()
   val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
@@ -41,7 +43,11 @@ fun AppSettingsScreen(
     clashRunning = clashRunning,
     uiState = uiState,
     onAutoRestartChange = viewModel::updateAutoRestart,
-    onDarkModeChange = viewModel::updateDarkMode,
+    onDarkModeChange = {
+      viewModel.updateDarkMode(it)
+      // TODO: wrap UiStore values to StateFlows.
+      activity?.recreate()
+    },
     onHideAppIconChange = viewModel::updateHideAppIcon,
     onHideFromRecentsChange = viewModel::updateHideFromRecents,
     onDynamicNotificationChange = viewModel::updateDynamicNotification,

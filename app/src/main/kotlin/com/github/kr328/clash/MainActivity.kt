@@ -6,10 +6,12 @@ import android.app.Application
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Color.TRANSPARENT
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
+import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts.RequestPermission
@@ -33,6 +35,7 @@ import com.github.kr328.clash.log.LogRoute
 import com.github.kr328.clash.log.logsEntries
 import com.github.kr328.clash.main.MainRoute
 import com.github.kr328.clash.main.mainEntries
+import com.github.kr328.clash.model.DarkMode
 import com.github.kr328.clash.nav.MihomoNavDisplay
 import com.github.kr328.clash.nav.addIfNotLast
 import com.github.kr328.clash.profile.ProfilesRoute
@@ -68,13 +71,19 @@ class MainActivity : ComponentActivity() {
     }
     intent.handleAction(backStack)
 
-    enableEdgeToEdge()
+    val systemBars =
+      when (uiStore.darkMode) {
+        DarkMode.ForceDark -> SystemBarStyle.auto(TRANSPARENT, TRANSPARENT) { true }
+        DarkMode.ForceLight -> SystemBarStyle.auto(TRANSPARENT, TRANSPARENT) { false }
+        DarkMode.Auto -> SystemBarStyle.auto(TRANSPARENT, TRANSPARENT)
+      }
+    enableEdgeToEdge(statusBarStyle = systemBars, navigationBarStyle = systemBars)
     // TODO: https://issuetracker.google.com/issues/298296168
     //  Fix for three-button nav not properly going edge-to-edge.
     ViewCompat.setOnApplyWindowInsetsListener(window.decorView) { _, insets -> insets }
 
     setContent {
-      MihomoTheme {
+      MihomoTheme(uiStore = uiStore) {
         MihomoNavDisplay(
           backStack = backStack,
           entryProvider =

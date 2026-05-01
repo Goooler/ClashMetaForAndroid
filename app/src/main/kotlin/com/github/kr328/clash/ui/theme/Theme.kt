@@ -1,5 +1,6 @@
 package com.github.kr328.clash.ui.theme
 
+import android.content.Context
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
@@ -9,13 +10,17 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.ReadOnlyComposable
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.staticCompositionLocalOf
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewWrapperProvider
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.github.kr328.clash.model.DarkMode
+import com.github.kr328.clash.store.UiStore
 
 private val DarkColorScheme =
   darkColorScheme(
@@ -197,7 +202,17 @@ val mihomoDimens: MihomoDimens
   @Composable @ReadOnlyComposable get() = LocalMihomoDimens.current
 
 @Composable
-fun MihomoTheme(darkTheme: Boolean = isSystemInDarkTheme(), content: @Composable () -> Unit) {
+fun MihomoTheme(
+  context: Context = LocalContext.current,
+  uiStore: UiStore = remember { UiStore(context = context) },
+  darkTheme: Boolean =
+    when (uiStore.darkMode) {
+      DarkMode.ForceDark -> true
+      DarkMode.ForceLight -> false
+      DarkMode.Auto -> isSystemInDarkTheme()
+    },
+  content: @Composable () -> Unit,
+) {
   val colorScheme = if (darkTheme) DarkColorScheme else LightColorScheme
   val mihomoColors = if (darkTheme) DarkMihomoColorTokens else LightMihomoColorTokens
 
@@ -213,7 +228,7 @@ fun MihomoTheme(darkTheme: Boolean = isSystemInDarkTheme(), content: @Composable
 class MihomoThemeWrapper : PreviewWrapperProvider {
   @Composable
   override fun Wrap(content: @Composable () -> Unit) {
-    MihomoTheme(content = content)
+    MihomoTheme(darkTheme = isSystemInDarkTheme(), content = content)
   }
 }
 
