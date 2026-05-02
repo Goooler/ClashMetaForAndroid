@@ -42,8 +42,8 @@ class UiStore(context: Context) {
     }
     callbackFlow {
         val listener = OnSharedPreferenceChangeListener { _, _ -> trySend(readValues()) }
-        trySend(readValues())
         preferences.registerOnSharedPreferenceChangeListener(listener)
+        trySend(readValues())
         awaitClose { preferences.unregisterOnSharedPreferenceChangeListener(listener) }
       }
       .stateIn(
