@@ -21,7 +21,7 @@ class UiStore(context: Context) {
   private val preferences = context.getSharedPreferences(PREFERENCE_NAME, Context.MODE_PRIVATE)
   private val store = Store(preferences.asStoreProvider())
 
-  private val _valueState by unsafeLazy {
+  val valueState: StateFlow<ValueState> by unsafeLazy {
     val readValues = {
       ValueState(
         enableVpn = enableVpn,
@@ -49,9 +49,6 @@ class UiStore(context: Context) {
         initialValue = readValues(),
       )
   }
-
-  val valueState: StateFlow<ValueState>
-    get() = _valueState
 
   var enableVpn: Boolean by store.boolean(key = "enable_vpn", defaultValue = true)
 
