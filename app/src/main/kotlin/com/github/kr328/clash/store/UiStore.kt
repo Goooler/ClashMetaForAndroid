@@ -4,15 +4,13 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener
 import android.content.pm.PackageManager
+import com.github.kr328.clash.common.Global
 import com.github.kr328.clash.common.store.Store
 import com.github.kr328.clash.common.store.asStoreProvider
 import com.github.kr328.clash.common.util.unsafeLazy
 import com.github.kr328.clash.core.model.ProxySort
 import com.github.kr328.clash.model.AppInfoSort
 import com.github.kr328.clash.model.DarkMode
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -22,7 +20,6 @@ import kotlinx.coroutines.flow.stateIn
 class UiStore(context: Context) {
   private val preferences = context.getSharedPreferences(PREFERENCE_NAME, Context.MODE_PRIVATE)
   private val store = Store(preferences.asStoreProvider())
-  private val scope = CoroutineScope(Dispatchers.Main.immediate + SupervisorJob())
 
   private val _valueState by unsafeLazy {
     val readValues = {
@@ -47,7 +44,7 @@ class UiStore(context: Context) {
         awaitClose { preferences.unregisterOnSharedPreferenceChangeListener(listener) }
       }
       .stateIn(
-        scope = scope,
+        scope = Global,
         started = SharingStarted.WhileSubscribed(),
         initialValue = readValues(),
       )
