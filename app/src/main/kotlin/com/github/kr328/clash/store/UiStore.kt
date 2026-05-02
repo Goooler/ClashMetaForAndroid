@@ -17,8 +17,23 @@ class UiStore(context: Context) {
   private val store = Store(preferences.asStoreProvider())
 
   private val _valueState by unsafeLazy {
-    val flow = MutableStateFlow(readValueState())
-    preferences.registerOnSharedPreferenceChangeListener { _, _ -> flow.value = readValueState() }
+    val readValues = {
+      ValueState(
+        enableVpn = enableVpn,
+        darkMode = darkMode,
+        hideAppIcon = hideAppIcon,
+        hideFromRecents = hideFromRecents,
+        proxyExcludeNotSelectable = proxyExcludeNotSelectable,
+        proxyLine = proxyLine,
+        proxySort = proxySort,
+        proxyLastGroup = proxyLastGroup,
+        accessControlSort = accessControlSort,
+        accessControlReverse = accessControlReverse,
+        accessControlSystemApp = accessControlSystemApp,
+      )
+    }
+    val flow = MutableStateFlow(readValues())
+    preferences.registerOnSharedPreferenceChangeListener { _, _ -> flow.value = readValues() }
     flow
   }
   val valueState: StateFlow<ValueState>
@@ -67,21 +82,6 @@ class UiStore(context: Context) {
 
   var accessControlSystemApp: Boolean by
     store.boolean(key = "access_control_system_app", defaultValue = false)
-
-  private fun readValueState() =
-    ValueState(
-      enableVpn = enableVpn,
-      darkMode = darkMode,
-      hideAppIcon = hideAppIcon,
-      hideFromRecents = hideFromRecents,
-      proxyExcludeNotSelectable = proxyExcludeNotSelectable,
-      proxyLine = proxyLine,
-      proxySort = proxySort,
-      proxyLastGroup = proxyLastGroup,
-      accessControlSort = accessControlSort,
-      accessControlReverse = accessControlReverse,
-      accessControlSystemApp = accessControlSystemApp,
-    )
 
   data class ValueState(
     val enableVpn: Boolean,
