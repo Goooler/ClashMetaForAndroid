@@ -5,7 +5,6 @@ plugins {
 }
 
 dependencies {
-  api(projects.core)
-  api(projects.service)
-  api(projects.common)
+  implementation(projects.glue)
+  implementation(projects.ui)
 }

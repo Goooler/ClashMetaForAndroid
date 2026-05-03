@@ -2,6 +2,7 @@ import com.android.build.api.dsl.CommonExtension
 import com.android.build.gradle.api.AndroidBasePlugin
 import com.diffplug.gradle.spotless.SpotlessExtension
 import kotlin.collections.addAll
+import org.jetbrains.kotlin.compose.compiler.gradle.ComposeCompilerGradlePluginExtension
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.dsl.KotlinAndroidProjectExtension
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
@@ -66,6 +67,9 @@ allprojects {
         "androidx.compose.foundation.ExperimentalFoundationApi",
         "androidx.compose.material3.ExperimentalMaterial3Api",
       )
+    }
+    extensions.configure<ComposeCompilerGradlePluginExtension> {
+      stabilityConfigurationFiles.add(rootProject.layout.projectDirectory.file("stability.conf"))
     }
     dependencies {
       "implementation"(platform(libs.androidx.compose.bom))

@@ -71,10 +71,15 @@ androidComponents {
   }
 }
 
-composeCompiler { stabilityConfigurationFiles.add(layout.projectDirectory.file("stability.conf")) }
-
 dependencies {
   implementation(projects.glue)
+  implementation(projects.ui)
+  implementation(projects.ui.crash)
+  implementation(projects.ui.log)
+  implementation(projects.ui.main)
+  implementation(projects.ui.proxy)
+  implementation(projects.ui.profile)
+  implementation(projects.ui.settings)
 
   implementation(libs.kotlin.coroutine)
 

@@ -78,15 +78,6 @@
         </activity-alias>
 
         <service
-            android:name=".log.LogcatService"
-            android:exported="false"
-            android:foregroundServiceType="specialUse"
-            android:label="@string/clash_logcat">
-            <property
-                android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
-                android:value="explanation_for_special_use" />
-        </service>
-        <service
             android:name=".TileService"
             android:exported="true"
             android:icon="@drawable/ic_logo_service"
