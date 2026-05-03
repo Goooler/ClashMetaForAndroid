@@ -10,6 +10,7 @@ import android.service.quicksettings.TileService
 import com.github.kr328.clash.common.compat.registerReceiverCompat
 import com.github.kr328.clash.common.constants.Intents
 import com.github.kr328.clash.common.constants.Permissions
+import com.github.kr328.clash.glue.R as GlueR
 import com.github.kr328.clash.remote.StatusClient
 import com.github.kr328.clash.util.startClashService
 import com.github.kr328.clash.util.stopClashService
@@ -65,7 +66,7 @@ class TileService : TileService() {
 
     tile.state = if (clashRunning) Tile.STATE_ACTIVE else Tile.STATE_INACTIVE
 
-    tile.label = currentProfile.ifEmpty { getText(R.string.launch_name_meta) }
+    tile.label = currentProfile.ifEmpty { getText(GlueR.string.launch_name_meta) }
 
     tile.icon =
       Icon.createWithResource(this, com.github.kr328.clash.service.R.drawable.ic_logo_service)

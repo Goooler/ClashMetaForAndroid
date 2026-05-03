@@ -1,0 +1,167 @@
+package com.github.kr328.clash.profile.vm
+
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.DefaultLifecycleObserver
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.application
+import androidx.lifecycle.viewModelScope
+import com.github.kr328.clash.common.log.Log
+import com.github.kr328.clash.core.model.Provider
+import com.github.kr328.clash.glue.R
+import com.github.kr328.clash.remote.Remote
+import com.github.kr328.clash.util.withClash
+import kotlin.time.Duration.Companion.minutes
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.isActive
+import kotlinx.coroutines.launch
+
+class ProvidersViewModel(app: Application) : AndroidViewModel(app), DefaultLifecycleObserver {
+  private var broadcastEventsJob: Job? = null
+  private var elapsedJob: Job? = null
+  private var fetchJob: Job? = null
+
+  val uiState: StateFlow<UiState>
+    field = MutableStateFlow(UiState())
+
+  val eventState: StateFlow<EventState>
+    field = MutableStateFlow<EventState>(EventState.Idle)
+
+  override fun onStart(owner: LifecycleOwner) {
+    broadcastEventsJob?.cancel()
+    broadcastEventsJob = viewModelScope.launch {
+      Remote.broadcasts.event.collect { event ->
+        when (event) {
+          ProfileLoaded -> fetch()
+          else -> Unit
+        }
+      }
+    }
+
+    startElapsedTicker()
+    fetch()
+  }
+
+  override fun onStop(owner: LifecycleOwner) {
+    broadcastEventsJob?.cancel()
+    broadcastEventsJob = null
+    elapsedJob?.cancel()
+    elapsedJob = null
+  }
+
+  override fun onCleared() {
+    broadcastEventsJob?.cancel()
+    elapsedJob?.cancel()
+    fetchJob?.cancel()
+  }
+
+  fun consumeEvent() {
+    eventState.value = EventState.Idle
+  }
+
+  fun onUpdateAll() {
+    uiState.value.providers.forEach { state ->
+      if (state.updating || state.provider.vehicleType == Inline) return@forEach
+      onUpdate(state.provider)
+    }
+  }
+
+  fun onUpdate(provider: Provider) {
+    updateProviderState(provider) { it.copy(updating = true) }
+
+    viewModelScope.launch {
+      try {
+        withClash { updateProvider(provider.type, provider.name) }
+        updateProviderState(provider) {
+          it.copy(updating = false, updatedAt = System.currentTimeMillis())
+        }
+      } catch (e: Exception) {
+        Log.e("Update provider ${provider.name} failed: ${e.message}", e)
+        updateProviderState(provider) { it.copy(updating = false) }
+        val errorMessage = e.localizedMessage ?: e.message ?: e.toString()
+        eventState.value =
+          EventState.ShowMessage(
+            application.getString(
+              R.string.format_update_provider_failure,
+              provider.name,
+              errorMessage,
+            )
+          )
+      }
+    }
+  }
+
+  private fun providerKey(provider: Provider): String {
+    return "${provider.type}-${provider.name}"
+  }
+
+  private fun updateProviderState(
+    provider: Provider,
+    transform: (UiState.ProviderItemState) -> UiState.ProviderItemState,
+  ) {
+    val key = providerKey(provider)
+
+    uiState.update { current ->
+      current.copy(
+        providers =
+          current.providers.map { state ->
+            if (providerKey(state.provider) == key) transform(state) else state
+          }
+      )
+    }
+  }
+
+  private fun fetch() {
+    fetchJob?.cancel()
+    fetchJob = viewModelScope.launch {
+      val providers = withClash { queryProviders().sorted() }
+      uiState.update { current ->
+        val existingMap = current.providers.associateBy { providerKey(it.provider) }
+        val newStates = providers.map { provider ->
+          val key = providerKey(provider)
+          existingMap[key]?.let { existing ->
+            existing.copy(
+              provider = provider,
+              updatedAt =
+                if (existing.updating) existing.updatedAt
+                else maxOf(existing.updatedAt, provider.updatedAt),
+            )
+          }
+            ?: UiState.ProviderItemState(
+              provider = provider,
+              updatedAt = provider.updatedAt,
+              updating = false,
+            )
+        }
+        current.copy(providers = newStates)
+      }
+    }
+  }
+
+  private fun startElapsedTicker() {
+    if (elapsedJob?.isActive == true) return
+    elapsedJob = viewModelScope.launch {
+      while (isActive) {
+        delay(1.minutes)
+        uiState.update { it.copy(currentTime = System.currentTimeMillis()) }
+      }
+    }
+  }
+
+  data class UiState(
+    val providers: List<ProviderItemState> = emptyList(),
+    val currentTime: Long = System.currentTimeMillis(),
+  ) {
+    data class ProviderItemState(val provider: Provider, val updatedAt: Long, val updating: Boolean)
+  }
+
+  sealed interface EventState {
+    data object Idle : EventState
+
+    data class ShowMessage(val message: String) : EventState
+  }
+}

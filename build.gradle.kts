@@ -3,6 +3,7 @@ import com.android.build.gradle.api.AndroidBasePlugin
 import com.diffplug.gradle.spotless.SpotlessExtension
 import kotlin.collections.addAll
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.dsl.KotlinAndroidProjectExtension
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
@@ -57,5 +58,27 @@ allprojects {
       ktfmt(libs.ktfmt.get().version).googleStyle()
     }
     kotlinGradle { ktfmt(libs.ktfmt.get().version).googleStyle() }
+  }
+
+  plugins.withId(rootProject.libs.plugins.kotlin.compose.get().pluginId) {
+    extensions.configure<KotlinAndroidProjectExtension> {
+      compilerOptions.optIn.addAll(
+        "androidx.compose.foundation.ExperimentalFoundationApi",
+        "androidx.compose.material3.ExperimentalMaterial3Api",
+      )
+    }
+    dependencies {
+      "implementation"(platform(libs.androidx.compose.bom))
+      "implementation"(libs.androidx.compose.ui)
+      "implementation"(libs.androidx.compose.ui.tooling.preview)
+      "implementation"(libs.androidx.compose.ui.util)
+      "debugImplementation"(libs.androidx.compose.ui.tooling)
+      "implementation"(libs.androidx.compose.animation)
+      "implementation"(libs.androidx.compose.material3)
+      "implementation"(libs.androidx.lifecycle.viewmodel.compose)
+      "implementation"(libs.androidx.lifecycle.viewmodel.navigation3)
+      "implementation"(libs.androidx.navigation3.runtime)
+      "implementation"(libs.androidx.navigation3.ui)
+    }
   }
 }

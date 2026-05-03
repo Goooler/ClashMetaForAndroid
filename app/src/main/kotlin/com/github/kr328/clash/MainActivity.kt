@@ -34,6 +34,7 @@ import com.github.kr328.clash.common.util.unsafeLazy
 import com.github.kr328.clash.common.util.uuid
 import com.github.kr328.clash.crash.CrashRoute
 import com.github.kr328.clash.crash.crashEntries
+import com.github.kr328.clash.glue.R as GlueR
 import com.github.kr328.clash.log.LogRoute
 import com.github.kr328.clash.log.logsEntries
 import com.github.kr328.clash.main.MainRoute
@@ -147,12 +148,12 @@ class MainActivity : ComponentActivity() {
       }
       Intents.ACTION_START_CLASH -> {
         if (!Remote.broadcasts.clashRunning) startClash()
-        else toast(R.string.external_control_started)
+        else toast(GlueR.string.external_control_started)
         true
       }
       Intents.ACTION_STOP_CLASH -> {
         if (Remote.broadcasts.clashRunning) stopClash()
-        else toast(R.string.external_control_stopped)
+        else toast(GlueR.string.external_control_stopped)
         true
       }
       else -> false
@@ -162,15 +163,15 @@ class MainActivity : ComponentActivity() {
   private fun startClash() {
     val vpnRequest = startClashService()
     if (vpnRequest != null) {
-      toast(R.string.unable_to_start_vpn)
+      toast(GlueR.string.unable_to_start_vpn)
       return
     }
-    toast(R.string.external_control_started)
+    toast(GlueR.string.external_control_started)
   }
 
   private fun stopClash() {
     stopClashService()
-    toast(R.string.external_control_stopped)
+    toast(GlueR.string.external_control_stopped)
   }
 
   private fun requestNotificationPermission() {
@@ -216,7 +217,8 @@ class MainActivity : ComponentActivity() {
               "file" -> Profile.Type.File
               else -> Profile.Type.Url
             }
-          val name = uri.getQueryParameter("name") ?: application.getString(R.string.new_profile)
+          val name =
+            uri.getQueryParameter("name") ?: application.getString(GlueR.string.new_profile)
           create(type, name).also { patch(it, name, url, 0) }
         }
         backStack.addIfNotLast(ProfilesRoute.Profiles(openPropertyUuid = uuid))
@@ -228,10 +230,5 @@ class MainActivity : ComponentActivity() {
       override fun <T : androidx.lifecycle.ViewModel> create(modelClass: Class<T>): T =
         ViewModel(application = context.applicationContext as Application) as T
     }
-  }
-
-  companion object {
-    fun intent(context: Context, action: String? = null) =
-      Intent(context, MainActivity::class.java).setAction(action)
   }
 }

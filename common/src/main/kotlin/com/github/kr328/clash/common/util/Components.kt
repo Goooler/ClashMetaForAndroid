@@ -5,6 +5,9 @@ import android.content.Intent
 import com.github.kr328.clash.common.Global
 import kotlin.reflect.KClass
 
+val Class<*>.componentName: ComponentName
+  get() = ComponentName(Global.application.packageName, name)
+
 val KClass<*>.componentName: ComponentName
   get() = ComponentName(Global.application.packageName, this.java.name)
 
