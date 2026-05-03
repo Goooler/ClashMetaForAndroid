@@ -3,14 +3,14 @@ package com.github.kr328.clash.profile
 import androidx.navigation3.runtime.EntryProviderScope
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entryProvider
-import com.github.kr328.clash.nav.MihomoNavDisplay
-import com.github.kr328.clash.nav.addIfNotLast
-import com.github.kr328.clash.nav.rememberNavBackStackBuilder
 import com.github.kr328.clash.profile.ui.FilesScreen
 import com.github.kr328.clash.profile.ui.NewProfileScreen
 import com.github.kr328.clash.profile.ui.ProfilesScreen
 import com.github.kr328.clash.profile.ui.PropertiesScreen
 import com.github.kr328.clash.profile.ui.ProvidersScreen
+import com.github.kr328.clash.ui.nav.MihomoNavDisplay
+import com.github.kr328.clash.ui.nav.addIfNotLast
+import com.github.kr328.clash.ui.nav.rememberNavBackStackBuilder
 import kotlin.uuid.Uuid
 import kotlinx.serialization.Serializable
 

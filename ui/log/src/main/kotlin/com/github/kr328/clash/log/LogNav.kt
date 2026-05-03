@@ -7,8 +7,8 @@ import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberNavBackStack
 import com.github.kr328.clash.log.ui.LogcatScreen
 import com.github.kr328.clash.log.ui.LogsScreen
-import com.github.kr328.clash.nav.MihomoNavDisplay
-import com.github.kr328.clash.nav.addIfNotLast
+import com.github.kr328.clash.ui.nav.MihomoNavDisplay
+import com.github.kr328.clash.ui.nav.addIfNotLast
 import kotlinx.serialization.Serializable
 
 sealed interface LogRoute : NavKey {

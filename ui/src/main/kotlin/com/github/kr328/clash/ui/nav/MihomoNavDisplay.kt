@@ -1,4 +1,4 @@
-package com.github.kr328.clash.nav
+package com.github.kr328.clash.ui.nav
 
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.slideInHorizontally

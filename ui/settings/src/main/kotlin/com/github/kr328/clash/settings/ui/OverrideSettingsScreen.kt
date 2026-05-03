@@ -40,13 +40,13 @@ import com.github.kr328.clash.core.model.ConfigurationOverride
 import com.github.kr328.clash.core.model.LogMessage
 import com.github.kr328.clash.core.model.TunnelState
 import com.github.kr328.clash.glue.R
-import com.github.kr328.clash.nav.MihomoNavDisplay
-import com.github.kr328.clash.nav.addIfNotLast
-import com.github.kr328.clash.nav.rememberNavBackStackBuilder
 import com.github.kr328.clash.settings.vm.OverrideSettingsViewModel
 import com.github.kr328.clash.ui.component.MihomoScaffold
 import com.github.kr328.clash.ui.icon.BaselineReplay
 import com.github.kr328.clash.ui.icon.MihomoIcons
+import com.github.kr328.clash.ui.nav.MihomoNavDisplay
+import com.github.kr328.clash.ui.nav.addIfNotLast
+import com.github.kr328.clash.ui.nav.rememberNavBackStackBuilder
 import com.github.kr328.clash.ui.theme.MihomoThemeWrapper
 import com.github.kr328.clash.ui.theme.PreviewMihomo
 import kotlinx.serialization.Serializable

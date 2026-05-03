@@ -4,14 +4,14 @@ import androidx.navigation3.runtime.EntryProviderScope
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberNavBackStack
-import com.github.kr328.clash.nav.MihomoNavDisplay
-import com.github.kr328.clash.nav.addIfNotLast
 import com.github.kr328.clash.settings.ui.AccessControlScreen
 import com.github.kr328.clash.settings.ui.AppSettingsScreen
 import com.github.kr328.clash.settings.ui.MetaFeatureSettingsScreen
 import com.github.kr328.clash.settings.ui.NetworkSettingsScreen
 import com.github.kr328.clash.settings.ui.OverrideSettingsScreen
 import com.github.kr328.clash.settings.ui.SettingsScreen
+import com.github.kr328.clash.ui.nav.MihomoNavDisplay
+import com.github.kr328.clash.ui.nav.addIfNotLast
 import kotlinx.serialization.Serializable
 
 sealed interface SettingsRoute : NavKey {
