@@ -43,4 +43,17 @@ enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
 enableFeaturePreview("STABLE_CONFIGURATION_CACHE")
 
-include(":app", ":core", ":service", ":common", ":glue")
+include(
+  ":app",
+  ":core",
+  ":service",
+  ":common",
+  ":glue",
+  ":ui",
+  ":ui:crash",
+  ":ui:log",
+  ":ui:main",
+  ":ui:proxy",
+  ":ui:profile",
+  ":ui:settings",
+)
