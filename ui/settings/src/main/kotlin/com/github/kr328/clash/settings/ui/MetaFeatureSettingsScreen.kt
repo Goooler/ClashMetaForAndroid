@@ -53,7 +53,7 @@ private sealed interface MetaFeatureSettingsRoute : NavKey {
 }
 
 @Composable
-fun MetaFeatureSettingsScreen(
+internal fun MetaFeatureSettingsScreen(
   modifier: Modifier = Modifier,
   viewModel: MetaFeatureSettingsViewModel = viewModel(),
   onResetCompleted: () -> Unit,

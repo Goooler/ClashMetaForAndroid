@@ -9,7 +9,7 @@ import com.github.kr328.clash.ui.icon.BaselineCloudDownload
 import com.github.kr328.clash.ui.icon.BaselineQrCodeScanner
 import com.github.kr328.clash.ui.icon.MihomoIcons
 
-sealed class ProfileProvider {
+internal sealed class ProfileProvider {
   class File(private val context: Context) : ProfileProvider() {
     override val name: String
       get() = context.getString(R.string.file)

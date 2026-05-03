@@ -30,7 +30,7 @@ import me.zhanghai.compose.preference.preferenceCategory
 import me.zhanghai.compose.preference.switchPreference
 
 @Composable
-fun AppSettingsScreen(
+internal fun AppSettingsScreen(
   modifier: Modifier = Modifier,
   viewModel: AppSettingsViewModel = viewModel(),
 ) {

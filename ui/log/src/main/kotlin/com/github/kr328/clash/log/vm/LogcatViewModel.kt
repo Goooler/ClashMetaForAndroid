@@ -35,7 +35,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
 
-class LogcatViewModel(app: Application) : AndroidViewModel(app), DefaultLifecycleObserver {
+internal class LogcatViewModel(app: Application) : AndroidViewModel(app), DefaultLifecycleObserver {
   private var conn: ServiceConnection? = null
   @Suppress("StaticFieldLeak") private var logcat: LogcatService? = null
   private var pollJob: Job? = null

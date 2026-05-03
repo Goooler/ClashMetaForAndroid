@@ -13,19 +13,19 @@ import androidx.compose.ui.text.input.TextFieldValue
 import com.github.kr328.clash.glue.R
 
 @Composable
-fun EmptyEditorContent(modifier: Modifier = Modifier) {
+internal fun EmptyEditorContent(modifier: Modifier = Modifier) {
   Box(modifier = modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
     Text(stringResource(R.string.empty))
   }
 }
 
 @Composable
-fun List<String>?.listSummary(@StringRes placeholder: Int) =
+internal fun List<String>?.listSummary(@StringRes placeholder: Int) =
   when {
     this == null -> stringResource(placeholder)
     isEmpty() -> stringResource(R.string.empty)
     else -> stringResource(R.string.format_elements, size)
   }
 
-fun initialTextFieldValue(text: String) =
+internal fun initialTextFieldValue(text: String) =
   TextFieldValue(text = text, selection = TextRange(text.length))

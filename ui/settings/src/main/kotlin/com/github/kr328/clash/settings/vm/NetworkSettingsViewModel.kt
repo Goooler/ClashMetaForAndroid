@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 
-class NetworkSettingsViewModel(app: Application) : AndroidViewModel(app) {
+internal class NetworkSettingsViewModel(app: Application) : AndroidViewModel(app) {
   private val uiStore = UiStore(app)
   private val serviceStore = ServiceStore(app)
 

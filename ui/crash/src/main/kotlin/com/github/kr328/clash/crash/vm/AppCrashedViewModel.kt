@@ -12,7 +12,7 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.withContext
 
-class AppCrashedViewModel(app: Application) : AndroidViewModel(app) {
+internal class AppCrashedViewModel(app: Application) : AndroidViewModel(app) {
   val logs: StateFlow<String> =
     flow {
         val log =

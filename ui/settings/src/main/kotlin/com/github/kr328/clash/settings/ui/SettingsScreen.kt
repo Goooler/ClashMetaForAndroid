@@ -34,7 +34,7 @@ import com.github.kr328.clash.ui.theme.PreviewMihomo
 import com.github.kr328.clash.ui.theme.mihomoDimens
 
 @Composable
-fun SettingsScreen(
+internal fun SettingsScreen(
   modifier: Modifier = Modifier,
   onOpenAppSettings: () -> Unit,
   onOpenNetworkSettings: () -> Unit,

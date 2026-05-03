@@ -73,7 +73,7 @@ import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.withContext
 
 @Composable
-fun AccessControlScreen(
+internal fun AccessControlScreen(
   modifier: Modifier = Modifier,
   viewModel: AccessControlViewModel = viewModel(),
 ) {

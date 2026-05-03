@@ -47,7 +47,7 @@ import com.github.kr328.clash.util.format
 import java.util.Date
 
 @Composable
-fun LogsScreen(
+internal fun LogsScreen(
   modifier: Modifier = Modifier,
   viewModel: LogsViewModel = viewModel(),
   onStartLogcat: () -> Unit,

@@ -53,7 +53,7 @@ import kotlin.math.roundToInt
 import kotlin.uuid.Uuid
 
 @Composable
-fun NewProfileScreen(
+internal fun NewProfileScreen(
   modifier: Modifier = Modifier,
   viewModel: NewProfileViewModel = viewModel(),
   onProperties: (Uuid) -> Unit,

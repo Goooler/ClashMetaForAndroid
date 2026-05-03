@@ -19,7 +19,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-class MetaFeatureSettingsViewModel(app: Application) :
+internal class MetaFeatureSettingsViewModel(app: Application) :
   AndroidViewModel(app), MetaFeatureSettingsActions {
   private val appContext = app
   private val validDatabaseExtensions = listOf(".metadb", ".db", ".dat", ".mmdb")

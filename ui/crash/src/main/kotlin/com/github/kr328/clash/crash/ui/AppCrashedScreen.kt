@@ -22,7 +22,10 @@ import com.github.kr328.clash.ui.theme.MihomoThemeWrapper
 import com.github.kr328.clash.ui.theme.PreviewMihomo
 
 @Composable
-fun AppCrashedScreen(modifier: Modifier = Modifier, viewModel: AppCrashedViewModel = viewModel()) {
+internal fun AppCrashedScreen(
+  modifier: Modifier = Modifier,
+  viewModel: AppCrashedViewModel = viewModel(),
+) {
   val logs by viewModel.logs.collectAsStateWithLifecycle()
 
   AppCrashedContent(modifier = modifier, logs = logs)

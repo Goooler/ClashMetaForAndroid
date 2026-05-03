@@ -12,7 +12,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class LogsViewModel(app: Application) : AndroidViewModel(app) {
+internal class LogsViewModel(app: Application) : AndroidViewModel(app) {
   val logFiles: StateFlow<List<LogFile>>
     field = MutableStateFlow(emptyList<LogFile>())
 

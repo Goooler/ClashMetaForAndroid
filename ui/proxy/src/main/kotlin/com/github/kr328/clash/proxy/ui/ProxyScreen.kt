@@ -73,7 +73,7 @@ import com.github.kr328.clash.ui.theme.mihomoDimens
 import kotlinx.coroutines.launch
 
 @Composable
-fun ProxyScreen(
+internal fun ProxyScreen(
   modifier: Modifier = Modifier,
   viewModel: ProxyViewModel = viewModel(),
   onReLaunch: () -> Unit,

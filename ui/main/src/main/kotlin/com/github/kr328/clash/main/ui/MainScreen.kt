@@ -67,7 +67,7 @@ import com.github.kr328.clash.ui.theme.PreviewMihomo
 import com.github.kr328.clash.ui.theme.mihomoDimens
 
 @Composable
-fun MainScreen(
+internal fun MainScreen(
   modifier: Modifier = Modifier,
   viewModel: MainViewModel = viewModel(),
   onOpenProxy: () -> Unit,

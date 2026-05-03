@@ -32,7 +32,7 @@ import me.zhanghai.compose.preference.preferenceCategory
 import me.zhanghai.compose.preference.switchPreference
 
 @Composable
-fun NetworkSettingsScreen(
+internal fun NetworkSettingsScreen(
   modifier: Modifier = Modifier,
   viewModel: NetworkSettingsViewModel = viewModel(),
   onStartAccessControlList: () -> Unit,

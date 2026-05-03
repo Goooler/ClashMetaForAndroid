@@ -20,7 +20,7 @@ import me.zhanghai.compose.preference.preference
 import me.zhanghai.compose.preference.preferenceCategory
 
 @Composable
-fun ApkBrokenScreen() {
+internal fun ApkBrokenScreen() {
   MihomoScaffold(title = stringResource(R.string.application_broken)) { innerPadding ->
     ProvidePreferenceLocals {
       val context = LocalContext.current

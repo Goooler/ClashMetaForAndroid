@@ -18,7 +18,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-class FilesViewModel(app: Application) : AndroidViewModel(app), DefaultLifecycleObserver {
+internal class FilesViewModel(app: Application) : AndroidViewModel(app), DefaultLifecycleObserver {
   private val client = FilesClient(app)
   private val stack = ArrayDeque<String>()
   private var root: String = ""

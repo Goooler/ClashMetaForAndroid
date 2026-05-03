@@ -58,7 +58,7 @@ import me.zhanghai.compose.preference.Preference
 import me.zhanghai.compose.preference.ProvidePreferenceLocals
 
 @Composable
-fun PropertiesScreen(
+internal fun PropertiesScreen(
   uuid: Uuid,
   modifier: Modifier = Modifier,
   viewModel: PropertiesViewModel = viewModel(),

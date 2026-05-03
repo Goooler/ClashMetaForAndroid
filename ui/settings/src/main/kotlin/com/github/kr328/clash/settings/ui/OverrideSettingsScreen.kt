@@ -61,7 +61,7 @@ private sealed interface OverrideSettingsRoute : NavKey {
 }
 
 @Composable
-fun OverrideSettingsScreen(
+internal fun OverrideSettingsScreen(
   modifier: Modifier = Modifier,
   viewModel: OverrideSettingsViewModel = viewModel(),
   onResetCompleted: () -> Unit,

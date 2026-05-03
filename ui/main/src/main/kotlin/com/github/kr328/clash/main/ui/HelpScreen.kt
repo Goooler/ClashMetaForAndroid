@@ -25,7 +25,7 @@ import me.zhanghai.compose.preference.preference
 import me.zhanghai.compose.preference.preferenceCategory
 
 @Composable
-fun HelpScreen(modifier: Modifier = Modifier) {
+internal fun HelpScreen(modifier: Modifier = Modifier) {
   MihomoScaffold(title = stringResource(R.string.help), modifier = modifier) { innerPadding ->
     ProvidePreferenceLocals {
       val context = LocalContext.current

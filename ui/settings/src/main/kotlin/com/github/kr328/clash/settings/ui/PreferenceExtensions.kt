@@ -8,7 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.AnnotatedString
 
-inline fun <T> LazyListScope.listPreference(
+internal inline fun <T> LazyListScope.listPreference(
   key: String,
   value: T,
   noinline onValueChange: (T) -> Unit,
@@ -37,7 +37,7 @@ inline fun <T> LazyListScope.listPreference(
   }
 }
 
-inline fun LazyListScope.switchPreference(
+internal inline fun LazyListScope.switchPreference(
   key: String,
   value: Boolean,
   noinline onValueChange: (Boolean) -> Unit,

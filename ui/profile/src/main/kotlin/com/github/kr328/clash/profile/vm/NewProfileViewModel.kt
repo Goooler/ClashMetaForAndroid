@@ -22,7 +22,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class NewProfileViewModel(app: Application) : AndroidViewModel(app) {
+internal class NewProfileViewModel(app: Application) : AndroidViewModel(app) {
   val uiState: StateFlow<UiState>
     field = MutableStateFlow(UiState())
 
