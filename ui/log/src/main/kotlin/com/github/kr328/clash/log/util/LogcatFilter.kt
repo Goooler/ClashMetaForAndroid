@@ -7,7 +7,7 @@ import java.io.BufferedWriter
 import java.io.Writer
 import java.util.Date
 
-class LogcatFilter(output: Writer, private val context: Context) : BufferedWriter(output) {
+internal class LogcatFilter(output: Writer, private val context: Context) : BufferedWriter(output) {
   fun writeHeader(time: Date) {
     appendLine("# Capture on ${time.format(context)}")
   }

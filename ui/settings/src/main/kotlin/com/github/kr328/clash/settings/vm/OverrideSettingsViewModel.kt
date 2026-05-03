@@ -15,7 +15,8 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-class OverrideSettingsViewModel(app: Application) : AndroidViewModel(app), OverrideSettingsActions {
+internal class OverrideSettingsViewModel(app: Application) :
+  AndroidViewModel(app), OverrideSettingsActions {
   @Volatile private var skipPersist = false
 
   val configuration: StateFlow<ConfigurationOverride>

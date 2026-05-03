@@ -21,7 +21,8 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class PropertiesViewModel(app: Application) : AndroidViewModel(app), DefaultLifecycleObserver {
+internal class PropertiesViewModel(app: Application) :
+  AndroidViewModel(app), DefaultLifecycleObserver {
   private var rootUuid: Uuid? = null
   private var canceled = false
 

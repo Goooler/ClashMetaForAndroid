@@ -49,7 +49,10 @@ import com.github.kr328.clash.util.elapsedIntervalString
 import com.github.kr328.clash.util.type
 
 @Composable
-fun ProvidersScreen(modifier: Modifier = Modifier, viewModel: ProvidersViewModel = viewModel()) {
+internal fun ProvidersScreen(
+  modifier: Modifier = Modifier,
+  viewModel: ProvidersViewModel = viewModel(),
+) {
   val lifecycleOwner = LocalLifecycleOwner.current
   val uiState by viewModel.uiState.collectAsStateWithLifecycle()
   val eventState by viewModel.eventState.collectAsStateWithLifecycle()

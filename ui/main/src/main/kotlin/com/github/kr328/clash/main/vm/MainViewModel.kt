@@ -27,7 +27,7 @@ import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class MainViewModel(app: Application) : AndroidViewModel(app), DefaultLifecycleObserver {
+internal class MainViewModel(app: Application) : AndroidViewModel(app), DefaultLifecycleObserver {
   private var broadcastEventsJob: Job? = null
   private var trafficPollingJob: Job? = null
   private var fetchJob: Job? = null

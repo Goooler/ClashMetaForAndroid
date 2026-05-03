@@ -5,7 +5,7 @@ import com.github.kr328.clash.core.model.LogMessage
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 
-class LogcatCache {
+internal class LogcatCache {
   data class Snapshot(val messages: List<LogMessage>, val removed: Int, val appended: Int)
 
   private val array = CircularArray<LogMessage>(CAPACITY)

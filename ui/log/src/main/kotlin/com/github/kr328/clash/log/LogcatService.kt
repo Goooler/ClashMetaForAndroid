@@ -39,7 +39,8 @@ import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class LogcatService : Service(), CoroutineScope by CoroutineScope(Dispatchers.Default), IInterface {
+internal class LogcatService :
+  Service(), CoroutineScope by CoroutineScope(Dispatchers.Default), IInterface {
   private val cache = LogcatCache()
 
   private val connection =

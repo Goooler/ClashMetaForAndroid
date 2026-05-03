@@ -32,7 +32,8 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.withTimeoutOrNull
 
-class AccessControlViewModel(app: Application) : AndroidViewModel(app), AccessControlActions {
+internal class AccessControlViewModel(app: Application) :
+  AndroidViewModel(app), AccessControlActions {
   private val appContext = app
   private val uiStore = UiStore(app)
   private val serviceStore = ServiceStore(app)

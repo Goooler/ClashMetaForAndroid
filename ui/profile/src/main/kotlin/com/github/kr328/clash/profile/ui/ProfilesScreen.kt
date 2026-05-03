@@ -72,7 +72,7 @@ import kotlin.uuid.Uuid
 import me.saket.bytesize.binaryBytes
 
 @Composable
-fun ProfilesScreen(
+internal fun ProfilesScreen(
   modifier: Modifier = Modifier,
   viewModel: ProfilesViewModel = viewModel(),
   onOpenCreate: () -> Unit,

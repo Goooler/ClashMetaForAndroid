@@ -20,7 +20,8 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 
-class ProvidersViewModel(app: Application) : AndroidViewModel(app), DefaultLifecycleObserver {
+internal class ProvidersViewModel(app: Application) :
+  AndroidViewModel(app), DefaultLifecycleObserver {
   private var broadcastEventsJob: Job? = null
   private var elapsedJob: Job? = null
   private var fetchJob: Job? = null

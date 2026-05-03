@@ -16,7 +16,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 
-class AppSettingsViewModel(app: Application) : AndroidViewModel(app) {
+internal class AppSettingsViewModel(app: Application) : AndroidViewModel(app) {
   private val uiStore = UiStore(app)
   private val serviceStore = ServiceStore(app)
   private val pm = app.packageManager

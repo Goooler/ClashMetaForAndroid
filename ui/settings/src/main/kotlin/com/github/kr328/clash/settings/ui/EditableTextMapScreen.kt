@@ -45,9 +45,10 @@ import com.github.kr328.clash.ui.theme.mihomoDimens
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class EditableTextMap(val title: Int, val initialValues: Map<String, String>?) : NavKey
+internal data class EditableTextMap(val title: Int, val initialValues: Map<String, String>?) :
+  NavKey
 
-fun EntryProviderScope<NavKey>.editableTextMapScreenEntry(
+internal fun EntryProviderScope<NavKey>.editableTextMapScreenEntry(
   onDismiss: () -> Unit,
   onApply: (Map<String, String>?) -> Unit,
 ) {
@@ -62,7 +63,7 @@ fun EntryProviderScope<NavKey>.editableTextMapScreenEntry(
 }
 
 @Composable
-fun EditableTextMapScreen(
+private fun EditableTextMapScreen(
   @StringRes title: Int,
   initialValues: Map<String, String>?,
   onDismiss: () -> Unit,

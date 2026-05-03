@@ -23,7 +23,7 @@ import kotlinx.coroutines.sync.Semaphore
 import kotlinx.coroutines.sync.withPermit
 import kotlinx.coroutines.withContext
 
-class ProxyViewModel(app: Application) : AndroidViewModel(app), DefaultLifecycleObserver {
+internal class ProxyViewModel(app: Application) : AndroidViewModel(app), DefaultLifecycleObserver {
   private val uiStore = UiStore(app)
   private var broadcastEventsJob: Job? = null
   private var fetchInitialStateJob: Job? = null

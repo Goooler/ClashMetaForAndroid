@@ -55,7 +55,7 @@ import java.util.Date
 import kotlinx.coroutines.launch
 
 @Composable
-fun LogcatScreen(
+internal fun LogcatScreen(
   fileName: String?,
   modifier: Modifier = Modifier,
   viewModel: LogcatViewModel = viewModel(),

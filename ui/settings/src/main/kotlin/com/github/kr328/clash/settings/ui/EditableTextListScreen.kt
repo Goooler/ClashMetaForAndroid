@@ -42,9 +42,10 @@ import com.github.kr328.clash.ui.theme.PreviewMihomo
 import com.github.kr328.clash.ui.theme.mihomoDimens
 import kotlinx.serialization.Serializable
 
-@Serializable data class EditableTextList(val title: Int, val initialValues: List<String>?) : NavKey
+@Serializable
+internal data class EditableTextList(val title: Int, val initialValues: List<String>?) : NavKey
 
-fun EntryProviderScope<NavKey>.editableTextListScreenEntry(
+internal fun EntryProviderScope<NavKey>.editableTextListScreenEntry(
   onDismiss: () -> Unit,
   onApply: (List<String>?) -> Unit,
 ) {
@@ -59,7 +60,7 @@ fun EntryProviderScope<NavKey>.editableTextListScreenEntry(
 }
 
 @Composable
-fun EditableTextListScreen(
+private fun EditableTextListScreen(
   @StringRes title: Int,
   initialValues: List<String>?,
   onDismiss: () -> Unit,

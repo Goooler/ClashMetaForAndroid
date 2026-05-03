@@ -9,7 +9,7 @@ import java.util.Date
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-class LogcatReader(
+internal class LogcatReader(
   context: Context,
   file: LogFile,
   private val reader: BufferedReader = context.logsDir.resolve(file.fileName).bufferedReader(),

@@ -71,7 +71,7 @@ import kotlinx.coroutines.delay
 import me.saket.bytesize.binaryBytes
 
 @Composable
-fun FilesScreen(
+internal fun FilesScreen(
   uuid: Uuid,
   modifier: Modifier = Modifier,
   viewModel: FilesViewModel = viewModel(),
