@@ -24,17 +24,13 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.ReceiveChannel
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonArray
+import kotlinx.serialization.json.decodeFromJsonElement
 import kotlinx.serialization.json.jsonPrimitive
 
 object Clash {
   enum class OverrideSlot {
     Persist,
     Session,
-  }
-
-  private val ConfigurationOverrideJson = Json {
-    ignoreUnknownKeys = true
-    encodeDefaults = false
   }
 
   fun reset() {
@@ -50,9 +46,7 @@ object Clash {
   }
 
   fun queryTunnelState(): TunnelState {
-    val json = Bridge.nativeQueryTunnelState()
-
-    return Json.decodeFromString(TunnelState.serializer(), json)
+    return json.decodeFromString(Bridge.nativeQueryTunnelState())
   }
 
   fun queryTrafficNow(): Traffic {
@@ -121,11 +115,7 @@ object Clash {
   }
 
   fun queryGroupNames(excludeNotSelectable: Boolean): List<String> {
-    val names =
-      Json.decodeFromString(
-        JsonArray.serializer(),
-        Bridge.nativeQueryGroupNames(excludeNotSelectable),
-      )
+    val names = json.decodeFromString<JsonArray>(Bridge.nativeQueryGroupNames(excludeNotSelectable))
 
     return names.map {
       require(it.jsonPrimitive.isString)
@@ -135,9 +125,8 @@ object Clash {
   }
 
   fun queryGroup(name: String, sort: ProxySort): ProxyGroup {
-    return Bridge.nativeQueryGroup(name, sort.name)?.let {
-      Json.decodeFromString(ProxyGroup.serializer(), it)
-    } ?: ProxyGroup(Proxy.Type.Unknown, emptyList(), "")
+    return Bridge.nativeQueryGroup(name, sort.name)?.let { json.decodeFromString(it) }
+      ?: ProxyGroup(Proxy.Type.Unknown, emptyList(), "")
   }
 
   fun healthCheck(name: String): CompletableDeferred<Unit> {
@@ -162,7 +151,7 @@ object Clash {
       Bridge.nativeFetchAndValid(
         object : FetchCallback {
           override fun report(statusJson: String) {
-            reportStatus(Json.decodeFromString(FetchStatus.serializer(), statusJson))
+            reportStatus(json.decodeFromString(statusJson))
           }
 
           override fun complete(error: String?) {
@@ -181,9 +170,9 @@ object Clash {
   }
 
   fun queryProviders(): List<Provider> {
-    val providers = Json.decodeFromString(JsonArray.serializer(), Bridge.nativeQueryProviders())
+    val providers = json.decodeFromString<JsonArray>(Bridge.nativeQueryProviders())
 
-    return List(providers.size) { Json.decodeFromJsonElement(Provider.serializer(), providers[it]) }
+    return List(providers.size) { json.decodeFromJsonElement<Provider>(providers[it]) }
   }
 
   fun updateProvider(type: Provider.Type, name: String): CompletableDeferred<Unit> {
@@ -194,10 +183,7 @@ object Clash {
 
   fun queryOverride(slot: OverrideSlot): ConfigurationOverride {
     return try {
-      ConfigurationOverrideJson.decodeFromString(
-        ConfigurationOverride.serializer(),
-        Bridge.nativeReadOverride(slot.ordinal),
-      )
+      json.decodeFromString(Bridge.nativeReadOverride(slot.ordinal))
     } catch (e: Exception) {
       Log.e("Read override failed: ${e.message}", e)
       ConfigurationOverride()
@@ -205,10 +191,7 @@ object Clash {
   }
 
   fun patchOverride(slot: OverrideSlot, configuration: ConfigurationOverride) {
-    Bridge.nativeWriteOverride(
-      slot.ordinal,
-      ConfigurationOverrideJson.encodeToString(ConfigurationOverride.serializer(), configuration),
-    )
+    Bridge.nativeWriteOverride(slot.ordinal, json.encodeToString(configuration))
   }
 
   fun clearOverride(slot: OverrideSlot) {
@@ -216,7 +199,7 @@ object Clash {
   }
 
   fun queryConfiguration(): UiConfiguration {
-    return Json.decodeFromString(UiConfiguration.serializer(), Bridge.nativeQueryConfiguration())
+    return json.decodeFromString(Bridge.nativeQueryConfiguration())
   }
 
   fun subscribeLogcat(): ReceiveChannel<LogMessage> {
@@ -224,10 +207,12 @@ object Clash {
       Bridge.nativeSubscribeLogcat(
         object : LogcatInterface {
           override fun received(jsonPayload: String) {
-            trySend(Json.decodeFromString(LogMessage.serializer(), jsonPayload))
+            trySend(json.decodeFromString(jsonPayload))
           }
         }
       )
     }
   }
 }
+
+private val json = Json { ignoreUnknownKeys = true }
