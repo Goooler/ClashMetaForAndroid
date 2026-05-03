@@ -73,38 +73,13 @@ androidComponents {
 
 composeCompiler { stabilityConfigurationFiles.add(layout.projectDirectory.file("stability.conf")) }
 
-kotlin {
-  compilerOptions.optIn.addAll(
-    "androidx.compose.foundation.ExperimentalFoundationApi",
-    "androidx.compose.material3.ExperimentalMaterial3Api",
-  )
-}
-
 dependencies {
-  implementation(projects.core)
-  implementation(projects.service)
-  implementation(projects.common)
+  implementation(projects.glue)
 
   implementation(libs.kotlin.coroutine)
-  implementation(libs.bytesize)
 
   implementation(libs.androidx.core)
   implementation(libs.androidx.activity.compose)
-  implementation(platform(libs.androidx.compose.bom))
-  implementation(libs.androidx.compose.ui)
-  implementation(libs.androidx.compose.ui.tooling.preview)
-  implementation(libs.androidx.compose.ui.util)
-  debugImplementation(libs.androidx.compose.ui.tooling)
-  implementation(libs.androidx.compose.animation)
-  implementation(libs.androidx.compose.material3)
-  implementation(libs.androidx.lifecycle.viewmodel.compose)
-  implementation(libs.androidx.lifecycle.viewmodel.navigation3)
-  implementation(libs.androidx.navigation3.runtime)
-  implementation(libs.androidx.navigation3.ui)
-
-  implementation(libs.composePreference)
-
-  implementation(libs.quickie.bundled)
 }
 
 val downloadGeoFiles by
