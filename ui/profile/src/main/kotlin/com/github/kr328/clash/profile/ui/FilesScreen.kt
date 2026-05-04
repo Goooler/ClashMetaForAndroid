@@ -19,13 +19,16 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
@@ -37,10 +40,15 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextRange
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.PreviewWrapper
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.LocalLifecycleOwner
@@ -51,7 +59,6 @@ import com.github.kr328.clash.glue.R
 import com.github.kr328.clash.model.ConfigFile
 import com.github.kr328.clash.profile.vm.FilesViewModel
 import com.github.kr328.clash.ui.component.MihomoScaffold
-import com.github.kr328.clash.ui.component.ModelTextInputDialog
 import com.github.kr328.clash.ui.icon.BaselineAdd
 import com.github.kr328.clash.ui.icon.BaselineEdit
 import com.github.kr328.clash.ui.icon.BaselineGetApp
@@ -63,6 +70,7 @@ import com.github.kr328.clash.ui.icon.OutlineDelete
 import com.github.kr328.clash.ui.icon.OutlineFolder
 import com.github.kr328.clash.ui.theme.MihomoThemeWrapper
 import com.github.kr328.clash.ui.theme.PreviewMihomo
+import com.github.kr328.clash.util.Validator
 import com.github.kr328.clash.util.ValidatorFileName
 import com.github.kr328.clash.util.elapsedIntervalString
 import kotlin.time.Duration.Companion.minutes
@@ -255,7 +263,7 @@ private fun FilesContent(
   }
 
   if (renameConfigFile != null) {
-    ModelTextInputDialog(
+    TextInputDialog(
       title = stringResource(R.string.file_name),
       initialValue = renameConfigFile!!.name,
       hint = stringResource(R.string.file_name),
@@ -268,6 +276,65 @@ private fun FilesContent(
       },
     )
   }
+}
+
+@Composable
+private fun TextInputDialog(
+  title: String,
+  initialValue: String? = null,
+  hint: String? = null,
+  error: String? = null,
+  validator: Validator = { true },
+  onDismiss: () -> Unit,
+  onConfirm: (String) -> Unit,
+) {
+  val initialText = initialValue.orEmpty()
+
+  var inputText by remember {
+    mutableStateOf(
+      TextFieldValue(text = initialText, selection = TextRange(initialValue?.length ?: 0))
+    )
+  }
+  var inputError by remember { mutableStateOf(if (!validator(initialText)) error else null) }
+  val focusRequester = remember { FocusRequester() }
+  val keyboardController = LocalSoftwareKeyboardController.current
+
+  LaunchedEffect(Unit) {
+    focusRequester.requestFocus()
+    keyboardController?.show()
+  }
+
+  val isValidInput = validator(inputText.text)
+
+  AlertDialog(
+    onDismissRequest = onDismiss,
+    title = { Text(title) },
+    text = {
+      OutlinedTextField(
+        value = inputText,
+        onValueChange = { newValue ->
+          inputText = newValue
+          inputError =
+            if (!validator(newValue.text)) {
+              error
+            } else {
+              null
+            }
+        },
+        label = hint?.let { { Text(it) } },
+        isError = inputError != null,
+        supportingText = inputError?.let { { Text(it) } },
+        singleLine = true,
+        modifier = Modifier.fillMaxWidth().focusRequester(focusRequester),
+      )
+    },
+    confirmButton = {
+      TextButton(onClick = { onConfirm(inputText.text) }, enabled = isValidInput) {
+        Text(stringResource(R.string.ok))
+      }
+    },
+    dismissButton = { TextButton(onClick = onDismiss) { Text(stringResource(R.string.cancel)) } },
+  )
 }
 
 @Composable
