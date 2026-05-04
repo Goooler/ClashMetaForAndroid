@@ -36,7 +36,6 @@ import com.github.kr328.clash.profile.vm.PropertiesViewModel
 import com.github.kr328.clash.service.model.Profile
 import com.github.kr328.clash.ui.component.MihomoScaffold
 import com.github.kr328.clash.ui.component.ModelProgressBarDialog
-import com.github.kr328.clash.ui.component.ModelTextInputDialog
 import com.github.kr328.clash.ui.icon.BaselineSave
 import com.github.kr328.clash.ui.icon.MihomoIcons
 import com.github.kr328.clash.ui.icon.OutlineFolder
@@ -55,6 +54,7 @@ import kotlin.time.Duration.Companion.minutes
 import kotlin.uuid.Uuid
 import me.zhanghai.compose.preference.Preference
 import me.zhanghai.compose.preference.ProvidePreferenceLocals
+import me.zhanghai.compose.preference.TextFieldPreference
 
 @Composable
 internal fun PropertiesScreen(
@@ -129,9 +129,6 @@ private fun PropertiesContent(
   val dimens = mihomoDimens
   val contentPaddingHorizontal = dimens.itemTrailingMargin
   var showExitWithoutSavingDialog by rememberSaveable { mutableStateOf(false) }
-  var showInputNameDialog by rememberSaveable { mutableStateOf(false) }
-  var showInputUrlDialog by rememberSaveable { mutableStateOf(false) }
-  var showInputIntervalDialog by rememberSaveable { mutableStateOf(false) }
 
   val onBack = {
     when {
@@ -180,42 +177,74 @@ private fun PropertiesContent(
           icon = { Icon(imageVector = MihomoIcons.OutlineInfo, contentDescription = null) },
           enabled = false,
         )
-        Preference(
-          modifier = Modifier.fillMaxWidth(),
+
+        TextFieldPreference(
+          value = profile.name,
+          onValueChange = { newName ->
+            if (newName != profile.name) {
+              onNameChanged(newName)
+            }
+          },
           title = { Text(stringResource(R.string.name)) },
-          summary = { Text(profile.name.ifBlank { stringResource(R.string.profile_name) }) },
-          icon = { Icon(imageVector = MihomoIcons.OutlineLabel, contentDescription = null) },
-          onClick = { showInputNameDialog = true },
-        )
-        Preference(
+          textToValue = { input -> if (ValidatorNotBlank(input)) input else null },
           modifier = Modifier.fillMaxWidth(),
+          icon = { Icon(imageVector = MihomoIcons.OutlineLabel, contentDescription = null) },
+          summary = { Text(profile.name.ifBlank { stringResource(R.string.profile_name) }) },
+        )
+
+        TextFieldPreference(
+          value = profile.source,
+          onValueChange = { newUrl ->
+            if (newUrl != profile.source) {
+              onUrlChanged(newUrl)
+            }
+          },
           title = { Text(stringResource(R.string.url)) },
+          textToValue = { input -> if (ValidatorHttpUrl(input)) input else null },
+          modifier = Modifier.fillMaxWidth(),
+          enabled = profile.type != File && profile.type != External,
+          icon = { Icon(imageVector = MihomoIcons.OutlineInbox, contentDescription = null) },
           summary = {
             Text(profile.source.ifBlank { stringResource(R.string.accept_http_content) })
           },
-          icon = { Icon(imageVector = MihomoIcons.OutlineInbox, contentDescription = null) },
-          enabled = profile.type != File && profile.type != External,
-          onClick = { showInputUrlDialog = true },
         )
-        Preference(
-          modifier = Modifier.fillMaxWidth(),
-          title = { Text(stringResource(R.string.auto_update)) },
-          summary = {
-            Text(
-              if (profile.interval == 0L) {
-                stringResource(R.string.disabled)
-              } else {
-                stringResource(
-                  R.string.format_minutes,
-                  profile.interval.milliseconds.inWholeMinutes,
-                )
-              }
-            )
+
+        val intervalSummary =
+          if (profile.interval == 0L) {
+            stringResource(R.string.disabled)
+          } else {
+            stringResource(R.string.format_minutes, profile.interval.milliseconds.inWholeMinutes)
+          }
+
+        TextFieldPreference(
+          value = profile.interval,
+          onValueChange = { interval ->
+            if (interval != profile.interval) {
+              onIntervalChanged(interval)
+            }
           },
-          icon = { Icon(imageVector = MihomoIcons.OutlineUpdate, contentDescription = null) },
+          title = { Text(stringResource(R.string.auto_update)) },
+          textToValue = { input ->
+            if (!ValidatorAutoUpdateInterval(input)) {
+              null
+            } else {
+              val minutes = input.toLongOrNull() ?: 0
+              minutes.minutes.inWholeMilliseconds
+            }
+          },
+          modifier = Modifier.fillMaxWidth(),
           enabled = profile.type != File,
-          onClick = { showInputIntervalDialog = true },
+          icon = { Icon(imageVector = MihomoIcons.OutlineUpdate, contentDescription = null) },
+          summary = { Text(intervalSummary) },
+          valueToText = { interval ->
+            if (interval == 0L) {
+              ""
+            } else {
+              interval.milliseconds.inWholeMinutes.toString()
+            }
+          },
         )
+
         Preference(
           modifier = Modifier.fillMaxWidth(),
           title = { Text(stringResource(R.string.browse_files)) },
@@ -231,61 +260,6 @@ private fun PropertiesContent(
     ExitWithoutSavingDialog(
       onConfirm = onRequestClose,
       onDismiss = { showExitWithoutSavingDialog = false },
-    )
-  }
-
-  if (showInputNameDialog) {
-    ModelTextInputDialog(
-      title = stringResource(R.string.name),
-      initialValue = profile.name,
-      hint = stringResource(R.string.properties),
-      error = stringResource(R.string.should_not_be_blank),
-      validator = ValidatorNotBlank,
-      onDismiss = { showInputNameDialog = false },
-      onConfirm = { newName ->
-        if (newName != profile.name) {
-          onNameChanged(newName)
-        }
-        showInputNameDialog = false
-      },
-    )
-  }
-
-  if (showInputUrlDialog) {
-    ModelTextInputDialog(
-      title = stringResource(R.string.url),
-      initialValue = profile.source,
-      hint = stringResource(R.string.profile_url),
-      error = stringResource(R.string.accept_http_content),
-      validator = ValidatorHttpUrl,
-      onDismiss = { showInputUrlDialog = false },
-      onConfirm = { newUrl ->
-        if (newUrl != profile.source) {
-          onUrlChanged(newUrl)
-        }
-        showInputUrlDialog = false
-      },
-    )
-  }
-
-  if (showInputIntervalDialog) {
-    val currentMinutes =
-      if (profile.interval == 0L) "" else profile.interval.milliseconds.inWholeMinutes.toString()
-    ModelTextInputDialog(
-      title = stringResource(R.string.auto_update),
-      initialValue = currentMinutes,
-      hint = stringResource(R.string.auto_update_minutes),
-      error = stringResource(R.string.at_least_15_minutes),
-      validator = ValidatorAutoUpdateInterval,
-      onDismiss = { showInputIntervalDialog = false },
-      onConfirm = { newInterval ->
-        val minutes = newInterval.toLongOrNull() ?: 0
-        val interval = minutes.minutes.inWholeMilliseconds
-        if (interval != profile.interval) {
-          onIntervalChanged(interval)
-        }
-        showInputIntervalDialog = false
-      },
     )
   }
 
