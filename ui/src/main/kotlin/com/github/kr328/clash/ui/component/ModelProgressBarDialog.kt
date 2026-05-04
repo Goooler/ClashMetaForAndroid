@@ -10,25 +10,19 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.window.Dialog
 import com.github.kr328.clash.ui.theme.mihomoDimens
 
-class ModelProgressBarState {
-  var visible by mutableStateOf(false)
-  var isIndeterminate by mutableStateOf(true)
-  var text by mutableStateOf<String?>(null)
-  var progress by mutableIntStateOf(0)
-  var max by mutableIntStateOf(0)
-}
-
 @Composable
-fun ModelProgressBarDialog(state: ModelProgressBarState) {
-  if (!state.visible) return
+fun ModelProgressBarDialog(
+  visible: Boolean,
+  isIndeterminate: Boolean,
+  text: String?,
+  progress: Int,
+  max: Int,
+) {
+  if (!visible) return
 
   val dimens = mihomoDimens
 
@@ -38,13 +32,13 @@ fun ModelProgressBarDialog(state: ModelProgressBarState) {
         modifier = Modifier.fillMaxWidth().padding(dimens.dialogPadding),
         verticalArrangement = Arrangement.spacedBy(dimens.dialogContentSpacing),
       ) {
-        Text(text = state.text.orEmpty(), style = MaterialTheme.typography.bodyLarge)
+        Text(text = text.orEmpty(), style = MaterialTheme.typography.bodyLarge)
 
-        if (state.isIndeterminate) {
+        if (isIndeterminate) {
           CircularProgressIndicator()
         } else {
-          val coercedMax = state.max.coerceAtLeast(1)
-          val coercedProgress = state.progress.coerceIn(0, coercedMax)
+          val coercedMax = max.coerceAtLeast(1)
+          val coercedProgress = progress.coerceIn(0, coercedMax)
           LinearProgressIndicator(
             progress = { coercedProgress.toFloat() / coercedMax.toFloat() },
             modifier = Modifier.fillMaxWidth(),
