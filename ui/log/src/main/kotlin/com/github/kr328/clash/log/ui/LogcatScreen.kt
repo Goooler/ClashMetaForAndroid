@@ -43,7 +43,7 @@ import com.github.kr328.clash.log.vm.LogcatViewModel
 import com.github.kr328.clash.ui.component.MihomoScaffold
 import com.github.kr328.clash.ui.component.ModelProgressBarDialog
 import com.github.kr328.clash.ui.icon.BaselineDelete
-import com.github.kr328.clash.ui.icon.BaselinePublish
+import com.github.kr328.clash.ui.icon.BaselineSave
 import com.github.kr328.clash.ui.icon.BaselineStop
 import com.github.kr328.clash.ui.icon.MihomoIcons
 import com.github.kr328.clash.ui.theme.MihomoThemeWrapper
@@ -172,7 +172,7 @@ private fun LogcatContent(
         }
         IconButton(onClick = onExport) {
           Icon(
-            imageVector = MihomoIcons.BaselinePublish,
+            imageVector = MihomoIcons.BaselineSave,
             contentDescription = stringResource(R.string.export),
           )
         }
