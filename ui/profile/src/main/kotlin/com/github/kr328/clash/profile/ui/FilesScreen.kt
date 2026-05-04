@@ -63,7 +63,7 @@ import com.github.kr328.clash.ui.icon.BaselineAdd
 import com.github.kr328.clash.ui.icon.BaselineEdit
 import com.github.kr328.clash.ui.icon.BaselineGetApp
 import com.github.kr328.clash.ui.icon.BaselineMoreVert
-import com.github.kr328.clash.ui.icon.BaselinePublish
+import com.github.kr328.clash.ui.icon.BaselineSave
 import com.github.kr328.clash.ui.icon.MihomoIcons
 import com.github.kr328.clash.ui.icon.OutlineArticle
 import com.github.kr328.clash.ui.icon.OutlineDelete
@@ -189,7 +189,7 @@ private fun FilesContent(
       }
       if (!file.isDirectory && file.size > 0) {
         FilesMenuAction(
-          icon = MihomoIcons.BaselinePublish,
+          icon = MihomoIcons.BaselineSave,
           text = stringResource(R.string.export),
           onClick = {
             menuConfigFile = null
