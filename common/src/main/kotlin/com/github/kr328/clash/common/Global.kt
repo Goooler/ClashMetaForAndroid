@@ -19,3 +19,5 @@ object Global : CoroutineScope by CoroutineScope(Dispatchers.IO) {
     cancel()
   }
 }
+
+val packageName: String = Global.application.packageName

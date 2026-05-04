@@ -4,7 +4,7 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.application
 import androidx.lifecycle.viewModelScope
-import com.github.kr328.clash.model.LogFile
+import com.github.kr328.clash.log.model.LogFile
 import com.github.kr328.clash.util.logsDir
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow

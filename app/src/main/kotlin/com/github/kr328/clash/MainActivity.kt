@@ -10,12 +10,14 @@ import android.graphics.Color.TRANSPARENT
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts.RequestPermission
 import androidx.activity.viewModels
+import androidx.annotation.StringRes
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
@@ -54,7 +56,6 @@ import com.github.kr328.clash.ui.nav.addIfNotLast
 import com.github.kr328.clash.ui.theme.MihomoTheme
 import com.github.kr328.clash.util.startClashService
 import com.github.kr328.clash.util.stopClashService
-import com.github.kr328.clash.util.toast
 import com.github.kr328.clash.util.withProfile
 import java.util.Locale
 import kotlinx.coroutines.launch
@@ -230,5 +231,9 @@ class MainActivity : ComponentActivity() {
       override fun <T : androidx.lifecycle.ViewModel> create(modelClass: Class<T>): T =
         ViewModel(application = context.applicationContext as Application) as T
     }
+  }
+
+  private fun toast(@StringRes resId: Int, duration: Int = Toast.LENGTH_LONG) {
+    Toast.makeText(this, resId, duration).show()
   }
 }

@@ -9,7 +9,7 @@ import com.github.kr328.clash.common.store.Store
 import com.github.kr328.clash.common.store.asStoreProvider
 import com.github.kr328.clash.common.util.unsafeLazy
 import com.github.kr328.clash.core.model.ProxySort
-import com.github.kr328.clash.model.AppInfoSort
+import com.github.kr328.clash.model.AppInfo
 import com.github.kr328.clash.model.DarkMode
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.SharingStarted
@@ -81,11 +81,11 @@ class UiStore(context: Context) {
 
   var proxyLastGroup: String by store.string(key = "proxy_last_group", defaultValue = "")
 
-  var accessControlSort: AppInfoSort by
+  var accessControlSort: AppInfo.Sorter by
     store.enum(
       key = "access_control_sort",
       defaultValue = Label,
-      values = AppInfoSort.entries.toTypedArray(),
+      values = AppInfo.Sorter.entries.toTypedArray(),
     )
 
   var accessControlReverse: Boolean by
@@ -103,7 +103,7 @@ class UiStore(context: Context) {
     val proxyLine: Int,
     val proxySort: ProxySort,
     val proxyLastGroup: String,
-    val accessControlSort: AppInfoSort,
+    val accessControlSort: AppInfo.Sorter,
     val accessControlReverse: Boolean,
     val accessControlSystemApp: Boolean,
   )

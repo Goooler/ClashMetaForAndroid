@@ -16,9 +16,9 @@ import com.github.kr328.clash.common.util.intent
 import com.github.kr328.clash.core.model.LogMessage
 import com.github.kr328.clash.glue.R
 import com.github.kr328.clash.log.LogcatService
+import com.github.kr328.clash.log.model.LogFile
 import com.github.kr328.clash.log.util.LogcatFilter
 import com.github.kr328.clash.log.util.LogcatReader
-import com.github.kr328.clash.model.LogFile
 import com.github.kr328.clash.util.logsDir
 import java.io.OutputStreamWriter
 import kotlin.coroutines.resume
@@ -282,7 +282,7 @@ internal class LogcatViewModel(app: Application) : AndroidViewModel(app), Defaul
           }
 
           try {
-            filter.writeHeader(file.date)
+            filter.writeHeader(file.created)
 
             messages.forEachIndexed { index, message ->
               uiState.update {

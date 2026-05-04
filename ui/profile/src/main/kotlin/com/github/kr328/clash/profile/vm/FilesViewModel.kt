@@ -7,7 +7,7 @@ import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.viewModelScope
 import com.github.kr328.clash.common.log.Log
-import com.github.kr328.clash.model.File
+import com.github.kr328.clash.model.ConfigFile
 import com.github.kr328.clash.remote.FilesClient
 import com.github.kr328.clash.util.fileName
 import com.github.kr328.clash.util.withProfile
@@ -64,20 +64,20 @@ internal class FilesViewModel(app: Application) : AndroidViewModel(app), Default
     }
   }
 
-  fun onOpen(file: File) {
-    if (file.isDirectory) {
-      stack.addLast(file.id)
+  fun onOpen(configFile: ConfigFile) {
+    if (configFile.isDirectory) {
+      stack.addLast(configFile.id)
       fetch()
     } else {
-      val uri = client.buildDocumentUri(file.id)
+      val uri = client.buildDocumentUri(configFile.id)
       eventState.value = EventState.OpenFile(uri)
     }
   }
 
-  fun onDelete(file: File) {
+  fun onDelete(configFile: ConfigFile) {
     viewModelScope.launch {
       try {
-        client.deleteDocument(file.id)
+        client.deleteDocument(configFile.id)
       } catch (e: Exception) {
         Log.e("Delete file failed: ${e.message}", e)
         eventState.value = EventState.ShowMessage(e.message ?: "Unknown error")
@@ -86,10 +86,10 @@ internal class FilesViewModel(app: Application) : AndroidViewModel(app), Default
     }
   }
 
-  fun onRename(file: File, newName: String) {
+  fun onRename(configFile: ConfigFile, newName: String) {
     viewModelScope.launch {
       try {
-        client.renameDocument(file.id, newName)
+        client.renameDocument(configFile.id, newName)
       } catch (e: Exception) {
         Log.e("Rename file failed: ${e.message}", e)
         eventState.value = EventState.ShowMessage(e.message ?: "Unknown error")
@@ -98,19 +98,19 @@ internal class FilesViewModel(app: Application) : AndroidViewModel(app), Default
     }
   }
 
-  fun onRequestImport(file: File?) {
-    eventState.value = EventState.RequestImport(file)
+  fun onRequestImport(configFile: ConfigFile?) {
+    eventState.value = EventState.RequestImport(configFile)
   }
 
-  fun onImportResult(uri: Uri?, targetFile: File?) {
+  fun onImportResult(uri: Uri?, targetConfigFile: ConfigFile?) {
     if (uri == null) return
     val parentId = if (stack.isEmpty()) root else stack.last()
     viewModelScope.launch {
       try {
-        if (targetFile == null) {
+        if (targetConfigFile == null) {
           client.importDocument(parentId, uri, uri.fileName ?: "File")
         } else {
-          client.copyDocument(targetFile.id, uri)
+          client.copyDocument(targetConfigFile.id, uri)
         }
       } catch (e: Exception) {
         Log.e("Import file failed: ${e.message}", e)
@@ -120,15 +120,15 @@ internal class FilesViewModel(app: Application) : AndroidViewModel(app), Default
     }
   }
 
-  fun onRequestExport(file: File) {
-    eventState.value = EventState.RequestExport(file)
+  fun onRequestExport(configFile: ConfigFile) {
+    eventState.value = EventState.RequestExport(configFile)
   }
 
-  fun onExportResult(uri: Uri?, sourceFile: File?) {
-    if (uri == null || sourceFile == null) return
+  fun onExportResult(uri: Uri?, sourceConfigFile: ConfigFile?) {
+    if (uri == null || sourceConfigFile == null) return
     viewModelScope.launch {
       try {
-        client.copyDocument(uri, sourceFile.id)
+        client.copyDocument(uri, sourceConfigFile.id)
       } catch (e: Exception) {
         Log.e("Export file failed: ${e.message}", e)
         eventState.value = EventState.ShowMessage(e.message ?: "Unknown error")
@@ -153,7 +153,7 @@ internal class FilesViewModel(app: Application) : AndroidViewModel(app), Default
             client.list(documentId)
           }
 
-        uiState.update { it.copy(files = files, currentInBaseDir = inBaseDir) }
+        uiState.update { it.copy(configFiles = files, currentInBaseDir = inBaseDir) }
       } catch (e: Exception) {
         Log.e("List files failed: ${e.message}", e)
         eventState.value = EventState.ShowMessage(e.message ?: "Unknown error")
@@ -162,7 +162,7 @@ internal class FilesViewModel(app: Application) : AndroidViewModel(app), Default
   }
 
   data class UiState(
-    val files: List<File> = emptyList(),
+    val configFiles: List<ConfigFile> = emptyList(),
     val currentInBaseDir: Boolean = true,
     val configurationEditable: Boolean = false,
   )
@@ -174,9 +174,9 @@ internal class FilesViewModel(app: Application) : AndroidViewModel(app), Default
 
     data class OpenFile(val uri: Uri) : EventState
 
-    data class RequestImport(val targetFile: File?) : EventState
+    data class RequestImport(val targetConfigFile: ConfigFile?) : EventState
 
-    data class RequestExport(val sourceFile: File) : EventState
+    data class RequestExport(val sourceConfigFile: ConfigFile) : EventState
 
     data class ShowMessage(val message: String) : EventState
   }

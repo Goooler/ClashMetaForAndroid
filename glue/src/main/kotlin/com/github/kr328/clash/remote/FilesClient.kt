@@ -4,13 +4,13 @@ import android.content.Context
 import android.net.Uri
 import android.provider.DocumentsContract as DC
 import com.github.kr328.clash.common.constants.Authorities
-import com.github.kr328.clash.model.File
+import com.github.kr328.clash.model.ConfigFile
 import com.github.kr328.clash.util.copyContentTo
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 class FilesClient(private val context: Context) {
-  suspend fun list(parentDocumentId: String): List<File> =
+  suspend fun list(parentDocumentId: String): List<ConfigFile> =
     withContext(Dispatchers.IO) {
       val uri = DC.buildChildDocumentsUri(Authorities.FILES_PROVIDER, parentDocumentId)
 
@@ -26,7 +26,7 @@ class FilesClient(private val context: Context) {
           cursor.moveToFirst()
 
           List(cursor.count) {
-              File(
+              ConfigFile(
                   id = cursor.getString(idIndex),
                   name = cursor.getString(nameIndex),
                   size = cursor.getLong(sizeIndex),
