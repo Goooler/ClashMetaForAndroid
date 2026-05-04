@@ -48,7 +48,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.github.kr328.clash.common.util.grantPermissions
 import com.github.kr328.clash.glue.R
-import com.github.kr328.clash.model.File
+import com.github.kr328.clash.model.ConfigFile
 import com.github.kr328.clash.profile.vm.FilesViewModel
 import com.github.kr328.clash.ui.component.MihomoScaffold
 import com.github.kr328.clash.ui.component.ModelTextInputDialog
@@ -82,8 +82,8 @@ internal fun FilesScreen(
   val eventState by viewModel.eventState.collectAsStateWithLifecycle()
   val snackbarHostState = remember { SnackbarHostState() }
 
-  var pendingImportTarget by remember { mutableStateOf<File?>(null) }
-  var pendingExportSource by remember { mutableStateOf<File?>(null) }
+  var pendingImportTarget by remember { mutableStateOf<ConfigFile?>(null) }
+  var pendingExportSource by remember { mutableStateOf<ConfigFile?>(null) }
 
   val openFileLauncher = rememberLauncherForActivityResult(StartActivityForResult()) {}
 
@@ -118,12 +118,12 @@ internal fun FilesScreen(
         )
       }
       is RequestImport -> {
-        pendingImportTarget = event.targetFile
+        pendingImportTarget = event.targetConfigFile
         importLauncher.launch("*/*")
       }
       is RequestExport -> {
-        pendingExportSource = event.sourceFile
-        exportLauncher.launch(event.sourceFile.name)
+        pendingExportSource = event.sourceConfigFile
+        exportLauncher.launch(event.sourceConfigFile.name)
       }
       is ShowMessage -> {
         snackbarHostState.showSnackbar(message = event.message)
@@ -152,29 +152,29 @@ private fun FilesContent(
   snackbarHostState: SnackbarHostState,
   uiState: FilesViewModel.UiState,
   onBack: () -> Unit,
-  onOpen: (File) -> Unit,
+  onOpen: (ConfigFile) -> Unit,
   onNew: () -> Unit,
-  onImport: (File) -> Unit,
-  onExport: (File) -> Unit,
-  onRename: (File, String) -> Unit,
-  onDelete: (File) -> Unit,
+  onImport: (ConfigFile) -> Unit,
+  onExport: (ConfigFile) -> Unit,
+  onRename: (ConfigFile, String) -> Unit,
+  onDelete: (ConfigFile) -> Unit,
 ) {
-  var menuFile by remember { mutableStateOf<File?>(null) }
-  var renameFile by remember { mutableStateOf<File?>(null) }
+  var menuConfigFile by remember { mutableStateOf<ConfigFile?>(null) }
+  var renameConfigFile by remember { mutableStateOf<ConfigFile?>(null) }
   val sheetState = rememberModalBottomSheetState()
   val currentInBaseDir = uiState.currentInBaseDir
   val configurationEditable = uiState.configurationEditable
-  val files = uiState.files
+  val files = uiState.configFiles
 
-  if (menuFile != null) {
-    ModalBottomSheet(onDismissRequest = { menuFile = null }, sheetState = sheetState) {
-      val file = menuFile!!
+  if (menuConfigFile != null) {
+    ModalBottomSheet(onDismissRequest = { menuConfigFile = null }, sheetState = sheetState) {
+      val file = menuConfigFile!!
       if (!file.isDirectory && (!currentInBaseDir || configurationEditable)) {
         FilesMenuAction(
           icon = MihomoIcons.BaselineGetApp,
           text = stringResource(R.string.import_),
           onClick = {
-            menuFile = null
+            menuConfigFile = null
             onImport(file)
           },
         )
@@ -184,7 +184,7 @@ private fun FilesContent(
           icon = MihomoIcons.BaselinePublish,
           text = stringResource(R.string.export),
           onClick = {
-            menuFile = null
+            menuConfigFile = null
             onExport(file)
           },
         )
@@ -194,8 +194,8 @@ private fun FilesContent(
           icon = MihomoIcons.BaselineEdit,
           text = stringResource(R.string.rename),
           onClick = {
-            menuFile = null
-            renameFile = file
+            menuConfigFile = null
+            renameConfigFile = file
           },
         )
         FilesMenuAction(
@@ -203,7 +203,7 @@ private fun FilesContent(
           text = stringResource(R.string.delete),
           tint = MaterialTheme.colorScheme.error,
           onClick = {
-            menuFile = null
+            menuConfigFile = null
             onDelete(file)
           },
         )
@@ -241,30 +241,30 @@ private fun FilesContent(
     }
 
     LazyColumn(modifier = Modifier.fillMaxSize().padding(innerPadding)) {
-      items(items = files, key = File::id) { file ->
+      items(items = files, key = ConfigFile::id) { file ->
         FileItem(
-          file = file,
+          configFile = file,
           currentTime = currentTime,
           context = context,
           onClick = { onOpen(file) },
-          onMore = { menuFile = file },
+          onMore = { menuConfigFile = file },
         )
         HorizontalDivider()
       }
     }
   }
 
-  if (renameFile != null) {
+  if (renameConfigFile != null) {
     ModelTextInputDialog(
       title = stringResource(R.string.file_name),
-      initialValue = renameFile!!.name,
+      initialValue = renameConfigFile!!.name,
       hint = stringResource(R.string.file_name),
       error = stringResource(R.string.invalid_file_name),
       validator = ValidatorFileName,
-      onDismiss = { renameFile = null },
+      onDismiss = { renameConfigFile = null },
       onConfirm = { newName ->
-        onRename(renameFile!!, newName)
-        renameFile = null
+        onRename(renameConfigFile!!, newName)
+        renameConfigFile = null
       },
     )
   }
@@ -272,7 +272,7 @@ private fun FilesContent(
 
 @Composable
 private fun FileItem(
-  file: File,
+  configFile: ConfigFile,
   currentTime: Long,
   context: Context,
   onClick: () -> Unit,
@@ -292,23 +292,26 @@ private fun FileItem(
     ) {
       Icon(
         imageVector =
-          if (file.isDirectory) MihomoIcons.OutlineFolder else MihomoIcons.OutlineArticle,
+          if (configFile.isDirectory) MihomoIcons.OutlineFolder else MihomoIcons.OutlineArticle,
         contentDescription = null,
         modifier = Modifier.size(28.dp),
       )
     }
 
     Column(modifier = Modifier.weight(1f).padding(vertical = 8.dp)) {
-      Text(text = file.name)
-      if (!file.isDirectory) {
+      Text(text = configFile.name)
+      if (!configFile.isDirectory) {
         Spacer(modifier = Modifier.size(3.dp))
-        Text(text = file.size.binaryBytes.toString(), style = MaterialTheme.typography.bodyMedium)
+        Text(
+          text = configFile.size.binaryBytes.toString(),
+          style = MaterialTheme.typography.bodyMedium,
+        )
       }
     }
 
-    if (!file.isDirectory) {
+    if (!configFile.isDirectory) {
       Text(
-        text = (currentTime - file.lastModified).elapsedIntervalString(context),
+        text = (currentTime - configFile.lastModified).elapsedIntervalString(context),
         style = MaterialTheme.typography.labelSmall,
         modifier = Modifier.padding(horizontal = 8.dp),
       )
@@ -358,10 +361,10 @@ private fun FilesContentPreview() {
     snackbarHostState = SnackbarHostState(),
     uiState =
       FilesViewModel.UiState(
-        files =
+        configFiles =
           listOf(
-            File("1", "config.yaml", 1024, System.currentTimeMillis() - 60_000, false),
-            File("2", "scripts", 0, System.currentTimeMillis() - 3_600_000, true),
+            ConfigFile("1", "config.yaml", 1024, System.currentTimeMillis() - 60_000, false),
+            ConfigFile("2", "scripts", 0, System.currentTimeMillis() - 3_600_000, true),
           ),
         currentInBaseDir = true,
         configurationEditable = false,

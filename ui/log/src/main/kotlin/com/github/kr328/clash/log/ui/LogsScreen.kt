@@ -34,8 +34,8 @@ import androidx.compose.ui.tooling.preview.PreviewWrapper
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.github.kr328.clash.glue.R
+import com.github.kr328.clash.log.model.LogFile
 import com.github.kr328.clash.log.vm.LogsViewModel
-import com.github.kr328.clash.model.LogFile
 import com.github.kr328.clash.ui.component.MihomoScaffold
 import com.github.kr328.clash.ui.icon.BaselineAdb
 import com.github.kr328.clash.ui.icon.BaselineClearAll
@@ -138,7 +138,7 @@ private fun LogsContent(
       items(items = logs, key = LogFile::fileName) { file ->
         LogsActionItem(
           title = file.fileName,
-          summary = file.date.format(context),
+          summary = Date(file.created).format(context),
           onClick = { onOpenFile(file) },
         )
       }
@@ -195,8 +195,8 @@ private fun LogsScreenPreview() {
   LogsContent(
     logs =
       listOf(
-        LogFile("clash-1710000000000.log", Date(1710000000000)),
-        LogFile("clash-1710000000001.log", Date(1710000000001)),
+        LogFile("clash-1710000000000.log", 1710000000000),
+        LogFile("clash-1710000000001.log", 1710000000001),
       ),
     onDeleteAllConfirm = {},
     onStartLogcat = {},

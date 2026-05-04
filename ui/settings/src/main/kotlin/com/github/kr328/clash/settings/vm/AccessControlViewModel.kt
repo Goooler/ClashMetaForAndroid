@@ -7,20 +7,20 @@ import android.content.ClipboardManager
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
+import android.graphics.drawable.AdaptiveIconDrawable
+import android.graphics.drawable.Drawable
 import android.os.Process
 import androidx.core.content.getSystemService
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.github.kr328.clash.common.Global
 import com.github.kr328.clash.model.AppInfo
-import com.github.kr328.clash.model.AppInfoSort
 import com.github.kr328.clash.remote.Remote
 import com.github.kr328.clash.service.store.ServiceStore
 import com.github.kr328.clash.settings.ui.AccessControlActions
 import com.github.kr328.clash.store.UiStore
 import com.github.kr328.clash.util.startClashService
 import com.github.kr328.clash.util.stopClashService
-import com.github.kr328.clash.util.toAppInfo
 import kotlin.time.Duration.Companion.seconds
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -149,7 +149,7 @@ internal class AccessControlViewModel(app: Application) :
     clipboard?.setPrimaryClip(data)
   }
 
-  override fun updateSort(sort: AppInfoSort) {
+  override fun updateSort(sort: AppInfo.Sorter) {
     uiStore.accessControlSort = sort
     uiState.update { it.copy(sort = sort) }
     reloadApps()
@@ -185,7 +185,7 @@ internal class AccessControlViewModel(app: Application) :
 
   private suspend fun loadApps(
     selected: Set<String>,
-    sort: AppInfoSort,
+    sort: AppInfo.Sorter,
     reverse: Boolean,
     showSystemApps: Boolean,
   ): List<AppInfo> =
@@ -216,8 +216,27 @@ internal class AccessControlViewModel(app: Application) :
   data class UiState(
     val apps: List<AppInfo>,
     val selected: Set<String>,
-    val sort: AppInfoSort,
+    val sort: AppInfo.Sorter,
     val reverse: Boolean,
     val showSystemApps: Boolean,
   )
 }
+
+private fun PackageInfo.toAppInfo(pm: PackageManager): AppInfo {
+  val applicationInfo = checkNotNull(applicationInfo)
+  return AppInfo(
+    packageName = packageName,
+    icon = applicationInfo.loadIcon(pm).foreground,
+    label = applicationInfo.loadLabel(pm).toString(),
+    installTime = firstInstallTime,
+    updateDate = lastUpdateTime,
+  )
+}
+
+private val Drawable.foreground: Drawable
+  get() {
+    if (this is AdaptiveIconDrawable && this.background == null) {
+      return this.foreground
+    }
+    return this
+  }

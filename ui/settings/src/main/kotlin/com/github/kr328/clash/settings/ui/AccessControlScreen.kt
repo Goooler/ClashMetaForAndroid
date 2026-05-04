@@ -54,7 +54,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.github.kr328.clash.glue.R
 import com.github.kr328.clash.model.AppInfo
-import com.github.kr328.clash.model.AppInfoSort
 import com.github.kr328.clash.settings.vm.AccessControlViewModel
 import com.github.kr328.clash.ui.component.MihomoScaffold
 import com.github.kr328.clash.ui.icon.BaselineMoreVert
@@ -96,7 +95,7 @@ internal fun AccessControlScreen(
 private fun AccessControlContent(
   apps: List<AppInfo>,
   selected: Set<String>,
-  sort: AppInfoSort,
+  sort: AppInfo.Sorter,
   reverse: Boolean,
   showSystemApps: Boolean,
   actions: AccessControlActions,
@@ -247,7 +246,7 @@ private fun ColumnScope.AccessControlSearchContent(
 
 @Composable
 private fun ColumnScope.AccessControlMenuContent(
-  sort: AppInfoSort,
+  sort: AppInfo.Sorter,
   reverse: Boolean,
   showSystemApps: Boolean,
   onSelectAll: () -> Unit,
@@ -255,7 +254,7 @@ private fun ColumnScope.AccessControlMenuContent(
   onSelectInvert: () -> Unit,
   onImport: () -> Unit,
   onExport: () -> Unit,
-  onUpdateSort: (AppInfoSort) -> Unit,
+  onUpdateSort: (AppInfo.Sorter) -> Unit,
   onUpdateReverse: (Boolean) -> Unit,
   onUpdateShowSystemApps: (Boolean) -> Unit,
 ) {
@@ -416,7 +415,7 @@ interface AccessControlActions {
 
   fun exportToClipboard() = Unit
 
-  fun updateSort(sort: AppInfoSort) = Unit
+  fun updateSort(sort: AppInfo.Sorter) = Unit
 
   fun updateReverse(reverse: Boolean) = Unit
 

@@ -2,8 +2,8 @@ package com.github.kr328.clash.core.model
 
 import android.os.Parcel
 import android.os.Parcelable
-import com.github.kr328.clash.common.util.createListFromParcelSlice
-import com.github.kr328.clash.common.util.writeToParcelSlice
+import com.github.kr328.clash.core.util.createListFromParcelSlice
+import com.github.kr328.clash.core.util.writeToParcelSlice
 import kotlinx.parcelize.Parceler
 import kotlinx.parcelize.Parcelize
 import kotlinx.parcelize.TypeParceler
