@@ -7,9 +7,7 @@ data class LogFile(val fileName: String, val created: Long) {
 
     fun parse(fileName: String): LogFile? {
       return REGEX_FILE.matchEntire(fileName)?.run {
-        groupValues[1].toLongOrNull()?.let { created ->
-          LogFile(fileName, created)
-        }
+        groupValues[1].toLongOrNull()?.let { created -> LogFile(fileName, created) }
       }
     }
 

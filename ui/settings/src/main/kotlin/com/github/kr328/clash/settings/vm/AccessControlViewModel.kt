@@ -222,7 +222,7 @@ internal class AccessControlViewModel(app: Application) :
   )
 }
 
-fun PackageInfo.toAppInfo(pm: PackageManager): AppInfo {
+private fun PackageInfo.toAppInfo(pm: PackageManager): AppInfo {
   val applicationInfo = checkNotNull(applicationInfo)
   return AppInfo(
     packageName = packageName,

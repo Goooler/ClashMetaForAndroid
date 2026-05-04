@@ -1,6 +1,7 @@
 package com.github.kr328.clash
 
 import android.Manifest.permission.POST_NOTIFICATIONS
+import android.app.Activity
 import android.app.ActivityManager
 import android.app.Application
 import android.content.Context
@@ -232,8 +233,8 @@ class MainActivity : ComponentActivity() {
         ViewModel(application = context.applicationContext as Application) as T
     }
   }
+}
 
-  private fun toast(@StringRes resId: Int, duration: Int = Toast.LENGTH_LONG) {
-    Toast.makeText(this, resId, duration).show()
-  }
+private fun Activity.toast(@StringRes resId: Int, duration: Int = Toast.LENGTH_LONG) {
+  Toast.makeText(this, resId, duration).show()
 }
