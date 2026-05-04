@@ -42,7 +42,6 @@ import com.github.kr328.clash.glue.R
 import com.github.kr328.clash.log.vm.LogcatViewModel
 import com.github.kr328.clash.ui.component.MihomoScaffold
 import com.github.kr328.clash.ui.component.ModelProgressBarDialog
-import com.github.kr328.clash.ui.component.ModelProgressBarState
 import com.github.kr328.clash.ui.icon.BaselineDelete
 import com.github.kr328.clash.ui.icon.BaselinePublish
 import com.github.kr328.clash.ui.icon.BaselineStop
@@ -69,7 +68,6 @@ internal fun LogcatScreen(
   val evenState by viewModel.eventState.collectAsStateWithLifecycle()
   val listState = rememberLazyListState()
   val snackbarHostState = remember { SnackbarHostState() }
-  val progressBarState = remember { ModelProgressBarState() }
   val scope = rememberCoroutineScope()
   val messageCopied = stringResource(R.string.copied)
   val invalidFileTip = stringResource(R.string.invalid_log_file)
@@ -103,15 +101,6 @@ internal fun LogcatScreen(
     viewModel.consumeEvent()
   }
 
-  LaunchedEffect(uiState.exportProgress) {
-    val exportProgress = uiState.exportProgress
-    progressBarState.visible = exportProgress.visible
-    progressBarState.isIndeterminate = exportProgress.isIndeterminate
-    progressBarState.text = exportProgress.text
-    progressBarState.progress = exportProgress.progress
-    progressBarState.max = exportProgress.max
-  }
-
   LaunchedEffect(listState, uiState.streaming) {
     if (!uiState.streaming) return@LaunchedEffect
 
@@ -128,7 +117,6 @@ internal fun LogcatScreen(
     streaming = uiState.streaming,
     messages = uiState.messages,
     listState = listState,
-    progressBarState = progressBarState,
     snackbarHostState = snackbarHostState,
     onClose = viewModel::close,
     onDelete = viewModel::delete,
@@ -141,6 +129,14 @@ internal fun LogcatScreen(
       }
     },
   )
+
+  ModelProgressBarDialog(
+    visible = uiState.exportProgress.visible,
+    isIndeterminate = uiState.exportProgress.isIndeterminate,
+    text = uiState.exportProgress.text,
+    progress = uiState.exportProgress.progress,
+    max = uiState.exportProgress.max,
+  )
 }
 
 @Composable
@@ -148,7 +144,6 @@ private fun LogcatContent(
   streaming: Boolean,
   messages: List<LogMessage>,
   listState: LazyListState,
-  progressBarState: ModelProgressBarState,
   snackbarHostState: SnackbarHostState,
   onClose: () -> Unit,
   onDelete: () -> Unit,
@@ -188,8 +183,6 @@ private fun LogcatContent(
       items(items = messages) { LogcatMessageItem(message = it, onCopyMessage = onCopyMessage) }
     }
   }
-
-  ModelProgressBarDialog(progressBarState)
 }
 
 @Composable
@@ -250,7 +243,6 @@ private fun LogcatContentPreview() {
         LogMessage(LogMessage.Level.Error, "Connection timeout to upstream", Date(1710000010000)),
       ),
     listState = rememberLazyListState(),
-    progressBarState = ModelProgressBarState(),
     snackbarHostState = SnackbarHostState(),
     onClose = {},
     onDelete = {},

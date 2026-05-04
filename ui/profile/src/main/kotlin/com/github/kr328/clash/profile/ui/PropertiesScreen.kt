@@ -36,7 +36,6 @@ import com.github.kr328.clash.profile.vm.PropertiesViewModel
 import com.github.kr328.clash.service.model.Profile
 import com.github.kr328.clash.ui.component.MihomoScaffold
 import com.github.kr328.clash.ui.component.ModelProgressBarDialog
-import com.github.kr328.clash.ui.component.ModelProgressBarState
 import com.github.kr328.clash.ui.component.ModelTextInputDialog
 import com.github.kr328.clash.ui.icon.BaselineSave
 import com.github.kr328.clash.ui.icon.MihomoIcons
@@ -133,15 +132,6 @@ private fun PropertiesContent(
   var showInputNameDialog by rememberSaveable { mutableStateOf(false) }
   var showInputUrlDialog by rememberSaveable { mutableStateOf(false) }
   var showInputIntervalDialog by rememberSaveable { mutableStateOf(false) }
-
-  val progressBarState = remember { ModelProgressBarState() }
-  with(progressBarState) {
-    visible = progressState.visible
-    isIndeterminate = progressState.isIndeterminate
-    text = progressState.text
-    progress = progressState.progress
-    max = progressState.max
-  }
 
   val onBack = {
     when {
@@ -299,7 +289,13 @@ private fun PropertiesContent(
     )
   }
 
-  ModelProgressBarDialog(progressBarState)
+  ModelProgressBarDialog(
+    visible = progressState.visible,
+    isIndeterminate = progressState.isIndeterminate,
+    text = progressState.text,
+    progress = progressState.progress,
+    max = progressState.max,
+  )
 }
 
 @Composable
