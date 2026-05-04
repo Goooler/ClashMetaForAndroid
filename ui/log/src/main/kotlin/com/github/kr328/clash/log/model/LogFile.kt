@@ -6,7 +6,11 @@ data class LogFile(val fileName: String, val created: Long) {
     private const val FORMAT_FILE_NAME = "clash-%d.log"
 
     fun parse(fileName: String): LogFile? {
-      return REGEX_FILE.matchEntire(fileName)?.run { LogFile(fileName, groupValues[1].toLong()) }
+      return REGEX_FILE.matchEntire(fileName)?.run {
+        groupValues[1].toLongOrNull()?.let { created ->
+          LogFile(fileName, created)
+        }
+      }
     }
 
     fun new(): LogFile {
