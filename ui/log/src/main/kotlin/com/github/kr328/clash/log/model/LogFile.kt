@@ -15,7 +15,7 @@ data class LogFile(val fileName: String, val created: Long) {
 
     fun new(): LogFile {
       val current = System.currentTimeMillis()
-      val fileName = FORMAT_FILE_NAME.format(current)
+      val fileName = "clash-$current.log"
 
       return LogFile(fileName, current)
     }
