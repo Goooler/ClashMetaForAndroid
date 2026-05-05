@@ -250,7 +250,6 @@ class TunService : VpnService(), CoroutineScope by CoroutineScope(Dispatchers.De
     private const val TUN_DNS6 = TUN_PORTAL6
     private const val NET_ANY = "0.0.0.0"
     private const val NET_ANY6 = "::"
-
     /** Public IPv4 route set used when bypassing private and other special-use ranges. */
     private val BYPASS_PRIVATE_ROUTE_V4: List<IPNet> =
       listOf(
@@ -330,7 +329,6 @@ class TunService : VpnService(), CoroutineScope by CoroutineScope(Dispatchers.De
           "255.255.255.254/32",
         )
         .map(IPNet::parse)
-
     /** Exclude fc00::/7, fe80::/10, ff00::/8 */
     private val BYPASS_PRIVATE_ROUTE_V6: List<IPNet> =
       listOf(
