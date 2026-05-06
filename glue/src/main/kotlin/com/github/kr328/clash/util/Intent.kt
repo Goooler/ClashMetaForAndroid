@@ -1,11 +1,12 @@
 package com.github.kr328.clash.util
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import org.koin.mp.KoinPlatform
 
 interface MainActivityClassProvider {
-  val mainActivityClass: Class<*>
+  val mainActivityClass: Class<out Activity>
 }
 
 private val mainActivityClass =
