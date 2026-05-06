@@ -69,7 +69,6 @@ import com.github.kr328.clash.ui.icon.BaselineMoreVert
 import com.github.kr328.clash.ui.icon.MihomoIcons
 import com.github.kr328.clash.ui.theme.MihomoThemeWrapper
 import com.github.kr328.clash.ui.theme.PreviewMihomo
-import com.github.kr328.clash.ui.theme.mihomoDimens
 import kotlinx.coroutines.launch
 
 @Composable
@@ -266,7 +265,6 @@ private fun ProxyGroupPage(
   selectedProxies: List<SelectedProxy>,
   onProxySelected: (Int, String) -> Unit,
 ) {
-  val dimens = mihomoDimens
   val sources = group.sources
   val refreshVersion = group.refreshVersion
   val selectedControl = MaterialTheme.colorScheme.onPrimary
@@ -278,7 +276,7 @@ private fun ProxyGroupPage(
     columns = GridCells.Fixed(columnsForProxyLine(proxyLine)),
     state = rememberLazyGridState(),
     modifier = Modifier.fillMaxSize(),
-    contentPadding = PaddingValues(dimens.proxyContentPaddingGrid3),
+    contentPadding = PaddingValues(gridContentPadding),
     horizontalArrangement = Arrangement.spacedBy(12.dp),
     verticalArrangement = Arrangement.spacedBy(12.dp),
   ) {
@@ -316,20 +314,14 @@ private fun ProxyItemCard(
   selectable: Boolean,
   onClick: () -> Unit,
 ) {
-  val dimens = mihomoDimens
-  val shape =
-    RoundedCornerShape(if (proxyLine == 1) dimens.proxyCardOffset else dimens.proxyCardRadius)
+  val shape = RoundedCornerShape(if (proxyLine == 1) 0.dp else 5.dp)
   val modifier =
     Modifier.fillMaxWidth()
       .then(if (proxyLine == 1) Modifier else Modifier.shadow(elevation = 2.dp, shape = shape))
       .clip(shape)
       .background(item.background)
       .clickable(enabled = selectable, onClick = onClick)
-      .padding(
-        horizontal =
-          if (proxyLine == 3) dimens.proxyContentPaddingGrid3 else dimens.proxyContentPadding,
-        vertical = 14.dp,
-      )
+      .padding(horizontal = if (proxyLine == 3) gridContentPadding else 15.dp, vertical = 14.dp)
 
   Row(
     modifier = modifier,
@@ -489,6 +481,8 @@ private fun ProxyMenuRadioRow(title: String, selected: Boolean, onClick: () -> U
     Text(text = title, style = MaterialTheme.typography.bodyLarge)
   }
 }
+
+private val gridContentPadding = 12.dp
 
 private fun columnsForProxyLine(proxyLine: Int): Int =
   when (proxyLine) {

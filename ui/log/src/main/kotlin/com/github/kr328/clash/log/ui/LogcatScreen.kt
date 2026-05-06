@@ -34,6 +34,7 @@ import androidx.compose.ui.platform.toClipEntry
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.PreviewWrapper
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -193,10 +194,7 @@ private fun LogcatMessageItem(message: LogMessage, onCopyMessage: (LogMessage) -
     modifier =
       Modifier.fillMaxWidth()
         .combinedClickable(onClick = {}, onLongClick = { onCopyMessage(message) })
-        .padding(
-          horizontal = dimens.logcatPaddingHorizontal,
-          vertical = dimens.logcatPaddingVertical,
-        ),
+        .padding(12.dp),
     verticalArrangement = Arrangement.Center,
   ) {
     Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {

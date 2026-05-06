@@ -41,7 +41,6 @@ import com.github.kr328.clash.ui.icon.MihomoIcons
 import com.github.kr328.clash.ui.icon.OutlineDelete
 import com.github.kr328.clash.ui.theme.MihomoThemeWrapper
 import com.github.kr328.clash.ui.theme.PreviewMihomo
-import com.github.kr328.clash.ui.theme.mihomoDimens
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -111,14 +110,8 @@ private fun EditableTextMapScreen(
         }
       }
 
-      val dimens = mihomoDimens
       Row(
-        modifier =
-          Modifier.fillMaxWidth()
-            .padding(
-              horizontal = dimens.preferenceDialogButtonBarHorizontalPadding,
-              vertical = dimens.preferenceDialogButtonBarVerticalPadding,
-            ),
+        modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 8.dp),
         horizontalArrangement = Arrangement.End,
       ) {
         TextButton(onClick = { onApply(null) }) { Text(stringResource(R.string.reset)) }

@@ -30,6 +30,7 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.PreviewWrapper
+import androidx.compose.ui.unit.dp
 import androidx.navigation3.runtime.EntryProviderScope
 import androidx.navigation3.runtime.NavKey
 import com.github.kr328.clash.glue.R
@@ -39,7 +40,6 @@ import com.github.kr328.clash.ui.icon.MihomoIcons
 import com.github.kr328.clash.ui.icon.OutlineDelete
 import com.github.kr328.clash.ui.theme.MihomoThemeWrapper
 import com.github.kr328.clash.ui.theme.PreviewMihomo
-import com.github.kr328.clash.ui.theme.mihomoDimens
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -103,14 +103,8 @@ private fun EditableTextListScreen(
         }
       }
 
-      val dimens = mihomoDimens
       Row(
-        modifier =
-          Modifier.fillMaxWidth()
-            .padding(
-              horizontal = dimens.preferenceDialogButtonBarHorizontalPadding,
-              vertical = dimens.preferenceDialogButtonBarVerticalPadding,
-            ),
+        modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 8.dp),
         horizontalArrangement = Arrangement.End,
       ) {
         TextButton(onClick = { onApply(null) }) { Text(stringResource(R.string.reset)) }

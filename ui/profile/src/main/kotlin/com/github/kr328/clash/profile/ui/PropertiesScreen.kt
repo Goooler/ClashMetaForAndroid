@@ -28,6 +28,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.fromHtml
 import androidx.compose.ui.tooling.preview.PreviewWrapper
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -126,8 +127,6 @@ private fun PropertiesContent(
   onUrlChanged: (String) -> Unit,
   onIntervalChanged: (Long) -> Unit,
 ) {
-  val dimens = mihomoDimens
-  val contentPaddingHorizontal = dimens.itemTrailingMargin
   var showExitWithoutSavingDialog by rememberSaveable { mutableStateOf(false) }
 
   val onBack = {
@@ -148,10 +147,7 @@ private fun PropertiesContent(
     onBack = onBack,
     actions = {
       if (processing) {
-        CircularProgressIndicator(
-          modifier = Modifier.size(dimens.itemTrailingComponentSize / 2),
-          strokeWidth = dimens.toolbarImageActionPadding / 2,
-        )
+        CircularProgressIndicator(modifier = Modifier.size(15.dp), strokeWidth = 2.5.dp)
       } else {
         IconButton(onClick = onCommit) {
           Icon(
@@ -162,12 +158,13 @@ private fun PropertiesContent(
       }
     },
   ) { innerPadding ->
+    val dimens = mihomoDimens
     Column(
       modifier =
         Modifier.fillMaxSize()
           .padding(innerPadding)
           .verticalScroll(rememberScrollState())
-          .padding(horizontal = contentPaddingHorizontal)
+          .padding(horizontal = dimens.itemHeaderMargin)
     ) {
       ProvidePreferenceLocals {
         Preference(
