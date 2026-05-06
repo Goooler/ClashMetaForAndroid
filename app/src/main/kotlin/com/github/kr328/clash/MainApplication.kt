@@ -15,9 +15,10 @@ import com.github.kr328.clash.service.util.sendServiceRecreated
 import com.github.kr328.clash.store.UiStore
 import com.github.kr328.clash.util.clashDir
 import java.io.File
+import org.koin.android.ext.koin.androidContext
+import org.koin.core.context.startKoin
 
-class MainApplication : Application(), MainActivityClassProvider {
-  override val mainActivityClass: Class<*> = MainActivity::class.java
+class MainApplication : Application() {
   private val uiStore by lazy(LazyThreadSafetyMode.NONE) { UiStore(this) }
 
   override fun attachBaseContext(base: Context?) {
@@ -28,6 +29,11 @@ class MainApplication : Application(), MainActivityClassProvider {
 
   override fun onCreate() {
     super.onCreate()
+
+    startKoin {
+      androidContext(this@MainApplication)
+      modules(appModule)
+    }
 
     val processName = getProcessName()
     extractGeoFiles()
