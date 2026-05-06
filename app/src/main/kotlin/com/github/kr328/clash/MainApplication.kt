@@ -15,6 +15,7 @@ import com.github.kr328.clash.remote.Remote
 import com.github.kr328.clash.service.util.sendServiceRecreated
 import com.github.kr328.clash.store.UiStore
 import com.github.kr328.clash.util.clashDir
+import com.github.kr328.clash.util.mainIntent
 import java.io.File
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
@@ -73,11 +74,7 @@ class MainApplication : Application() {
         .setShortLabel(getString(GlueR.string.shortcut_toggle_short))
         .setLongLabel(getString(GlueR.string.shortcut_toggle_long))
         .setIcon(icon)
-        .setIntent(
-          Intent(Intents.ACTION_TOGGLE_CLASH)
-            .setClassName(this, MainActivity::class.java.name)
-            .addFlags(flags)
-        )
+        .setIntent(mainIntent(action = Intents.ACTION_TOGGLE_CLASH).addFlags(flags))
         .setRank(0)
         .build()
 
@@ -86,11 +83,7 @@ class MainApplication : Application() {
         .setShortLabel(getString(GlueR.string.shortcut_start_short))
         .setLongLabel(getString(GlueR.string.shortcut_start_long))
         .setIcon(icon)
-        .setIntent(
-          Intent(Intents.ACTION_START_CLASH)
-            .setClassName(this, MainActivity::class.java.name)
-            .addFlags(flags)
-        )
+        .setIntent(mainIntent(action = Intents.ACTION_START_CLASH).addFlags(flags))
         .setRank(1)
         .build()
 
@@ -99,11 +92,7 @@ class MainApplication : Application() {
         .setShortLabel(getString(GlueR.string.shortcut_stop_short))
         .setLongLabel(getString(GlueR.string.shortcut_stop_long))
         .setIcon(icon)
-        .setIntent(
-          Intent(Intents.ACTION_STOP_CLASH)
-            .setClassName(this, MainActivity::class.java.name)
-            .addFlags(flags)
-        )
+        .setIntent(mainIntent(action = Intents.ACTION_STOP_CLASH).addFlags(flags))
         .setRank(2)
         .build()
 
