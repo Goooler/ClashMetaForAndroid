@@ -1,6 +1,7 @@
 [versions]
 agp = "9.2.1"
 kotlin = "2.3.21"
+metro = "1.0.0"
 androidx-lifecycle = "2.11.0-beta01"
 kaidl = "0.2.0"
 room = "2.8.4"
@@ -40,6 +41,8 @@ bytesize = "me.saket.bytesize:bytesize:2.2.1"
 
 composePreference = "me.zhanghai.compose.preference:preference:2.2.0"
 
+metro-runtime = { module = "dev.zacsweers.metro:runtime", version.ref = "metro" }
+
 # Dummy to get renovate updates, the version is used in rootProject build.gradle with spotless.
 ktfmt = "com.facebook:ktfmt:0.62"
 
@@ -53,3 +56,4 @@ ksp = "com.google.devtools.ksp:2.3.7"
 golang = "io.github.goooler.golang:0.2.1"
 download = "de.undercouch.download:5.7.0"
 spotless = "com.diffplug.spotless:8.4.0"
+metro = { id = "dev.zacsweers.metro", version.ref = "metro" }

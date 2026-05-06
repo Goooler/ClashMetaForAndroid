@@ -14,6 +14,7 @@ import com.github.kr328.clash.remote.Remote
 import com.github.kr328.clash.service.util.sendServiceRecreated
 import com.github.kr328.clash.store.UiStore
 import com.github.kr328.clash.util.clashDir
+import dev.zacsweers.metro.createGraph
 import java.io.File
 
 class MainApplication : Application() {
@@ -23,6 +24,7 @@ class MainApplication : Application() {
     super.attachBaseContext(base)
 
     Global.init(this)
+    initMainActivityClassProvider(createGraph<AppGraph>().mainActivityClassProvider)
   }
 
   override fun onCreate() {
