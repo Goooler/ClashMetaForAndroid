@@ -1,5 +1,6 @@
 package com.github.kr328.clash
 
+import com.github.kr328.clash.util.MainActivityClassProvider
 import org.koin.dsl.module
 
 val appModule = module { single<MainActivityClassProvider> { MainActivityClassProviderImpl } }

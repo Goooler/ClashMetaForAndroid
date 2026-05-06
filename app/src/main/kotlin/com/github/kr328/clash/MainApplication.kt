@@ -31,11 +31,7 @@ class MainApplication : Application() {
   override fun onCreate() {
     super.onCreate()
 
-    startKoin {
-      AndroidLogger()
-      androidContext(this@MainApplication)
-      modules(appModule)
-    }
+    koin()
 
     val processName = getProcessName()
     extractGeoFiles()
@@ -47,6 +43,14 @@ class MainApplication : Application() {
       setupShortcuts()
     } else {
       sendServiceRecreated()
+    }
+  }
+
+  private fun koin() {
+    startKoin {
+      AndroidLogger()
+      androidContext(this@MainApplication)
+      modules(appModule)
     }
   }
 

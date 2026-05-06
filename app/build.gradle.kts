@@ -86,9 +86,9 @@ dependencies {
 
   implementation(libs.androidx.core)
   implementation(libs.androidx.activity.compose)
+
   implementation(platform(libs.koin.bom))
   implementation(libs.koin.android)
-  implementation(libs.koin.annotations)
 }
 
 val downloadGeoFiles by
