@@ -32,13 +32,14 @@ class MainApplication : Application() {
   override fun onCreate() {
     super.onCreate()
 
+    koin()
+
     val processName = getProcessName()
     extractGeoFiles()
 
     Log.d("Process $processName started")
 
     if (processName == packageName) {
-      koin()
       Remote.launch()
       setupShortcuts()
     } else {
