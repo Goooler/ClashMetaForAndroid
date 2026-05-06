@@ -127,7 +127,6 @@ private fun ProviderItem(state: ProviderItemState, currentTime: Long, onUpdate: 
   val itemMinHeight = dimens.itemMinHeight
   val itemHeaderMargin = dimens.itemHeaderMargin
   val itemTextMargin = dimens.itemTextMargin
-  val itemMiddleMargin = dimens.itemMiddleMargin
 
   val canUpdate = state.provider.vehicleType != Inline
 
@@ -145,11 +144,11 @@ private fun ProviderItem(state: ProviderItemState, currentTime: Long, onUpdate: 
     if (canUpdate) {
       Text(
         text = (currentTime - state.updatedAt).elapsedIntervalString(context),
-        modifier = Modifier.padding(end = itemMiddleMargin),
+        modifier = Modifier.padding(end = 10.dp),
       )
       Box(
         modifier =
-          Modifier.size(width = dimens.dividerSize, height = itemMinHeight)
+          Modifier.size(width = 1.dp, height = itemMinHeight)
             .background(MaterialTheme.colorScheme.outline)
       )
       IconButton(
@@ -158,10 +157,7 @@ private fun ProviderItem(state: ProviderItemState, currentTime: Long, onUpdate: 
         modifier = Modifier.padding(horizontal = 4.dp),
       ) {
         if (state.updating) {
-          CircularProgressIndicator(
-            modifier = Modifier.size(dimens.itemTrailingComponentSize),
-            strokeWidth = 2.dp,
-          )
+          CircularProgressIndicator(modifier = Modifier.size(30.dp), strokeWidth = 2.dp)
         } else {
           Icon(
             imageVector = MihomoIcons.BaselineSwapVert,

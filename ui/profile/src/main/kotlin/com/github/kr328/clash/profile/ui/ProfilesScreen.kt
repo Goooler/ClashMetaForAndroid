@@ -200,11 +200,7 @@ private fun ProfilesContent(
       if (hasUpdatableProfile) {
         IconButton(onClick = onUpdateAll, enabled = !allUpdating) {
           if (allUpdating) {
-            val dimens = mihomoDimens
-            CircularProgressIndicator(
-              modifier = Modifier.size(dimens.itemTrailingComponentSize / 2),
-              strokeWidth = dimens.toolbarImageActionPadding / 2,
-            )
+            CircularProgressIndicator(modifier = Modifier.size(15.dp), strokeWidth = 2.5.dp)
           } else {
             Icon(
               imageVector = MihomoIcons.BaselineSync,
@@ -250,7 +246,6 @@ private fun ProfileItem(
   val itemMinHeight = dimens.itemMinHeight
   val itemHeaderMargin = dimens.itemHeaderMargin
   val itemTextMargin = dimens.itemTextMargin
-  val itemMiddleMargin = dimens.itemMiddleMargin
 
   val profileTypeText =
     if (profile.pending) {
@@ -313,7 +308,7 @@ private fun ProfileItem(
       Text(
         text = (currentTime - profile.updatedAt).elapsedIntervalString(context),
         style = MaterialTheme.typography.labelSmall,
-        modifier = Modifier.padding(horizontal = itemMiddleMargin),
+        modifier = Modifier.padding(horizontal = 10.dp),
       )
 
       Box(

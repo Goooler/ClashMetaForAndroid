@@ -64,7 +64,6 @@ import com.github.kr328.clash.ui.theme.MihomoLightStopped
 import com.github.kr328.clash.ui.theme.MihomoOnPrimary
 import com.github.kr328.clash.ui.theme.MihomoThemeWrapper
 import com.github.kr328.clash.ui.theme.PreviewMihomo
-import com.github.kr328.clash.ui.theme.mihomoDimens
 
 @Composable
 internal fun HomeScreen(
@@ -161,7 +160,6 @@ private fun HomeContent(
   onOpenAbout: () -> Unit,
 ) {
   val darkTheme = isSystemInDarkTheme()
-  val dimens = mihomoDimens
   val stoppedColor = if (darkTheme) MihomoDarkSurface else MihomoLightStopped
 
   MihomoScaffold(
@@ -174,17 +172,17 @@ private fun HomeContent(
       modifier =
         Modifier.fillMaxSize()
           .padding(innerPadding)
-          .padding(horizontal = dimens.homePaddingHorizontal)
+          .padding(horizontal = 30.dp)
           .verticalScroll(rememberScrollState())
     ) {
       Row(
-        modifier = Modifier.fillMaxWidth().height(dimens.homeTopBannerHeight),
+        modifier = Modifier.fillMaxWidth().height(90.dp),
         verticalAlignment = Alignment.CenterVertically,
       ) {
         Image(
           imageVector = MihomoIcons.Clash,
           contentDescription = null,
-          modifier = Modifier.size(dimens.homeLogoSize),
+          modifier = Modifier.size(logoSize),
         )
         Spacer(modifier = Modifier.width(4.dp))
         Text(
@@ -194,7 +192,7 @@ private fun HomeContent(
       }
 
       HomeActionCard(
-        modifier = Modifier.padding(vertical = dimens.homeCardMarginVertical),
+        modifier = Modifier.padding(vertical = cardMarginVertical),
         icon =
           if (clashRunning) MihomoIcons.OutlineCheckCircle else MihomoIcons.OutlineNotInterested,
         text = stringResource(if (clashRunning) R.string.running else R.string.stopped),
@@ -209,7 +207,7 @@ private fun HomeContent(
 
       AnimatedVisibility(visible = clashRunning) {
         HomeActionCard(
-          modifier = Modifier.padding(vertical = dimens.homeCardMarginVertical),
+          modifier = Modifier.padding(vertical = cardMarginVertical),
           icon = MihomoIcons.BaselineApps,
           text = stringResource(R.string.proxy),
           subtext = mode,
@@ -220,7 +218,7 @@ private fun HomeContent(
       }
 
       HomeActionCard(
-        modifier = Modifier.padding(vertical = dimens.homeCardMarginVertical),
+        modifier = Modifier.padding(vertical = cardMarginVertical),
         icon = MihomoIcons.BaselineViewList,
         text = stringResource(R.string.profile),
         subtext =
@@ -233,7 +231,7 @@ private fun HomeContent(
 
       AnimatedVisibility(visible = clashRunning && hasProviders) {
         HomeActionLabel(
-          modifier = Modifier.padding(vertical = dimens.homeLabelMarginVertical),
+          modifier = Modifier.padding(vertical = labelMarginVertical),
           icon = MihomoIcons.BaselineSwapVerticalCircle,
           text = stringResource(R.string.providers),
           onClick = onOpenProviders,
@@ -241,25 +239,25 @@ private fun HomeContent(
       }
 
       HomeActionLabel(
-        modifier = Modifier.padding(vertical = dimens.homeLabelMarginVertical),
+        modifier = Modifier.padding(vertical = labelMarginVertical),
         icon = MihomoIcons.BaselineAssignment,
         text = stringResource(R.string.logs),
         onClick = onOpenLogs,
       )
       HomeActionLabel(
-        modifier = Modifier.padding(vertical = dimens.homeLabelMarginVertical),
+        modifier = Modifier.padding(vertical = labelMarginVertical),
         icon = MihomoIcons.BaselineSettings,
         text = stringResource(R.string.settings),
         onClick = onOpenSettings,
       )
       HomeActionLabel(
-        modifier = Modifier.padding(vertical = dimens.homeLabelMarginVertical),
+        modifier = Modifier.padding(vertical = labelMarginVertical),
         icon = MihomoIcons.BaselineHelpCenter,
         text = stringResource(R.string.help),
         onClick = onOpenHelp,
       )
       HomeActionLabel(
-        modifier = Modifier.padding(vertical = dimens.homeLabelMarginVertical),
+        modifier = Modifier.padding(vertical = labelMarginVertical),
         icon = MihomoIcons.BaselineInfo,
         text = stringResource(R.string.about),
         onClick = onOpenAbout,
@@ -280,33 +278,29 @@ private fun HomeActionCard(
   onClick: () -> Unit,
   modifier: Modifier = Modifier,
 ) {
-  val dimens = mihomoDimens
   Card(
-    modifier = modifier.fillMaxWidth().heightIn(min = dimens.largeActionCardMinHeight),
+    modifier = modifier.fillMaxWidth().heightIn(min = 85.dp),
     onClick = onClick,
     colors = CardDefaults.cardColors(containerColor = backgroundColor, contentColor = contentColor),
-    elevation = CardDefaults.cardElevation(defaultElevation = dimens.largeActionCardElevation),
+    elevation = CardDefaults.cardElevation(defaultElevation = 5.dp),
   ) {
     Row(
       modifier =
         Modifier.fillMaxWidth()
-          .padding(
-            horizontal = dimens.largeItemTrailingMarginHorizontal,
-            vertical = dimens.largeItemPaddingVertical,
-          ),
+          .padding(horizontal = actionItemPaddingHorizontal, vertical = actionItemPaddingVertical),
       verticalAlignment = Alignment.CenterVertically,
     ) {
       Icon(
         imageVector = icon,
         contentDescription = null,
-        modifier = Modifier.size(dimens.largeItemHeaderComponentSize),
+        modifier = Modifier.size(actionIconSize),
         tint = contentColor,
       )
-      Spacer(modifier = Modifier.width(dimens.largeItemTrailingMarginHorizontal))
+      Spacer(modifier = Modifier.width(actionItemPaddingHorizontal))
       Column {
         Text(text = text, style = MaterialTheme.typography.bodyLarge, color = contentColor)
         if (subtext != null) {
-          Spacer(modifier = Modifier.height(dimens.largeItemTextMargin))
+          Spacer(modifier = Modifier.height(5.dp))
           Text(text = subtext, style = MaterialTheme.typography.bodyMedium, color = contentColor)
         }
       }
@@ -321,30 +315,24 @@ private fun HomeActionLabel(
   onClick: () -> Unit,
   modifier: Modifier = Modifier,
 ) {
-  val dimens = mihomoDimens
   Row(
     modifier =
       modifier
         .fillMaxWidth()
         .heightIn(min = 60.dp)
         .clickable(onClick = onClick)
-        .padding(vertical = dimens.largeItemPaddingVertical),
+        .padding(vertical = actionItemPaddingVertical),
     verticalAlignment = Alignment.CenterVertically,
   ) {
-    Spacer(modifier = Modifier.width(dimens.largeItemTrailingMarginHorizontal))
-    Icon(
-      imageVector = icon,
-      contentDescription = null,
-      modifier = Modifier.size(dimens.largeItemHeaderComponentSize),
-    )
-    Spacer(modifier = Modifier.width(dimens.largeItemTrailingMarginHorizontal))
+    Spacer(modifier = Modifier.width(actionItemPaddingHorizontal))
+    Icon(imageVector = icon, contentDescription = null, modifier = Modifier.size(actionIconSize))
+    Spacer(modifier = Modifier.width(actionItemPaddingHorizontal))
     Text(text = text, style = MaterialTheme.typography.bodyLarge)
   }
 }
 
 @Composable
 private fun AboutDialog(versionName: String, onDismiss: () -> Unit) {
-  val dimens = mihomoDimens
   AlertDialog(
     onDismissRequest = onDismiss,
     confirmButton = {
@@ -354,7 +342,7 @@ private fun AboutDialog(versionName: String, onDismiss: () -> Unit) {
       Image(
         imageVector = MihomoIcons.Clash,
         contentDescription = null,
-        modifier = Modifier.size(dimens.aboutIconSize),
+        modifier = Modifier.size(logoSize),
       )
     },
     title = {
@@ -369,6 +357,13 @@ private fun AboutDialog(versionName: String, onDismiss: () -> Unit) {
     },
   )
 }
+
+private val logoSize = 50.dp
+private val cardMarginVertical = 5.dp
+private val labelMarginVertical = 2.dp
+private val actionItemPaddingHorizontal = 20.dp
+private val actionItemPaddingVertical = 15.dp
+private val actionIconSize = 30.dp
 
 @PreviewWrapper(MihomoThemeWrapper::class)
 @PreviewMihomo
