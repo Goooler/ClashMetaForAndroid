@@ -9,8 +9,7 @@ interface MainActivityClassProvider {
   val mainActivityClass: Class<out Activity>
 }
 
-private val mainActivityClass =
-  KoinPlatform.getKoin().get<MainActivityClassProvider>().mainActivityClass
-
-fun mainIntent(context: Context, action: String? = null) =
-  Intent(context, mainActivityClass).setAction(action)
+fun mainIntent(context: Context, action: String? = null): Intent {
+  val mainActivityClass = KoinPlatform.getKoin().get<MainActivityClassProvider>().mainActivityClass
+  return Intent(context, mainActivityClass).setAction(action)
+}

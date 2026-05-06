@@ -16,7 +16,7 @@ import com.github.kr328.clash.store.UiStore
 import com.github.kr328.clash.util.clashDir
 import java.io.File
 import org.koin.android.ext.koin.androidContext
-import org.koin.android.logger.AndroidLogger
+import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
 
 class MainApplication : Application() {
@@ -31,14 +31,13 @@ class MainApplication : Application() {
   override fun onCreate() {
     super.onCreate()
 
-    koin()
-
     val processName = getProcessName()
     extractGeoFiles()
 
     Log.d("Process $processName started")
 
     if (processName == packageName) {
+      koin()
       Remote.launch()
       setupShortcuts()
     } else {
@@ -48,7 +47,7 @@ class MainApplication : Application() {
 
   private fun koin() {
     startKoin {
-      AndroidLogger()
+      androidLogger()
       androidContext(this@MainApplication)
       modules(appModule)
     }
