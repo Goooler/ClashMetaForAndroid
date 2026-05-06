@@ -7,7 +7,7 @@ import com.github.kr328.clash.util.mainIntent
 
 class DialerReceiver : BroadcastReceiver() {
   override fun onReceive(context: Context, intent: Intent) {
-    val intent = mainIntent(context = context).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+    val intent = context.mainIntent().addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
     context.startActivity(intent)
   }
 }

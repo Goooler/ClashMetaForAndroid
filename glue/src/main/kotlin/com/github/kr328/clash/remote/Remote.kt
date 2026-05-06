@@ -20,7 +20,8 @@ object Remote {
       ApplicationObserver.createdActivities.forEach { it.finish() }
 
       val intent =
-        mainIntent(context = application, action = Intents.ACTION_APP_CRASHED)
+        application
+          .mainIntent(action = Intents.ACTION_APP_CRASHED)
           .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
 
       application.startActivity(intent)
@@ -54,7 +55,8 @@ object Remote {
         ApplicationObserver.createdActivities.forEach { it.finish() }
 
         val intent =
-          mainIntent(context = application, action = Intents.ACTION_APK_BROKEN)
+          application
+            .mainIntent(action = Intents.ACTION_APK_BROKEN)
             .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
 
         return context.startActivity(intent)

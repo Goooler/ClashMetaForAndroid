@@ -6,9 +6,9 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import com.github.kr328.clash.di.AppInfoProvider.Companion.instance as appInfoProvider
 
-fun mainIntent(context: Context, action: String? = null): Intent {
+fun Context.mainIntent(action: String? = null): Intent {
   val mainActivityClass = appInfoProvider.mainActivityClass
-  return Intent(context, mainActivityClass).setAction(action)
+  return Intent(this, mainActivityClass).setAction(action)
 }
 
 val Context.mainActivityAlias: ComponentName
