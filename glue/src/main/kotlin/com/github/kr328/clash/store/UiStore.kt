@@ -1,6 +1,5 @@
 package com.github.kr328.clash.store
 
-import android.content.ComponentName
 import android.content.Context
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener
 import android.content.pm.PackageManager
@@ -11,6 +10,7 @@ import com.github.kr328.clash.common.util.unsafeLazy
 import com.github.kr328.clash.core.model.ProxySort
 import com.github.kr328.clash.model.AppInfo
 import com.github.kr328.clash.model.DarkMode
+import com.github.kr328.clash.util.mainActivityAlias
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -110,8 +110,5 @@ class UiStore(context: Context) {
 
   companion object {
     private const val PREFERENCE_NAME = "ui"
-
-    val Context.mainActivityAlias: ComponentName
-      get() = ComponentName(this, "com.github.kr328.clash.MainActivityAlias")
   }
 }

@@ -1,11 +1,12 @@
 package com.github.kr328.clash
 
 import android.app.Activity
-import com.github.kr328.clash.util.MainActivityClassProvider
+import com.github.kr328.clash.di.AppInfoProvider
 import org.koin.dsl.module
 
-val appModule = module { single<MainActivityClassProvider> { MainActivityClassProviderImpl } }
+val appModule = module { single<AppInfoProvider> { AppInfoProviderImpl } }
 
-private object MainActivityClassProviderImpl : MainActivityClassProvider {
+private object AppInfoProviderImpl : AppInfoProvider {
   override val mainActivityClass: Class<out Activity> = MainActivity::class.java
+  override val mainActivityAlias: String = "${MainActivity::class.qualifiedName}Alias"
 }
