@@ -10,8 +10,8 @@ import com.github.kr328.clash.model.DarkMode
 import com.github.kr328.clash.remote.Remote
 import com.github.kr328.clash.service.store.ServiceStore
 import com.github.kr328.clash.store.UiStore
-import com.github.kr328.clash.store.UiStore.Companion.mainActivityAlias
 import com.github.kr328.clash.util.ApplicationObserver
+import com.github.kr328.clash.util.mainActivityAlias
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
