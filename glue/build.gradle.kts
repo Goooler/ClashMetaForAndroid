@@ -1,7 +1,4 @@
-plugins {
-  alias(libs.plugins.android.library)
-  alias(libs.plugins.metro)
-}
+plugins { alias(libs.plugins.android.library) }
 
 dependencies {
   api(projects.core)
