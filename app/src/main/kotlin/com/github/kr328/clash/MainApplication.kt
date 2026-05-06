@@ -16,6 +16,9 @@ import com.github.kr328.clash.service.util.sendServiceRecreated
 import com.github.kr328.clash.store.UiStore
 import com.github.kr328.clash.util.clashDir
 import java.io.File
+import org.koin.android.ext.koin.androidContext
+import org.koin.android.ext.koin.androidLogger
+import org.koin.core.context.startKoin
 
 class MainApplication : Application() {
   private val uiStore by unsafeLazy { UiStore(this) }
@@ -35,10 +38,19 @@ class MainApplication : Application() {
     Log.d("Process $processName started")
 
     if (processName == packageName) {
+      koin()
       Remote.launch()
       setupShortcuts()
     } else {
       sendServiceRecreated()
+    }
+  }
+
+  private fun koin() {
+    startKoin {
+      androidLogger()
+      androidContext(this@MainApplication)
+      modules(appModule)
     }
   }
 

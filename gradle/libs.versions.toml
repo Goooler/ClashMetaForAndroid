@@ -38,6 +38,10 @@ okhttp-client = { module = "com.squareup.okhttp3:okhttp", version.ref = "okhttp"
 okhttp-interceptor = { module = "com.squareup.okhttp3:logging-interceptor", version.ref = "okhttp" }
 bytesize = "me.saket.bytesize:bytesize:2.2.1"
 
+koin-bom = "io.insert-koin:koin-bom:4.2.1"
+koin-core = { module = "io.insert-koin:koin-core" }
+koin-android = { module = "io.insert-koin:koin-android" }
+
 composePreference = "me.zhanghai.compose.preference:preference:2.2.0"
 
 # Dummy to get renovate updates, the version is used in rootProject build.gradle with spotless.
