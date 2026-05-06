@@ -16,7 +16,8 @@ import com.github.kr328.clash.store.UiStore
 import com.github.kr328.clash.util.clashDir
 import java.io.File
 
-class MainApplication : Application() {
+class MainApplication : Application(), MainActivityClassProvider {
+  override val mainActivityClass: Class<*> = MainActivity::class.java
   private val uiStore by lazy(LazyThreadSafetyMode.NONE) { UiStore(this) }
 
   override fun attachBaseContext(base: Context?) {
