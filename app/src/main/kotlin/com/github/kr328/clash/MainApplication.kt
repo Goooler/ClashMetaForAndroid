@@ -16,6 +16,7 @@ import com.github.kr328.clash.store.UiStore
 import com.github.kr328.clash.util.clashDir
 import java.io.File
 import org.koin.android.ext.koin.androidContext
+import org.koin.android.logger.AndroidLogger
 import org.koin.core.context.startKoin
 
 class MainApplication : Application() {
@@ -31,6 +32,7 @@ class MainApplication : Application() {
     super.onCreate()
 
     startKoin {
+      AndroidLogger()
       androidContext(this@MainApplication)
       modules(appModule)
     }

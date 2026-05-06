@@ -7,6 +7,7 @@ plugins {
   alias(libs.plugins.kotlin.compose)
   alias(libs.plugins.kotlin.serialization)
   alias(libs.plugins.download)
+  alias(libs.plugins.koin.compiler)
 }
 
 android {
@@ -87,6 +88,7 @@ dependencies {
   implementation(libs.androidx.activity.compose)
   implementation(platform(libs.koin.bom))
   implementation(libs.koin.android)
+  implementation(libs.koin.annotations)
 }
 
 val downloadGeoFiles by

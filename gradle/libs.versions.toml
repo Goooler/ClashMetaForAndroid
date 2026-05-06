@@ -46,6 +46,7 @@ ktfmt = "com.facebook:ktfmt:0.62"
 koin-bom = { module = "io.insert-koin:koin-bom", version.ref = "koin-bom" }
 koin-core = { module = "io.insert-koin:koin-core" }
 koin-android = { module = "io.insert-koin:koin-android" }
+koin-annotations = { module = "io.insert-koin:koin-annotations" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
@@ -57,3 +58,4 @@ ksp = "com.google.devtools.ksp:2.3.7"
 golang = "io.github.goooler.golang:0.2.1"
 download = "de.undercouch.download:5.7.0"
 spotless = "com.diffplug.spotless:8.4.0"
+koin-compiler = "io.insert-koin.compiler.plugin:1.0.0-RC2"
