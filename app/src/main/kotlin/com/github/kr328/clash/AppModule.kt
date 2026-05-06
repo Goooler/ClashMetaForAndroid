@@ -8,5 +8,4 @@ val appModule = module { single<AppInfoProvider> { AppInfoProviderImpl } }
 
 private object AppInfoProviderImpl : AppInfoProvider {
   override val mainActivityClass: Class<out Activity> = MainActivity::class.java
-  override val mainActivityAlias: String = "${MainActivity::class.qualifiedName}Alias"
 }

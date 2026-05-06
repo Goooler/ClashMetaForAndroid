@@ -3,6 +3,7 @@ package com.github.kr328.clash.util
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import com.github.kr328.clash.di.AppInfoProvider.Companion.instance as appInfoProvider
 
 fun mainIntent(context: Context, action: String? = null): Intent {
@@ -11,4 +12,20 @@ fun mainIntent(context: Context, action: String? = null): Intent {
 }
 
 val Context.mainActivityAlias: ComponentName
-  get() = ComponentName(this, appInfoProvider.mainActivityAlias)
+  get() {
+    val mainActivityName = appInfoProvider.mainActivityClass.name
+    val launcherIntent = Intent(Intent.ACTION_MAIN).addCategory(Intent.CATEGORY_LAUNCHER)
+    val resolveFlags = PackageManager.MATCH_DISABLED_COMPONENTS
+
+    return packageManager
+      .queryIntentActivities(launcherIntent, resolveFlags)
+      .firstNotNullOfOrNull { resolveInfo ->
+        val activityInfo = resolveInfo.activityInfo
+        if (activityInfo.targetActivity == mainActivityName) {
+          ComponentName(activityInfo.packageName, activityInfo.name)
+        } else {
+          null
+        }
+      }
+      ?: error("Launcher alias targeting $mainActivityName is not declared in AndroidManifest.xml")
+  }
