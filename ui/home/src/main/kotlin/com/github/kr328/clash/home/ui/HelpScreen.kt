@@ -1,4 +1,4 @@
-package com.github.kr328.clash.main.ui
+package com.github.kr328.clash.home.ui
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth

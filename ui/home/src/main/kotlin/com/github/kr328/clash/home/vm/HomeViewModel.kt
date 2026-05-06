@@ -1,4 +1,4 @@
-package com.github.kr328.clash.main.vm
+package com.github.kr328.clash.home.vm
 
 import android.app.Application
 import android.content.Intent
@@ -27,7 +27,7 @@ import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-internal class MainViewModel(app: Application) : AndroidViewModel(app), DefaultLifecycleObserver {
+internal class HomeViewModel(app: Application) : AndroidViewModel(app), DefaultLifecycleObserver {
   private var broadcastEventsJob: Job? = null
   private var trafficPollingJob: Job? = null
   private var fetchJob: Job? = null

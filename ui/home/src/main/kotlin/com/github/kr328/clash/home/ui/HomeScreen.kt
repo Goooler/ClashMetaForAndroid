@@ -1,4 +1,4 @@
-package com.github.kr328.clash.main.ui
+package com.github.kr328.clash.home.ui
 
 import android.app.Activity
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -46,7 +46,7 @@ import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.github.kr328.clash.glue.R
-import com.github.kr328.clash.main.vm.MainViewModel
+import com.github.kr328.clash.home.vm.HomeViewModel
 import com.github.kr328.clash.ui.component.MihomoScaffold
 import com.github.kr328.clash.ui.icon.BaselineApps
 import com.github.kr328.clash.ui.icon.BaselineAssignment
@@ -67,9 +67,9 @@ import com.github.kr328.clash.ui.theme.PreviewMihomo
 import com.github.kr328.clash.ui.theme.mihomoDimens
 
 @Composable
-internal fun MainScreen(
+internal fun HomeScreen(
   modifier: Modifier = Modifier,
-  viewModel: MainViewModel = viewModel(),
+  viewModel: HomeViewModel = viewModel(),
   onOpenProxy: () -> Unit,
   onOpenProfiles: () -> Unit,
   onOpenProviders: () -> Unit,
@@ -119,7 +119,7 @@ internal fun MainScreen(
     viewModel.consumeEvent()
   }
 
-  MainContent(
+  HomeContent(
     modifier = modifier,
     snackbarHostState = snackbarHostState,
     clashRunning = clashRunning,
@@ -141,7 +141,7 @@ internal fun MainScreen(
 }
 
 @Composable
-private fun MainContent(
+private fun HomeContent(
   modifier: Modifier = Modifier,
   snackbarHostState: SnackbarHostState,
   clashRunning: Boolean,
@@ -174,17 +174,17 @@ private fun MainContent(
       modifier =
         Modifier.fillMaxSize()
           .padding(innerPadding)
-          .padding(horizontal = dimens.mainPaddingHorizontal)
+          .padding(horizontal = dimens.homePaddingHorizontal)
           .verticalScroll(rememberScrollState())
     ) {
       Row(
-        modifier = Modifier.fillMaxWidth().height(dimens.mainTopBannerHeight),
+        modifier = Modifier.fillMaxWidth().height(dimens.homeTopBannerHeight),
         verticalAlignment = Alignment.CenterVertically,
       ) {
         Image(
           imageVector = MihomoIcons.Clash,
           contentDescription = null,
-          modifier = Modifier.size(dimens.mainLogoSize),
+          modifier = Modifier.size(dimens.homeLogoSize),
         )
         Spacer(modifier = Modifier.width(4.dp))
         Text(
@@ -193,8 +193,8 @@ private fun MainContent(
         )
       }
 
-      MainActionCard(
-        modifier = Modifier.padding(vertical = dimens.mainCardMarginVertical),
+      HomeActionCard(
+        modifier = Modifier.padding(vertical = dimens.homeCardMarginVertical),
         icon =
           if (clashRunning) MihomoIcons.OutlineCheckCircle else MihomoIcons.OutlineNotInterested,
         text = stringResource(if (clashRunning) R.string.running else R.string.stopped),
@@ -208,8 +208,8 @@ private fun MainContent(
       )
 
       AnimatedVisibility(visible = clashRunning) {
-        MainActionCard(
-          modifier = Modifier.padding(vertical = dimens.mainCardMarginVertical),
+        HomeActionCard(
+          modifier = Modifier.padding(vertical = dimens.homeCardMarginVertical),
           icon = MihomoIcons.BaselineApps,
           text = stringResource(R.string.proxy),
           subtext = mode,
@@ -219,8 +219,8 @@ private fun MainContent(
         )
       }
 
-      MainActionCard(
-        modifier = Modifier.padding(vertical = dimens.mainCardMarginVertical),
+      HomeActionCard(
+        modifier = Modifier.padding(vertical = dimens.homeCardMarginVertical),
         icon = MihomoIcons.BaselineViewList,
         text = stringResource(R.string.profile),
         subtext =
@@ -232,34 +232,34 @@ private fun MainContent(
       )
 
       AnimatedVisibility(visible = clashRunning && hasProviders) {
-        MainActionLabel(
-          modifier = Modifier.padding(vertical = dimens.mainLabelMarginVertical),
+        HomeActionLabel(
+          modifier = Modifier.padding(vertical = dimens.homeLabelMarginVertical),
           icon = MihomoIcons.BaselineSwapVerticalCircle,
           text = stringResource(R.string.providers),
           onClick = onOpenProviders,
         )
       }
 
-      MainActionLabel(
-        modifier = Modifier.padding(vertical = dimens.mainLabelMarginVertical),
+      HomeActionLabel(
+        modifier = Modifier.padding(vertical = dimens.homeLabelMarginVertical),
         icon = MihomoIcons.BaselineAssignment,
         text = stringResource(R.string.logs),
         onClick = onOpenLogs,
       )
-      MainActionLabel(
-        modifier = Modifier.padding(vertical = dimens.mainLabelMarginVertical),
+      HomeActionLabel(
+        modifier = Modifier.padding(vertical = dimens.homeLabelMarginVertical),
         icon = MihomoIcons.BaselineSettings,
         text = stringResource(R.string.settings),
         onClick = onOpenSettings,
       )
-      MainActionLabel(
-        modifier = Modifier.padding(vertical = dimens.mainLabelMarginVertical),
+      HomeActionLabel(
+        modifier = Modifier.padding(vertical = dimens.homeLabelMarginVertical),
         icon = MihomoIcons.BaselineHelpCenter,
         text = stringResource(R.string.help),
         onClick = onOpenHelp,
       )
-      MainActionLabel(
-        modifier = Modifier.padding(vertical = dimens.mainLabelMarginVertical),
+      HomeActionLabel(
+        modifier = Modifier.padding(vertical = dimens.homeLabelMarginVertical),
         icon = MihomoIcons.BaselineInfo,
         text = stringResource(R.string.about),
         onClick = onOpenAbout,
@@ -271,7 +271,7 @@ private fun MainContent(
 }
 
 @Composable
-private fun MainActionCard(
+private fun HomeActionCard(
   icon: ImageVector,
   text: String,
   subtext: String?,
@@ -315,7 +315,7 @@ private fun MainActionCard(
 }
 
 @Composable
-private fun MainActionLabel(
+private fun HomeActionLabel(
   icon: ImageVector,
   text: String,
   onClick: () -> Unit,
@@ -373,8 +373,8 @@ private fun AboutDialog(versionName: String, onDismiss: () -> Unit) {
 @PreviewWrapper(MihomoThemeWrapper::class)
 @PreviewMihomo
 @Composable
-private fun MainContentRunningPreview() {
-  MainContent(
+private fun HomeContentRunningPreview() {
+  HomeContent(
     snackbarHostState = SnackbarHostState(),
     clashRunning = true,
     forwarded = "1.23 GB",
@@ -397,8 +397,8 @@ private fun MainContentRunningPreview() {
 @PreviewWrapper(MihomoThemeWrapper::class)
 @PreviewMihomo
 @Composable
-private fun MainContentStoppedPreview() {
-  MainContent(
+private fun HomeContentStoppedPreview() {
+  HomeContent(
     snackbarHostState = SnackbarHostState(),
     clashRunning = false,
     forwarded = null,

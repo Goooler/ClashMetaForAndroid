@@ -1,18 +1,18 @@
-package com.github.kr328.clash.main
+package com.github.kr328.clash.home
 
 import androidx.navigation3.runtime.EntryProviderScope
 import androidx.navigation3.runtime.NavKey
-import com.github.kr328.clash.main.ui.HelpScreen
-import com.github.kr328.clash.main.ui.MainScreen
+import com.github.kr328.clash.home.ui.HelpScreen
+import com.github.kr328.clash.home.ui.HomeScreen
 import kotlinx.serialization.Serializable
 
-sealed interface MainRoute : NavKey {
-  @Serializable data object Main : MainRoute
+sealed interface HomeRoute : NavKey {
+  @Serializable data object Home : HomeRoute
 
-  @Serializable data object Help : MainRoute
+  @Serializable data object Help : HomeRoute
 }
 
-fun EntryProviderScope<NavKey>.mainEntries(
+fun EntryProviderScope<NavKey>.homeEntries(
   onOpenProxy: () -> Unit,
   onOpenProfiles: () -> Unit,
   onOpenProviders: () -> Unit,
@@ -20,8 +20,8 @@ fun EntryProviderScope<NavKey>.mainEntries(
   onOpenSettings: () -> Unit,
   onOpenHelp: () -> Unit,
 ) {
-  entry<MainRoute.Main> {
-    MainScreen(
+  entry<HomeRoute.Home> {
+    HomeScreen(
       onOpenProxy = onOpenProxy,
       onOpenProfiles = onOpenProfiles,
       onOpenProviders = onOpenProviders,
@@ -30,5 +30,5 @@ fun EntryProviderScope<NavKey>.mainEntries(
       onOpenHelp = onOpenHelp,
     )
   }
-  entry<MainRoute.Help> { HelpScreen() }
+  entry<HomeRoute.Help> { HelpScreen() }
 }

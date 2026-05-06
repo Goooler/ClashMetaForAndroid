@@ -38,10 +38,10 @@ import com.github.kr328.clash.common.util.uuid
 import com.github.kr328.clash.crash.CrashRoute
 import com.github.kr328.clash.crash.crashEntries
 import com.github.kr328.clash.glue.R as GlueR
+import com.github.kr328.clash.home.HomeRoute
+import com.github.kr328.clash.home.homeEntries
 import com.github.kr328.clash.log.LogRoute
 import com.github.kr328.clash.log.logsEntries
-import com.github.kr328.clash.main.MainRoute
-import com.github.kr328.clash.main.mainEntries
 import com.github.kr328.clash.model.DarkMode
 import com.github.kr328.clash.profile.ProfilesRoute
 import com.github.kr328.clash.profile.profilesEntries
@@ -88,17 +88,17 @@ class MainActivity : ComponentActivity() {
           backStack = backStack,
           entryProvider =
             entryProvider {
-              mainEntries(
+              homeEntries(
                 onOpenProxy = { backStack.addIfNotLast(ProxyRoute.Proxy) },
                 onOpenProfiles = { backStack.addIfNotLast(ProfilesRoute.Profiles()) },
                 onOpenProviders = { backStack.addIfNotLast(ProfilesRoute.Providers) },
                 onOpenLogs = { backStack.addIfNotLast(LogRoute.Root) },
                 onOpenSettings = { backStack.addIfNotLast(SettingsRoute.Root) },
-                onOpenHelp = { backStack.addIfNotLast(MainRoute.Help) },
+                onOpenHelp = { backStack.addIfNotLast(HomeRoute.Help) },
               )
               proxyEntries {
                 backStack.clear()
-                backStack.add(MainRoute.Main)
+                backStack.add(HomeRoute.Home)
               }
               profilesEntries()
               logsEntries()
@@ -207,7 +207,7 @@ class MainActivity : ComponentActivity() {
   }
 
   private class ViewModel(application: Application) : AndroidViewModel(application) {
-    val backStack = mutableStateListOf<NavKey>(MainRoute.Main)
+    val backStack = mutableStateListOf<NavKey>(HomeRoute.Home)
 
     fun handleInstallConfigUri(uri: Uri) {
       val url = uri.getQueryParameter("url") ?: return
