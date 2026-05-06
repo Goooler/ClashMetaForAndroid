@@ -9,6 +9,7 @@ import androidx.core.graphics.drawable.IconCompat
 import com.github.kr328.clash.common.Global
 import com.github.kr328.clash.common.constants.Intents
 import com.github.kr328.clash.common.log.Log
+import com.github.kr328.clash.common.util.unsafeLazy
 import com.github.kr328.clash.glue.R as GlueR
 import com.github.kr328.clash.remote.Remote
 import com.github.kr328.clash.service.util.sendServiceRecreated
@@ -17,7 +18,7 @@ import com.github.kr328.clash.util.clashDir
 import java.io.File
 
 class MainApplication : Application() {
-  private val uiStore by lazy(LazyThreadSafetyMode.NONE) { UiStore(this) }
+  private val uiStore by unsafeLazy { UiStore(this) }
 
   override fun attachBaseContext(base: Context?) {
     super.attachBaseContext(base)
