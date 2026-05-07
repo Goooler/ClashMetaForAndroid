@@ -174,29 +174,16 @@ private fun OverrideSettingsContent(
           onOpenEditableTextList,
         )
       }
+    }
 
-      if (showResetConfirmDialog) {
-        AlertDialog(
-          onDismissRequest = { onShowResetConfirmDialogChange(false) },
-          title = { Text(stringResource(R.string.reset_override_settings)) },
-          text = { Text(stringResource(R.string.reset_override_settings_message)) },
-          confirmButton = {
-            TextButton(
-              onClick = {
-                onShowResetConfirmDialogChange(false)
-                onResetConfirmed()
-              }
-            ) {
-              Text(stringResource(CommonR.string.ok))
-            }
-          },
-          dismissButton = {
-            TextButton(onClick = { onShowResetConfirmDialogChange(false) }) {
-              Text(stringResource(CommonR.string.cancel))
-            }
-          },
-        )
-      }
+    if (showResetConfirmDialog) {
+      ResetOverrideSettingsDialog(
+        onConfirm = {
+          onShowResetConfirmDialogChange(false)
+          onResetConfirmed()
+        },
+        onDismiss = { onShowResetConfirmDialogChange(false) },
+      )
     }
   }
 }
