@@ -21,8 +21,8 @@ import me.zhanghai.compose.preference.preferenceCategory
 @Composable
 internal fun ApkBrokenScreen() {
   MihomoScaffold(title = stringResource(R.string.application_broken)) { innerPadding ->
+    val context = LocalContext.current
     ProvidePreferenceLocals {
-      val context = LocalContext.current
       LazyColumn(modifier = Modifier.fillMaxSize(), contentPadding = innerPadding) {
         preference(
           key = "tips_application_broken",

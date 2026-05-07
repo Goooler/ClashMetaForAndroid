@@ -27,8 +27,8 @@ import me.zhanghai.compose.preference.preferenceCategory
 @Composable
 internal fun HelpScreen(modifier: Modifier = Modifier) {
   MihomoScaffold(title = stringResource(R.string.help), modifier = modifier) { innerPadding ->
+    val context = LocalContext.current
     ProvidePreferenceLocals {
-      val context = LocalContext.current
       LazyColumn(modifier = Modifier.fillMaxSize(), contentPadding = innerPadding) {
         preference(
           key = "tips_help",
