@@ -8,6 +8,6 @@ interface AppInfoProvider {
   val mainActivityClass: Class<out Activity>
 
   companion object : KoinComponent {
-    val instance: AppInfoProvider by inject()
+    val instance: AppInfoProvider by inject(mode = NONE)
   }
 }
