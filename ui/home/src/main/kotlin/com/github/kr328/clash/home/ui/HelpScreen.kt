@@ -1,7 +1,6 @@
 package com.github.kr328.clash.home.ui
 
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -33,7 +32,6 @@ internal fun HelpScreen(modifier: Modifier = Modifier) {
       LazyColumn(modifier = Modifier.fillMaxSize(), contentPadding = innerPadding) {
         preference(
           key = "tips_help",
-          modifier = Modifier.fillMaxWidth(),
           title = { Text(stringResource(R.string.help)) },
           summary = { Text(AnnotatedString.fromHtml(stringResource(R.string.tips_help))) },
           enabled = false,
@@ -44,14 +42,12 @@ internal fun HelpScreen(modifier: Modifier = Modifier) {
         )
         preference(
           key = "clash_wiki",
-          modifier = Modifier.fillMaxWidth(),
           title = { Text(stringResource(R.string.clash_wiki)) },
           summary = { Text(CLASH_WIKI) },
           onClick = { context.openLink(CLASH_WIKI) },
         )
         preference(
           key = "clash_meta_wiki",
-          modifier = Modifier.fillMaxWidth(),
           title = { Text(stringResource(R.string.clash_meta_wiki)) },
           summary = { Text(CLASH_META_WIKI) },
           onClick = { context.openLink(CLASH_META_WIKI) },
@@ -59,14 +55,12 @@ internal fun HelpScreen(modifier: Modifier = Modifier) {
         preferenceCategory(key = "cat_sources", title = { Text(stringResource(R.string.sources)) })
         preference(
           key = "clash_meta_core",
-          modifier = Modifier.fillMaxWidth(),
           title = { Text(stringResource(R.string.clash_meta_core)) },
           summary = { Text(CLASH_META_CORE) },
           onClick = { context.openLink(CLASH_META_CORE) },
         )
         preference(
           key = "clash_meta_for_android",
-          modifier = Modifier.fillMaxWidth(),
           title = { Text(stringResource(CommonR.string.clash_meta_for_android)) },
           summary = { Text(CMFA_GITHUB) },
           onClick = { context.openLink(CMFA_GITHUB) },
