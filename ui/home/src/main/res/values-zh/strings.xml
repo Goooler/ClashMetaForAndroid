@@ -9,7 +9,7 @@
   <string name="feedback">反馈</string>
   <string name="format_profile_activated">%s 已激活</string>
   <string name="format_traffic_forwarded">%s 已转发</string>
-  <string name="github_issues">Github Issues</string>
+  <string name="github_issues">GitHub Issues</string>
   <string name="google_play">Google Play</string>
   <string name="help">帮助</string>
   <string name="no_profile_selected">没有选择配置文件</string>

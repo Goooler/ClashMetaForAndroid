@@ -9,7 +9,7 @@
   <string name="feedback">フィードバック</string>
   <string name="format_profile_activated">%sがアクティベートされました</string>
   <string name="format_traffic_forwarded">%sが転送されました</string>
-  <string name="github_issues">Github Issues</string>
+  <string name="github_issues">GitHub Issues</string>
   <string name="google_play">Google Play</string>
   <string name="help">ヘルプ</string>
   <string name="no_profile_selected">プロファイルが選択されていません</string>
