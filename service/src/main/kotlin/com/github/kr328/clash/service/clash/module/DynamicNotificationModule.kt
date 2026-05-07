@@ -7,6 +7,7 @@ import android.os.PowerManager
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.getSystemService
+import com.github.kr328.clash.common.R as CommonR
 import com.github.kr328.clash.common.compat.getColorCompat
 import com.github.kr328.clash.common.compat.pendingIntentFlags
 import com.github.kr328.clash.common.constants.Components
@@ -25,7 +26,7 @@ import kotlinx.coroutines.selects.select
 class DynamicNotificationModule(service: Service) : Module<Unit>(service) {
   private val builder =
     NotificationCompat.Builder(service, StaticNotificationModule.CHANNEL_ID)
-      .setSmallIcon(R.drawable.ic_logo_service)
+      .setSmallIcon(CommonR.drawable.ic_logo_service)
       .setOngoing(true)
       .setColor(service.getColorCompat(R.color.color_clash))
       .setOnlyAlertOnce(true)

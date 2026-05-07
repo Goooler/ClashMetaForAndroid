@@ -45,8 +45,8 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.github.kr328.clash.common.R
-import com.github.kr328.clash.home.R as HomeR
+import com.github.kr328.clash.common.R as CommonR
+import com.github.kr328.clash.home.R
 import com.github.kr328.clash.home.vm.HomeViewModel
 import com.github.kr328.clash.ui.component.MihomoScaffold
 import com.github.kr328.clash.ui.icon.BaselineApps
@@ -83,8 +83,8 @@ internal fun HomeScreen(
   val eventState by viewModel.eventState.collectAsStateWithLifecycle()
   val snackbarHostState = remember { SnackbarHostState() }
 
-  val noProfileText = stringResource(HomeR.string.no_profile_selected)
-  val profilesActionText = stringResource(R.string.profiles)
+  val noProfileText = stringResource(R.string.no_profile_selected)
+  val profilesActionText = stringResource(CommonR.string.profiles)
 
   DisposableEffect(lifecycleOwner, viewModel) {
     lifecycleOwner.lifecycle.addObserver(viewModel)
@@ -187,7 +187,7 @@ private fun HomeContent(
         )
         Spacer(modifier = Modifier.width(4.dp))
         Text(
-          text = stringResource(R.string.launch_name_meta),
+          text = stringResource(CommonR.string.launch_name_meta),
           style = MaterialTheme.typography.titleLarge,
         )
       }
@@ -196,11 +196,11 @@ private fun HomeContent(
         modifier = Modifier.padding(vertical = cardMarginVertical),
         icon =
           if (clashRunning) MihomoIcons.OutlineCheckCircle else MihomoIcons.OutlineNotInterested,
-        text = stringResource(if (clashRunning) R.string.running else HomeR.string.stopped),
+        text = stringResource(if (clashRunning) CommonR.string.running else R.string.stopped),
         subtext =
           if (clashRunning && forwarded != null)
-            stringResource(HomeR.string.format_traffic_forwarded, forwarded)
-          else stringResource(R.string.tap_to_start),
+            stringResource(R.string.format_traffic_forwarded, forwarded)
+          else stringResource(CommonR.string.tap_to_start),
         backgroundColor = if (clashRunning) MaterialTheme.colorScheme.primary else stoppedColor,
         contentColor = MihomoOnPrimary,
         onClick = onToggleStatus,
@@ -210,7 +210,7 @@ private fun HomeContent(
         HomeActionCard(
           modifier = Modifier.padding(vertical = cardMarginVertical),
           icon = MihomoIcons.BaselineApps,
-          text = stringResource(R.string.proxy),
+          text = stringResource(CommonR.string.proxy),
           subtext = mode,
           backgroundColor = MaterialTheme.colorScheme.surface,
           contentColor = MaterialTheme.colorScheme.onSurface,
@@ -221,11 +221,10 @@ private fun HomeContent(
       HomeActionCard(
         modifier = Modifier.padding(vertical = cardMarginVertical),
         icon = MihomoIcons.BaselineViewList,
-        text = stringResource(HomeR.string.profile),
+        text = stringResource(R.string.profile),
         subtext =
-          if (profileName != null)
-            stringResource(HomeR.string.format_profile_activated, profileName)
-          else stringResource(R.string.not_selected),
+          if (profileName != null) stringResource(R.string.format_profile_activated, profileName)
+          else stringResource(CommonR.string.not_selected),
         backgroundColor = MaterialTheme.colorScheme.surface,
         contentColor = MaterialTheme.colorScheme.onSurface,
         onClick = onOpenProfiles,
@@ -235,7 +234,7 @@ private fun HomeContent(
         HomeActionLabel(
           modifier = Modifier.padding(vertical = labelMarginVertical),
           icon = MihomoIcons.BaselineSwapVerticalCircle,
-          text = stringResource(R.string.providers),
+          text = stringResource(CommonR.string.providers),
           onClick = onOpenProviders,
         )
       }
@@ -243,25 +242,25 @@ private fun HomeContent(
       HomeActionLabel(
         modifier = Modifier.padding(vertical = labelMarginVertical),
         icon = MihomoIcons.BaselineAssignment,
-        text = stringResource(R.string.logs),
+        text = stringResource(CommonR.string.logs),
         onClick = onOpenLogs,
       )
       HomeActionLabel(
         modifier = Modifier.padding(vertical = labelMarginVertical),
         icon = MihomoIcons.BaselineSettings,
-        text = stringResource(R.string.settings),
+        text = stringResource(CommonR.string.settings),
         onClick = onOpenSettings,
       )
       HomeActionLabel(
         modifier = Modifier.padding(vertical = labelMarginVertical),
         icon = MihomoIcons.BaselineHelpCenter,
-        text = stringResource(HomeR.string.help),
+        text = stringResource(R.string.help),
         onClick = onOpenHelp,
       )
       HomeActionLabel(
         modifier = Modifier.padding(vertical = labelMarginVertical),
         icon = MihomoIcons.BaselineInfo,
-        text = stringResource(HomeR.string.about),
+        text = stringResource(R.string.about),
         onClick = onOpenAbout,
       )
     }
@@ -338,7 +337,7 @@ private fun AboutDialog(versionName: String, onDismiss: () -> Unit) {
   AlertDialog(
     onDismissRequest = onDismiss,
     confirmButton = {
-      TextButton(onClick = onDismiss) { Text(text = stringResource(android.R.string.ok)) }
+      TextButton(onClick = onDismiss) { Text(text = stringResource(CommonR.string.ok)) }
     },
     icon = {
       Image(
@@ -349,7 +348,7 @@ private fun AboutDialog(versionName: String, onDismiss: () -> Unit) {
     },
     title = {
       Text(
-        text = stringResource(R.string.launch_name_meta),
+        text = stringResource(CommonR.string.launch_name_meta),
         modifier = Modifier.fillMaxWidth(),
         textAlign = TextAlign.Center,
       )

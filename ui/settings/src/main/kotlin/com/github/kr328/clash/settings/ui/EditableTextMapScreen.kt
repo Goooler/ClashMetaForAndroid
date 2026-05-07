@@ -34,8 +34,8 @@ import androidx.compose.ui.tooling.preview.PreviewWrapper
 import androidx.compose.ui.unit.dp
 import androidx.navigation3.runtime.EntryProviderScope
 import androidx.navigation3.runtime.NavKey
-import com.github.kr328.clash.common.R
-import com.github.kr328.clash.settings.R as SettingsR
+import com.github.kr328.clash.common.R as CommonR
+import com.github.kr328.clash.settings.R
 import com.github.kr328.clash.ui.component.MihomoScaffold
 import com.github.kr328.clash.ui.icon.BaselineAdd
 import com.github.kr328.clash.ui.icon.MihomoIcons
@@ -83,7 +83,7 @@ private fun EditableTextMapScreen(
       IconButton(onClick = { showAddDialog = true }) {
         Icon(
           imageVector = MihomoIcons.BaselineAdd,
-          contentDescription = stringResource(R.string._new),
+          contentDescription = stringResource(CommonR.string._new),
         )
       }
     },
@@ -101,7 +101,7 @@ private fun EditableTextMapScreen(
                 IconButton(onClick = { values.remove(key) }) {
                   Icon(
                     imageVector = MihomoIcons.OutlineDelete,
-                    contentDescription = stringResource(R.string.delete),
+                    contentDescription = stringResource(CommonR.string.delete),
                   )
                 }
               },
@@ -115,9 +115,11 @@ private fun EditableTextMapScreen(
         modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 8.dp),
         horizontalArrangement = Arrangement.End,
       ) {
-        TextButton(onClick = { onApply(null) }) { Text(stringResource(R.string.reset)) }
-        TextButton(onClick = onDismiss) { Text(stringResource(R.string.cancel)) }
-        TextButton(onClick = { onApply(values.toMap()) }) { Text(stringResource(R.string.ok)) }
+        TextButton(onClick = { onApply(null) }) { Text(stringResource(CommonR.string.reset)) }
+        TextButton(onClick = onDismiss) { Text(stringResource(CommonR.string.cancel)) }
+        TextButton(onClick = { onApply(values.toMap()) }) {
+          Text(stringResource(CommonR.string.ok))
+        }
       }
     }
   }
@@ -159,16 +161,16 @@ private fun MapEntryInputDialog(
         OutlinedTextField(
           value = keyText,
           onValueChange = { keyText = it },
-          label = { Text(stringResource(SettingsR.string.key)) },
-          placeholder = { Text(stringResource(SettingsR.string.key)) },
+          label = { Text(stringResource(R.string.key)) },
+          placeholder = { Text(stringResource(R.string.key)) },
           singleLine = true,
           modifier = Modifier.fillMaxWidth().focusRequester(focusRequester),
         )
         OutlinedTextField(
           value = valueText,
           onValueChange = { valueText = it },
-          label = { Text(stringResource(SettingsR.string.value)) },
-          placeholder = { Text(stringResource(SettingsR.string.value)) },
+          label = { Text(stringResource(R.string.value)) },
+          placeholder = { Text(stringResource(R.string.value)) },
           singleLine = true,
           modifier = Modifier.fillMaxWidth(),
         )
@@ -179,10 +181,12 @@ private fun MapEntryInputDialog(
         onClick = { onConfirm(keyText.text.trim(), valueText.text.trim()) },
         enabled = confirmEnabled,
       ) {
-        Text(stringResource(R.string.ok))
+        Text(stringResource(CommonR.string.ok))
       }
     },
-    dismissButton = { TextButton(onClick = onDismiss) { Text(stringResource(R.string.cancel)) } },
+    dismissButton = {
+      TextButton(onClick = onDismiss) { Text(stringResource(CommonR.string.cancel)) }
+    },
   )
 }
 
@@ -191,7 +195,7 @@ private fun MapEntryInputDialog(
 @Composable
 private fun EditableTextMapScreenPreview() {
   EditableTextMapScreen(
-    title = SettingsR.string.hosts,
+    title = R.string.hosts,
     initialValues = mapOf("example.com" to "127.0.0.1", "test.com" to "192.168.1.1"),
     onDismiss = {},
     onApply = {},

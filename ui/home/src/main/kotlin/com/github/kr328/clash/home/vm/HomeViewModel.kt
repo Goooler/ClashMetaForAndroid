@@ -7,7 +7,7 @@ import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.application
 import androidx.lifecycle.viewModelScope
-import com.github.kr328.clash.common.R
+import com.github.kr328.clash.common.R as CommonR
 import com.github.kr328.clash.common.log.Log
 import com.github.kr328.clash.core.bridge.Bridge
 import com.github.kr328.clash.core.util.trafficTotal
@@ -113,9 +113,9 @@ internal class HomeViewModel(app: Application) : AndroidViewModel(app), DefaultL
       val providers = withClash { queryProviders() }
       val mode =
         when (state.mode) {
-          Direct -> application.getString(R.string.direct_mode)
-          Global -> application.getString(R.string.global_mode)
-          Rule -> application.getString(R.string.rule_mode)
+          Direct -> application.getString(CommonR.string.direct_mode)
+          Global -> application.getString(CommonR.string.global_mode)
+          Rule -> application.getString(CommonR.string.rule_mode)
         }
       val profileName = withProfile { queryActive()?.name }
 
@@ -159,7 +159,7 @@ internal class HomeViewModel(app: Application) : AndroidViewModel(app), DefaultL
       } catch (e: Exception) {
         Log.e("Start clash service failed: ${e.message}", e)
         eventState.value =
-          EventState.ShowMessage(application.getString(R.string.unable_to_start_vpn))
+          EventState.ShowMessage(application.getString(CommonR.string.unable_to_start_vpn))
       }
     }
   }

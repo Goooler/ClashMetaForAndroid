@@ -52,9 +52,9 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.graphics.drawable.toDrawable
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.github.kr328.clash.common.R
+import com.github.kr328.clash.common.R as CommonR
 import com.github.kr328.clash.model.AppInfo
-import com.github.kr328.clash.settings.R as SettingsR
+import com.github.kr328.clash.settings.R
 import com.github.kr328.clash.settings.vm.AccessControlViewModel
 import com.github.kr328.clash.ui.component.MihomoScaffold
 import com.github.kr328.clash.ui.icon.BaselineMoreVert
@@ -161,19 +161,19 @@ private fun AccessControlContent(
   }
 
   MihomoScaffold(
-    title = stringResource(SettingsR.string.access_control_packages),
+    title = stringResource(R.string.access_control_packages),
     modifier = modifier,
     actions = {
       IconButton(onClick = { showSearch = true }) {
         Icon(
           imageVector = MihomoIcons.BaselineSearch,
-          contentDescription = stringResource(SettingsR.string.search),
+          contentDescription = stringResource(R.string.search),
         )
       }
       IconButton(onClick = { showMenu = true }) {
         Icon(
           imageVector = MihomoIcons.BaselineMoreVert,
-          contentDescription = stringResource(R.string.more),
+          contentDescription = stringResource(CommonR.string.more),
         )
       }
     },
@@ -224,7 +224,7 @@ private fun ColumnScope.AccessControlSearchContent(
     value = keyword,
     onValueChange = { keyword = it },
     modifier = Modifier.fillMaxWidth().padding(horizontal = 20.dp),
-    placeholder = { Text(text = stringResource(SettingsR.string.keyword)) },
+    placeholder = { Text(text = stringResource(R.string.keyword)) },
     singleLine = true,
     colors = TextFieldDefaults.colors(),
   )
@@ -260,62 +260,50 @@ private fun ColumnScope.AccessControlMenuContent(
   onUpdateShowSystemApps: (Boolean) -> Unit,
 ) {
   Column(modifier = Modifier.fillMaxWidth()) {
-    AccessControlMenuAction(
-      text = stringResource(SettingsR.string.select_all),
-      onClick = onSelectAll,
-    )
-    AccessControlMenuAction(
-      text = stringResource(SettingsR.string.select_none),
-      onClick = onSelectNone,
-    )
-    AccessControlMenuAction(
-      text = stringResource(SettingsR.string.select_invert),
-      onClick = onSelectInvert,
-    )
+    AccessControlMenuAction(text = stringResource(R.string.select_all), onClick = onSelectAll)
+    AccessControlMenuAction(text = stringResource(R.string.select_none), onClick = onSelectNone)
+    AccessControlMenuAction(text = stringResource(R.string.select_invert), onClick = onSelectInvert)
 
-    AccessControlMenuSectionTitle(text = stringResource(R.string.filter))
+    AccessControlMenuSectionTitle(text = stringResource(CommonR.string.filter))
     AccessControlMenuCheckAction(
-      text = stringResource(SettingsR.string.system_apps),
+      text = stringResource(R.string.system_apps),
       checked = showSystemApps,
       onCheckedChange = onUpdateShowSystemApps,
     )
 
-    AccessControlMenuSectionTitle(text = stringResource(R.string.sort))
+    AccessControlMenuSectionTitle(text = stringResource(CommonR.string.sort))
     AccessControlMenuSortAction(
-      text = stringResource(R.string.name),
+      text = stringResource(CommonR.string.name),
       checked = sort == Label,
       onClick = { onUpdateSort(Label) },
     )
     AccessControlMenuSortAction(
-      text = stringResource(SettingsR.string.package_name),
+      text = stringResource(R.string.package_name),
       checked = sort == PackageName,
       onClick = { onUpdateSort(PackageName) },
     )
     AccessControlMenuSortAction(
-      text = stringResource(SettingsR.string.install_time),
+      text = stringResource(R.string.install_time),
       checked = sort == InstallTime,
       onClick = { onUpdateSort(InstallTime) },
     )
     AccessControlMenuSortAction(
-      text = stringResource(SettingsR.string.update_time),
+      text = stringResource(R.string.update_time),
       checked = sort == UpdateTime,
       onClick = { onUpdateSort(UpdateTime) },
     )
     AccessControlMenuCheckAction(
-      text = stringResource(SettingsR.string.reverse),
+      text = stringResource(R.string.reverse),
       checked = reverse,
       onCheckedChange = onUpdateReverse,
     )
 
-    AccessControlMenuSectionTitle(text = stringResource(R.string.external))
+    AccessControlMenuSectionTitle(text = stringResource(CommonR.string.external))
     AccessControlMenuAction(
-      text = stringResource(SettingsR.string.import_from_clipboard),
+      text = stringResource(R.string.import_from_clipboard),
       onClick = onImport,
     )
-    AccessControlMenuAction(
-      text = stringResource(SettingsR.string.export_to_clipboard),
-      onClick = onExport,
-    )
+    AccessControlMenuAction(text = stringResource(R.string.export_to_clipboard), onClick = onExport)
   }
 }
 

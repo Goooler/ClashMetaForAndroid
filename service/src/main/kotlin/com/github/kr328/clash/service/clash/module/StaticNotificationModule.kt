@@ -6,6 +6,7 @@ import android.content.Intent
 import androidx.core.app.NotificationChannelCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import com.github.kr328.clash.common.R as CommonR
 import com.github.kr328.clash.common.compat.getColorCompat
 import com.github.kr328.clash.common.compat.pendingIntentFlags
 import com.github.kr328.clash.common.compat.startForegroundCompat
@@ -18,7 +19,7 @@ import kotlinx.coroutines.channels.Channel
 class StaticNotificationModule(service: Service) : Module<Unit>(service) {
   private val builder =
     NotificationCompat.Builder(service, CHANNEL_ID)
-      .setSmallIcon(R.drawable.ic_logo_service)
+      .setSmallIcon(CommonR.drawable.ic_logo_service)
       .setOngoing(true)
       .setColor(service.getColorCompat(R.color.color_clash))
       .setOnlyAlertOnce(true)
@@ -73,7 +74,7 @@ class StaticNotificationModule(service: Service) : Module<Unit>(service) {
     fun notifyLoadingNotification(service: Service) {
       val notification =
         NotificationCompat.Builder(service, CHANNEL_ID)
-          .setSmallIcon(R.drawable.ic_logo_service)
+          .setSmallIcon(CommonR.drawable.ic_logo_service)
           .setOngoing(true)
           .setColor(service.getColorCompat(R.color.color_clash))
           .setOnlyAlertOnce(true)

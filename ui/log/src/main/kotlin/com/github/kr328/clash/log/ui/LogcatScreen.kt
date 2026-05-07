@@ -38,9 +38,9 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.github.kr328.clash.common.R
+import com.github.kr328.clash.common.R as CommonR
 import com.github.kr328.clash.core.model.LogMessage
-import com.github.kr328.clash.log.R as LogR
+import com.github.kr328.clash.log.R
 import com.github.kr328.clash.log.vm.LogcatViewModel
 import com.github.kr328.clash.ui.component.MihomoScaffold
 import com.github.kr328.clash.ui.component.ModelProgressBarDialog
@@ -71,8 +71,8 @@ internal fun LogcatScreen(
   val listState = rememberLazyListState()
   val snackbarHostState = remember { SnackbarHostState() }
   val scope = rememberCoroutineScope()
-  val messageCopied = stringResource(LogR.string.copied)
-  val invalidFileTip = stringResource(LogR.string.invalid_log_file)
+  val messageCopied = stringResource(R.string.copied)
+  val invalidFileTip = stringResource(R.string.invalid_log_file)
 
   LaunchedEffect(fileName, viewModel) { viewModel.init(fileName) }
 
@@ -154,7 +154,7 @@ private fun LogcatContent(
   modifier: Modifier = Modifier,
 ) {
   MihomoScaffold(
-    title = stringResource(LogR.string.clash_logcat),
+    title = stringResource(R.string.clash_logcat),
     modifier = modifier,
     snackbarHostState = snackbarHostState,
     actions = {
@@ -162,20 +162,20 @@ private fun LogcatContent(
         IconButton(onClick = onClose) {
           Icon(
             imageVector = MihomoIcons.BaselineStop,
-            contentDescription = stringResource(R.string.close),
+            contentDescription = stringResource(CommonR.string.close),
           )
         }
       } else {
         IconButton(onClick = onDelete) {
           Icon(
             imageVector = MihomoIcons.BaselineDelete,
-            contentDescription = stringResource(R.string.delete),
+            contentDescription = stringResource(CommonR.string.delete),
           )
         }
         IconButton(onClick = onExport) {
           Icon(
             imageVector = MihomoIcons.BaselineSave,
-            contentDescription = stringResource(R.string.export),
+            contentDescription = stringResource(CommonR.string.export),
           )
         }
       }

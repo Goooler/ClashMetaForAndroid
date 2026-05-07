@@ -68,8 +68,7 @@ class TileService : TileService() {
 
     tile.label = currentProfile.ifEmpty { getText(CommonR.string.launch_name_meta) }
 
-    tile.icon =
-      Icon.createWithResource(this, com.github.kr328.clash.service.R.drawable.ic_logo_service)
+    tile.icon = Icon.createWithResource(this, CommonR.drawable.ic_logo_service)
 
     tile.updateTile()
   }

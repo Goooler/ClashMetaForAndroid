@@ -30,9 +30,9 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entryProvider
-import com.github.kr328.clash.common.R
+import com.github.kr328.clash.common.R as CommonR
 import com.github.kr328.clash.core.model.ConfigurationOverride
-import com.github.kr328.clash.settings.R as SettingsR
+import com.github.kr328.clash.settings.R
 import com.github.kr328.clash.settings.vm.MetaFeatureSettingsViewModel
 import com.github.kr328.clash.settings.vm.MetaFeatureSettingsViewModel.ImportType
 import com.github.kr328.clash.ui.component.MihomoScaffold
@@ -74,8 +74,8 @@ internal fun MetaFeatureSettingsScreen(
           val configuration by viewModel.configuration.collectAsStateWithLifecycle()
           val importResult by viewModel.importResult.collectAsStateWithLifecycle()
           val snackbarHostState = remember { SnackbarHostState() }
-          val importedText = stringResource(SettingsR.string.geofile_imported)
-          val importFailedText = stringResource(SettingsR.string.geofile_import_failed)
+          val importedText = stringResource(R.string.geofile_imported)
+          val importFailedText = stringResource(R.string.geofile_import_failed)
           var pendingImportType by remember { mutableStateOf<ImportType?>(null) }
           var showUnsupportedFormatDialog by remember { mutableStateOf(false) }
           var validExtensionsSummary by remember { mutableStateOf("") }
@@ -142,18 +142,15 @@ internal fun MetaFeatureSettingsScreen(
           if (showUnsupportedFormatDialog) {
             AlertDialog(
               onDismissRequest = { showUnsupportedFormatDialog = false },
-              title = { Text(stringResource(SettingsR.string.geofile_unknown_db_format)) },
+              title = { Text(stringResource(R.string.geofile_unknown_db_format)) },
               text = {
                 Text(
-                  stringResource(
-                    SettingsR.string.geofile_unknown_db_format_message,
-                    validExtensionsSummary,
-                  )
+                  stringResource(R.string.geofile_unknown_db_format_message, validExtensionsSummary)
                 )
               },
               confirmButton = {
                 TextButton(onClick = { showUnsupportedFormatDialog = false }) {
-                  Text(text = stringResource(R.string.ok))
+                  Text(text = stringResource(CommonR.string.ok))
                 }
               },
             )
@@ -191,7 +188,7 @@ private fun MetaFeatureSettingsContent(
 ) {
   val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
   MihomoScaffold(
-    title = stringResource(SettingsR.string.meta_features),
+    title = stringResource(R.string.meta_features),
     modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
     snackbarHostState = snackbarHostState,
     scrollBehavior = scrollBehavior,
@@ -199,7 +196,7 @@ private fun MetaFeatureSettingsContent(
       IconButton(onClick = { onShowResetConfirmDialogChange(true) }) {
         Icon(
           imageVector = MihomoIcons.BaselineReplay,
-          contentDescription = stringResource(R.string.reset),
+          contentDescription = stringResource(CommonR.string.reset),
         )
       }
     },
@@ -220,8 +217,8 @@ private fun MetaFeatureSettingsContent(
     if (showResetConfirmDialog) {
       AlertDialog(
         onDismissRequest = { onShowResetConfirmDialogChange(false) },
-        title = { Text(stringResource(SettingsR.string.reset_override_settings)) },
-        text = { Text(stringResource(SettingsR.string.reset_override_settings_message)) },
+        title = { Text(stringResource(R.string.reset_override_settings)) },
+        text = { Text(stringResource(R.string.reset_override_settings_message)) },
         confirmButton = {
           TextButton(
             onClick = {
@@ -229,12 +226,12 @@ private fun MetaFeatureSettingsContent(
               onResetConfirmed()
             }
           ) {
-            Text(stringResource(R.string.ok))
+            Text(stringResource(CommonR.string.ok))
           }
         },
         dismissButton = {
           TextButton(onClick = { onShowResetConfirmDialogChange(false) }) {
-            Text(stringResource(R.string.cancel))
+            Text(stringResource(CommonR.string.cancel))
           }
         },
       )
@@ -246,7 +243,10 @@ private fun LazyListScope.metaBasicPreferenceItems(
   configuration: ConfigurationOverride,
   actions: MetaFeatureSettingsActions,
 ) {
-  preferenceCategory(key = "cat_settings", title = { Text(stringResource(R.string.settings)) })
+  preferenceCategory(
+    key = "cat_settings",
+    title = { Text(stringResource(CommonR.string.settings)) },
+  )
 
   listPreference(
     key = "unifiedDelay",
@@ -254,7 +254,7 @@ private fun LazyListScope.metaBasicPreferenceItems(
     onValueChange = actions::updateUnifiedDelay,
     values = booleanOptions,
     modifier = Modifier.fillMaxWidth(),
-    title = { Text(stringResource(SettingsR.string.unified_delay)) },
+    title = { Text(stringResource(R.string.unified_delay)) },
     summary = { Text(stringResource(configuration.unifiedDelay.textRes)) },
     valueToText = { AnnotatedString(stringResource(it.textRes)) },
   )
@@ -264,7 +264,7 @@ private fun LazyListScope.metaBasicPreferenceItems(
     onValueChange = actions::updateGeodataMode,
     values = booleanOptions,
     modifier = Modifier.fillMaxWidth(),
-    title = { Text(stringResource(SettingsR.string.geodata_mode)) },
+    title = { Text(stringResource(R.string.geodata_mode)) },
     summary = { Text(stringResource(configuration.geodataMode.textRes)) },
     valueToText = { AnnotatedString(stringResource(it.textRes)) },
   )
@@ -274,7 +274,7 @@ private fun LazyListScope.metaBasicPreferenceItems(
     onValueChange = actions::updateTcpConcurrent,
     values = booleanOptions,
     modifier = Modifier.fillMaxWidth(),
-    title = { Text(stringResource(SettingsR.string.tcp_concurrent)) },
+    title = { Text(stringResource(R.string.tcp_concurrent)) },
     summary = { Text(stringResource(configuration.tcpConcurrent.textRes)) },
     valueToText = { AnnotatedString(stringResource(it.textRes)) },
   )
@@ -284,7 +284,7 @@ private fun LazyListScope.metaBasicPreferenceItems(
     onValueChange = actions::updateFindProcessMode,
     values = ConfigurationOverride.FindProcessMode.entries,
     modifier = Modifier.fillMaxWidth(),
-    title = { Text(stringResource(SettingsR.string.find_process_mode)) },
+    title = { Text(stringResource(R.string.find_process_mode)) },
     summary = { Text(stringResource(configuration.findProcessMode.textRes)) },
     valueToText = { AnnotatedString(stringResource(it.textRes)) },
   )
@@ -297,7 +297,7 @@ private fun LazyListScope.metaSnifferPreferenceItems(
 ) {
   preferenceCategory(
     key = "cat_sniffer",
-    title = { Text(stringResource(SettingsR.string.sniffer_setting)) },
+    title = { Text(stringResource(R.string.sniffer_setting)) },
   )
   listPreference(
     key = "snifferEnable",
@@ -305,21 +305,19 @@ private fun LazyListScope.metaSnifferPreferenceItems(
     onValueChange = actions::updateSnifferEnable,
     values = booleanOptions,
     modifier = Modifier.fillMaxWidth(),
-    title = { Text(stringResource(SettingsR.string.strategy)) },
+    title = { Text(stringResource(R.string.strategy)) },
     summary = { Text(stringResource(configuration.sniffer.enable.textRes)) },
     valueToText = { AnnotatedString(stringResource(it.textRes)) },
   )
   preference(
     key = "sniffHttpPorts",
     modifier = Modifier.fillMaxWidth(),
-    title = { Text(stringResource(SettingsR.string.sniff_http_ports)) },
-    summary = {
-      Text(configuration.sniffer.sniff.http.ports.listSummary(SettingsR.string.dont_modify))
-    },
+    title = { Text(stringResource(R.string.sniff_http_ports)) },
+    summary = { Text(configuration.sniffer.sniff.http.ports.listSummary(R.string.dont_modify)) },
     enabled = configuration.sniffer.enable != false,
     onClick = {
       onOpenEditableTextList(
-        SettingsR.string.sniff_http_ports,
+        R.string.sniff_http_ports,
         configuration.sniffer.sniff.http.ports,
         actions::updateSniffHttpPorts,
       )
@@ -332,7 +330,7 @@ private fun LazyListScope.metaSnifferPreferenceItems(
     values = booleanOptions,
     modifier = Modifier.fillMaxWidth(),
     enabled = configuration.sniffer.enable != false,
-    title = { Text(stringResource(SettingsR.string.sniff_http_override_destination)) },
+    title = { Text(stringResource(R.string.sniff_http_override_destination)) },
     summary = {
       Text(stringResource(configuration.sniffer.sniff.http.overrideDestination.textRes))
     },
@@ -341,14 +339,12 @@ private fun LazyListScope.metaSnifferPreferenceItems(
   preference(
     key = "sniffTlsPorts",
     modifier = Modifier.fillMaxWidth(),
-    title = { Text(stringResource(SettingsR.string.sniff_tls_ports)) },
-    summary = {
-      Text(configuration.sniffer.sniff.tls.ports.listSummary(SettingsR.string.dont_modify))
-    },
+    title = { Text(stringResource(R.string.sniff_tls_ports)) },
+    summary = { Text(configuration.sniffer.sniff.tls.ports.listSummary(R.string.dont_modify)) },
     enabled = configuration.sniffer.enable != false,
     onClick = {
       onOpenEditableTextList(
-        SettingsR.string.sniff_tls_ports,
+        R.string.sniff_tls_ports,
         configuration.sniffer.sniff.tls.ports,
         actions::updateSniffTlsPorts,
       )
@@ -361,21 +357,19 @@ private fun LazyListScope.metaSnifferPreferenceItems(
     values = booleanOptions,
     modifier = Modifier.fillMaxWidth(),
     enabled = configuration.sniffer.enable != false,
-    title = { Text(stringResource(SettingsR.string.sniff_tls_override_destination)) },
+    title = { Text(stringResource(R.string.sniff_tls_override_destination)) },
     summary = { Text(stringResource(configuration.sniffer.sniff.tls.overrideDestination.textRes)) },
     valueToText = { AnnotatedString(stringResource(it.textRes)) },
   )
   preference(
     key = "sniffQuicPorts",
     modifier = Modifier.fillMaxWidth(),
-    title = { Text(stringResource(SettingsR.string.sniff_quic_ports)) },
-    summary = {
-      Text(configuration.sniffer.sniff.quic.ports.listSummary(SettingsR.string.dont_modify))
-    },
+    title = { Text(stringResource(R.string.sniff_quic_ports)) },
+    summary = { Text(configuration.sniffer.sniff.quic.ports.listSummary(R.string.dont_modify)) },
     enabled = configuration.sniffer.enable != false,
     onClick = {
       onOpenEditableTextList(
-        SettingsR.string.sniff_quic_ports,
+        R.string.sniff_quic_ports,
         configuration.sniffer.sniff.quic.ports,
         actions::updateSniffQuicPorts,
       )
@@ -388,7 +382,7 @@ private fun LazyListScope.metaSnifferPreferenceItems(
     values = booleanOptions,
     modifier = Modifier.fillMaxWidth(),
     enabled = configuration.sniffer.enable != false,
-    title = { Text(stringResource(SettingsR.string.sniff_quic_override_destination)) },
+    title = { Text(stringResource(R.string.sniff_quic_override_destination)) },
     summary = {
       Text(stringResource(configuration.sniffer.sniff.quic.overrideDestination.textRes))
     },
@@ -401,7 +395,7 @@ private fun LazyListScope.metaSnifferPreferenceItems(
     values = booleanOptions,
     modifier = Modifier.fillMaxWidth(),
     enabled = configuration.sniffer.enable != false,
-    title = { Text(stringResource(SettingsR.string.force_dns_mapping)) },
+    title = { Text(stringResource(R.string.force_dns_mapping)) },
     summary = { Text(stringResource(configuration.sniffer.forceDnsMapping.textRes)) },
     valueToText = { AnnotatedString(stringResource(it.textRes)) },
   )
@@ -412,7 +406,7 @@ private fun LazyListScope.metaSnifferPreferenceItems(
     values = booleanOptions,
     modifier = Modifier.fillMaxWidth(),
     enabled = configuration.sniffer.enable != false,
-    title = { Text(stringResource(SettingsR.string.parse_pure_ip)) },
+    title = { Text(stringResource(R.string.parse_pure_ip)) },
     summary = { Text(stringResource(configuration.sniffer.parsePureIp.textRes)) },
     valueToText = { AnnotatedString(stringResource(it.textRes)) },
   )
@@ -423,19 +417,19 @@ private fun LazyListScope.metaSnifferPreferenceItems(
     values = booleanOptions,
     modifier = Modifier.fillMaxWidth(),
     enabled = configuration.sniffer.enable != false,
-    title = { Text(stringResource(SettingsR.string.override_destination)) },
+    title = { Text(stringResource(R.string.override_destination)) },
     summary = { Text(stringResource(configuration.sniffer.overrideDestination.textRes)) },
     valueToText = { AnnotatedString(stringResource(it.textRes)) },
   )
   preference(
     key = "forceDomain",
     modifier = Modifier.fillMaxWidth(),
-    title = { Text(stringResource(SettingsR.string.force_domain)) },
-    summary = { Text(configuration.sniffer.forceDomain.listSummary(SettingsR.string.dont_modify)) },
+    title = { Text(stringResource(R.string.force_domain)) },
+    summary = { Text(configuration.sniffer.forceDomain.listSummary(R.string.dont_modify)) },
     enabled = configuration.sniffer.enable != false,
     onClick = {
       onOpenEditableTextList(
-        SettingsR.string.force_domain,
+        R.string.force_domain,
         configuration.sniffer.forceDomain,
         actions::updateForceDomain,
       )
@@ -444,12 +438,12 @@ private fun LazyListScope.metaSnifferPreferenceItems(
   preference(
     key = "skipDomain",
     modifier = Modifier.fillMaxWidth(),
-    title = { Text(stringResource(SettingsR.string.skip_domain)) },
-    summary = { Text(configuration.sniffer.skipDomain.listSummary(SettingsR.string.dont_modify)) },
+    title = { Text(stringResource(R.string.skip_domain)) },
+    summary = { Text(configuration.sniffer.skipDomain.listSummary(R.string.dont_modify)) },
     enabled = configuration.sniffer.enable != false,
     onClick = {
       onOpenEditableTextList(
-        SettingsR.string.skip_domain,
+        R.string.skip_domain,
         configuration.sniffer.skipDomain,
         actions::updateSkipDomain,
       )
@@ -458,14 +452,12 @@ private fun LazyListScope.metaSnifferPreferenceItems(
   preference(
     key = "skipSrcAddress",
     modifier = Modifier.fillMaxWidth(),
-    title = { Text(stringResource(SettingsR.string.skip_src_address)) },
-    summary = {
-      Text(configuration.sniffer.skipSrcAddress.listSummary(SettingsR.string.dont_modify))
-    },
+    title = { Text(stringResource(R.string.skip_src_address)) },
+    summary = { Text(configuration.sniffer.skipSrcAddress.listSummary(R.string.dont_modify)) },
     enabled = configuration.sniffer.enable != false,
     onClick = {
       onOpenEditableTextList(
-        SettingsR.string.skip_src_address,
+        R.string.skip_src_address,
         configuration.sniffer.skipSrcAddress,
         actions::updateSkipSrcAddress,
       )
@@ -474,14 +466,12 @@ private fun LazyListScope.metaSnifferPreferenceItems(
   preference(
     key = "skipDstAddress",
     modifier = Modifier.fillMaxWidth(),
-    title = { Text(stringResource(SettingsR.string.skip_dst_address)) },
-    summary = {
-      Text(configuration.sniffer.skipDstAddress.listSummary(SettingsR.string.dont_modify))
-    },
+    title = { Text(stringResource(R.string.skip_dst_address)) },
+    summary = { Text(configuration.sniffer.skipDstAddress.listSummary(R.string.dont_modify)) },
     enabled = configuration.sniffer.enable != false,
     onClick = {
       onOpenEditableTextList(
-        SettingsR.string.skip_dst_address,
+        R.string.skip_dst_address,
         configuration.sniffer.skipDstAddress,
         actions::updateSkipDstAddress,
       )
@@ -495,37 +485,34 @@ private fun LazyListScope.metaGeoFileItems(
   onImportCountry: () -> Unit,
   onImportASN: () -> Unit,
 ) {
-  preferenceCategory(
-    key = "cat_geox",
-    title = { Text(stringResource(SettingsR.string.geox_files)) },
-  )
+  preferenceCategory(key = "cat_geox", title = { Text(stringResource(R.string.geox_files)) })
 
   preference(
     key = "importGeoIp",
     modifier = Modifier.fillMaxWidth(),
-    title = { Text(stringResource(SettingsR.string.import_geoip_file)) },
-    summary = { Text(stringResource(SettingsR.string.press_to_import)) },
+    title = { Text(stringResource(R.string.import_geoip_file)) },
+    summary = { Text(stringResource(R.string.press_to_import)) },
     onClick = onImportGeoIp,
   )
   preference(
     key = "importGeoSite",
     modifier = Modifier.fillMaxWidth(),
-    title = { Text(stringResource(SettingsR.string.import_geosite_file)) },
-    summary = { Text(stringResource(SettingsR.string.press_to_import)) },
+    title = { Text(stringResource(R.string.import_geosite_file)) },
+    summary = { Text(stringResource(R.string.press_to_import)) },
     onClick = onImportGeoSite,
   )
   preference(
     key = "importCountry",
     modifier = Modifier.fillMaxWidth(),
-    title = { Text(stringResource(SettingsR.string.import_country_file)) },
-    summary = { Text(stringResource(SettingsR.string.press_to_import)) },
+    title = { Text(stringResource(R.string.import_country_file)) },
+    summary = { Text(stringResource(R.string.press_to_import)) },
     onClick = onImportCountry,
   )
   preference(
     key = "importASN",
     modifier = Modifier.fillMaxWidth(),
-    title = { Text(stringResource(SettingsR.string.import_asn_file)) },
-    summary = { Text(stringResource(SettingsR.string.press_to_import)) },
+    title = { Text(stringResource(R.string.import_asn_file)) },
+    summary = { Text(stringResource(R.string.press_to_import)) },
     onClick = onImportASN,
   )
 }
@@ -534,10 +521,10 @@ private val ConfigurationOverride.FindProcessMode?.textRes: Int
   @StringRes
   get() =
     when (this) {
-      Off -> SettingsR.string.off
-      Strict -> SettingsR.string.strict
-      Always -> SettingsR.string.always
-      null -> SettingsR.string.dont_modify
+      Off -> R.string.off
+      Strict -> R.string.strict
+      Always -> R.string.always
+      null -> R.string.dont_modify
     }
 
 interface MetaFeatureSettingsActions {

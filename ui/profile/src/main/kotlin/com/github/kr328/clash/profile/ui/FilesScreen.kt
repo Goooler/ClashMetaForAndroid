@@ -54,10 +54,10 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.github.kr328.clash.common.R
+import com.github.kr328.clash.common.R as CommonR
 import com.github.kr328.clash.common.util.grantPermissions
 import com.github.kr328.clash.model.ConfigFile
-import com.github.kr328.clash.profile.R as ProfileR
+import com.github.kr328.clash.profile.R
 import com.github.kr328.clash.profile.vm.FilesViewModel
 import com.github.kr328.clash.ui.component.MihomoScaffold
 import com.github.kr328.clash.ui.icon.BaselineAdd
@@ -181,7 +181,7 @@ private fun FilesContent(
       if (!file.isDirectory && (!currentInBaseDir || configurationEditable)) {
         FilesMenuAction(
           icon = MihomoIcons.BaselineGetApp,
-          text = stringResource(ProfileR.string.import_),
+          text = stringResource(R.string.import_),
           onClick = {
             menuConfigFile = null
             onImport(file)
@@ -191,7 +191,7 @@ private fun FilesContent(
       if (!file.isDirectory && file.size > 0) {
         FilesMenuAction(
           icon = MihomoIcons.BaselineSave,
-          text = stringResource(R.string.export),
+          text = stringResource(CommonR.string.export),
           onClick = {
             menuConfigFile = null
             onExport(file)
@@ -201,7 +201,7 @@ private fun FilesContent(
       if (!currentInBaseDir) {
         FilesMenuAction(
           icon = MihomoIcons.BaselineEdit,
-          text = stringResource(ProfileR.string.rename),
+          text = stringResource(R.string.rename),
           onClick = {
             menuConfigFile = null
             renameConfigFile = file
@@ -209,7 +209,7 @@ private fun FilesContent(
         )
         FilesMenuAction(
           icon = MihomoIcons.OutlineDelete,
-          text = stringResource(R.string.delete),
+          text = stringResource(CommonR.string.delete),
           tint = MaterialTheme.colorScheme.error,
           onClick = {
             menuConfigFile = null
@@ -226,14 +226,14 @@ private fun FilesContent(
   MihomoScaffold(
     modifier = modifier,
     snackbarHostState = snackbarHostState,
-    title = stringResource(ProfileR.string.files),
+    title = stringResource(R.string.files),
     onBack = onBack,
     actions = {
       if (!currentInBaseDir) {
         IconButton(onClick = onNew) {
           Icon(
             imageVector = MihomoIcons.BaselineAdd,
-            contentDescription = stringResource(R.string._new),
+            contentDescription = stringResource(CommonR.string._new),
           )
         }
       }
@@ -265,10 +265,10 @@ private fun FilesContent(
 
   if (renameConfigFile != null) {
     TextInputDialog(
-      title = stringResource(ProfileR.string.file_name),
+      title = stringResource(R.string.file_name),
       initialValue = renameConfigFile!!.name,
-      hint = stringResource(ProfileR.string.file_name),
-      error = stringResource(ProfileR.string.invalid_file_name),
+      hint = stringResource(R.string.file_name),
+      error = stringResource(R.string.invalid_file_name),
       validator = ValidatorFileName,
       onDismiss = { renameConfigFile = null },
       onConfirm = { newName ->
@@ -331,10 +331,12 @@ private fun TextInputDialog(
     },
     confirmButton = {
       TextButton(onClick = { onConfirm(inputText.text) }, enabled = isValidInput) {
-        Text(stringResource(R.string.ok))
+        Text(stringResource(CommonR.string.ok))
       }
     },
-    dismissButton = { TextButton(onClick = onDismiss) { Text(stringResource(R.string.cancel)) } },
+    dismissButton = {
+      TextButton(onClick = onDismiss) { Text(stringResource(CommonR.string.cancel)) }
+    },
   )
 }
 
@@ -388,7 +390,7 @@ private fun FileItem(
     IconButton(onClick = onMore) {
       Icon(
         imageVector = MihomoIcons.BaselineMoreVert,
-        contentDescription = stringResource(R.string.more),
+        contentDescription = stringResource(CommonR.string.more),
       )
     }
   }

@@ -11,7 +11,7 @@ import android.os.IInterface
 import androidx.core.app.NotificationChannelCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
-import com.github.kr328.clash.common.R
+import com.github.kr328.clash.common.R as CommonR
 import com.github.kr328.clash.common.compat.getColorCompat
 import com.github.kr328.clash.common.compat.pendingIntentFlags
 import com.github.kr328.clash.common.compat.startForegroundCompat
@@ -19,7 +19,6 @@ import com.github.kr328.clash.common.constants.Intents
 import com.github.kr328.clash.common.log.Log
 import com.github.kr328.clash.common.util.intent
 import com.github.kr328.clash.core.model.LogMessage
-import com.github.kr328.clash.log.R as LogR
 import com.github.kr328.clash.log.util.LogcatCache
 import com.github.kr328.clash.log.util.LogcatWriter
 import com.github.kr328.clash.service.RemoteService
@@ -141,7 +140,7 @@ internal class LogcatService :
     NotificationManagerCompat.from(this)
       .createNotificationChannel(
         NotificationChannelCompat.Builder(CHANNEL_ID, NotificationManagerCompat.IMPORTANCE_DEFAULT)
-          .setName(getString(LogR.string.clash_logcat))
+          .setName(getString(R.string.clash_logcat))
           .build()
       )
   }
@@ -149,14 +148,14 @@ internal class LogcatService :
   private fun showNotification() {
     val notification =
       NotificationCompat.Builder(this, CHANNEL_ID)
-        .setSmallIcon(com.github.kr328.clash.service.R.drawable.ic_logo_service)
-        .setColor(getColorCompat(LogR.color.color_clash_light))
-        .setContentTitle(getString(LogR.string.clash_logcat))
-        .setContentText(getString(R.string.running))
+        .setSmallIcon(CommonR.drawable.ic_logo_service)
+        .setColor(getColorCompat(R.color.color_clash_light))
+        .setContentTitle(getString(R.string.clash_logcat))
+        .setContentText(getString(CommonR.string.running))
         .setContentIntent(
           PendingIntent.getActivity(
             this,
-            LogR.id.nf_logcat_status,
+            R.id.nf_logcat_status,
             mainIntent(action = Intents.ACTION_LOGCAT)
               .setFlags(
                 Intent.FLAG_ACTIVITY_NEW_TASK or
@@ -168,7 +167,7 @@ internal class LogcatService :
         )
         .build()
 
-    startForegroundCompat(LogR.id.nf_logcat_status, notification)
+    startForegroundCompat(R.id.nf_logcat_status, notification)
   }
 
   companion object {

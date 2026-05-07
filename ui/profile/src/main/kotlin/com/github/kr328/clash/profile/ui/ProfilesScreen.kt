@@ -49,8 +49,8 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.github.kr328.clash.common.R
-import com.github.kr328.clash.profile.R as ProfileR
+import com.github.kr328.clash.common.R as CommonR
+import com.github.kr328.clash.profile.R
 import com.github.kr328.clash.profile.vm.ProfilesViewModel
 import com.github.kr328.clash.service.model.Profile
 import com.github.kr328.clash.ui.component.MihomoScaffold
@@ -83,7 +83,7 @@ internal fun ProfilesScreen(
   val uiState by viewModel.uiState.collectAsStateWithLifecycle()
   val eventState by viewModel.eventState.collectAsStateWithLifecycle()
   val snackbarHostState = remember { SnackbarHostState() }
-  val editText = stringResource(ProfileR.string.edit)
+  val editText = stringResource(R.string.edit)
 
   DisposableEffect(lifecycleOwner, viewModel) {
     lifecycleOwner.lifecycle.addObserver(viewModel)
@@ -155,7 +155,7 @@ private fun ProfilesContent(
       if (profile.imported && profile.type != File) {
         ProfilesMenuAction(
           icon = MihomoIcons.BaselineUpdate,
-          text = stringResource(ProfileR.string.update),
+          text = stringResource(R.string.update),
           onClick = {
             menuProfile = null
             onUpdate(profile)
@@ -164,7 +164,7 @@ private fun ProfilesContent(
       }
       ProfilesMenuAction(
         icon = MihomoIcons.BaselineEdit,
-        text = stringResource(ProfileR.string.edit),
+        text = stringResource(R.string.edit),
         onClick = {
           menuProfile = null
           onEdit(profile)
@@ -173,7 +173,7 @@ private fun ProfilesContent(
       if (profile.imported) {
         ProfilesMenuAction(
           icon = MihomoIcons.BaselineContentCopy,
-          text = stringResource(ProfileR.string.duplicate),
+          text = stringResource(R.string.duplicate),
           onClick = {
             menuProfile = null
             onDuplicate(profile)
@@ -182,7 +182,7 @@ private fun ProfilesContent(
       }
       ProfilesMenuAction(
         icon = MihomoIcons.OutlineDelete,
-        text = stringResource(R.string.delete),
+        text = stringResource(CommonR.string.delete),
         tint = MaterialTheme.colorScheme.error,
         onClick = {
           menuProfile = null
@@ -194,7 +194,7 @@ private fun ProfilesContent(
   }
 
   MihomoScaffold(
-    title = stringResource(R.string.profiles),
+    title = stringResource(CommonR.string.profiles),
     modifier = modifier,
     snackbarHostState = snackbarHostState,
     actions = {
@@ -205,7 +205,7 @@ private fun ProfilesContent(
           } else {
             Icon(
               imageVector = MihomoIcons.BaselineSync,
-              contentDescription = stringResource(ProfileR.string.update_all),
+              contentDescription = stringResource(R.string.update_all),
             )
           }
         }
@@ -213,7 +213,7 @@ private fun ProfilesContent(
       IconButton(onClick = onCreate) {
         Icon(
           imageVector = MihomoIcons.BaselineAdd,
-          contentDescription = stringResource(R.string.new_profile),
+          contentDescription = stringResource(CommonR.string.new_profile),
         )
       }
     },
@@ -250,7 +250,7 @@ private fun ProfileItem(
 
   val profileTypeText =
     if (profile.pending) {
-      stringResource(ProfileR.string.format_type_unsaved, profile.type.toString(context))
+      stringResource(R.string.format_type_unsaved, profile.type.toString(context))
     } else {
       profile.type.toString(context)
     }
@@ -320,7 +320,7 @@ private fun ProfileItem(
       IconButton(onClick = onMenuClick, modifier = Modifier.padding(horizontal = 4.dp)) {
         Icon(
           imageVector = MihomoIcons.BaselineMoreVert,
-          contentDescription = stringResource(R.string.more),
+          contentDescription = stringResource(CommonR.string.more),
         )
       }
     }

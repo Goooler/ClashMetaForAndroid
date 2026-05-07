@@ -7,10 +7,10 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.application
 import androidx.lifecycle.viewModelScope
 import com.github.kr328.clash.common.Global
-import com.github.kr328.clash.common.R
+import com.github.kr328.clash.common.R as CommonR
 import com.github.kr328.clash.common.log.Log
 import com.github.kr328.clash.core.model.FetchStatus
-import com.github.kr328.clash.profile.R as ProfileR
+import com.github.kr328.clash.profile.R
 import com.github.kr328.clash.service.model.Profile
 import com.github.kr328.clash.util.withProfile
 import kotlin.uuid.Uuid
@@ -124,12 +124,12 @@ internal class PropertiesViewModel(app: Application) :
     val profile = uiState.value.profile ?: return
 
     if (profile.name.isBlank()) {
-      eventState.value = EventState.ShowMessage(application.getString(ProfileR.string.empty_name))
+      eventState.value = EventState.ShowMessage(application.getString(R.string.empty_name))
       return
     }
 
     if (profile.type != File && profile.source.isBlank()) {
-      eventState.value = EventState.ShowMessage(application.getString(ProfileR.string.invalid_url))
+      eventState.value = EventState.ShowMessage(application.getString(R.string.invalid_url))
       return
     }
 
@@ -146,7 +146,7 @@ internal class PropertiesViewModel(app: Application) :
       } catch (e: Exception) {
         Log.e("Commit profile failed: ${e.message}", e)
         eventState.value =
-          EventState.ShowMessage(e.message ?: application.getString(R.string.unknown))
+          EventState.ShowMessage(e.message ?: application.getString(CommonR.string.unknown))
       }
     }
   }
@@ -161,7 +161,7 @@ internal class PropertiesViewModel(app: Application) :
               ProgressState(
                 visible = true,
                 isIndeterminate = true,
-                text = application.getString(ProfileR.string.initializing),
+                text = application.getString(R.string.initializing),
                 progress = 0,
                 max = 0,
               ),
@@ -187,7 +187,7 @@ internal class PropertiesViewModel(app: Application) :
             current.progress.copy(
               text =
                 application.getString(
-                  ProfileR.string.format_fetching_configuration,
+                  R.string.format_fetching_configuration,
                   status.args.getOrNull(0).orEmpty(),
                 ),
               isIndeterminate = true,
@@ -197,7 +197,7 @@ internal class PropertiesViewModel(app: Application) :
             current.progress.copy(
               text =
                 application.getString(
-                  ProfileR.string.format_fetching_provider,
+                  R.string.format_fetching_provider,
                   status.args.getOrNull(0).orEmpty(),
                 ),
               isIndeterminate = false,
@@ -207,7 +207,7 @@ internal class PropertiesViewModel(app: Application) :
           }
           Verifying -> {
             current.progress.copy(
-              text = application.getString(ProfileR.string.verifying),
+              text = application.getString(R.string.verifying),
               isIndeterminate = false,
               max = status.max,
               progress = status.progress,

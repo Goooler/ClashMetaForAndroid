@@ -7,10 +7,10 @@ import android.net.Uri
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.application
 import androidx.lifecycle.viewModelScope
-import com.github.kr328.clash.common.R
+import com.github.kr328.clash.common.R as CommonR
 import com.github.kr328.clash.common.constants.Intents
 import com.github.kr328.clash.common.log.Log
-import com.github.kr328.clash.profile.R as ProfileR
+import com.github.kr328.clash.profile.R
 import com.github.kr328.clash.profile.model.ProfileProvider
 import com.github.kr328.clash.service.model.Profile
 import com.github.kr328.clash.util.withProfile
@@ -56,13 +56,13 @@ internal class NewProfileViewModel(app: Application) : AndroidViewModel(app) {
   fun onExternalProviderResult(uri: Uri, name: String?) {
     viewModelScope.launch {
       try {
-        val profileName = application.getString(R.string.new_profile)
+        val profileName = application.getString(CommonR.string.new_profile)
         val uuid = withProfile { create(External, name ?: profileName, uri.toString()) }
         eventState.value = EventState.LaunchProperties(uuid)
       } catch (e: Exception) {
         Log.e("Create external profile failed: ${e.message}", e)
         eventState.value =
-          EventState.ShowMessage(e.message ?: application.getString(R.string.unknown))
+          EventState.ShowMessage(e.message ?: application.getString(CommonR.string.unknown))
       }
     }
   }
@@ -74,38 +74,36 @@ internal class NewProfileViewModel(app: Application) : AndroidViewModel(app) {
         viewModelScope.launch {
           try {
             val uuid = withProfile {
-              create(type = Url, name = application.getString(R.string.new_profile), url)
+              create(type = Url, name = application.getString(CommonR.string.new_profile), url)
             }
             eventState.value = EventState.LaunchProperties(uuid)
           } catch (e: Exception) {
             Log.e("Create QR profile failed: ${e.message}", e)
             eventState.value =
-              EventState.ShowMessage(e.message ?: application.getString(R.string.unknown))
+              EventState.ShowMessage(e.message ?: application.getString(CommonR.string.unknown))
           }
         }
       }
       QRUserCanceled -> Unit
       QRMissingPermission ->
         eventState.value =
-          EventState.ShowMessage(
-            application.getString(ProfileR.string.import_from_qr_no_permission)
-          )
+          EventState.ShowMessage(application.getString(R.string.import_from_qr_no_permission))
       is QRError ->
         eventState.value =
-          EventState.ShowMessage(application.getString(ProfileR.string.import_from_qr_exception))
+          EventState.ShowMessage(application.getString(R.string.import_from_qr_exception))
     }
   }
 
   private fun createProfile(type: Profile.Type) {
     viewModelScope.launch {
       try {
-        val name = application.getString(R.string.new_profile)
+        val name = application.getString(CommonR.string.new_profile)
         val uuid = withProfile { create(type, name) }
         eventState.value = EventState.LaunchProperties(uuid)
       } catch (e: Exception) {
         Log.e("Create profile failed: ${e.message}", e)
         eventState.value =
-          EventState.ShowMessage(e.message ?: application.getString(R.string.unknown))
+          EventState.ShowMessage(e.message ?: application.getString(CommonR.string.unknown))
       }
     }
   }

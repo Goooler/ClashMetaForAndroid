@@ -11,8 +11,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.fromHtml
 import androidx.compose.ui.tooling.preview.PreviewWrapper
-import com.github.kr328.clash.common.R
-import com.github.kr328.clash.home.R as HomeR
+import com.github.kr328.clash.common.R as CommonR
+import com.github.kr328.clash.home.R
 import com.github.kr328.clash.ui.component.MihomoScaffold
 import com.github.kr328.clash.ui.theme.MihomoThemeWrapper
 import com.github.kr328.clash.ui.theme.PreviewMihomo
@@ -27,50 +27,47 @@ import me.zhanghai.compose.preference.preferenceCategory
 
 @Composable
 internal fun HelpScreen(modifier: Modifier = Modifier) {
-  MihomoScaffold(title = stringResource(HomeR.string.help), modifier = modifier) { innerPadding ->
+  MihomoScaffold(title = stringResource(R.string.help), modifier = modifier) { innerPadding ->
     ProvidePreferenceLocals {
       val context = LocalContext.current
       LazyColumn(modifier = Modifier.fillMaxSize(), contentPadding = innerPadding) {
         preference(
           key = "tips_help",
           modifier = Modifier.fillMaxWidth(),
-          title = { Text(stringResource(HomeR.string.help)) },
-          summary = { Text(AnnotatedString.fromHtml(stringResource(HomeR.string.tips_help))) },
+          title = { Text(stringResource(R.string.help)) },
+          summary = { Text(AnnotatedString.fromHtml(stringResource(R.string.tips_help))) },
           enabled = false,
         )
         preferenceCategory(
           key = "cat_document",
-          title = { Text(stringResource(HomeR.string.document)) },
+          title = { Text(stringResource(R.string.document)) },
         )
         preference(
           key = "clash_wiki",
           modifier = Modifier.fillMaxWidth(),
-          title = { Text(stringResource(HomeR.string.clash_wiki)) },
+          title = { Text(stringResource(R.string.clash_wiki)) },
           summary = { Text(CLASH_WIKI) },
           onClick = { context.openLink(CLASH_WIKI) },
         )
         preference(
           key = "clash_meta_wiki",
           modifier = Modifier.fillMaxWidth(),
-          title = { Text(stringResource(HomeR.string.clash_meta_wiki)) },
+          title = { Text(stringResource(R.string.clash_meta_wiki)) },
           summary = { Text(CLASH_META_WIKI) },
           onClick = { context.openLink(CLASH_META_WIKI) },
         )
-        preferenceCategory(
-          key = "cat_sources",
-          title = { Text(stringResource(HomeR.string.sources)) },
-        )
+        preferenceCategory(key = "cat_sources", title = { Text(stringResource(R.string.sources)) })
         preference(
           key = "clash_meta_core",
           modifier = Modifier.fillMaxWidth(),
-          title = { Text(stringResource(HomeR.string.clash_meta_core)) },
+          title = { Text(stringResource(R.string.clash_meta_core)) },
           summary = { Text(CLASH_META_CORE) },
           onClick = { context.openLink(CLASH_META_CORE) },
         )
         preference(
           key = "clash_meta_for_android",
           modifier = Modifier.fillMaxWidth(),
-          title = { Text(stringResource(R.string.clash_meta_for_android)) },
+          title = { Text(stringResource(CommonR.string.clash_meta_for_android)) },
           summary = { Text(CMFA_GITHUB) },
           onClick = { context.openLink(CMFA_GITHUB) },
         )
