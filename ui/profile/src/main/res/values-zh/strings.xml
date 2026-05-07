@@ -36,7 +36,7 @@
   <string name="rename">重命名</string>
   <string name="save">保存</string>
   <string name="should_not_be_blank">不能为空</string>
-  <string name="tips_properties"><![CDATA[仅接受 <strong>Clash 配置文件</strong>(包含<strong>代理</strong>/<strong>规则</strong>)]]></string>
+  <string name="tips_properties"><![CDATA[仅接受 <strong>Tabby 配置文件</strong>(包含<strong>代理</strong>/<strong>规则</strong>)]]></string>
   <string name="toast_profile_updated_complete">更新配置 %s 成功</string>
   <string name="toast_profile_updated_failed">更新配置 %1$s 失败：%2$s</string>
   <string name="update">更新</string>

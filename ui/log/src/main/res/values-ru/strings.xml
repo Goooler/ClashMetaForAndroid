@@ -1,6 +1,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="PluralsCandidate">
 
-  <string name="clash_logcat">Clash Logcat</string>
+  <string name="tabby_logcat">Tabby Logcat</string>
   <string name="copied">Скопировано</string>
   <string name="delete_all_logs">Удалить все логи</string>
   <string name="delete_all_logs_warn">Вся история будет ПОТЕРЯНА</string>

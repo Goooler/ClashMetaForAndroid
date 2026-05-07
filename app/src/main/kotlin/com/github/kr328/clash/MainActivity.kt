@@ -52,9 +52,9 @@ import com.github.kr328.clash.service.model.Profile
 import com.github.kr328.clash.settings.SettingsRoute
 import com.github.kr328.clash.settings.settingsEntries
 import com.github.kr328.clash.store.UiStore
-import com.github.kr328.clash.ui.nav.MihomoNavDisplay
+import com.github.kr328.clash.ui.nav.TabbyNavDisplay
 import com.github.kr328.clash.ui.nav.addIfNotLast
-import com.github.kr328.clash.ui.theme.MihomoTheme
+import com.github.kr328.clash.ui.theme.TabbyTheme
 import com.github.kr328.clash.util.startClashService
 import com.github.kr328.clash.util.stopClashService
 import com.github.kr328.clash.util.withProfile
@@ -83,8 +83,8 @@ class MainActivity : ComponentActivity() {
 
       LaunchedEffect(darkMode) { edgeToEdge(darkMode) }
 
-      MihomoTheme(darkModeInSettings = darkMode) {
-        MihomoNavDisplay(
+      TabbyTheme(darkModeInSettings = darkMode) {
+        TabbyNavDisplay(
           backStack = backStack,
           entryProvider =
             entryProvider {

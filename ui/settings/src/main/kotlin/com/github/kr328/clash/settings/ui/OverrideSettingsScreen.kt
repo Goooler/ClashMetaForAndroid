@@ -42,14 +42,14 @@ import com.github.kr328.clash.core.model.LogMessage
 import com.github.kr328.clash.core.model.TunnelState
 import com.github.kr328.clash.settings.R
 import com.github.kr328.clash.settings.vm.OverrideSettingsViewModel
-import com.github.kr328.clash.ui.component.MihomoScaffold
+import com.github.kr328.clash.ui.component.TabbyScaffold
 import com.github.kr328.clash.ui.icon.BaselineReplay
-import com.github.kr328.clash.ui.icon.MihomoIcons
-import com.github.kr328.clash.ui.nav.MihomoNavDisplay
+import com.github.kr328.clash.ui.icon.TabbyIcons
+import com.github.kr328.clash.ui.nav.TabbyNavDisplay
 import com.github.kr328.clash.ui.nav.addIfNotLast
 import com.github.kr328.clash.ui.nav.rememberNavBackStackBuilder
-import com.github.kr328.clash.ui.theme.MihomoThemeWrapper
-import com.github.kr328.clash.ui.theme.PreviewMihomo
+import com.github.kr328.clash.ui.theme.PreviewTabby
+import com.github.kr328.clash.ui.theme.TabbyThemeWrapper
 import kotlinx.serialization.Serializable
 import me.zhanghai.compose.preference.Preference
 import me.zhanghai.compose.preference.ProvidePreferenceLocals
@@ -77,7 +77,7 @@ internal fun OverrideSettingsScreen(
 
   DisposableEffect(viewModel) { onDispose { viewModel.persistOverride() } }
 
-  MihomoNavDisplay(
+  TabbyNavDisplay(
     backStack = backStack,
     entryProvider =
       entryProvider {
@@ -145,14 +145,14 @@ private fun OverrideSettingsContent(
   val dnsEnabled = configuration.dns.enable
 
   val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
-  MihomoScaffold(
+  TabbyScaffold(
     title = stringResource(R.string.override),
     modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
     scrollBehavior = scrollBehavior,
     actions = {
       IconButton(onClick = { onShowResetConfirmDialogChange(true) }) {
         Icon(
-          imageVector = MihomoIcons.BaselineReplay,
+          imageVector = TabbyIcons.BaselineReplay,
           contentDescription = stringResource(CommonR.string.reset),
         )
       }
@@ -802,8 +802,8 @@ interface OverrideSettingsActions {
   fun updateDnsNameserverPolicy(value: Map<String, String>?) = Unit
 }
 
-@PreviewWrapper(MihomoThemeWrapper::class)
-@PreviewMihomo
+@PreviewWrapper(TabbyThemeWrapper::class)
+@PreviewTabby
 @Composable
 private fun OverrideSettingsContentPreview() {
   OverrideSettingsContent(

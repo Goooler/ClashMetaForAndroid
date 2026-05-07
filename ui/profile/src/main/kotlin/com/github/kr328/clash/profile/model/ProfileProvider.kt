@@ -8,7 +8,7 @@ import com.github.kr328.clash.profile.R
 import com.github.kr328.clash.ui.icon.BaselineAttachFile
 import com.github.kr328.clash.ui.icon.BaselineCloudDownload
 import com.github.kr328.clash.ui.icon.BaselineQrCodeScanner
-import com.github.kr328.clash.ui.icon.MihomoIcons
+import com.github.kr328.clash.ui.icon.TabbyIcons
 
 internal sealed class ProfileProvider {
   class File(private val context: Context) : ProfileProvider() {
@@ -18,7 +18,7 @@ internal sealed class ProfileProvider {
     override val summary: String
       get() = context.getString(R.string.import_from_file)
 
-    override val icon: ImageVector = MihomoIcons.BaselineAttachFile
+    override val icon: ImageVector = TabbyIcons.BaselineAttachFile
   }
 
   class Url(private val context: Context) : ProfileProvider() {
@@ -28,7 +28,7 @@ internal sealed class ProfileProvider {
     override val summary: String
       get() = context.getString(R.string.import_from_url)
 
-    override val icon: ImageVector = MihomoIcons.BaselineCloudDownload
+    override val icon: ImageVector = TabbyIcons.BaselineCloudDownload
   }
 
   class QR(private val context: Context) : ProfileProvider() {
@@ -38,7 +38,7 @@ internal sealed class ProfileProvider {
     override val summary: String
       get() = context.getString(R.string.import_from_qr)
 
-    override val icon: ImageVector = MihomoIcons.BaselineQrCodeScanner
+    override val icon: ImageVector = TabbyIcons.BaselineQrCodeScanner
   }
 
   class External(

@@ -6,7 +6,7 @@
   <string name="allow_all_apps">Cho phép tất cả các ứng dụng</string>
   <string name="allow_bypass">Cho phép bỏ qua</string>
   <string name="allow_bypass_summary">Cho phép tất cả các ứng dụng bỏ qua kết nối VPN này</string>
-  <string name="allow_clash_auto_restart">Cho phép Clash tự khởi động lại</string>
+  <string name="allow_tabby_auto_restart">Cho phép Tabby tự khởi động lại</string>
   <string name="allow_ipv6">Cho phép IPv6</string>
   <string name="allow_ipv6_summary">Cho phép lưu lượng IPv6 qua hệ thống Vpn</string>
   <string name="allow_lan">Cho phép mạng LAN</string>
@@ -87,13 +87,13 @@
   <string name="listen">Nghe</string>
   <string name="log_level">Mức nhật ký</string>
   <string name="mapping">IP thực với ánh xạ miền</string>
-  <string name="meta_features">Tính năng của Clash Meta</string>
+  <string name="meta_features">Tính năng của Tabby</string>
   <string name="mixed_port">Cổng Mixed</string>
   <string name="name_server">Tên máy chủ</string>
   <string name="name_server_policy">Chính sách máy chủ định danh</string>
   <string name="network">Mạng</string>
   <string name="off">TẮT</string>
-  <string name="options_unavailable">Tùy chọn không khả dụng cho đến khi Clash ngắt kết nối</string>
+  <string name="options_unavailable">Tùy chọn không khả dụng cho đến khi Tabby ngắt kết nối</string>
   <string name="override">Cài đặt thêm</string>
   <string name="override_destination">Ghi đè đích</string>
   <string name="package_name">Tên gói</string>

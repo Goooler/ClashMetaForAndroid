@@ -19,11 +19,11 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.github.kr328.clash.service.model.AccessControlMode
 import com.github.kr328.clash.settings.R
 import com.github.kr328.clash.settings.vm.NetworkSettingsViewModel
-import com.github.kr328.clash.ui.component.MihomoScaffold
+import com.github.kr328.clash.ui.component.TabbyScaffold
 import com.github.kr328.clash.ui.icon.BaselineVpnLock
-import com.github.kr328.clash.ui.icon.MihomoIcons
-import com.github.kr328.clash.ui.theme.MihomoThemeWrapper
-import com.github.kr328.clash.ui.theme.PreviewMihomo
+import com.github.kr328.clash.ui.icon.TabbyIcons
+import com.github.kr328.clash.ui.theme.PreviewTabby
+import com.github.kr328.clash.ui.theme.TabbyThemeWrapper
 import me.zhanghai.compose.preference.ProvidePreferenceLocals
 import me.zhanghai.compose.preference.listPreference
 import me.zhanghai.compose.preference.preference
@@ -86,7 +86,7 @@ private fun NetworkSettingsContent(
   val vpnDependenciesEnabled = !clashRunning && uiState.enableVpn
   val tunStackMode = TunStackMode.fromValue(uiState.tunStackMode)
 
-  MihomoScaffold(
+  TabbyScaffold(
     title = stringResource(R.string.network),
     modifier = modifier.fillMaxSize(),
     snackbarHostState = snackbarHostState,
@@ -98,7 +98,7 @@ private fun NetworkSettingsContent(
           value = uiState.enableVpn,
           onValueChange = onEnableVpnChange,
           enabled = !clashRunning,
-          icon = { Icon(imageVector = MihomoIcons.BaselineVpnLock, contentDescription = null) },
+          icon = { Icon(imageVector = TabbyIcons.BaselineVpnLock, contentDescription = null) },
           title = { Text(stringResource(R.string.route_system_traffic)) },
           summary = { Text(stringResource(R.string.routing_via_vpn_service)) },
         )
@@ -211,8 +211,8 @@ private val AccessControlMode.summaryRes: Int
       DenySelected -> R.string.deny_selected_apps
     }
 
-@PreviewWrapper(MihomoThemeWrapper::class)
-@PreviewMihomo
+@PreviewWrapper(TabbyThemeWrapper::class)
+@PreviewTabby
 @Composable
 private fun NetworkSettingsScreenPreview() {
   NetworkSettingsContent(
@@ -241,8 +241,8 @@ private fun NetworkSettingsScreenPreview() {
   )
 }
 
-@PreviewWrapper(MihomoThemeWrapper::class)
-@PreviewMihomo
+@PreviewWrapper(TabbyThemeWrapper::class)
+@PreviewTabby
 @Composable
 private fun NetworkSettingsScreenRunningPreview() {
   NetworkSettingsContent(

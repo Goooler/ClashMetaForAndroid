@@ -1,12 +1,12 @@
 <resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="PluralsCandidate">
 
   <string name="external_control_activity">Điều khiển bên ngoài</string>
-  <string name="external_control_started">Dịch vụ Clash.Meta đã bắt đầu</string>
-  <string name="external_control_stopped">Dịch vụ Clash.Meta đã dừng</string>
-  <string name="shortcut_start_long">Bắt đầu dịch vụ Clash</string>
-  <string name="shortcut_start_short">Bắt đầu Clash</string>
-  <string name="shortcut_stop_long">Dừng dịch vụ Clash</string>
-  <string name="shortcut_stop_short">Dừng Clash</string>
-  <string name="shortcut_toggle_long">Bật/Tắt dịch vụ Clash</string>
-  <string name="shortcut_toggle_short">Bật/Tắt Clash</string>
+  <string name="external_control_started">Dịch vụ Tabby đã bắt đầu</string>
+  <string name="external_control_stopped">Dịch vụ Tabby đã dừng</string>
+  <string name="shortcut_start_long">Bắt đầu dịch vụ Tabby</string>
+  <string name="shortcut_start_short">Bắt đầu Tabby</string>
+  <string name="shortcut_stop_long">Dừng dịch vụ Tabby</string>
+  <string name="shortcut_stop_short">Dừng Tabby</string>
+  <string name="shortcut_toggle_long">Bật/Tắt dịch vụ Tabby</string>
+  <string name="shortcut_toggle_short">Bật/Tắt Tabby</string>
 </resources>

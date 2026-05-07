@@ -56,13 +56,13 @@ import com.github.kr328.clash.common.R as CommonR
 import com.github.kr328.clash.model.AppInfo
 import com.github.kr328.clash.settings.R
 import com.github.kr328.clash.settings.vm.AccessControlViewModel
-import com.github.kr328.clash.ui.component.MihomoScaffold
+import com.github.kr328.clash.ui.component.TabbyScaffold
 import com.github.kr328.clash.ui.icon.BaselineMoreVert
 import com.github.kr328.clash.ui.icon.BaselineSearch
-import com.github.kr328.clash.ui.icon.MihomoIcons
-import com.github.kr328.clash.ui.theme.MihomoThemeWrapper
-import com.github.kr328.clash.ui.theme.PreviewMihomo
-import com.github.kr328.clash.ui.theme.mihomoDimens
+import com.github.kr328.clash.ui.icon.TabbyIcons
+import com.github.kr328.clash.ui.theme.PreviewTabby
+import com.github.kr328.clash.ui.theme.TabbyThemeWrapper
+import com.github.kr328.clash.ui.theme.tabbyDimens
 import kotlin.time.Duration.Companion.milliseconds
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -160,19 +160,19 @@ private fun AccessControlContent(
     }
   }
 
-  MihomoScaffold(
+  TabbyScaffold(
     title = stringResource(R.string.access_control_packages),
     modifier = modifier,
     actions = {
       IconButton(onClick = { showSearch = true }) {
         Icon(
-          imageVector = MihomoIcons.BaselineSearch,
+          imageVector = TabbyIcons.BaselineSearch,
           contentDescription = stringResource(R.string.search),
         )
       }
       IconButton(onClick = { showMenu = true }) {
         Icon(
-          imageVector = MihomoIcons.BaselineMoreVert,
+          imageVector = TabbyIcons.BaselineMoreVert,
           contentDescription = stringResource(CommonR.string.more),
         )
       }
@@ -364,7 +364,7 @@ private fun AccessControlMenuCheckAction(
 
 @Composable
 private fun AccessControlAppItem(app: AppInfo, selected: Boolean, onClick: () -> Unit) {
-  val dimens = mihomoDimens
+  val dimens = tabbyDimens
   val itemMinHeight = dimens.itemMinHeight
   val itemTextMargin = dimens.itemTextMargin
 
@@ -423,8 +423,8 @@ interface AccessControlActions {
   fun updateShowSystemApps(show: Boolean) = Unit
 }
 
-@PreviewWrapper(MihomoThemeWrapper::class)
-@PreviewMihomo
+@PreviewWrapper(TabbyThemeWrapper::class)
+@PreviewTabby
 @Composable
 private fun AccessControlContentPreview() {
   AccessControlContent(
@@ -453,8 +453,8 @@ private fun AccessControlContentPreview() {
   )
 }
 
-@PreviewWrapper(MihomoThemeWrapper::class)
-@PreviewMihomo
+@PreviewWrapper(TabbyThemeWrapper::class)
+@PreviewTabby
 @Composable
 private fun AccessControlMenuSheetPreview() {
   Surface {
@@ -476,8 +476,8 @@ private fun AccessControlMenuSheetPreview() {
   }
 }
 
-@PreviewWrapper(MihomoThemeWrapper::class)
-@PreviewMihomo
+@PreviewWrapper(TabbyThemeWrapper::class)
+@PreviewTabby
 @Composable
 private fun AccessControlSearchSheetPreview() {
   Surface {

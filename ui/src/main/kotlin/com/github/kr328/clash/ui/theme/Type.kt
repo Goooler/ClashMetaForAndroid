@@ -66,7 +66,7 @@ val Typography =
   )
 
 @Immutable
-data class MihomoTextStyles(
+data class TabbyTextStyles(
   val toolbarTitle: TextStyle,
   val title: TextStyle,
   val body: TextStyle,
@@ -77,8 +77,8 @@ data class MihomoTextStyles(
   val proxyGrid3: TextStyle,
 )
 
-internal val DefaultMihomoTextStyles =
-  MihomoTextStyles(
+internal val DefaultTabbyTextStyles =
+  TabbyTextStyles(
     toolbarTitle = Headline6TextStyle,
     title = Headline6TextStyle,
     body = Body1TextStyle,

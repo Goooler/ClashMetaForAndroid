@@ -1,6 +1,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="PluralsCandidate">
 
-  <string name="clash_service_status_channel">Статус Clash</string>
+  <string name="tabby_service_status_channel">Статус Tabby</string>
   <string name="configuration_yaml">Configuration.yaml</string>
   <string name="format_update_complete">Обновление %s завершено</string>
   <string name="format_update_failure">Обновление %1$s: %2$s</string>

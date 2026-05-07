@@ -1,5 +1,4 @@
 <resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="PluralsCandidate">
 
-  <string name="application_name_meta" translatable="false">Clash Meta for Android</string>
-  <string name="launch_name_meta" translatable="false">Clash Meta</string>
+  <string name="tabby" translatable="false">Tabby</string>
 </resources>

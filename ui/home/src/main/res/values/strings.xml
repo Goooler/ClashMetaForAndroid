@@ -16,7 +16,7 @@
   <string name="profile">Profile</string>
   <string name="sources">Sources</string>
   <string name="stopped">Stopped</string>
-  <string name="tips_help"><![CDATA[Clash Meta for Android is a <strong>freeware</strong> and we do <strong>NOT</strong> provide any service for it]]></string>
+  <string name="tips_help"><![CDATA[Tabby is a <strong>freeware</strong> and we do <strong>NOT</strong> provide any service for it]]></string>
   <string name="version_updated">App Updated</string>
   <string name="version_updated_tips">The settings have been rested and the old profiles needs to be saved again.</string>
 </resources>

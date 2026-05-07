@@ -1,6 +1,6 @@
 <resources>
 
-  <string name="clash_logcat">Clash 日誌捕捉工具</string>
+  <string name="tabby_logcat">Tabby 日誌捕捉工具</string>
   <string name="copied">已複製</string>
   <string name="delete_all_logs">刪除所有日誌</string>
   <string name="delete_all_logs_warn">所有歷史日誌將丟失</string>

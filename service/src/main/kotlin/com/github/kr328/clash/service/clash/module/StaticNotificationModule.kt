@@ -21,14 +21,14 @@ class StaticNotificationModule(service: Service) : Module<Unit>(service) {
     NotificationCompat.Builder(service, CHANNEL_ID)
       .setSmallIcon(CommonR.drawable.ic_logo_service)
       .setOngoing(true)
-      .setColor(service.getColorCompat(CommonR.color.color_clash_light))
+      .setColor(service.getColorCompat(CommonR.color.color_tabby_light))
       .setOnlyAlertOnce(true)
       .setShowWhen(false)
       .setForegroundServiceBehavior(NotificationCompat.FOREGROUND_SERVICE_IMMEDIATE)
       .setContentIntent(
         PendingIntent.getActivity(
           service,
-          R.id.nf_clash_status,
+          R.id.nf_tabby_status,
           Intent()
             .setComponent(Components.MAIN_ACTIVITY)
             .setFlags(
@@ -55,7 +55,7 @@ class StaticNotificationModule(service: Service) : Module<Unit>(service) {
           .setContentText(service.getText(R.string.running))
           .build()
 
-      service.startForegroundCompat(R.id.nf_clash_status, notification)
+      service.startForegroundCompat(R.id.nf_tabby_status, notification)
     }
   }
 
@@ -66,7 +66,7 @@ class StaticNotificationModule(service: Service) : Module<Unit>(service) {
       NotificationManagerCompat.from(service)
         .createNotificationChannel(
           NotificationChannelCompat.Builder(CHANNEL_ID, NotificationManagerCompat.IMPORTANCE_LOW)
-            .setName(service.getText(R.string.clash_service_status_channel))
+            .setName(service.getText(R.string.tabby_service_status_channel))
             .build()
         )
     }
@@ -76,13 +76,13 @@ class StaticNotificationModule(service: Service) : Module<Unit>(service) {
         NotificationCompat.Builder(service, CHANNEL_ID)
           .setSmallIcon(CommonR.drawable.ic_logo_service)
           .setOngoing(true)
-          .setColor(service.getColorCompat(CommonR.color.color_clash_light))
+          .setColor(service.getColorCompat(CommonR.color.color_tabby_light))
           .setOnlyAlertOnce(true)
           .setShowWhen(false)
           .setContentTitle(service.getText(R.string.loading))
           .build()
 
-      service.startForegroundCompat(R.id.nf_clash_status, notification)
+      service.startForegroundCompat(R.id.nf_tabby_status, notification)
     }
   }
 }

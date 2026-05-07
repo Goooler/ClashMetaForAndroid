@@ -48,7 +48,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.github.kr328.clash.common.R as CommonR
 import com.github.kr328.clash.home.R
 import com.github.kr328.clash.home.vm.HomeViewModel
-import com.github.kr328.clash.ui.component.MihomoScaffold
+import com.github.kr328.clash.ui.component.TabbyScaffold
 import com.github.kr328.clash.ui.icon.BaselineApps
 import com.github.kr328.clash.ui.icon.BaselineAssignment
 import com.github.kr328.clash.ui.icon.BaselineHelpCenter
@@ -56,15 +56,15 @@ import com.github.kr328.clash.ui.icon.BaselineInfo
 import com.github.kr328.clash.ui.icon.BaselineSettings
 import com.github.kr328.clash.ui.icon.BaselineSwapVerticalCircle
 import com.github.kr328.clash.ui.icon.BaselineViewList
-import com.github.kr328.clash.ui.icon.Clash
-import com.github.kr328.clash.ui.icon.MihomoIcons
 import com.github.kr328.clash.ui.icon.OutlineCheckCircle
 import com.github.kr328.clash.ui.icon.OutlineNotInterested
-import com.github.kr328.clash.ui.theme.MihomoDarkSurface
-import com.github.kr328.clash.ui.theme.MihomoLightStopped
-import com.github.kr328.clash.ui.theme.MihomoOnPrimary
-import com.github.kr328.clash.ui.theme.MihomoThemeWrapper
-import com.github.kr328.clash.ui.theme.PreviewMihomo
+import com.github.kr328.clash.ui.icon.Tabby
+import com.github.kr328.clash.ui.icon.TabbyIcons
+import com.github.kr328.clash.ui.theme.PreviewTabby
+import com.github.kr328.clash.ui.theme.TabbyDarkSurface
+import com.github.kr328.clash.ui.theme.TabbyLightStopped
+import com.github.kr328.clash.ui.theme.TabbyOnPrimary
+import com.github.kr328.clash.ui.theme.TabbyThemeWrapper
 
 @Composable
 internal fun HomeScreen(
@@ -161,9 +161,9 @@ private fun HomeContent(
   onOpenAbout: () -> Unit,
 ) {
   val darkTheme = isSystemInDarkTheme()
-  val stoppedColor = if (darkTheme) MihomoDarkSurface else MihomoLightStopped
+  val stoppedColor = if (darkTheme) TabbyDarkSurface else TabbyLightStopped
 
-  MihomoScaffold(
+  TabbyScaffold(
     title = "",
     modifier = modifier,
     topBar = {},
@@ -181,35 +181,34 @@ private fun HomeContent(
         verticalAlignment = Alignment.CenterVertically,
       ) {
         Image(
-          imageVector = MihomoIcons.Clash,
+          imageVector = TabbyIcons.Tabby,
           contentDescription = null,
           modifier = Modifier.size(logoSize),
         )
         Spacer(modifier = Modifier.width(4.dp))
         Text(
-          text = stringResource(CommonR.string.launch_name_meta),
+          text = stringResource(CommonR.string.tabby),
           style = MaterialTheme.typography.titleLarge,
         )
       }
 
       HomeActionCard(
         modifier = Modifier.padding(vertical = cardMarginVertical),
-        icon =
-          if (clashRunning) MihomoIcons.OutlineCheckCircle else MihomoIcons.OutlineNotInterested,
+        icon = if (clashRunning) TabbyIcons.OutlineCheckCircle else TabbyIcons.OutlineNotInterested,
         text = stringResource(if (clashRunning) CommonR.string.running else R.string.stopped),
         subtext =
           if (clashRunning && forwarded != null)
             stringResource(R.string.format_traffic_forwarded, forwarded)
           else stringResource(CommonR.string.tap_to_start),
         backgroundColor = if (clashRunning) MaterialTheme.colorScheme.primary else stoppedColor,
-        contentColor = MihomoOnPrimary,
+        contentColor = TabbyOnPrimary,
         onClick = onToggleStatus,
       )
 
       AnimatedVisibility(visible = clashRunning) {
         HomeActionCard(
           modifier = Modifier.padding(vertical = cardMarginVertical),
-          icon = MihomoIcons.BaselineApps,
+          icon = TabbyIcons.BaselineApps,
           text = stringResource(CommonR.string.proxy),
           subtext = mode,
           backgroundColor = MaterialTheme.colorScheme.surface,
@@ -220,7 +219,7 @@ private fun HomeContent(
 
       HomeActionCard(
         modifier = Modifier.padding(vertical = cardMarginVertical),
-        icon = MihomoIcons.BaselineViewList,
+        icon = TabbyIcons.BaselineViewList,
         text = stringResource(R.string.profile),
         subtext =
           if (profileName != null) stringResource(R.string.format_profile_activated, profileName)
@@ -233,7 +232,7 @@ private fun HomeContent(
       AnimatedVisibility(visible = clashRunning && hasProviders) {
         HomeActionLabel(
           modifier = Modifier.padding(vertical = labelMarginVertical),
-          icon = MihomoIcons.BaselineSwapVerticalCircle,
+          icon = TabbyIcons.BaselineSwapVerticalCircle,
           text = stringResource(CommonR.string.providers),
           onClick = onOpenProviders,
         )
@@ -241,25 +240,25 @@ private fun HomeContent(
 
       HomeActionLabel(
         modifier = Modifier.padding(vertical = labelMarginVertical),
-        icon = MihomoIcons.BaselineAssignment,
+        icon = TabbyIcons.BaselineAssignment,
         text = stringResource(CommonR.string.logs),
         onClick = onOpenLogs,
       )
       HomeActionLabel(
         modifier = Modifier.padding(vertical = labelMarginVertical),
-        icon = MihomoIcons.BaselineSettings,
+        icon = TabbyIcons.BaselineSettings,
         text = stringResource(CommonR.string.settings),
         onClick = onOpenSettings,
       )
       HomeActionLabel(
         modifier = Modifier.padding(vertical = labelMarginVertical),
-        icon = MihomoIcons.BaselineHelpCenter,
+        icon = TabbyIcons.BaselineHelpCenter,
         text = stringResource(R.string.help),
         onClick = onOpenHelp,
       )
       HomeActionLabel(
         modifier = Modifier.padding(vertical = labelMarginVertical),
-        icon = MihomoIcons.BaselineInfo,
+        icon = TabbyIcons.BaselineInfo,
         text = stringResource(R.string.about),
         onClick = onOpenAbout,
       )
@@ -341,14 +340,14 @@ private fun AboutDialog(versionName: String, onDismiss: () -> Unit) {
     },
     icon = {
       Image(
-        imageVector = MihomoIcons.Clash,
+        imageVector = TabbyIcons.Tabby,
         contentDescription = null,
         modifier = Modifier.size(logoSize),
       )
     },
     title = {
       Text(
-        text = stringResource(CommonR.string.launch_name_meta),
+        text = stringResource(CommonR.string.tabby),
         modifier = Modifier.fillMaxWidth(),
         textAlign = TextAlign.Center,
       )
@@ -366,8 +365,8 @@ private val actionItemPaddingHorizontal = 20.dp
 private val actionItemPaddingVertical = 15.dp
 private val actionIconSize = 30.dp
 
-@PreviewWrapper(MihomoThemeWrapper::class)
-@PreviewMihomo
+@PreviewWrapper(TabbyThemeWrapper::class)
+@PreviewTabby
 @Composable
 private fun HomeContentRunningPreview() {
   HomeContent(
@@ -390,8 +389,8 @@ private fun HomeContentRunningPreview() {
   )
 }
 
-@PreviewWrapper(MihomoThemeWrapper::class)
-@PreviewMihomo
+@PreviewWrapper(TabbyThemeWrapper::class)
+@PreviewTabby
 @Composable
 private fun HomeContentStoppedPreview() {
   HomeContent(

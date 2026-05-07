@@ -12,7 +12,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.window.Dialog
-import com.github.kr328.clash.ui.theme.mihomoDimens
+import com.github.kr328.clash.ui.theme.tabbyDimens
 
 @Composable
 fun ModelProgressBarDialog(
@@ -24,7 +24,7 @@ fun ModelProgressBarDialog(
 ) {
   if (!visible) return
 
-  val dimens = mihomoDimens
+  val dimens = tabbyDimens
 
   Dialog(onDismissRequest = {}) {
     Surface(shape = MaterialTheme.shapes.large) {

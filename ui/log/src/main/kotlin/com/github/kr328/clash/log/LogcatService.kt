@@ -140,7 +140,7 @@ internal class LogcatService :
     NotificationManagerCompat.from(this)
       .createNotificationChannel(
         NotificationChannelCompat.Builder(CHANNEL_ID, NotificationManagerCompat.IMPORTANCE_DEFAULT)
-          .setName(getString(R.string.clash_logcat))
+          .setName(getString(R.string.tabby_logcat))
           .build()
       )
   }
@@ -149,8 +149,8 @@ internal class LogcatService :
     val notification =
       NotificationCompat.Builder(this, CHANNEL_ID)
         .setSmallIcon(CommonR.drawable.ic_logo_service)
-        .setColor(getColorCompat(CommonR.color.color_clash_light))
-        .setContentTitle(getString(R.string.clash_logcat))
+        .setColor(getColorCompat(CommonR.color.color_tabby_light))
+        .setContentTitle(getString(R.string.tabby_logcat))
         .setContentText(getString(CommonR.string.running))
         .setContentIntent(
           PendingIntent.getActivity(

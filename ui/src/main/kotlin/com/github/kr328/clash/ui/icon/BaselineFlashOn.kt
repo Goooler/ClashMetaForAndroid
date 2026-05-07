@@ -7,7 +7,7 @@ import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.unit.dp
 
 @Suppress("UnusedReceiverParameter")
-val MihomoIcons.BaselineFlashOn: ImageVector
+val TabbyIcons.BaselineFlashOn: ImageVector
   get() {
     if (_BaselineFlashOn != null) {
       return _BaselineFlashOn!!

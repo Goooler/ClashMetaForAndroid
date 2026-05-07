@@ -36,7 +36,7 @@
   <string name="rename">Đổi tên</string>
   <string name="save">Lưu</string>
   <string name="should_not_be_blank">Không được để trống</string>
-  <string name="tips_properties">Chỉ chấp nhận cấu hình Clash bao gồm Proxy và Quy tắc</string>
+  <string name="tips_properties">Chỉ chấp nhận cấu hình Tabby bao gồm Proxy và Quy tắc</string>
   <string name="toast_profile_updated_complete">Cập nhật thành công %s</string>
   <string name="toast_profile_updated_failed">Cập nhật không thành công %1$s %2$s</string>
   <string name="update">Cập nhật</string>

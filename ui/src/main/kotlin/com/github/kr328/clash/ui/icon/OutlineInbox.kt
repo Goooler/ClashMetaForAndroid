@@ -7,7 +7,7 @@ import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.unit.dp
 
 @Suppress("UnusedReceiverParameter")
-val MihomoIcons.OutlineInbox: ImageVector
+val TabbyIcons.OutlineInbox: ImageVector
   get() {
     if (_OutlineInbox != null) {
       return _OutlineInbox!!

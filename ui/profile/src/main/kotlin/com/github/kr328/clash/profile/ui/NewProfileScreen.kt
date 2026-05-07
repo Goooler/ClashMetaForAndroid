@@ -42,12 +42,12 @@ import com.github.kr328.clash.common.R as CommonR
 import com.github.kr328.clash.common.constants.Intents
 import com.github.kr328.clash.profile.model.ProfileProvider
 import com.github.kr328.clash.profile.vm.NewProfileViewModel
-import com.github.kr328.clash.ui.component.MihomoScaffold
+import com.github.kr328.clash.ui.component.TabbyScaffold
 import com.github.kr328.clash.ui.icon.BaselineExtension
-import com.github.kr328.clash.ui.icon.MihomoIcons
-import com.github.kr328.clash.ui.theme.MihomoThemeWrapper
-import com.github.kr328.clash.ui.theme.PreviewMihomo
-import com.github.kr328.clash.ui.theme.mihomoDimens
+import com.github.kr328.clash.ui.icon.TabbyIcons
+import com.github.kr328.clash.ui.theme.PreviewTabby
+import com.github.kr328.clash.ui.theme.TabbyThemeWrapper
+import com.github.kr328.clash.ui.theme.tabbyDimens
 import io.github.g00fy2.quickie.ScanQRCode
 import kotlin.math.roundToInt
 import kotlin.uuid.Uuid
@@ -109,7 +109,7 @@ private fun NewProfileContent(
   onCreate: (ProfileProvider) -> Unit,
   onDetail: (ProfileProvider.External) -> Unit,
 ) {
-  MihomoScaffold(
+  TabbyScaffold(
     title = stringResource(CommonR.string.new_profile),
     modifier = modifier,
     snackbarHostState = snackbarHostState,
@@ -133,7 +133,7 @@ private fun ProfileProviderItem(
   onLongClick: () -> Unit,
 ) {
   val density = LocalDensity.current
-  val dimens = mihomoDimens
+  val dimens = tabbyDimens
   val itemPaddingVertical = dimens.itemPaddingVertical
   val headerSize = dimens.itemHeaderComponentSize
   val headerMargin = dimens.itemHeaderMargin
@@ -178,8 +178,8 @@ private fun ProfileProviderItem(
   }
 }
 
-@PreviewWrapper(MihomoThemeWrapper::class)
-@PreviewMihomo
+@PreviewWrapper(TabbyThemeWrapper::class)
+@PreviewTabby
 @Composable
 private fun NewProfileContentPreview() {
   val context = LocalContext.current
@@ -191,7 +191,7 @@ private fun NewProfileContentPreview() {
       ProfileProvider.External(
         name = "External Provider",
         summary = "Import from external app",
-        icon = MihomoIcons.BaselineExtension,
+        icon = TabbyIcons.BaselineExtension,
         intent = Intent(),
       ),
     )

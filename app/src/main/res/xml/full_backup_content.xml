@@ -14,5 +14,5 @@
     path="pending" />
   <include
     domain="file"
-    path="clash/override.json" />
+    path="tabby/override.json" />
 </full-backup-content>

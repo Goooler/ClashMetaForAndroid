@@ -6,7 +6,7 @@
   <string name="allow_all_apps">すべてのアプリを許可</string>
   <string name="allow_bypass">アプリのバイパスを許可</string>
   <string name="allow_bypass_summary">アプリにVPNのバイパスを許可</string>
-  <string name="allow_clash_auto_restart">Clashの自動リスタートを許可</string>
+  <string name="allow_tabby_auto_restart">Tabby の自動リスタートを許可</string>
   <string name="allow_ipv6">IPv6 を許可</string>
   <string name="allow_ipv6_summary">VpnService を介して IPv6 トラフィックを許可する</string>
   <string name="allow_lan">LANからの接続を許可</string>
@@ -93,7 +93,7 @@
   <string name="name_server_policy">ネームサーバーポリシー</string>
   <string name="network">ネットワーク</string>
   <string name="off">OFF</string>
-  <string name="options_unavailable">Clash実行時にこのオプションは利用できません</string>
+  <string name="options_unavailable">Tabby 実行時にこのオプションは利用できません</string>
   <string name="override">オーバライド</string>
   <string name="override_destination">Override Destination</string>
   <string name="package_name">パッケージ名</string>

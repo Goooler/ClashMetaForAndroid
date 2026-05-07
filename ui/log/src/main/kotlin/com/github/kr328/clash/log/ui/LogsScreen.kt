@@ -37,13 +37,13 @@ import com.github.kr328.clash.common.R as CommonR
 import com.github.kr328.clash.log.R
 import com.github.kr328.clash.log.model.LogFile
 import com.github.kr328.clash.log.vm.LogsViewModel
-import com.github.kr328.clash.ui.component.MihomoScaffold
+import com.github.kr328.clash.ui.component.TabbyScaffold
 import com.github.kr328.clash.ui.icon.BaselineAdb
 import com.github.kr328.clash.ui.icon.BaselineClearAll
-import com.github.kr328.clash.ui.icon.MihomoIcons
-import com.github.kr328.clash.ui.theme.MihomoThemeWrapper
-import com.github.kr328.clash.ui.theme.PreviewMihomo
-import com.github.kr328.clash.ui.theme.mihomoDimens
+import com.github.kr328.clash.ui.icon.TabbyIcons
+import com.github.kr328.clash.ui.theme.PreviewTabby
+import com.github.kr328.clash.ui.theme.TabbyThemeWrapper
+import com.github.kr328.clash.ui.theme.tabbyDimens
 import com.github.kr328.clash.util.format
 import java.util.Date
 
@@ -97,27 +97,27 @@ private fun LogsContent(
   onStartLogcat: () -> Unit,
   onOpenFile: (LogFile) -> Unit,
 ) {
-  MihomoScaffold(
+  TabbyScaffold(
     modifier = modifier,
     title = stringResource(CommonR.string.logs),
     actions = {
       IconButton(onClick = onDeleteAllConfirm) {
         Icon(
-          imageVector = MihomoIcons.BaselineClearAll,
+          imageVector = TabbyIcons.BaselineClearAll,
           contentDescription = stringResource(R.string.delete_all_logs),
         )
       }
     },
   ) { innerPadding ->
     val context = LocalContext.current
-    val dimens = mihomoDimens
+    val dimens = tabbyDimens
 
     LazyColumn(modifier = Modifier.fillMaxSize().padding(innerPadding)) {
       item {
         LogsActionItem(
-          title = stringResource(R.string.clash_logcat),
+          title = stringResource(R.string.tabby_logcat),
           summary = stringResource(CommonR.string.tap_to_start),
-          icon = MihomoIcons.BaselineAdb,
+          icon = TabbyIcons.BaselineAdb,
           onClick = onStartLogcat,
         )
       }
@@ -155,7 +155,7 @@ private fun LogsActionItem(
   modifier: Modifier = Modifier,
   icon: ImageVector? = null,
 ) {
-  val dimens = mihomoDimens
+  val dimens = tabbyDimens
   val headerLayoutWidth = dimens.itemHeaderComponentSize + dimens.itemHeaderMargin * 2
   Row(
     modifier =
@@ -189,8 +189,8 @@ private fun LogsActionItem(
   }
 }
 
-@PreviewWrapper(MihomoThemeWrapper::class)
-@PreviewMihomo
+@PreviewWrapper(TabbyThemeWrapper::class)
+@PreviewTabby
 @Composable
 private fun LogsScreenPreview() {
   LogsContent(

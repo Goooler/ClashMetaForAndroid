@@ -6,7 +6,7 @@
   <string name="allow_all_apps">允許所有應用</string>
   <string name="allow_bypass">允許應用繞過</string>
   <string name="allow_bypass_summary">允許其他應用繞過 VPN</string>
-  <string name="allow_clash_auto_restart">允許 Clash 自動重啓</string>
+  <string name="allow_tabby_auto_restart">允許 Tabby 自動重啓</string>
   <string name="allow_ipv6">允許 IPv6</string>
   <string name="allow_ipv6_summary">通過 VpnService 允許 IPv6 流量</string>
   <string name="allow_lan">允許來自局域網的連接</string>
@@ -93,7 +93,7 @@
   <string name="name_server_policy">Name Server 策略</string>
   <string name="network">網絡</string>
   <string name="off">強制關閉</string>
-  <string name="options_unavailable">選項在 Clash 運行時不可用</string>
+  <string name="options_unavailable">選項在 Tabby 運行時不可用</string>
   <string name="override">覆寫</string>
   <string name="override_destination">Override Destination</string>
   <string name="package_name">應用包名稱</string>

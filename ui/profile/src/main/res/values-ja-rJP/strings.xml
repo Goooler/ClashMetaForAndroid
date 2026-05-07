@@ -36,7 +36,7 @@
   <string name="rename">名前の変更</string>
   <string name="save">保存</string>
   <string name="should_not_be_blank">空白にはできません</string>
-  <string name="tips_properties"><![CDATA[<strong>Clashプロファイル</strong>のみご利用可能です(<strong>プロキシルール</strong>を含む)]]></string>
+  <string name="tips_properties"><![CDATA[<strong>Tabby プロファイル</strong>のみご利用可能です(<strong>プロキシルール</strong>を含む)]]></string>
   <string name="toast_profile_updated_complete">Update profile %s completed</string>
   <string name="toast_profile_updated_failed">Update profile %1$s failed: %2$s</string>
   <string name="update">更新</string>

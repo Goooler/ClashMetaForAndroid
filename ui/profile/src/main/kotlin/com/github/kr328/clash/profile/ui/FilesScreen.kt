@@ -59,18 +59,18 @@ import com.github.kr328.clash.common.util.grantPermissions
 import com.github.kr328.clash.model.ConfigFile
 import com.github.kr328.clash.profile.R
 import com.github.kr328.clash.profile.vm.FilesViewModel
-import com.github.kr328.clash.ui.component.MihomoScaffold
+import com.github.kr328.clash.ui.component.TabbyScaffold
 import com.github.kr328.clash.ui.icon.BaselineAdd
 import com.github.kr328.clash.ui.icon.BaselineEdit
 import com.github.kr328.clash.ui.icon.BaselineGetApp
 import com.github.kr328.clash.ui.icon.BaselineMoreVert
 import com.github.kr328.clash.ui.icon.BaselineSave
-import com.github.kr328.clash.ui.icon.MihomoIcons
 import com.github.kr328.clash.ui.icon.OutlineArticle
 import com.github.kr328.clash.ui.icon.OutlineDelete
 import com.github.kr328.clash.ui.icon.OutlineFolder
-import com.github.kr328.clash.ui.theme.MihomoThemeWrapper
-import com.github.kr328.clash.ui.theme.PreviewMihomo
+import com.github.kr328.clash.ui.icon.TabbyIcons
+import com.github.kr328.clash.ui.theme.PreviewTabby
+import com.github.kr328.clash.ui.theme.TabbyThemeWrapper
 import com.github.kr328.clash.util.Validator
 import com.github.kr328.clash.util.ValidatorFileName
 import com.github.kr328.clash.util.elapsedIntervalString
@@ -180,7 +180,7 @@ private fun FilesContent(
       val file = menuConfigFile!!
       if (!file.isDirectory && (!currentInBaseDir || configurationEditable)) {
         FilesMenuAction(
-          icon = MihomoIcons.BaselineGetApp,
+          icon = TabbyIcons.BaselineGetApp,
           text = stringResource(R.string.import_),
           onClick = {
             menuConfigFile = null
@@ -190,7 +190,7 @@ private fun FilesContent(
       }
       if (!file.isDirectory && file.size > 0) {
         FilesMenuAction(
-          icon = MihomoIcons.BaselineSave,
+          icon = TabbyIcons.BaselineSave,
           text = stringResource(CommonR.string.export),
           onClick = {
             menuConfigFile = null
@@ -200,7 +200,7 @@ private fun FilesContent(
       }
       if (!currentInBaseDir) {
         FilesMenuAction(
-          icon = MihomoIcons.BaselineEdit,
+          icon = TabbyIcons.BaselineEdit,
           text = stringResource(R.string.rename),
           onClick = {
             menuConfigFile = null
@@ -208,7 +208,7 @@ private fun FilesContent(
           },
         )
         FilesMenuAction(
-          icon = MihomoIcons.OutlineDelete,
+          icon = TabbyIcons.OutlineDelete,
           text = stringResource(CommonR.string.delete),
           tint = MaterialTheme.colorScheme.error,
           onClick = {
@@ -223,7 +223,7 @@ private fun FilesContent(
 
   BackHandler(onBack = onBack)
 
-  MihomoScaffold(
+  TabbyScaffold(
     modifier = modifier,
     snackbarHostState = snackbarHostState,
     title = stringResource(R.string.files),
@@ -232,7 +232,7 @@ private fun FilesContent(
       if (!currentInBaseDir) {
         IconButton(onClick = onNew) {
           Icon(
-            imageVector = MihomoIcons.BaselineAdd,
+            imageVector = TabbyIcons.BaselineAdd,
             contentDescription = stringResource(CommonR.string._new),
           )
         }
@@ -362,7 +362,7 @@ private fun FileItem(
     ) {
       Icon(
         imageVector =
-          if (configFile.isDirectory) MihomoIcons.OutlineFolder else MihomoIcons.OutlineArticle,
+          if (configFile.isDirectory) TabbyIcons.OutlineFolder else TabbyIcons.OutlineArticle,
         contentDescription = null,
         modifier = Modifier.size(28.dp),
       )
@@ -389,7 +389,7 @@ private fun FileItem(
 
     IconButton(onClick = onMore) {
       Icon(
-        imageVector = MihomoIcons.BaselineMoreVert,
+        imageVector = TabbyIcons.BaselineMoreVert,
         contentDescription = stringResource(CommonR.string.more),
       )
     }
@@ -423,8 +423,8 @@ private fun FilesMenuAction(
   }
 }
 
-@PreviewWrapper(MihomoThemeWrapper::class)
-@PreviewMihomo
+@PreviewWrapper(TabbyThemeWrapper::class)
+@PreviewTabby
 @Composable
 private fun FilesContentPreview() {
   FilesContent(

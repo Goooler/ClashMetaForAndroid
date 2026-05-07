@@ -7,7 +7,7 @@ import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.unit.dp
 
 @Suppress("UnusedReceiverParameter")
-val MihomoIcons.BaselineQrCodeScanner: ImageVector
+val TabbyIcons.BaselineQrCodeScanner: ImageVector
   get() {
     if (_BaselineQrCodeScanner != null) {
       return _BaselineQrCodeScanner!!

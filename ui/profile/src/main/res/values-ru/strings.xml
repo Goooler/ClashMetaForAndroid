@@ -36,7 +36,7 @@
   <string name="rename">Переименовать</string>
   <string name="save">Сохранить</string>
   <string name="should_not_be_blank">Не должно быть пустым</string>
-  <string name="tips_properties"><![CDATA[Принимается только <strong>конфиг Clash</strong> (включая <strong>Прокси</strong>/<strong>Правила</strong>)]]></string>
+  <string name="tips_properties"><![CDATA[Принимается только <strong>конфиг Tabby</strong> (включая <strong>Прокси</strong>/<strong>Правила</strong>)]]></string>
   <string name="toast_profile_updated_complete">Update profile %s completed</string>
   <string name="toast_profile_updated_failed">Update profile %1$s failed: %2$s</string>
   <string name="update">Обновить</string>

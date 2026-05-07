@@ -51,4 +51,4 @@ internal class AppCrashedViewModel(app: Application) : AndroidViewModel(app) {
 }
 
 private val crashDumpCommand =
-  arrayOf("logcat", "-d", "-s", "Go", "DEBUG", "AndroidRuntime", "ClashMetaForAndroid", "LwIP")
+  arrayOf("logcat", "-d", "-s", "Go", "DEBUG", "AndroidRuntime", "Tabby", "LwIP")

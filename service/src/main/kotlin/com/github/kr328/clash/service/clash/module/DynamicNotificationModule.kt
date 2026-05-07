@@ -28,7 +28,7 @@ class DynamicNotificationModule(service: Service) : Module<Unit>(service) {
     NotificationCompat.Builder(service, StaticNotificationModule.CHANNEL_ID)
       .setSmallIcon(CommonR.drawable.ic_logo_service)
       .setOngoing(true)
-      .setColor(service.getColorCompat(CommonR.color.color_clash_light))
+      .setColor(service.getColorCompat(CommonR.color.color_tabby_light))
       .setOnlyAlertOnce(true)
       .setShowWhen(false)
       .setContentTitle("Not Selected")
@@ -36,7 +36,7 @@ class DynamicNotificationModule(service: Service) : Module<Unit>(service) {
       .setContentIntent(
         PendingIntent.getActivity(
           service,
-          R.id.nf_clash_status,
+          R.id.nf_tabby_status,
           Intent()
             .setComponent(Components.MAIN_ACTIVITY)
             .setFlags(
@@ -62,13 +62,13 @@ class DynamicNotificationModule(service: Service) : Module<Unit>(service) {
     val notification =
       builder
         .setContentText(
-          service.getString(R.string.clash_notification_content, "$uploading/s", "$downloading/s")
+          service.getString(R.string.tabby_notification_content, "$uploading/s", "$downloading/s")
         )
-        .setSubText(service.getString(R.string.clash_notification_content, uploaded, downloaded))
+        .setSubText(service.getString(R.string.tabby_notification_content, uploaded, downloaded))
         .build()
 
     @Suppress("MissingPermission") // We don't care whether the permission is granted.
-    notificationManager.notify(R.id.nf_clash_status, notification)
+    notificationManager.notify(R.id.nf_tabby_status, notification)
   }
 
   override suspend fun run() = coroutineScope {

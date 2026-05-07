@@ -10,7 +10,7 @@ import com.github.kr328.clash.settings.ui.MetaFeatureSettingsScreen
 import com.github.kr328.clash.settings.ui.NetworkSettingsScreen
 import com.github.kr328.clash.settings.ui.OverrideSettingsScreen
 import com.github.kr328.clash.settings.ui.SettingsScreen
-import com.github.kr328.clash.ui.nav.MihomoNavDisplay
+import com.github.kr328.clash.ui.nav.TabbyNavDisplay
 import com.github.kr328.clash.ui.nav.addIfNotLast
 import kotlinx.serialization.Serializable
 
@@ -31,7 +31,7 @@ sealed interface SettingsRoute : NavKey {
 fun EntryProviderScope<NavKey>.settingsEntries() {
   entry<SettingsRoute.Root> {
     val backStack = rememberNavBackStack(SettingsRoute.Root)
-    MihomoNavDisplay(
+    TabbyNavDisplay(
       backStack = backStack,
       entryProvider =
         entryProvider {

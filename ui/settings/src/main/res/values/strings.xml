@@ -6,7 +6,7 @@
   <string name="allow_all_apps">Allow all apps</string>
   <string name="allow_bypass">Allow Bypass</string>
   <string name="allow_bypass_summary">Allows all apps to bypass this VPN connection</string>
-  <string name="allow_clash_auto_restart">Allow clash auto restart</string>
+  <string name="allow_tabby_auto_restart">Allow Tabby auto restart</string>
   <string name="allow_ipv6">Allow IPv6</string>
   <string name="allow_ipv6_summary">Allows IPv6 traffic via VpnService</string>
   <string name="allow_lan">Allow LAN</string>
@@ -93,7 +93,7 @@
   <string name="name_server_policy">Name Server Policy</string>
   <string name="network">Network</string>
   <string name="off">OFF</string>
-  <string name="options_unavailable">Options Unavailable until Clash Stopped</string>
+  <string name="options_unavailable">Options Unavailable until Tabby Stopped</string>
   <string name="override">Override</string>
   <string name="override_destination">Override Destination</string>
   <string name="package_name">Package Name</string>

@@ -6,7 +6,7 @@
   <string name="allow_all_apps">모든 앱 허용</string>
   <string name="allow_bypass">앱 제외 허용</string>
   <string name="allow_bypass_summary">모든 앱이 VPN 우회 연결에서 제외될 수 있도록 합니다.</string>
-  <string name="allow_clash_auto_restart">Clash 앱이 자동으로 재시작하도록 합니다.</string>
+  <string name="allow_tabby_auto_restart">Tabby 앱이 자동으로 재시작하도록 합니다.</string>
   <string name="allow_ipv6">IPv6 허용</string>
   <string name="allow_ipv6_summary">VpnService를 통해 IPv6 트래픽 허용</string>
   <string name="allow_lan">LAN 허용</string>
@@ -93,7 +93,7 @@
   <string name="name_server_policy">네임 서버 정책</string>
   <string name="network">네트워크</string>
   <string name="off">강제 종료</string>
-  <string name="options_unavailable">Clash 연결인 상태에서는 변경할 수 없습니다.</string>
+  <string name="options_unavailable">Tabby 연결인 상태에서는 변경할 수 없습니다.</string>
   <string name="override">재정의</string>
   <string name="override_destination">Override Destination</string>
   <string name="package_name">패키지 이름</string>

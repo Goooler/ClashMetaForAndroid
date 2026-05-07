@@ -7,7 +7,7 @@ import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.unit.dp
 
 @Suppress("UnusedReceiverParameter")
-val MihomoIcons.OutlineCheckCircle: ImageVector
+val TabbyIcons.OutlineCheckCircle: ImageVector
   get() {
     if (_OutlineCheckCircle != null) {
       return _OutlineCheckCircle!!

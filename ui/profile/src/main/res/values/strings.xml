@@ -36,7 +36,7 @@
   <string name="rename">Rename</string>
   <string name="save">Save</string>
   <string name="should_not_be_blank">Should not be blank</string>
-  <string name="tips_properties"><![CDATA[Accept Only <strong>Clash Config</strong>(including <strong>Proxy</strong>/<strong>Rules</strong>)]]></string>
+  <string name="tips_properties"><![CDATA[Accept Only <strong>Tabby Config</strong>(including <strong>Proxy</strong>/<strong>Rules</strong>)]]></string>
   <string name="toast_profile_updated_complete">Update profile %s completed</string>
   <string name="toast_profile_updated_failed">Update profile %1$s failed: %2$s</string>
   <string name="update">Update</string>

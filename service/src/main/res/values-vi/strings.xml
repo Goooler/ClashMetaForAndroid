@@ -1,6 +1,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="PluralsCandidate">
 
-  <string name="clash_service_status_channel">Trạng thái Clash</string>
+  <string name="tabby_service_status_channel">Trạng thái Tabby</string>
   <string name="configuration_yaml">Configuration.yaml</string>
   <string name="format_update_complete">Cập nhật %s hoàn tất</string>
   <string name="format_update_failure">Cập nhật %1$s: %2$s thất bại</string>

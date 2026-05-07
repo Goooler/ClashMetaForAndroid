@@ -7,7 +7,7 @@ import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberNavBackStack
 import com.github.kr328.clash.log.ui.LogcatScreen
 import com.github.kr328.clash.log.ui.LogsScreen
-import com.github.kr328.clash.ui.nav.MihomoNavDisplay
+import com.github.kr328.clash.ui.nav.TabbyNavDisplay
 import com.github.kr328.clash.ui.nav.addIfNotLast
 import kotlinx.serialization.Serializable
 
@@ -23,7 +23,7 @@ fun EntryProviderScope<NavKey>.logsEntries() {
   entry<LogRoute.Root> {
     val initial = remember { if (LogcatService.running.value) Logcat() else Logs }
     val backStack = rememberNavBackStack(initial)
-    MihomoNavDisplay(
+    TabbyNavDisplay(
       backStack = backStack,
       entryProvider =
         entryProvider {

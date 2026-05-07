@@ -2,7 +2,6 @@
 
   <string name="_new">Mới</string>
   <string name="cancel">Huỷ bỏ</string>
-  <string name="clash_meta_for_android">Clash Meta</string>
   <string name="close">Đóng</string>
   <string name="compatible">Tương thích</string>
   <string name="default_">Mặc định</string>
@@ -35,8 +34,8 @@
   <string name="profiles">Cấu hình</string>
   <string name="providers">Nhà cung cấp</string>
   <string name="proxy">Proxy</string>
-  <string name="receive_broadcasts_of_clash">Nhận thông báo của dịch vụ Clash</string>
-  <string name="receive_clash_broadcasts">Nhận thông báo Clash</string>
+  <string name="receive_broadcasts_of_tabby">Nhận thông báo của dịch vụ Tabby</string>
+  <string name="receive_tabby_broadcasts">Nhận thông báo Tabby</string>
   <string name="recently">Vừa xong</string>
   <string name="reset">Đặt lại</string>
   <string name="rule">Quy tắc</string>

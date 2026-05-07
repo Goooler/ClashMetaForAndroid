@@ -35,12 +35,12 @@ import androidx.navigation3.runtime.EntryProviderScope
 import androidx.navigation3.runtime.NavKey
 import com.github.kr328.clash.common.R as CommonR
 import com.github.kr328.clash.settings.R
-import com.github.kr328.clash.ui.component.MihomoScaffold
+import com.github.kr328.clash.ui.component.TabbyScaffold
 import com.github.kr328.clash.ui.icon.BaselineAdd
-import com.github.kr328.clash.ui.icon.MihomoIcons
 import com.github.kr328.clash.ui.icon.OutlineDelete
-import com.github.kr328.clash.ui.theme.MihomoThemeWrapper
-import com.github.kr328.clash.ui.theme.PreviewMihomo
+import com.github.kr328.clash.ui.icon.TabbyIcons
+import com.github.kr328.clash.ui.theme.PreviewTabby
+import com.github.kr328.clash.ui.theme.TabbyThemeWrapper
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -70,13 +70,13 @@ private fun EditableTextListScreen(
   val values = remember(initialValues) { initialValues.orEmpty().toMutableStateList() }
   var showAddDialog by remember { mutableStateOf(false) }
 
-  MihomoScaffold(
+  TabbyScaffold(
     title = stringResource(title),
     onBack = onDismiss,
     actions = {
       IconButton(onClick = { showAddDialog = true }) {
         Icon(
-          imageVector = MihomoIcons.BaselineAdd,
+          imageVector = TabbyIcons.BaselineAdd,
           contentDescription = stringResource(CommonR.string._new),
         )
       }
@@ -93,7 +93,7 @@ private fun EditableTextListScreen(
               trailingContent = {
                 IconButton(onClick = { values.removeAt(index) }) {
                   Icon(
-                    imageVector = MihomoIcons.OutlineDelete,
+                    imageVector = TabbyIcons.OutlineDelete,
                     contentDescription = stringResource(CommonR.string.delete),
                   )
                 }
@@ -168,8 +168,8 @@ private fun SingleTextInputDialog(
   )
 }
 
-@PreviewWrapper(MihomoThemeWrapper::class)
-@PreviewMihomo
+@PreviewWrapper(TabbyThemeWrapper::class)
+@PreviewTabby
 @Composable
 private fun EditableTextListScreenPreview() {
   EditableTextListScreen(

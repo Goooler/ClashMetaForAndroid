@@ -36,7 +36,7 @@
   <string name="rename">이름 변경</string>
   <string name="save">저장</string>
   <string name="should_not_be_blank">이 필드는 공백이 허용되지 않습니다.</string>
-  <string name="tips_properties"><![CDATA[<strong>Clash 구성 파일</strong>(<strong>프록시</strong>/<strong>규칙</strong> 포함)만 추가할 수 있습니다.]]></string>
+  <string name="tips_properties"><![CDATA[<strong>Tabby 구성 파일</strong>(<strong>프록시</strong>/<strong>규칙</strong> 포함)만 추가할 수 있습니다.]]></string>
   <string name="toast_profile_updated_complete">Update profile %s completed</string>
   <string name="toast_profile_updated_failed">Update profile %1$s failed: %2$s</string>
   <string name="update">업데이트</string>
