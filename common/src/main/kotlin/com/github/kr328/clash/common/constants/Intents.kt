@@ -4,18 +4,18 @@ import com.github.kr328.clash.common.packageName
 
 object Intents {
   // Public
-  val ACTION_PROVIDE_URL = "$packageName.action.PROVIDE_URL"
-  val ACTION_START_CLASH = "$packageName.action.START_CLASH"
-  val ACTION_STOP_CLASH = "$packageName.action.STOP_CLASH"
-  val ACTION_TOGGLE_CLASH = "$packageName.action.TOGGLE_CLASH"
+  val ACTION_PROVIDE_URL = "$packageName.intent.action.PROVIDE_URL"
+  val ACTION_START_CLASH = "$packageName.intent.action.START_CLASH"
+  val ACTION_STOP_CLASH = "$packageName.intent.action.STOP_CLASH"
+  val ACTION_TOGGLE_CLASH = "$packageName.intent.action.TOGGLE_CLASH"
 
   const val EXTRA_NAME = "name"
 
   // Routes
-  val ACTION_PROPERTIES = "$packageName.ACTION_PROPERTIES"
-  val ACTION_LOGCAT = "$packageName.ACTION_LOGCAT"
-  val ACTION_APK_BROKEN = "$packageName.ACTION_APK_BROKEN"
-  val ACTION_APP_CRASHED = "$packageName.ACTION_APP_CRASHED"
+  val ACTION_PROPERTIES = "$packageName.intent.action.PROPERTIES"
+  val ACTION_LOGCAT = "$packageName.intent.action.LOGCAT"
+  val ACTION_APK_BROKEN = "$packageName.intent.action.APK_BROKEN"
+  val ACTION_APP_CRASHED = "$packageName.intent.action.APP_CRASHED"
 
   // Self
   val ACTION_SERVICE_RECREATED = "$packageName.intent.action.CLASH_RECREATED"
@@ -25,7 +25,7 @@ object Intents {
   val ACTION_PROFILE_CHANGED = "$packageName.intent.action.PROFILE_CHANGED"
   val ACTION_PROFILE_UPDATE_COMPLETED = "$packageName.intent.action.PROFILE_UPDATE_COMPLETED"
   val ACTION_PROFILE_UPDATE_FAILED = "$packageName.intent.action.PROFILE_UPDATE_FAILED"
-  val ACTION_PROFILE_REQUEST_UPDATE = "$packageName.intent.action.REQUEST_UPDATE"
+  val ACTION_PROFILE_REQUEST_UPDATE = "$packageName.intent.action.PROFILE_REQUEST_UPDATE"
   val ACTION_PROFILE_SCHEDULE_UPDATES = "$packageName.intent.action.SCHEDULE_UPDATES"
   val ACTION_PROFILE_LOADED = "$packageName.intent.action.PROFILE_LOADED"
   val ACTION_OVERRIDE_CHANGED = "$packageName.intent.action.OVERRIDE_CHANGED"

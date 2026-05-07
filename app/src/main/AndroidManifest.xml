@@ -52,15 +52,15 @@
         <data android:host="install-config" />
       </intent-filter>
       <intent-filter>
-        <action android:name="${applicationId}.action.START_CLASH" />
+        <action android:name="${applicationId}.intent.action.START_CLASH" />
         <category android:name="android.intent.category.DEFAULT" />
       </intent-filter>
       <intent-filter>
-        <action android:name="${applicationId}.action.STOP_CLASH" />
+        <action android:name="${applicationId}.intent.action.STOP_CLASH" />
         <category android:name="android.intent.category.DEFAULT" />
       </intent-filter>
       <intent-filter>
-        <action android:name="${applicationId}.action.TOGGLE_CLASH" />
+        <action android:name="${applicationId}.intent.action.TOGGLE_CLASH" />
         <category android:name="android.intent.category.DEFAULT" />
       </intent-filter>
     </activity>
