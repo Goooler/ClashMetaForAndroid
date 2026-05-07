@@ -15,7 +15,7 @@ import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
 
 @Composable
-fun <T : Any> MihomoNavDisplay(
+fun <T : Any> TabbyNavDisplay(
   backStack: List<T>,
   modifier: Modifier = Modifier,
   onBack: () -> Unit = {

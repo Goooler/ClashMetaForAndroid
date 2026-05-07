@@ -66,7 +66,7 @@ class TileService : TileService() {
 
     tile.state = if (clashRunning) Tile.STATE_ACTIVE else Tile.STATE_INACTIVE
 
-    tile.label = currentProfile.ifEmpty { getText(CommonR.string.launch_name_meta) }
+    tile.label = currentProfile.ifEmpty { getText(CommonR.string.tabby) }
 
     tile.icon = Icon.createWithResource(this, CommonR.drawable.ic_logo_service)
 

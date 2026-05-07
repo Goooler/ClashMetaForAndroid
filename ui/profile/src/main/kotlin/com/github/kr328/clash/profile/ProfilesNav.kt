@@ -8,7 +8,7 @@ import com.github.kr328.clash.profile.ui.NewProfileScreen
 import com.github.kr328.clash.profile.ui.ProfilesScreen
 import com.github.kr328.clash.profile.ui.PropertiesScreen
 import com.github.kr328.clash.profile.ui.ProvidersScreen
-import com.github.kr328.clash.ui.nav.MihomoNavDisplay
+import com.github.kr328.clash.ui.nav.TabbyNavDisplay
 import com.github.kr328.clash.ui.nav.addIfNotLast
 import com.github.kr328.clash.ui.nav.rememberNavBackStackBuilder
 import kotlin.uuid.Uuid
@@ -35,7 +35,7 @@ fun EntryProviderScope<NavKey>.profilesEntries() {
       }
     }
 
-    MihomoNavDisplay(
+    TabbyNavDisplay(
       backStack = backStack,
       entryProvider =
         entryProvider {

@@ -64,12 +64,12 @@ import com.github.kr328.clash.core.model.TunnelState
 import com.github.kr328.clash.proxy.R
 import com.github.kr328.clash.proxy.vm.ProxyViewModel
 import com.github.kr328.clash.proxy.vm.ProxyViewModel.SelectedProxy
-import com.github.kr328.clash.ui.component.MihomoScaffold
+import com.github.kr328.clash.ui.component.TabbyScaffold
 import com.github.kr328.clash.ui.icon.BaselineFlashOn
 import com.github.kr328.clash.ui.icon.BaselineMoreVert
-import com.github.kr328.clash.ui.icon.MihomoIcons
-import com.github.kr328.clash.ui.theme.MihomoThemeWrapper
-import com.github.kr328.clash.ui.theme.PreviewMihomo
+import com.github.kr328.clash.ui.icon.TabbyIcons
+import com.github.kr328.clash.ui.theme.PreviewTabby
+import com.github.kr328.clash.ui.theme.TabbyThemeWrapper
 import kotlinx.coroutines.launch
 
 @Composable
@@ -163,7 +163,7 @@ private fun ProxyContent(
     }
   }
 
-  MihomoScaffold(
+  TabbyScaffold(
     modifier = modifier,
     snackbarHostState = snackbarHostState,
     title = stringResource(CommonR.string.proxy),
@@ -177,7 +177,7 @@ private fun ProxyContent(
         } else {
           IconButton(onClick = { onUrlTest(uiState.currentPage) }) {
             Icon(
-              imageVector = MihomoIcons.BaselineFlashOn,
+              imageVector = TabbyIcons.BaselineFlashOn,
               contentDescription = stringResource(R.string.delay_test),
             )
           }
@@ -186,7 +186,7 @@ private fun ProxyContent(
 
       IconButton(onClick = { menuVisible = true }) {
         Icon(
-          imageVector = MihomoIcons.BaselineMoreVert,
+          imageVector = TabbyIcons.BaselineMoreVert,
           contentDescription = stringResource(CommonR.string.more),
         )
       }
@@ -492,8 +492,8 @@ private fun columnsForProxyLine(proxyLine: Int): Int =
     else -> 3
   }
 
-@PreviewWrapper(MihomoThemeWrapper::class)
-@PreviewMihomo
+@PreviewWrapper(TabbyThemeWrapper::class)
+@PreviewTabby
 @Composable
 private fun ProxyContentPreview() {
   val groups = remember {

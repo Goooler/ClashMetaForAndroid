@@ -32,7 +32,7 @@ jobs:
         run: |
           ./gradlew app:assembleRelease
       - name: Create release
-        if: github.repository == 'Goooler/MihomoForAndroid'
+        if: github.repository == 'Goooler/Tabby'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |

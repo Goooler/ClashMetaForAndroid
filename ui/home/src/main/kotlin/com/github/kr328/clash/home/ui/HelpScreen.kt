@@ -12,9 +12,9 @@ import androidx.compose.ui.text.fromHtml
 import androidx.compose.ui.tooling.preview.PreviewWrapper
 import com.github.kr328.clash.common.R as CommonR
 import com.github.kr328.clash.home.R
-import com.github.kr328.clash.ui.component.MihomoScaffold
-import com.github.kr328.clash.ui.theme.MihomoThemeWrapper
-import com.github.kr328.clash.ui.theme.PreviewMihomo
+import com.github.kr328.clash.ui.component.TabbyScaffold
+import com.github.kr328.clash.ui.theme.PreviewTabby
+import com.github.kr328.clash.ui.theme.TabbyThemeWrapper
 import com.github.kr328.clash.util.CLASH_META_CORE
 import com.github.kr328.clash.util.CLASH_META_WIKI
 import com.github.kr328.clash.util.CLASH_WIKI
@@ -26,7 +26,7 @@ import me.zhanghai.compose.preference.preferenceCategory
 
 @Composable
 internal fun HelpScreen(modifier: Modifier = Modifier) {
-  MihomoScaffold(title = stringResource(R.string.help), modifier = modifier) { innerPadding ->
+  TabbyScaffold(title = stringResource(R.string.help), modifier = modifier) { innerPadding ->
     val context = LocalContext.current
     ProvidePreferenceLocals {
       LazyColumn(modifier = Modifier.fillMaxSize(), contentPadding = innerPadding) {
@@ -61,7 +61,7 @@ internal fun HelpScreen(modifier: Modifier = Modifier) {
         )
         preference(
           key = "clash_meta_for_android",
-          title = { Text(stringResource(CommonR.string.clash_meta_for_android)) },
+          title = { Text(stringResource(CommonR.string.tabby)) },
           summary = { Text(CMFA_GITHUB) },
           onClick = { context.openLink(CMFA_GITHUB) },
         )
@@ -70,8 +70,8 @@ internal fun HelpScreen(modifier: Modifier = Modifier) {
   }
 }
 
-@PreviewWrapper(MihomoThemeWrapper::class)
-@PreviewMihomo
+@PreviewWrapper(TabbyThemeWrapper::class)
+@PreviewTabby
 @Composable
 private fun HelpScreenPreview() {
   HelpScreen()

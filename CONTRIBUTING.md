@@ -1,4 +1,4 @@
-## Contributing to Mihomo for Android
+## Contributing to Tabby
 
 Thank you for contributing to this project.
 

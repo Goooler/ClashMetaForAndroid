@@ -9,9 +9,9 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.PreviewWrapper
 import com.github.kr328.clash.crash.R
-import com.github.kr328.clash.ui.component.MihomoScaffold
-import com.github.kr328.clash.ui.theme.MihomoThemeWrapper
-import com.github.kr328.clash.ui.theme.PreviewMihomo
+import com.github.kr328.clash.ui.component.TabbyScaffold
+import com.github.kr328.clash.ui.theme.PreviewTabby
+import com.github.kr328.clash.ui.theme.TabbyThemeWrapper
 import com.github.kr328.clash.util.CMFA_GITHUB
 import com.github.kr328.clash.util.openLink
 import me.zhanghai.compose.preference.ProvidePreferenceLocals
@@ -20,7 +20,7 @@ import me.zhanghai.compose.preference.preferenceCategory
 
 @Composable
 internal fun ApkBrokenScreen() {
-  MihomoScaffold(title = stringResource(R.string.application_broken)) { innerPadding ->
+  TabbyScaffold(title = stringResource(R.string.application_broken)) { innerPadding ->
     val context = LocalContext.current
     ProvidePreferenceLocals {
       LazyColumn(modifier = Modifier.fillMaxSize(), contentPadding = innerPadding) {
@@ -45,8 +45,8 @@ internal fun ApkBrokenScreen() {
   }
 }
 
-@PreviewWrapper(MihomoThemeWrapper::class)
-@PreviewMihomo
+@PreviewWrapper(TabbyThemeWrapper::class)
+@PreviewTabby
 @Composable
 private fun ApkBrokenScreenPreview() {
   ApkBrokenScreen()

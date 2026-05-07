@@ -42,15 +42,15 @@ import com.github.kr328.clash.common.R as CommonR
 import com.github.kr328.clash.core.model.LogMessage
 import com.github.kr328.clash.log.R
 import com.github.kr328.clash.log.vm.LogcatViewModel
-import com.github.kr328.clash.ui.component.MihomoScaffold
 import com.github.kr328.clash.ui.component.ModelProgressBarDialog
+import com.github.kr328.clash.ui.component.TabbyScaffold
 import com.github.kr328.clash.ui.icon.BaselineDelete
 import com.github.kr328.clash.ui.icon.BaselineSave
 import com.github.kr328.clash.ui.icon.BaselineStop
-import com.github.kr328.clash.ui.icon.MihomoIcons
-import com.github.kr328.clash.ui.theme.MihomoThemeWrapper
-import com.github.kr328.clash.ui.theme.PreviewMihomo
-import com.github.kr328.clash.ui.theme.mihomoDimens
+import com.github.kr328.clash.ui.icon.TabbyIcons
+import com.github.kr328.clash.ui.theme.PreviewTabby
+import com.github.kr328.clash.ui.theme.TabbyThemeWrapper
+import com.github.kr328.clash.ui.theme.tabbyDimens
 import com.github.kr328.clash.util.format
 import java.util.Date
 import kotlinx.coroutines.launch
@@ -153,28 +153,28 @@ private fun LogcatContent(
   onCopyMessage: (LogMessage) -> Unit,
   modifier: Modifier = Modifier,
 ) {
-  MihomoScaffold(
-    title = stringResource(R.string.clash_logcat),
+  TabbyScaffold(
+    title = stringResource(R.string.tabby_logcat),
     modifier = modifier,
     snackbarHostState = snackbarHostState,
     actions = {
       if (streaming) {
         IconButton(onClick = onClose) {
           Icon(
-            imageVector = MihomoIcons.BaselineStop,
+            imageVector = TabbyIcons.BaselineStop,
             contentDescription = stringResource(CommonR.string.close),
           )
         }
       } else {
         IconButton(onClick = onDelete) {
           Icon(
-            imageVector = MihomoIcons.BaselineDelete,
+            imageVector = TabbyIcons.BaselineDelete,
             contentDescription = stringResource(CommonR.string.delete),
           )
         }
         IconButton(onClick = onExport) {
           Icon(
-            imageVector = MihomoIcons.BaselineSave,
+            imageVector = TabbyIcons.BaselineSave,
             contentDescription = stringResource(CommonR.string.export),
           )
         }
@@ -190,7 +190,7 @@ private fun LogcatContent(
 @Composable
 private fun LogcatMessageItem(message: LogMessage, onCopyMessage: (LogMessage) -> Unit) {
   val context = LocalContext.current
-  val dimens = mihomoDimens
+  val dimens = tabbyDimens
   Column(
     modifier =
       Modifier.fillMaxWidth()
@@ -229,15 +229,15 @@ private val LazyListState.isBottom: Boolean
       lastVisibleItem.offset + lastVisibleItem.size <= layoutInfo.viewportEndOffset
   }
 
-@PreviewWrapper(MihomoThemeWrapper::class)
-@PreviewMihomo
+@PreviewWrapper(TabbyThemeWrapper::class)
+@PreviewTabby
 @Composable
 private fun LogcatContentPreview() {
   LogcatContent(
     streaming = false,
     messages =
       listOf(
-        LogMessage(LogMessage.Level.Info, "Mihomo started successfully", Date(1710000000000)),
+        LogMessage(LogMessage.Level.Info, "Tabby started successfully", Date(1710000000000)),
         LogMessage(LogMessage.Level.Warning, "Proxy group fallback in use", Date(1710000005000)),
         LogMessage(LogMessage.Level.Error, "Connection timeout to upstream", Date(1710000010000)),
       ),

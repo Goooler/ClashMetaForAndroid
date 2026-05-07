@@ -1,6 +1,6 @@
 <resources>
 
-  <string name="clash_logcat">Clash 로그 수집 도구</string>
+  <string name="tabby_logcat">Tabby 로그 수집 도구</string>
   <string name="copied">복사됨</string>
   <string name="delete_all_logs">전체 로그 삭제</string>
   <string name="delete_all_logs_warn">전체 로그가 삭제됩니다.</string>

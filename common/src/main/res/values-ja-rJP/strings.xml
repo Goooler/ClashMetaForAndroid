@@ -2,7 +2,6 @@
 
   <string name="_new">新規</string>
   <string name="cancel">キャンセル</string>
-  <string name="clash_meta_for_android">Clash Meta for Android</string>
   <string name="close">閉じる</string>
   <string name="compatible">互換</string>
   <string name="default_">デフォルト</string>
@@ -35,8 +34,8 @@
   <string name="profiles">プロファイル</string>
   <string name="providers">プロバイダー</string>
   <string name="proxy">プロキシ</string>
-  <string name="receive_broadcasts_of_clash">Clash サービスのブロードキャストを受信</string>
-  <string name="receive_clash_broadcasts">Clash ブロードキャストを受信</string>
+  <string name="receive_broadcasts_of_tabby">Tabby サービスのブロードキャストを受信</string>
+  <string name="receive_tabby_broadcasts">Tabby ブロードキャストを受信</string>
   <string name="recently">直近</string>
   <string name="reset">リセット</string>
   <string name="rule">ルール</string>

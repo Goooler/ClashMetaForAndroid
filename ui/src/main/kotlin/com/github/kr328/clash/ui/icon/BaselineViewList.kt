@@ -7,7 +7,7 @@ import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.unit.dp
 
 @Suppress("UnusedReceiverParameter")
-val MihomoIcons.BaselineViewList: ImageVector
+val TabbyIcons.BaselineViewList: ImageVector
   get() {
     if (_BaselineViewList != null) {
       return _BaselineViewList!!

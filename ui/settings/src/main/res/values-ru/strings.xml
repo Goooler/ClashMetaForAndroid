@@ -6,7 +6,7 @@
   <string name="allow_all_apps">Разрешить все приложения</string>
   <string name="allow_bypass">Разрешить обход</string>
   <string name="allow_bypass_summary">Разрешить приложениям обходить VPN соединение</string>
-  <string name="allow_clash_auto_restart">Разрешить Clash автоматически перезапускаться</string>
+  <string name="allow_tabby_auto_restart">Разрешить Tabby автоматически перезапускаться</string>
   <string name="allow_ipv6">Разрешить IPv6</string>
   <string name="allow_ipv6_summary">Разрешить трафик IPv6 через VpnService</string>
   <string name="allow_lan">Разрешить LAN</string>
@@ -93,7 +93,7 @@
   <string name="name_server_policy">Политика сервера имён</string>
   <string name="network">Сеть</string>
   <string name="off">Принудительно закрыть</string>
-  <string name="options_unavailable">Настройки недоступны, пока Clash не будет остановлен</string>
+  <string name="options_unavailable">Настройки недоступны, пока Tabby не будет остановлен</string>
   <string name="override">Переопределение</string>
   <string name="override_destination">Override Destination</string>
   <string name="package_name">Название пакета</string>

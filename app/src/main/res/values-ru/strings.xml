@@ -1,12 +1,12 @@
 <resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="PluralsCandidate">
 
   <string name="external_control_activity">Внешнее управление</string>
-  <string name="external_control_started">Сервис Clash.Meta запущен</string>
-  <string name="external_control_stopped">Сервис Clash.Meta остановлен</string>
-  <string name="shortcut_start_long">Запустить сервис Clash</string>
-  <string name="shortcut_start_short">Запустить Clash</string>
-  <string name="shortcut_stop_long">Остановить сервис Clash</string>
-  <string name="shortcut_stop_short">Остановить Clash</string>
-  <string name="shortcut_toggle_long">Переключить сервис Clash (вкл/выкл)</string>
-  <string name="shortcut_toggle_short">Переключить Clash</string>
+  <string name="external_control_started">Сервис Tabby запущен</string>
+  <string name="external_control_stopped">Сервис Tabby остановлен</string>
+  <string name="shortcut_start_long">Запустить сервис Tabby</string>
+  <string name="shortcut_start_short">Запустить Tabby</string>
+  <string name="shortcut_stop_long">Остановить сервис Tabby</string>
+  <string name="shortcut_stop_short">Остановить Tabby</string>
+  <string name="shortcut_toggle_long">Переключить сервис Tabby (вкл/выкл)</string>
+  <string name="shortcut_toggle_short">Переключить Tabby</string>
 </resources>

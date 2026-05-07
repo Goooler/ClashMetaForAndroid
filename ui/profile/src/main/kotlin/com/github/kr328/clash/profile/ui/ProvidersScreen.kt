@@ -39,13 +39,13 @@ import com.github.kr328.clash.core.model.Provider
 import com.github.kr328.clash.profile.R
 import com.github.kr328.clash.profile.vm.ProvidersViewModel
 import com.github.kr328.clash.profile.vm.ProvidersViewModel.UiState.ProviderItemState
-import com.github.kr328.clash.ui.component.MihomoScaffold
+import com.github.kr328.clash.ui.component.TabbyScaffold
 import com.github.kr328.clash.ui.icon.BaselineSwapVert
 import com.github.kr328.clash.ui.icon.BaselineSync
-import com.github.kr328.clash.ui.icon.MihomoIcons
-import com.github.kr328.clash.ui.theme.MihomoThemeWrapper
-import com.github.kr328.clash.ui.theme.PreviewMihomo
-import com.github.kr328.clash.ui.theme.mihomoDimens
+import com.github.kr328.clash.ui.icon.TabbyIcons
+import com.github.kr328.clash.ui.theme.PreviewTabby
+import com.github.kr328.clash.ui.theme.TabbyThemeWrapper
+import com.github.kr328.clash.ui.theme.tabbyDimens
 import com.github.kr328.clash.util.elapsedIntervalString
 import com.github.kr328.clash.util.type
 
@@ -93,14 +93,14 @@ private fun ProvidersContent(
   onUpdateAll: () -> Unit,
   onUpdate: (Int, Provider) -> Unit,
 ) {
-  MihomoScaffold(
+  TabbyScaffold(
     title = stringResource(CommonR.string.providers),
     modifier = modifier,
     snackbarHostState = snackbarHostState,
     actions = {
       IconButton(onClick = onUpdateAll) {
         Icon(
-          imageVector = MihomoIcons.BaselineSync,
+          imageVector = TabbyIcons.BaselineSync,
           contentDescription = stringResource(R.string.update_all),
         )
       }
@@ -124,7 +124,7 @@ private fun ProvidersContent(
 @Composable
 private fun ProviderItem(state: ProviderItemState, currentTime: Long, onUpdate: () -> Unit) {
   val context = LocalContext.current
-  val dimens = mihomoDimens
+  val dimens = tabbyDimens
   val itemMinHeight = dimens.itemMinHeight
   val itemHeaderMargin = dimens.itemHeaderMargin
   val itemTextMargin = dimens.itemTextMargin
@@ -161,7 +161,7 @@ private fun ProviderItem(state: ProviderItemState, currentTime: Long, onUpdate: 
           CircularProgressIndicator(modifier = Modifier.size(30.dp), strokeWidth = 2.dp)
         } else {
           Icon(
-            imageVector = MihomoIcons.BaselineSwapVert,
+            imageVector = TabbyIcons.BaselineSwapVert,
             contentDescription = stringResource(R.string.update),
           )
         }
@@ -170,8 +170,8 @@ private fun ProviderItem(state: ProviderItemState, currentTime: Long, onUpdate: 
   }
 }
 
-@PreviewWrapper(MihomoThemeWrapper::class)
-@PreviewMihomo
+@PreviewWrapper(TabbyThemeWrapper::class)
+@PreviewTabby
 @Composable
 private fun ProvidersContentPreview() {
   ProvidersContent(

@@ -15,7 +15,7 @@
       android:name=".ClashService"
       android:exported="false"
       android:foregroundServiceType="specialUse"
-      android:label="@string/clash_meta_for_android"
+      android:label="@string/tabby"
       android:process=":background">
       <property
         android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
@@ -25,7 +25,7 @@
       android:name=".TunService"
       android:exported="false"
       android:foregroundServiceType="specialUse"
-      android:label="@string/clash_meta_for_android"
+      android:label="@string/tabby"
       android:permission="android.permission.BIND_VPN_SERVICE"
       android:process=":background">
       <property

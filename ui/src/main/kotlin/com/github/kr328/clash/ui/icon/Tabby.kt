@@ -8,14 +8,14 @@ import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.unit.dp
 
 @Suppress("UnusedReceiverParameter")
-val MihomoIcons.Clash: ImageVector
+val TabbyIcons.Tabby: ImageVector
   get() {
     if (_Clash != null) {
       return _Clash!!
     }
     _Clash =
       ImageVector.Builder(
-          name = "Clash",
+          name = "Tabby",
           defaultWidth = 128.dp,
           defaultHeight = 128.dp,
           viewportWidth = 128f,

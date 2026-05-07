@@ -2,6 +2,7 @@ package com.github.kr328.clash.service.document
 
 import android.content.Context
 import android.provider.DocumentsContract
+import com.github.kr328.clash.common.R as CommonR
 import com.github.kr328.clash.service.R
 import com.github.kr328.clash.service.data.ImportedDao
 import com.github.kr328.clash.service.data.Pending
@@ -37,7 +38,7 @@ class Picker(private val context: Context) {
     if (path.uuid == null) {
       return VirtualDocument(
         "",
-        context.getString(R.string.clash_meta_for_android),
+        context.getString(CommonR.string.tabby),
         DocumentsContract.Document.MIME_TYPE_DIR,
         0,
         0,

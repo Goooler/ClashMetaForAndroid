@@ -7,7 +7,7 @@ import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.unit.dp
 
 @Suppress("UnusedReceiverParameter")
-val MihomoIcons.BaselineSwapVerticalCircle: ImageVector
+val TabbyIcons.BaselineSwapVerticalCircle: ImageVector
   get() {
     if (_BaselineSwapVerticalCircle != null) {
       return _BaselineSwapVerticalCircle!!

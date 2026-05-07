@@ -32,17 +32,17 @@ import com.github.kr328.clash.common.R as CommonR
 import com.github.kr328.clash.profile.R
 import com.github.kr328.clash.profile.vm.PropertiesViewModel
 import com.github.kr328.clash.service.model.Profile
-import com.github.kr328.clash.ui.component.MihomoScaffold
 import com.github.kr328.clash.ui.component.ModelProgressBarDialog
+import com.github.kr328.clash.ui.component.TabbyScaffold
 import com.github.kr328.clash.ui.icon.BaselineSave
-import com.github.kr328.clash.ui.icon.MihomoIcons
 import com.github.kr328.clash.ui.icon.OutlineFolder
 import com.github.kr328.clash.ui.icon.OutlineInbox
 import com.github.kr328.clash.ui.icon.OutlineInfo
 import com.github.kr328.clash.ui.icon.OutlineLabel
 import com.github.kr328.clash.ui.icon.OutlineUpdate
-import com.github.kr328.clash.ui.theme.MihomoThemeWrapper
-import com.github.kr328.clash.ui.theme.PreviewMihomo
+import com.github.kr328.clash.ui.icon.TabbyIcons
+import com.github.kr328.clash.ui.theme.PreviewTabby
+import com.github.kr328.clash.ui.theme.TabbyThemeWrapper
 import com.github.kr328.clash.util.ValidatorAutoUpdateInterval
 import com.github.kr328.clash.util.ValidatorHttpUrl
 import com.github.kr328.clash.util.ValidatorNotBlank
@@ -136,7 +136,7 @@ private fun PropertiesContent(
 
   BackHandler(onBack = onBack)
 
-  MihomoScaffold(
+  TabbyScaffold(
     modifier = modifier,
     snackbarHostState = snackbarHostState,
     title = stringResource(R.string.properties),
@@ -147,7 +147,7 @@ private fun PropertiesContent(
       } else {
         IconButton(onClick = onCommit) {
           Icon(
-            imageVector = MihomoIcons.BaselineSave,
+            imageVector = TabbyIcons.BaselineSave,
             contentDescription = stringResource(R.string.save),
           )
         }
@@ -160,7 +160,7 @@ private fun PropertiesContent(
           key = "tip",
           title = { Text(stringResource(R.string.properties)) },
           summary = { Text(AnnotatedString.fromHtml(stringResource(R.string.tips_properties))) },
-          icon = { Icon(imageVector = MihomoIcons.OutlineInfo, contentDescription = null) },
+          icon = { Icon(imageVector = TabbyIcons.OutlineInfo, contentDescription = null) },
           enabled = false,
         )
         textFieldPreference(
@@ -173,7 +173,7 @@ private fun PropertiesContent(
           },
           title = { Text(stringResource(CommonR.string.name)) },
           textToValue = { input -> if (ValidatorNotBlank(input)) input else null },
-          icon = { Icon(imageVector = MihomoIcons.OutlineLabel, contentDescription = null) },
+          icon = { Icon(imageVector = TabbyIcons.OutlineLabel, contentDescription = null) },
           summary = { Text(profile.name.ifBlank { stringResource(R.string.profile_name) }) },
         )
         textFieldPreference(
@@ -187,7 +187,7 @@ private fun PropertiesContent(
           title = { Text(stringResource(CommonR.string.url)) },
           textToValue = { input -> if (ValidatorHttpUrl(input)) input else null },
           enabled = profile.type != File && profile.type != External,
-          icon = { Icon(imageVector = MihomoIcons.OutlineInbox, contentDescription = null) },
+          icon = { Icon(imageVector = TabbyIcons.OutlineInbox, contentDescription = null) },
           summary = {
             Text(profile.source.ifBlank { stringResource(R.string.accept_http_content) })
           },
@@ -210,7 +210,7 @@ private fun PropertiesContent(
             }
           },
           enabled = profile.type != File,
-          icon = { Icon(imageVector = MihomoIcons.OutlineUpdate, contentDescription = null) },
+          icon = { Icon(imageVector = TabbyIcons.OutlineUpdate, contentDescription = null) },
           summary = {
             val intervalSummary =
               if (profile.interval == 0L) {
@@ -235,7 +235,7 @@ private fun PropertiesContent(
           key = "browse_files",
           title = { Text(stringResource(R.string.browse_files)) },
           summary = { Text(stringResource(R.string.browse_configuration_providers)) },
-          icon = { Icon(imageVector = MihomoIcons.OutlineFolder, contentDescription = null) },
+          icon = { Icon(imageVector = TabbyIcons.OutlineFolder, contentDescription = null) },
           onClick = onBrowseFiles,
         )
       }
@@ -273,8 +273,8 @@ private fun ExitWithoutSavingDialog(onConfirm: () -> Unit, onDismiss: () -> Unit
   )
 }
 
-@PreviewWrapper(MihomoThemeWrapper::class)
-@PreviewMihomo
+@PreviewWrapper(TabbyThemeWrapper::class)
+@PreviewTabby
 @Composable
 private fun PropertiesContentPreview() {
   PropertiesContent(

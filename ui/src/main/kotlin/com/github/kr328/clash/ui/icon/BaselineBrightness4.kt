@@ -7,7 +7,7 @@ import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.unit.dp
 
 @Suppress("UnusedReceiverParameter")
-val MihomoIcons.BaselineBrightness4: ImageVector
+val TabbyIcons.BaselineBrightness4: ImageVector
   get() {
     if (_BaselineBrightness4 != null) {
       return _BaselineBrightness4!!

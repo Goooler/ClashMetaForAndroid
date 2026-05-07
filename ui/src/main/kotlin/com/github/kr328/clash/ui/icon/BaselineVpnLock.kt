@@ -7,7 +7,7 @@ import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.unit.dp
 
 @Suppress("UnusedReceiverParameter")
-val MihomoIcons.BaselineVpnLock: ImageVector
+val TabbyIcons.BaselineVpnLock: ImageVector
   get() {
     if (_BaselineVpnLock != null) {
       return _BaselineVpnLock!!

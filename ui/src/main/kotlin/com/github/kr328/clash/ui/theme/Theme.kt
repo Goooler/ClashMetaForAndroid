@@ -18,56 +18,56 @@ import com.github.kr328.clash.model.DarkMode
 
 private val DarkColorScheme =
   darkColorScheme(
-    primary = MihomoDarkPrimary,
-    onPrimary = MihomoOnPrimary,
-    secondary = MihomoDarkPrimary,
-    onSecondary = MihomoOnPrimary,
-    background = MihomoDarkBackground,
-    onBackground = MihomoDarkControlNormal,
-    surface = MihomoDarkSurface,
-    onSurface = MihomoDarkControlNormal,
-    surfaceVariant = MihomoDarkSurface,
-    onSurfaceVariant = MihomoDarkControlNormal,
-    surfaceContainerLowest = MihomoDarkBackground,
-    surfaceContainerLow = MihomoDarkSurface,
-    surfaceContainer = MihomoDarkSurface,
-    surfaceContainerHigh = MihomoDarkSurface,
-    surfaceContainerHighest = MihomoDarkSurface,
-    outline = MihomoDarkControlDisabled,
-    inverseSurface = MihomoLightBackground,
-    inverseOnSurface = MihomoLightControlNormal,
-    inversePrimary = MihomoDarkPrimary,
-    error = MihomoError,
-    onError = MihomoOnPrimary,
+    primary = TabbyDarkPrimary,
+    onPrimary = TabbyOnPrimary,
+    secondary = TabbyDarkPrimary,
+    onSecondary = TabbyOnPrimary,
+    background = TabbyDarkBackground,
+    onBackground = TabbyDarkControlNormal,
+    surface = TabbyDarkSurface,
+    onSurface = TabbyDarkControlNormal,
+    surfaceVariant = TabbyDarkSurface,
+    onSurfaceVariant = TabbyDarkControlNormal,
+    surfaceContainerLowest = TabbyDarkBackground,
+    surfaceContainerLow = TabbyDarkSurface,
+    surfaceContainer = TabbyDarkSurface,
+    surfaceContainerHigh = TabbyDarkSurface,
+    surfaceContainerHighest = TabbyDarkSurface,
+    outline = TabbyDarkControlDisabled,
+    inverseSurface = TabbyLightBackground,
+    inverseOnSurface = TabbyLightControlNormal,
+    inversePrimary = TabbyDarkPrimary,
+    error = TabbyError,
+    onError = TabbyOnPrimary,
   )
 
 private val LightColorScheme =
   lightColorScheme(
-    primary = MihomoLightPrimary,
-    onPrimary = MihomoOnPrimary,
-    secondary = MihomoLightPrimary,
-    onSecondary = MihomoOnPrimary,
-    background = MihomoLightBackground,
-    onBackground = MihomoLightControlNormal,
-    surface = MihomoLightBackground,
-    onSurface = MihomoLightControlNormal,
-    surfaceVariant = MihomoLightBackground,
-    onSurfaceVariant = MihomoLightControlNormal,
-    surfaceContainerLowest = MihomoLightBackground,
-    surfaceContainerLow = MihomoLightBackground,
-    surfaceContainer = MihomoLightBackground,
-    surfaceContainerHigh = MihomoLightBackground,
-    surfaceContainerHighest = MihomoLightBackground,
-    outline = MihomoLightControlDisabled,
-    inverseSurface = MihomoDarkSurface,
-    inverseOnSurface = MihomoDarkControlNormal,
-    inversePrimary = MihomoDarkPrimary,
-    error = MihomoError,
-    onError = MihomoOnPrimary,
+    primary = TabbyLightPrimary,
+    onPrimary = TabbyOnPrimary,
+    secondary = TabbyLightPrimary,
+    onSecondary = TabbyOnPrimary,
+    background = TabbyLightBackground,
+    onBackground = TabbyLightControlNormal,
+    surface = TabbyLightBackground,
+    onSurface = TabbyLightControlNormal,
+    surfaceVariant = TabbyLightBackground,
+    onSurfaceVariant = TabbyLightControlNormal,
+    surfaceContainerLowest = TabbyLightBackground,
+    surfaceContainerLow = TabbyLightBackground,
+    surfaceContainer = TabbyLightBackground,
+    surfaceContainerHigh = TabbyLightBackground,
+    surfaceContainerHighest = TabbyLightBackground,
+    outline = TabbyLightControlDisabled,
+    inverseSurface = TabbyDarkSurface,
+    inverseOnSurface = TabbyDarkControlNormal,
+    inversePrimary = TabbyDarkPrimary,
+    error = TabbyError,
+    onError = TabbyOnPrimary,
   )
 
 @Immutable
-data class MihomoDimens(
+data class TabbyDimens(
   val dialogPadding: Dp,
   val itemMinHeight: Dp,
   val itemHeaderComponentSize: Dp,
@@ -78,8 +78,8 @@ data class MihomoDimens(
   val dialogContentSpacing: Dp,
 )
 
-private val DefaultMihomoDimens =
-  MihomoDimens(
+private val DefaultTabbyDimens =
+  TabbyDimens(
     dialogPadding = 20.dp,
     itemMinHeight = 75.dp,
     itemHeaderComponentSize = 30.dp,
@@ -90,15 +90,15 @@ private val DefaultMihomoDimens =
     dialogContentSpacing = 12.dp,
   )
 
-private val LocalMihomoColors = staticCompositionLocalOf { LightMihomoColorTokens }
-private val LocalMihomoDimens = staticCompositionLocalOf { DefaultMihomoDimens }
-private val LocalMihomoTypography = staticCompositionLocalOf { DefaultMihomoTextStyles }
+private val LocalTabbyColors = staticCompositionLocalOf { LightTabbyColorTokens }
+private val LocalTabbyDimens = staticCompositionLocalOf { DefaultTabbyDimens }
+private val LocalTabbyTypography = staticCompositionLocalOf { DefaultTabbyTextStyles }
 
-val mihomoDimens: MihomoDimens
-  @Composable @ReadOnlyComposable get() = LocalMihomoDimens.current
+val tabbyDimens: TabbyDimens
+  @Composable @ReadOnlyComposable get() = LocalTabbyDimens.current
 
 @Composable
-fun MihomoTheme(
+fun TabbyTheme(
   darkModeInSettings: DarkMode = DarkMode.Auto,
   darkTheme: Boolean =
     when (darkModeInSettings) {
@@ -109,24 +109,24 @@ fun MihomoTheme(
   content: @Composable () -> Unit,
 ) {
   val colorScheme = if (darkTheme) DarkColorScheme else LightColorScheme
-  val mihomoColors = if (darkTheme) DarkMihomoColorTokens else LightMihomoColorTokens
+  val tabbyColors = if (darkTheme) DarkTabbyColorTokens else LightTabbyColorTokens
 
   CompositionLocalProvider(
-    LocalMihomoColors provides mihomoColors,
-    LocalMihomoDimens provides DefaultMihomoDimens,
-    LocalMihomoTypography provides DefaultMihomoTextStyles,
+    LocalTabbyColors provides tabbyColors,
+    LocalTabbyDimens provides DefaultTabbyDimens,
+    LocalTabbyTypography provides DefaultTabbyTextStyles,
   ) {
     MaterialTheme(colorScheme = colorScheme, typography = Typography, content = content)
   }
 }
 
-class MihomoThemeWrapper : PreviewWrapperProvider {
+class TabbyThemeWrapper : PreviewWrapperProvider {
   @Composable
   override fun Wrap(content: @Composable () -> Unit) {
-    MihomoTheme(content = content)
+    TabbyTheme(content = content)
   }
 }
 
 @Preview(name = "Light", showBackground = true)
 @Preview(name = "Dark", showBackground = true, uiMode = UI_MODE_NIGHT_YES)
-annotation class PreviewMihomo
+annotation class PreviewTabby

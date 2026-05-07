@@ -6,7 +6,7 @@
       android:name=".LogcatService"
       android:exported="false"
       android:foregroundServiceType="specialUse"
-      android:label="@string/clash_logcat">
+      android:label="@string/tabby_logcat">
       <property
         android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
         android:value="explanation_for_special_use" />

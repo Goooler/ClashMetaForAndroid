@@ -17,9 +17,9 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.github.kr328.clash.crash.R
 import com.github.kr328.clash.crash.vm.AppCrashedViewModel
-import com.github.kr328.clash.ui.component.MihomoScaffold
-import com.github.kr328.clash.ui.theme.MihomoThemeWrapper
-import com.github.kr328.clash.ui.theme.PreviewMihomo
+import com.github.kr328.clash.ui.component.TabbyScaffold
+import com.github.kr328.clash.ui.theme.PreviewTabby
+import com.github.kr328.clash.ui.theme.TabbyThemeWrapper
 
 @Composable
 internal fun AppCrashedScreen(
@@ -33,7 +33,7 @@ internal fun AppCrashedScreen(
 
 @Composable
 private fun AppCrashedContent(modifier: Modifier = Modifier, logs: String) {
-  MihomoScaffold(modifier = modifier, title = stringResource(R.string.application_crashed)) {
+  TabbyScaffold(modifier = modifier, title = stringResource(R.string.application_crashed)) {
     innerPadding ->
     SelectionContainer {
       Text(
@@ -53,8 +53,8 @@ private fun AppCrashedContent(modifier: Modifier = Modifier, logs: String) {
   }
 }
 
-@PreviewWrapper(MihomoThemeWrapper::class)
-@PreviewMihomo
+@PreviewWrapper(TabbyThemeWrapper::class)
+@PreviewTabby
 @Composable
 private fun AppCrashedScreenPreview() {
   AppCrashedContent(

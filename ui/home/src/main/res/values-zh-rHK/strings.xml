@@ -16,7 +16,7 @@
   <string name="profile">配置</string>
   <string name="sources">源代碼</string>
   <string name="stopped">已停止</string>
-  <string name="tips_help"><![CDATA[Clash Meta for Android 是一個<strong>免費軟件</strong>並且我們<strong>不</strong>為其提供任何服務, <strong>請務必不要反饋非應用自身引起的問題</strong>]]></string>
+  <string name="tips_help"><![CDATA[Tabby 是一個<strong>免費軟件</strong>並且我們<strong>不</strong>為其提供任何服務, <strong>請務必不要反饋非應用自身引起的問題</strong>]]></string>
   <string name="version_updated">應用已更新</string>
   <string name="version_updated_tips">設置已被清除，舊的配置文件需要再次保存。</string>
 </resources>

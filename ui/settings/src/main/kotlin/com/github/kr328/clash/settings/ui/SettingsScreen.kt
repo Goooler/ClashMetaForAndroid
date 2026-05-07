@@ -24,15 +24,15 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.PreviewWrapper
 import com.github.kr328.clash.common.R as CommonR
 import com.github.kr328.clash.settings.R
-import com.github.kr328.clash.ui.component.MihomoScaffold
+import com.github.kr328.clash.ui.component.TabbyScaffold
 import com.github.kr328.clash.ui.icon.BaselineDns
 import com.github.kr328.clash.ui.icon.BaselineExtension
 import com.github.kr328.clash.ui.icon.BaselineMeta
 import com.github.kr328.clash.ui.icon.BaselineSettings
-import com.github.kr328.clash.ui.icon.MihomoIcons
-import com.github.kr328.clash.ui.theme.MihomoThemeWrapper
-import com.github.kr328.clash.ui.theme.PreviewMihomo
-import com.github.kr328.clash.ui.theme.mihomoDimens
+import com.github.kr328.clash.ui.icon.TabbyIcons
+import com.github.kr328.clash.ui.theme.PreviewTabby
+import com.github.kr328.clash.ui.theme.TabbyThemeWrapper
+import com.github.kr328.clash.ui.theme.tabbyDimens
 
 @Composable
 internal fun SettingsScreen(
@@ -42,7 +42,7 @@ internal fun SettingsScreen(
   onOpenOverrideSettings: () -> Unit,
   onOpenMetaFeatureSettings: () -> Unit,
 ) {
-  MihomoScaffold(
+  TabbyScaffold(
     title = stringResource(CommonR.string.settings),
     modifier = modifier.fillMaxSize(),
   ) { innerPadding ->
@@ -50,25 +50,25 @@ internal fun SettingsScreen(
       modifier = Modifier.fillMaxSize().padding(innerPadding).verticalScroll(rememberScrollState())
     ) {
       SettingsEntryItem(
-        icon = MihomoIcons.BaselineSettings,
+        icon = TabbyIcons.BaselineSettings,
         titleRes = R.string.app,
         onClick = onOpenAppSettings,
       )
 
       SettingsEntryItem(
-        icon = MihomoIcons.BaselineDns,
+        icon = TabbyIcons.BaselineDns,
         titleRes = R.string.network,
         onClick = onOpenNetworkSettings,
       )
 
       SettingsEntryItem(
-        icon = MihomoIcons.BaselineExtension,
+        icon = TabbyIcons.BaselineExtension,
         titleRes = R.string.override,
         onClick = onOpenOverrideSettings,
       )
 
       SettingsEntryItem(
-        icon = MihomoIcons.BaselineMeta,
+        icon = TabbyIcons.BaselineMeta,
         titleRes = R.string.meta_features,
         onClick = onOpenMetaFeatureSettings,
       )
@@ -83,7 +83,7 @@ private fun SettingsEntryItem(
   onClick: () -> Unit,
   modifier: Modifier = Modifier,
 ) {
-  val dimens = mihomoDimens
+  val dimens = tabbyDimens
   Row(
     modifier =
       modifier
@@ -108,8 +108,8 @@ private fun SettingsEntryItem(
   }
 }
 
-@PreviewWrapper(MihomoThemeWrapper::class)
-@PreviewMihomo
+@PreviewWrapper(TabbyThemeWrapper::class)
+@PreviewTabby
 @Composable
 private fun SettingsScreenPreview() {
   SettingsScreen(

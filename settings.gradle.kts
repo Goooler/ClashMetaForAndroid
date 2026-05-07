@@ -40,7 +40,7 @@ develocity {
   }
 }
 
-rootProject.name = "MihomoForAndroid"
+rootProject.name = "Tabby"
 
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 

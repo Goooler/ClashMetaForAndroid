@@ -2,7 +2,6 @@
 
   <string name="_new">New</string>
   <string name="cancel">Cancel</string>
-  <string name="clash_meta_for_android">Clash Meta for Android</string>
   <string name="close">Close</string>
   <string name="compatible">Compatible</string>
   <string name="default_">Default</string>
@@ -35,8 +34,8 @@
   <string name="profiles">Profiles</string>
   <string name="providers">Providers</string>
   <string name="proxy">Proxy</string>
-  <string name="receive_broadcasts_of_clash">Receive broadcasts of clash services</string>
-  <string name="receive_clash_broadcasts">Receive Clash Broadcasts</string>
+  <string name="receive_broadcasts_of_tabby">Receive broadcasts of Tabby services</string>
+  <string name="receive_tabby_broadcasts">Receive Tabby Broadcasts</string>
   <string name="recently">Recently</string>
   <string name="reset">Reset</string>
   <string name="rule">Rule</string>

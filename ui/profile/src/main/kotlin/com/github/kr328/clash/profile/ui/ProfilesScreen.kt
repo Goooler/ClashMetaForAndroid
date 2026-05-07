@@ -53,18 +53,18 @@ import com.github.kr328.clash.common.R as CommonR
 import com.github.kr328.clash.profile.R
 import com.github.kr328.clash.profile.vm.ProfilesViewModel
 import com.github.kr328.clash.service.model.Profile
-import com.github.kr328.clash.ui.component.MihomoScaffold
+import com.github.kr328.clash.ui.component.TabbyScaffold
 import com.github.kr328.clash.ui.icon.BaselineAdd
 import com.github.kr328.clash.ui.icon.BaselineContentCopy
 import com.github.kr328.clash.ui.icon.BaselineEdit
 import com.github.kr328.clash.ui.icon.BaselineMoreVert
 import com.github.kr328.clash.ui.icon.BaselineSync
 import com.github.kr328.clash.ui.icon.BaselineUpdate
-import com.github.kr328.clash.ui.icon.MihomoIcons
 import com.github.kr328.clash.ui.icon.OutlineDelete
-import com.github.kr328.clash.ui.theme.MihomoThemeWrapper
-import com.github.kr328.clash.ui.theme.PreviewMihomo
-import com.github.kr328.clash.ui.theme.mihomoDimens
+import com.github.kr328.clash.ui.icon.TabbyIcons
+import com.github.kr328.clash.ui.theme.PreviewTabby
+import com.github.kr328.clash.ui.theme.TabbyThemeWrapper
+import com.github.kr328.clash.ui.theme.tabbyDimens
 import com.github.kr328.clash.util.elapsedIntervalString
 import com.github.kr328.clash.util.toDateStr
 import com.github.kr328.clash.util.toString
@@ -154,7 +154,7 @@ private fun ProfilesContent(
     ModalBottomSheet(onDismissRequest = { menuProfile = null }, sheetState = sheetState) {
       if (profile.imported && profile.type != File) {
         ProfilesMenuAction(
-          icon = MihomoIcons.BaselineUpdate,
+          icon = TabbyIcons.BaselineUpdate,
           text = stringResource(R.string.update),
           onClick = {
             menuProfile = null
@@ -163,7 +163,7 @@ private fun ProfilesContent(
         )
       }
       ProfilesMenuAction(
-        icon = MihomoIcons.BaselineEdit,
+        icon = TabbyIcons.BaselineEdit,
         text = stringResource(R.string.edit),
         onClick = {
           menuProfile = null
@@ -172,7 +172,7 @@ private fun ProfilesContent(
       )
       if (profile.imported) {
         ProfilesMenuAction(
-          icon = MihomoIcons.BaselineContentCopy,
+          icon = TabbyIcons.BaselineContentCopy,
           text = stringResource(R.string.duplicate),
           onClick = {
             menuProfile = null
@@ -181,7 +181,7 @@ private fun ProfilesContent(
         )
       }
       ProfilesMenuAction(
-        icon = MihomoIcons.OutlineDelete,
+        icon = TabbyIcons.OutlineDelete,
         text = stringResource(CommonR.string.delete),
         tint = MaterialTheme.colorScheme.error,
         onClick = {
@@ -193,7 +193,7 @@ private fun ProfilesContent(
     }
   }
 
-  MihomoScaffold(
+  TabbyScaffold(
     title = stringResource(CommonR.string.profiles),
     modifier = modifier,
     snackbarHostState = snackbarHostState,
@@ -204,7 +204,7 @@ private fun ProfilesContent(
             CircularProgressIndicator(modifier = Modifier.size(15.dp), strokeWidth = 2.5.dp)
           } else {
             Icon(
-              imageVector = MihomoIcons.BaselineSync,
+              imageVector = TabbyIcons.BaselineSync,
               contentDescription = stringResource(R.string.update_all),
             )
           }
@@ -212,7 +212,7 @@ private fun ProfilesContent(
       }
       IconButton(onClick = onCreate) {
         Icon(
-          imageVector = MihomoIcons.BaselineAdd,
+          imageVector = TabbyIcons.BaselineAdd,
           contentDescription = stringResource(CommonR.string.new_profile),
         )
       }
@@ -243,7 +243,7 @@ private fun ProfileItem(
   onMenuClick: () -> Unit,
 ) {
   val context = LocalContext.current
-  val dimens = mihomoDimens
+  val dimens = tabbyDimens
   val itemMinHeight = dimens.itemMinHeight
   val itemHeaderMargin = dimens.itemHeaderMargin
   val itemTextMargin = dimens.itemTextMargin
@@ -319,7 +319,7 @@ private fun ProfileItem(
 
       IconButton(onClick = onMenuClick, modifier = Modifier.padding(horizontal = 4.dp)) {
         Icon(
-          imageVector = MihomoIcons.BaselineMoreVert,
+          imageVector = TabbyIcons.BaselineMoreVert,
           contentDescription = stringResource(CommonR.string.more),
         )
       }
@@ -354,8 +354,8 @@ private fun ProfilesMenuAction(
   }
 }
 
-@PreviewWrapper(MihomoThemeWrapper::class)
-@PreviewMihomo
+@PreviewWrapper(TabbyThemeWrapper::class)
+@PreviewTabby
 @Composable
 private fun ProfilesContentPreview() {
   ProfilesContent(

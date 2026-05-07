@@ -18,10 +18,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import com.github.kr328.clash.common.R as CommonR
 import com.github.kr328.clash.ui.icon.BaselineArrowBack
-import com.github.kr328.clash.ui.icon.MihomoIcons
+import com.github.kr328.clash.ui.icon.TabbyIcons
 
 @Composable
-fun MihomoScaffold(
+fun TabbyScaffold(
   title: String,
   modifier: Modifier = Modifier,
   onBackPressedDispatcher: OnBackPressedDispatcher? =
@@ -35,7 +35,7 @@ fun MihomoScaffold(
       navigationIcon = {
         IconButton(onClick = onBack) {
           Icon(
-            imageVector = MihomoIcons.BaselineArrowBack,
+            imageVector = TabbyIcons.BaselineArrowBack,
             contentDescription = stringResource(CommonR.string.close),
           )
         }
