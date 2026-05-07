@@ -9,6 +9,7 @@
   <string name="delete">Удалить</string>
   <string name="direct_mode">Прямой режим</string>
   <string name="disabled">Отключен</string>
+  <string name="dont_modify">Не изменять</string>
   <string name="export">Экспорт</string>
   <string name="external">Внешний</string>
   <string name="file">Файл</string>
@@ -22,6 +23,7 @@
   <string name="format_years_ago">%d лет назад</string>
   <string name="global_mode">Глобальный режим</string>
   <string name="http">HTTP</string>
+  <string name="inline">Встроенный</string>
   <string name="loading">Загрузка</string>
   <string name="logs">Логи</string>
   <string name="mode">Режим</string>
@@ -33,6 +35,8 @@
   <string name="profiles">Профили</string>
   <string name="providers">Провайдеры</string>
   <string name="proxy">Прокси</string>
+  <string name="receive_broadcasts_of_clash">Получать уведомления от сервисов Clash</string>
+  <string name="receive_clash_broadcasts">Получать уведомления Clash</string>
   <string name="recently">Недавно</string>
   <string name="reset">Сброс</string>
   <string name="rule">Правило</string>

@@ -9,6 +9,7 @@
   <string name="delete">삭제</string>
   <string name="direct_mode">다이렉트</string>
   <string name="disabled">끔</string>
+  <string name="dont_modify">수정하지 마십시오</string>
   <string name="export">내보내기</string>
   <string name="external">외부</string>
   <string name="file">파일</string>
@@ -22,6 +23,7 @@
   <string name="format_years_ago">%d 년 전</string>
   <string name="global_mode">글로벌</string>
   <string name="http">HTTP</string>
+  <string name="inline">인라인</string>
   <string name="loading">로딩중</string>
   <string name="logs">로그</string>
   <string name="mode">모드</string>
@@ -33,6 +35,8 @@
   <string name="profiles">구성 목록</string>
   <string name="providers">외부 리소스</string>
   <string name="proxy">프록시</string>
+  <string name="receive_broadcasts_of_clash">Clash 서비스 브로드캐스트 수신</string>
+  <string name="receive_clash_broadcasts">Clash 브로드캐스트 수신</string>
   <string name="recently">최근</string>
   <string name="reset">재설정</string>
   <string name="rule">규칙</string>

@@ -1,0 +1,19 @@
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="PluralsCandidate">
+
+  <string name="clash_meta_for_android">Clash Meta cho Android</string>
+  <string name="clash_service_status_channel">Trạng thái Clash</string>
+  <string name="configuration_yaml">Configuration.yaml</string>
+  <string name="format_update_complete">Cập nhật %s hoàn tất</string>
+  <string name="format_update_failure">Cập nhật %1$s: %2$s thất bại</string>
+  <string name="loading">Đang tải</string>
+  <string name="profile_process_result">Kết quả xử lý cấu hình</string>
+  <string name="profile_process_status">Trạng thái xử lý cấu hình</string>
+  <string name="profile_service_status">Trạng thái dịch vụ cấu hình</string>
+  <string name="profile_updater">Trình cập nhật cấu hình</string>
+  <string name="profile_updating">Đang cập nhật cấu hình</string>
+  <string name="profiles_and_providers">Cấu hình và Nhà cung cấp</string>
+  <string name="provider_files">Tệp nhà cung cấp</string>
+  <string name="running">Đang chạy</string>
+  <string name="update_failure">Cập nhật thất bại</string>
+  <string name="update_successfully">Cập nhật thành công</string>
+</resources>

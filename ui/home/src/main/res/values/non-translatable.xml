@@ -1,4 +1,0 @@
-<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="PluralsCandidate">
-
-  <string name="google_play_url" translatable="false">https://play.google.com/store/apps/details?id=com.github.kr328.clash</string>
-</resources>

@@ -9,6 +9,7 @@
   <string name="delete">削除</string>
   <string name="direct_mode">ダイレクトモード</string>
   <string name="disabled">無効にする</string>
+  <string name="dont_modify">変更しないでください</string>
   <string name="export">エクスポート</string>
   <string name="external">外部入力</string>
   <string name="file">ファイル</string>
@@ -22,6 +23,7 @@
   <string name="format_years_ago">%d年前</string>
   <string name="global_mode">グローバルモード</string>
   <string name="http">HTTP</string>
+  <string name="inline">インライン</string>
   <string name="loading">読み込み中</string>
   <string name="logs">ログ</string>
   <string name="mode">モード</string>
@@ -33,6 +35,8 @@
   <string name="profiles">プロファイル</string>
   <string name="providers">プロバイダー</string>
   <string name="proxy">プロキシ</string>
+  <string name="receive_broadcasts_of_clash">Clash サービスのブロードキャストを受信</string>
+  <string name="receive_clash_broadcasts">Clash ブロードキャストを受信</string>
   <string name="recently">直近</string>
   <string name="reset">リセット</string>
   <string name="rule">ルール</string>

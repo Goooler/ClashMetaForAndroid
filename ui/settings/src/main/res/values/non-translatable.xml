@@ -1,7 +1,3 @@
 <resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="PluralsCandidate">
-
-  <string name="geoip_url" translatable="false">https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/release/geoip.dat</string>
-  <string name="geosite_url" translatable="false">https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/release/geosite.dat</string>
-  <string name="mmdb_url" translatable="false">https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/release/country.mmdb</string>
   <string name="raw_cn" translatable="false">cn</string>
 </resources>

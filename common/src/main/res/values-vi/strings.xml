@@ -9,6 +9,7 @@
   <string name="delete">Xoá</string>
   <string name="direct_mode">Chế độ trực tiếp</string>
   <string name="disabled">Vô hiệu hóa</string>
+  <string name="dont_modify">Không sửa đổi</string>
   <string name="export">Xuất</string>
   <string name="external">Bên ngoài</string>
   <string name="file">Tệp</string>
@@ -22,6 +23,7 @@
   <string name="format_years_ago">%d năm trước</string>
   <string name="global_mode">Chế độ toàn cầu</string>
   <string name="http">HTTP</string>
+  <string name="inline">Nội tuyến</string>
   <string name="loading">Đang tải</string>
   <string name="logs">Nhật ký</string>
   <string name="mode">Chế độ</string>
@@ -33,6 +35,8 @@
   <string name="profiles">Cấu hình</string>
   <string name="providers">Nhà cung cấp</string>
   <string name="proxy">Proxy</string>
+  <string name="receive_broadcasts_of_clash">Nhận thông báo của dịch vụ Clash</string>
+  <string name="receive_clash_broadcasts">Nhận thông báo Clash</string>
   <string name="recently">Vừa xong</string>
   <string name="reset">Đặt lại</string>
   <string name="rule">Quy tắc</string>
