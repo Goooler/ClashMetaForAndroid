@@ -1,9 +1,7 @@
 package com.github.kr328.clash.profile.ui
 
 import androidx.activity.compose.BackHandler
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.AlertDialog
@@ -45,7 +43,6 @@ import com.github.kr328.clash.ui.icon.OutlineLabel
 import com.github.kr328.clash.ui.icon.OutlineUpdate
 import com.github.kr328.clash.ui.theme.MihomoThemeWrapper
 import com.github.kr328.clash.ui.theme.PreviewMihomo
-import com.github.kr328.clash.ui.theme.mihomoDimens
 import com.github.kr328.clash.util.ValidatorAutoUpdateInterval
 import com.github.kr328.clash.util.ValidatorHttpUrl
 import com.github.kr328.clash.util.ValidatorNotBlank
@@ -157,12 +154,8 @@ private fun PropertiesContent(
       }
     },
   ) { innerPadding ->
-    val dimens = mihomoDimens
     ProvidePreferenceLocals {
-      LazyColumn(
-        modifier = Modifier.fillMaxSize().padding(innerPadding),
-        contentPadding = PaddingValues(horizontal = dimens.itemHeaderMargin),
-      ) {
+      LazyColumn(modifier = Modifier.fillMaxSize(), contentPadding = innerPadding) {
         preference(
           key = "tip",
           title = { Text(stringResource(R.string.properties)) },
