@@ -16,7 +16,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
-import com.github.kr328.clash.glue.R
+import com.github.kr328.clash.common.R
 import com.github.kr328.clash.ui.icon.BaselineArrowBack
 import com.github.kr328.clash.ui.icon.MihomoIcons
 

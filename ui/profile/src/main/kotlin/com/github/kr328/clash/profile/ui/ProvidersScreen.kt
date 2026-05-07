@@ -34,8 +34,9 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.github.kr328.clash.common.R
 import com.github.kr328.clash.core.model.Provider
-import com.github.kr328.clash.glue.R
+import com.github.kr328.clash.profile.R as ProfileR
 import com.github.kr328.clash.profile.vm.ProvidersViewModel
 import com.github.kr328.clash.profile.vm.ProvidersViewModel.UiState.ProviderItemState
 import com.github.kr328.clash.ui.component.MihomoScaffold
@@ -100,7 +101,7 @@ private fun ProvidersContent(
       IconButton(onClick = onUpdateAll) {
         Icon(
           imageVector = MihomoIcons.BaselineSync,
-          contentDescription = stringResource(R.string.update_all),
+          contentDescription = stringResource(ProfileR.string.update_all),
         )
       }
     },
@@ -161,7 +162,7 @@ private fun ProviderItem(state: ProviderItemState, currentTime: Long, onUpdate: 
         } else {
           Icon(
             imageVector = MihomoIcons.BaselineSwapVert,
-            contentDescription = stringResource(R.string.update),
+            contentDescription = stringResource(ProfileR.string.update),
           )
         }
       }

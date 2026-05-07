@@ -1,7 +1,7 @@
 package com.github.kr328.clash.util
 
 import android.content.Context
-import com.github.kr328.clash.glue.R
+import com.github.kr328.clash.common.R
 import kotlin.time.Duration.Companion.milliseconds
 
 fun Long.elapsedIntervalString(context: Context): String {

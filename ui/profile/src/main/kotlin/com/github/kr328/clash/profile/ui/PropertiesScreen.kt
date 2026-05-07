@@ -32,7 +32,8 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.github.kr328.clash.glue.R
+import com.github.kr328.clash.common.R
+import com.github.kr328.clash.profile.R as ProfileR
 import com.github.kr328.clash.profile.vm.PropertiesViewModel
 import com.github.kr328.clash.service.model.Profile
 import com.github.kr328.clash.ui.component.MihomoScaffold
@@ -143,7 +144,7 @@ private fun PropertiesContent(
   MihomoScaffold(
     modifier = modifier,
     snackbarHostState = snackbarHostState,
-    title = stringResource(R.string.properties),
+    title = stringResource(ProfileR.string.properties),
     onBack = onBack,
     actions = {
       if (processing) {
@@ -152,7 +153,7 @@ private fun PropertiesContent(
         IconButton(onClick = onCommit) {
           Icon(
             imageVector = MihomoIcons.BaselineSave,
-            contentDescription = stringResource(R.string.save),
+            contentDescription = stringResource(ProfileR.string.save),
           )
         }
       }
@@ -169,8 +170,10 @@ private fun PropertiesContent(
       ProvidePreferenceLocals {
         Preference(
           modifier = Modifier.fillMaxWidth(),
-          title = { Text(stringResource(R.string.properties)) },
-          summary = { Text(AnnotatedString.fromHtml(stringResource(R.string.tips_properties))) },
+          title = { Text(stringResource(ProfileR.string.properties)) },
+          summary = {
+            Text(AnnotatedString.fromHtml(stringResource(ProfileR.string.tips_properties)))
+          },
           icon = { Icon(imageVector = MihomoIcons.OutlineInfo, contentDescription = null) },
           enabled = false,
         )
@@ -186,7 +189,7 @@ private fun PropertiesContent(
           textToValue = { input -> if (ValidatorNotBlank(input)) input else null },
           modifier = Modifier.fillMaxWidth(),
           icon = { Icon(imageVector = MihomoIcons.OutlineLabel, contentDescription = null) },
-          summary = { Text(profile.name.ifBlank { stringResource(R.string.profile_name) }) },
+          summary = { Text(profile.name.ifBlank { stringResource(ProfileR.string.profile_name) }) },
         )
 
         TextFieldPreference(
@@ -202,7 +205,7 @@ private fun PropertiesContent(
           enabled = profile.type != File && profile.type != External,
           icon = { Icon(imageVector = MihomoIcons.OutlineInbox, contentDescription = null) },
           summary = {
-            Text(profile.source.ifBlank { stringResource(R.string.accept_http_content) })
+            Text(profile.source.ifBlank { stringResource(ProfileR.string.accept_http_content) })
           },
         )
 
@@ -210,7 +213,10 @@ private fun PropertiesContent(
           if (profile.interval == 0L) {
             stringResource(R.string.disabled)
           } else {
-            stringResource(R.string.format_minutes, profile.interval.milliseconds.inWholeMinutes)
+            stringResource(
+              ProfileR.string.format_minutes,
+              profile.interval.milliseconds.inWholeMinutes,
+            )
           }
 
         TextFieldPreference(
@@ -220,7 +226,7 @@ private fun PropertiesContent(
               onIntervalChanged(interval)
             }
           },
-          title = { Text(stringResource(R.string.auto_update)) },
+          title = { Text(stringResource(ProfileR.string.auto_update)) },
           textToValue = { input ->
             if (!ValidatorAutoUpdateInterval(input)) {
               null
@@ -244,8 +250,8 @@ private fun PropertiesContent(
 
         Preference(
           modifier = Modifier.fillMaxWidth(),
-          title = { Text(stringResource(R.string.browse_files)) },
-          summary = { Text(stringResource(R.string.browse_configuration_providers)) },
+          title = { Text(stringResource(ProfileR.string.browse_files)) },
+          summary = { Text(stringResource(ProfileR.string.browse_configuration_providers)) },
           icon = { Icon(imageVector = MihomoIcons.OutlineFolder, contentDescription = null) },
           onClick = onBrowseFiles,
         )
@@ -273,8 +279,8 @@ private fun PropertiesContent(
 private fun ExitWithoutSavingDialog(onConfirm: () -> Unit, onDismiss: () -> Unit) {
   AlertDialog(
     onDismissRequest = onDismiss,
-    title = { Text(text = stringResource(R.string.exit_without_save)) },
-    text = { Text(text = stringResource(R.string.exit_without_save_warning)) },
+    title = { Text(text = stringResource(ProfileR.string.exit_without_save)) },
+    text = { Text(text = stringResource(ProfileR.string.exit_without_save_warning)) },
     confirmButton = {
       TextButton(onClick = onConfirm) { Text(text = stringResource(R.string.ok)) }
     },

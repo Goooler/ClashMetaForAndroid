@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="accept_http_content">http(s) 연결만 허용</string>
+  <string name="active_unsaved_tips">활성화하기 전에 구성 파일을 저장해야합니다.</string>
+  <string name="at_least_15_minutes">최소 15분 이상 또는 공백</string>
+  <string name="auto_update">자동 업데이트</string>
+  <string name="auto_update_minutes">자동 업데이트 (분)</string>
+  <string name="browse_configuration_providers"><![CDATA[구성 파일과 외부 리소스를 찾습니다.]]></string>
+  <string name="browse_files">파일 찾아보기</string>
+  <string name="create_profile">구성 추가</string>
+  <string name="detail">자세히</string>
+  <string name="duplicate">복제</string>
+  <string name="edit">편집</string>
+  <string name="empty_name">빈칸</string>
+  <string name="exit_without_save">저장없이 종료</string>
+  <string name="exit_without_save_warning">모든 변경 사항이 저장되지 않습니다.</string>
+  <string name="file_name">파일명</string>
+  <string name="files">파일</string>
+  <string name="format_fetching_configuration">현재 %s 에서 구성 파일을 가져오는 중입니다.</string>
+  <string name="format_fetching_provider">현재 외부 리소스 %s 을 가져오는 중입니다.</string>
+  <string name="format_minutes">%d 분</string>
+  <string name="format_type_unsaved">%s (저장되지 않음)</string>
+  <string name="format_update_provider_failure">업데이트 %1$s: %2$s</string>
+  <string name="import_">가져오기</string>
+  <string name="import_from_file">파일에서 가져오기</string>
+  <string name="import_from_qr">QR코드에서 가져오기</string>
+  <string name="import_from_qr_exception">처리되지 않은 시스템 예외가 발생했습니다.</string>
+  <string name="import_from_qr_no_permission">카메라 접근이 제한되었습니다. 설정에서 허용해 주세요.</string>
+  <string name="import_from_url">URL에서 가져오기</string>
+  <string name="initializing">초기화 중입니다.</string>
+  <string name="invalid_file_name">유효하지 않은 파일명</string>
+  <string name="invalid_url">유효하지 않은 URL</string>
+  <string name="profile_name">구성 이름</string>
+  <string name="profile_url">구성 URL</string>
+  <string name="properties">속성</string>
+  <string name="rename">이름 변경</string>
+  <string name="save">저장</string>
+  <string name="should_not_be_blank">이 필드는 공백이 허용되지 않습니다.</string>
+  <string name="tips_properties"><![CDATA[<strong>Clash 구성 파일</strong>(<strong>프록시</strong>/<strong>규칙</strong> 포함)만 추가할 수 있습니다.]]></string>
+  <string name="toast_profile_updated_complete">Update profile %s completed</string>
+  <string name="toast_profile_updated_failed">Update profile %1$s failed: %2$s</string>
+  <string name="update">업데이트</string>
+  <string name="update_all">전체 업데이트</string>
+  <string name="verifying">인증 중입니다.</string>
+</resources>

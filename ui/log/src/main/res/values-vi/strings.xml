@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="clash_logcat">Nhật ký Clash</string>
+  <string name="copied">Đã sao chép</string>
+  <string name="delete_all_logs">Xóa tất cả nhật ký</string>
+  <string name="delete_all_logs_warn">Tất cả nhật ký lịch sử sẽ *MẤT*</string>
+  <string name="file_exported">Tệp đã xuất</string>
+  <string name="history">Lịch sử</string>
+  <string name="invalid_log_file">Tệp nhật ký không hợp lệ</string>
+  <string name="logcat">Nhật ký</string>
+</resources>

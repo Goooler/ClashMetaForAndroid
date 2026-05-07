@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="PluralsCandidate">
+  <string name="delay">Задержка</string>
+  <string name="delay_test">Проверка задержки</string>
+  <string name="doubles">Двойное</string>
+  <string name="layout">Отображение</string>
+  <string name="mode_switch_tips">Действует только для текущей сессии</string>
+  <string name="multiple">Множественное</string>
+  <string name="not_selectable">Not Selectable</string>
+  <string name="proxy_empty_tips">Нет групп для отображения</string>
+  <string name="single">Одиночное</string>
+</resources>

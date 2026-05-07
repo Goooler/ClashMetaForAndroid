@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="accept_http_content">http(s) のみを許可</string>
+  <string name="active_unsaved_tips">プロファイルを有効にする前に保存する必要があります</string>
+  <string name="at_least_15_minutes">15分以上か空白にしてください</string>
+  <string name="auto_update">自動更新</string>
+  <string name="auto_update_minutes">自動更新 (分)</string>
+  <string name="browse_configuration_providers"><![CDATA[プロファイルと外部リソースを表示]]></string>
+  <string name="browse_files">ファイルを表示</string>
+  <string name="create_profile">プロファイルの作成</string>
+  <string name="detail">詳細</string>
+  <string name="duplicate">複製</string>
+  <string name="edit">編集</string>
+  <string name="empty_name">空の名前</string>
+  <string name="exit_without_save">保存せずに閉じる</string>
+  <string name="exit_without_save_warning">すべての変更は失われます</string>
+  <string name="file_name">ファイル名</string>
+  <string name="files">ファイル</string>
+  <string name="format_fetching_configuration">%sのプロファイルをダウンロード中</string>
+  <string name="format_fetching_provider">%s外部リソースをダウンロード中</string>
+  <string name="format_minutes">%d分</string>
+  <string name="format_type_unsaved">%s (未保存)</string>
+  <string name="format_update_provider_failure">更新 %1$s: %2$s</string>
+  <string name="import_">インポート</string>
+  <string name="import_from_file">ファイルからインポート</string>
+  <string name="import_from_qr">QRコードからインポート</string>
+  <string name="import_from_qr_exception">システムで予期しない例外が発生しました。</string>
+  <string name="import_from_qr_no_permission">カメラのアクセスが制限されています。設定から有効にしてください。</string>
+  <string name="import_from_url">URLからインポート</string>
+  <string name="initializing">初期化中</string>
+  <string name="invalid_file_name">無効なファイル名</string>
+  <string name="invalid_url">無効なURL</string>
+  <string name="profile_name">プロファイル名</string>
+  <string name="profile_url">プロファイルURL</string>
+  <string name="properties">プロパティ</string>
+  <string name="rename">名前の変更</string>
+  <string name="save">保存</string>
+  <string name="should_not_be_blank">空白にはできません</string>
+  <string name="tips_properties"><![CDATA[<strong>Clashプロファイル</strong>のみご利用可能です(<strong>プロキシルール</strong>を含む)]]></string>
+  <string name="toast_profile_updated_complete">Update profile %s completed</string>
+  <string name="toast_profile_updated_failed">Update profile %1$s failed: %2$s</string>
+  <string name="update">更新</string>
+  <string name="update_all">すべて更新</string>
+  <string name="verifying">チェック中</string>
+</resources>

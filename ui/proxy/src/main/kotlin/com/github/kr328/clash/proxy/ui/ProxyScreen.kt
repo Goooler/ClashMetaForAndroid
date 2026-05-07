@@ -57,10 +57,11 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.github.kr328.clash.common.R
 import com.github.kr328.clash.core.model.Proxy
 import com.github.kr328.clash.core.model.ProxySort
 import com.github.kr328.clash.core.model.TunnelState
-import com.github.kr328.clash.glue.R
+import com.github.kr328.clash.proxy.R as ProxyR
 import com.github.kr328.clash.proxy.vm.ProxyViewModel
 import com.github.kr328.clash.proxy.vm.ProxyViewModel.SelectedProxy
 import com.github.kr328.clash.ui.component.MihomoScaffold
@@ -82,7 +83,7 @@ internal fun ProxyScreen(
   val selectedProxies by viewModel.selectedProxies.collectAsStateWithLifecycle()
   val eventState by viewModel.eventState.collectAsStateWithLifecycle()
   val snackbarHostState = remember { SnackbarHostState() }
-  val modeSwitchTips = stringResource(R.string.mode_switch_tips)
+  val modeSwitchTips = stringResource(ProxyR.string.mode_switch_tips)
 
   DisposableEffect(lifecycleOwner, viewModel) {
     lifecycleOwner.lifecycle.addObserver(viewModel)
@@ -177,7 +178,7 @@ private fun ProxyContent(
           IconButton(onClick = { onUrlTest(uiState.currentPage) }) {
             Icon(
               imageVector = MihomoIcons.BaselineFlashOn,
-              contentDescription = stringResource(R.string.delay_test),
+              contentDescription = stringResource(ProxyR.string.delay_test),
             )
           }
         }
@@ -195,7 +196,7 @@ private fun ProxyContent(
       if (uiState.groupNames.isEmpty()) {
         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
           Text(
-            text = stringResource(R.string.proxy_empty_tips),
+            text = stringResource(ProxyR.string.proxy_empty_tips),
             style = MaterialTheme.typography.titleMedium,
           )
         }
@@ -370,7 +371,7 @@ private fun ColumnScope.ProxyMenuSheetContent(
 ) {
   ProxyMenuSection(title = stringResource(R.string.filter)) {
     ProxyMenuCheckboxRow(
-      title = stringResource(R.string.not_selectable),
+      title = stringResource(ProxyR.string.not_selectable),
       checked = excludeNotSelectable,
       onClick = { onExcludeNotSelectableChanged(!excludeNotSelectable) },
     )
@@ -399,19 +400,19 @@ private fun ColumnScope.ProxyMenuSheetContent(
     )
   }
 
-  ProxyMenuSection(title = stringResource(R.string.layout)) {
+  ProxyMenuSection(title = stringResource(ProxyR.string.layout)) {
     ProxyMenuRadioRow(
-      title = stringResource(R.string.single),
+      title = stringResource(ProxyR.string.single),
       selected = proxyLine == 1,
       onClick = { onProxyLineChanged(1) },
     )
     ProxyMenuRadioRow(
-      title = stringResource(R.string.doubles),
+      title = stringResource(ProxyR.string.doubles),
       selected = proxyLine == 2,
       onClick = { onProxyLineChanged(2) },
     )
     ProxyMenuRadioRow(
-      title = stringResource(R.string.multiple),
+      title = stringResource(ProxyR.string.multiple),
       selected = proxyLine == 3,
       onClick = { onProxyLineChanged(3) },
     )
@@ -429,7 +430,7 @@ private fun ColumnScope.ProxyMenuSheetContent(
       onClick = { onProxySortChanged(ProxySort.Title) },
     )
     ProxyMenuRadioRow(
-      title = stringResource(R.string.delay),
+      title = stringResource(ProxyR.string.delay),
       selected = proxySort == ProxySort.Delay,
       onClick = { onProxySortChanged(ProxySort.Delay) },
     )

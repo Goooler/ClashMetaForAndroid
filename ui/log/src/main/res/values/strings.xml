@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="PluralsCandidate">
+  <string name="clash_logcat">Clash Logcat</string>
+  <string name="copied">Copied</string>
+  <string name="delete_all_logs">Delete All Logs</string>
+  <string name="delete_all_logs_warn">All historical logs will *LOST*</string>
+  <string name="file_exported">File Exported</string>
+  <string name="history">History</string>
+  <string name="invalid_log_file">Invalid log file</string>
+  <string name="logcat">Logcat</string>
+</resources>

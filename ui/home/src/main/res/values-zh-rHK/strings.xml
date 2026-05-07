@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="about">關於</string>
+  <string name="clash_meta_core">Clash Meta 核心</string>
+  <string name="clash_meta_wiki">Clash Meta Wiki</string>
+  <string name="clash_wiki">Clash Wiki</string>
+  <string name="document">文檔</string>
+  <string name="donate">捐贈</string>
+  <string name="feedback">反饋</string>
+  <string name="format_profile_activated">%s 已激活</string>
+  <string name="format_traffic_forwarded">%s 已轉發</string>
+  <string name="github_issues">Github Issues</string>
+  <string name="google_play">Google Play</string>
+  <string name="help">幫助</string>
+  <string name="no_profile_selected">沒有選擇配置文件</string>
+  <string name="profile">配置</string>
+  <string name="sources">源代碼</string>
+  <string name="stopped">已停止</string>
+  <string name="tips_help"><![CDATA[Clash Meta for Android 是一個<strong>免費軟件</strong>並且我們<strong>不</strong>為其提供任何服務, <strong>請務必不要反饋非應用自身引起的問題</strong>]]></string>
+  <string name="version_updated">應用已更新</string>
+  <string name="version_updated_tips">設置已被清除，舊的配置文件需要再次保存。</string>
+</resources>

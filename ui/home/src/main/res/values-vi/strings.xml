@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="about">Thông tin</string>
+  <string name="clash_meta_core">Clash Meta Core</string>
+  <string name="clash_meta_wiki">Clash Meta Wiki</string>
+  <string name="document">Tài liệu</string>
+  <string name="donate">Quyên góp</string>
+  <string name="feedback">Phản hồi</string>
+  <string name="format_profile_activated">%s đang sử dụng</string>
+  <string name="format_traffic_forwarded">%s được sử dụng</string>
+  <string name="github_issues">Sự cố trên Github</string>
+  <string name="help">Trợ giúp</string>
+  <string name="no_profile_selected">Không có cấu hình</string>
+  <string name="profile">Cấu hình</string>
+  <string name="sources">Nguồn</string>
+  <string name="stopped">Đã ngắt kết nối</string>
+  <string name="tips_help">Clash Meta là một phần mềm miễn phí và chúng tôi KHÔNG cung cấp bất kỳ dịch vụ trả phí nào cho nó</string>
+  <string name="version_updated">Đã cập nhật ứng dụng</string>
+  <string name="version_updated_tips">Các cài đặt đã được đặt lại và các cấu hình cũ cần được lưu lại.</string>
+</resources>

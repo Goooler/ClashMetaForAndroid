@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="accept_http_content">Chỉ chấp nhận http(s)</string>
+  <string name="active_unsaved_tips">Hồ sơ cần được lưu trước khi kích hoạt</string>
+  <string name="at_least_15_minutes">Ít nhất 15 phút hoặc để trống</string>
+  <string name="auto_update">Thời gian tự động cập nhật</string>
+  <string name="auto_update_minutes">Tự động cập nhật (Phút)</string>
+  <string name="browse_configuration_providers">Duyệt qua tệp cấu hình và nhà cung cấp</string>
+  <string name="browse_files">Duyệt qua tệp</string>
+  <string name="create_profile">Tạo cấu hình</string>
+  <string name="detail">Chi tiết</string>
+  <string name="duplicate">Tạo bản sao</string>
+  <string name="edit">Sửa</string>
+  <string name="empty_name">Tên trống</string>
+  <string name="exit_without_save">Thoát mà không lưu</string>
+  <string name="exit_without_save_warning">Tất cả thay đổi sẽ *MẤT*</string>
+  <string name="file_name">Tên tệp</string>
+  <string name="files">Tệp</string>
+  <string name="format_fetching_configuration">Tìm nạp cấu hình từ \'%s\'</string>
+  <string name="format_fetching_provider">Nhà cung cấp tìm nạp \'%s\'</string>
+  <string name="format_minutes">%d phút</string>
+  <string name="format_type_unsaved">%s (Chưa lưu)</string>
+  <string name="format_update_provider_failure">Cập nhật %1$s: %2$s</string>
+  <string name="import_">Nhập</string>
+  <string name="import_from_file">Nhập từ tệp</string>
+  <string name="import_from_qr">Nhập từ Mã QR</string>
+  <string name="import_from_qr_exception">Đã xảy ra ngoại lệ hệ thống không xử lý được.</string>
+  <string name="import_from_qr_no_permission">Quyền truy cập camera bị hạn chế. Vui lòng bật trong Cài đặt.</string>
+  <string name="import_from_url">Nhập từ liên kết URL</string>
+  <string name="initializing">Khởi tạo</string>
+  <string name="invalid_file_name">Tên tệp không hợp lệ</string>
+  <string name="invalid_url">Liên kết URL không hợp lệ</string>
+  <string name="profile_name">Tên cấu hình</string>
+  <string name="profile_url">Liên kết URL cấu hình</string>
+  <string name="properties">Thuộc tính</string>
+  <string name="rename">Đổi tên</string>
+  <string name="save">Lưu</string>
+  <string name="should_not_be_blank">Không được để trống</string>
+  <string name="tips_properties">Chỉ chấp nhận cấu hình Clash bao gồm Proxy và Quy tắc</string>
+  <string name="toast_profile_updated_complete">Cập nhật thành công %s</string>
+  <string name="toast_profile_updated_failed">Cập nhật không thành công %1$s %2$s</string>
+  <string name="update">Cập nhật</string>
+  <string name="update_all">Cập nhật tất cả</string>
+  <string name="verifying">Đang xác minh</string>
+</resources>

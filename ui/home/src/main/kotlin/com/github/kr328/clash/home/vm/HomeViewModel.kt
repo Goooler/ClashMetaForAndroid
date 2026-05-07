@@ -7,10 +7,10 @@ import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.application
 import androidx.lifecycle.viewModelScope
+import com.github.kr328.clash.common.R
 import com.github.kr328.clash.common.log.Log
 import com.github.kr328.clash.core.bridge.Bridge
 import com.github.kr328.clash.core.util.trafficTotal
-import com.github.kr328.clash.glue.R
 import com.github.kr328.clash.remote.Remote
 import com.github.kr328.clash.util.startClashService
 import com.github.kr328.clash.util.stopClashService

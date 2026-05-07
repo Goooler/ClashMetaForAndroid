@@ -33,7 +33,8 @@ import androidx.compose.ui.tooling.preview.PreviewWrapper
 import androidx.compose.ui.unit.dp
 import androidx.navigation3.runtime.EntryProviderScope
 import androidx.navigation3.runtime.NavKey
-import com.github.kr328.clash.glue.R
+import com.github.kr328.clash.common.R
+import com.github.kr328.clash.settings.R as SettingsR
 import com.github.kr328.clash.ui.component.MihomoScaffold
 import com.github.kr328.clash.ui.icon.BaselineAdd
 import com.github.kr328.clash.ui.icon.MihomoIcons
@@ -166,7 +167,7 @@ private fun SingleTextInputDialog(
 @Composable
 private fun EditableTextListScreenPreview() {
   EditableTextListScreen(
-    title = R.string.sniff_http_ports,
+    title = SettingsR.string.sniff_http_ports,
     initialValues = listOf("80", "8080"),
     onDismiss = {},
     onApply = {},

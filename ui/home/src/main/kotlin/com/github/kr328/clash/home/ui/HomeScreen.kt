@@ -45,7 +45,8 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.github.kr328.clash.glue.R
+import com.github.kr328.clash.common.R
+import com.github.kr328.clash.home.R as HomeR
 import com.github.kr328.clash.home.vm.HomeViewModel
 import com.github.kr328.clash.ui.component.MihomoScaffold
 import com.github.kr328.clash.ui.icon.BaselineApps
@@ -82,7 +83,7 @@ internal fun HomeScreen(
   val eventState by viewModel.eventState.collectAsStateWithLifecycle()
   val snackbarHostState = remember { SnackbarHostState() }
 
-  val noProfileText = stringResource(R.string.no_profile_selected)
+  val noProfileText = stringResource(HomeR.string.no_profile_selected)
   val profilesActionText = stringResource(R.string.profiles)
 
   DisposableEffect(lifecycleOwner, viewModel) {
@@ -195,10 +196,10 @@ private fun HomeContent(
         modifier = Modifier.padding(vertical = cardMarginVertical),
         icon =
           if (clashRunning) MihomoIcons.OutlineCheckCircle else MihomoIcons.OutlineNotInterested,
-        text = stringResource(if (clashRunning) R.string.running else R.string.stopped),
+        text = stringResource(if (clashRunning) R.string.running else HomeR.string.stopped),
         subtext =
           if (clashRunning && forwarded != null)
-            stringResource(R.string.format_traffic_forwarded, forwarded)
+            stringResource(HomeR.string.format_traffic_forwarded, forwarded)
           else stringResource(R.string.tap_to_start),
         backgroundColor = if (clashRunning) MaterialTheme.colorScheme.primary else stoppedColor,
         contentColor = MihomoOnPrimary,
@@ -220,9 +221,10 @@ private fun HomeContent(
       HomeActionCard(
         modifier = Modifier.padding(vertical = cardMarginVertical),
         icon = MihomoIcons.BaselineViewList,
-        text = stringResource(R.string.profile),
+        text = stringResource(HomeR.string.profile),
         subtext =
-          if (profileName != null) stringResource(R.string.format_profile_activated, profileName)
+          if (profileName != null)
+            stringResource(HomeR.string.format_profile_activated, profileName)
           else stringResource(R.string.not_selected),
         backgroundColor = MaterialTheme.colorScheme.surface,
         contentColor = MaterialTheme.colorScheme.onSurface,
@@ -253,13 +255,13 @@ private fun HomeContent(
       HomeActionLabel(
         modifier = Modifier.padding(vertical = labelMarginVertical),
         icon = MihomoIcons.BaselineHelpCenter,
-        text = stringResource(R.string.help),
+        text = stringResource(HomeR.string.help),
         onClick = onOpenHelp,
       )
       HomeActionLabel(
         modifier = Modifier.padding(vertical = labelMarginVertical),
         icon = MihomoIcons.BaselineInfo,
-        text = stringResource(R.string.about),
+        text = stringResource(HomeR.string.about),
         onClick = onOpenAbout,
       )
     }

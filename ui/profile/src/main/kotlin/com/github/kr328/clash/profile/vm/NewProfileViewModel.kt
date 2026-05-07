@@ -7,9 +7,10 @@ import android.net.Uri
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.application
 import androidx.lifecycle.viewModelScope
+import com.github.kr328.clash.common.R
 import com.github.kr328.clash.common.constants.Intents
 import com.github.kr328.clash.common.log.Log
-import com.github.kr328.clash.glue.R
+import com.github.kr328.clash.profile.R as ProfileR
 import com.github.kr328.clash.profile.model.ProfileProvider
 import com.github.kr328.clash.service.model.Profile
 import com.github.kr328.clash.util.withProfile
@@ -86,10 +87,12 @@ internal class NewProfileViewModel(app: Application) : AndroidViewModel(app) {
       QRUserCanceled -> Unit
       QRMissingPermission ->
         eventState.value =
-          EventState.ShowMessage(application.getString(R.string.import_from_qr_no_permission))
+          EventState.ShowMessage(
+            application.getString(ProfileR.string.import_from_qr_no_permission)
+          )
       is QRError ->
         eventState.value =
-          EventState.ShowMessage(application.getString(R.string.import_from_qr_exception))
+          EventState.ShowMessage(application.getString(ProfileR.string.import_from_qr_exception))
     }
   }
 

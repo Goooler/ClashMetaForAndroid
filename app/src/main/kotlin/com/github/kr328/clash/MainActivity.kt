@@ -32,12 +32,12 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entryProvider
+import com.github.kr328.clash.common.R as CommonR
 import com.github.kr328.clash.common.constants.Intents
 import com.github.kr328.clash.common.util.unsafeLazy
 import com.github.kr328.clash.common.util.uuid
 import com.github.kr328.clash.crash.CrashRoute
 import com.github.kr328.clash.crash.crashEntries
-import com.github.kr328.clash.glue.R as GlueR
 import com.github.kr328.clash.home.HomeRoute
 import com.github.kr328.clash.home.homeEntries
 import com.github.kr328.clash.log.LogRoute
@@ -150,12 +150,12 @@ class MainActivity : ComponentActivity() {
       }
       Intents.ACTION_START_CLASH -> {
         if (!Remote.broadcasts.clashRunning) startClash()
-        else toast(GlueR.string.external_control_started)
+        else toast(R.string.external_control_started)
         true
       }
       Intents.ACTION_STOP_CLASH -> {
         if (Remote.broadcasts.clashRunning) stopClash()
-        else toast(GlueR.string.external_control_stopped)
+        else toast(R.string.external_control_stopped)
         true
       }
       else -> false
@@ -165,15 +165,15 @@ class MainActivity : ComponentActivity() {
   private fun startClash() {
     val vpnRequest = startClashService()
     if (vpnRequest != null) {
-      toast(GlueR.string.unable_to_start_vpn)
+      toast(CommonR.string.unable_to_start_vpn)
       return
     }
-    toast(GlueR.string.external_control_started)
+    toast(R.string.external_control_started)
   }
 
   private fun stopClash() {
     stopClashService()
-    toast(GlueR.string.external_control_stopped)
+    toast(R.string.external_control_stopped)
   }
 
   private fun requestNotificationPermission() {
@@ -220,7 +220,7 @@ class MainActivity : ComponentActivity() {
               else -> Profile.Type.Url
             }
           val name =
-            uri.getQueryParameter("name") ?: application.getString(GlueR.string.new_profile)
+            uri.getQueryParameter("name") ?: application.getString(CommonR.string.new_profile)
           create(type, name).also { patch(it, name, url, 0) }
         }
         backStack.addIfNotLast(ProfilesRoute.Profiles(openPropertyUuid = uuid))

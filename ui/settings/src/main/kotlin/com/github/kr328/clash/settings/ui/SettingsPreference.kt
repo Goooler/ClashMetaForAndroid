@@ -10,12 +10,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
-import com.github.kr328.clash.glue.R
+import com.github.kr328.clash.common.R
+import com.github.kr328.clash.settings.R as SettingsR
 
 @Composable
 internal fun EmptyEditorContent(modifier: Modifier = Modifier) {
   Box(modifier = modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
-    Text(stringResource(R.string.empty))
+    Text(stringResource(SettingsR.string.empty))
   }
 }
 
@@ -23,7 +24,7 @@ internal fun EmptyEditorContent(modifier: Modifier = Modifier) {
 internal fun List<String>?.listSummary(@StringRes placeholder: Int) =
   when {
     this == null -> stringResource(placeholder)
-    isEmpty() -> stringResource(R.string.empty)
+    isEmpty() -> stringResource(SettingsR.string.empty)
     else -> stringResource(R.string.format_elements, size)
   }
 

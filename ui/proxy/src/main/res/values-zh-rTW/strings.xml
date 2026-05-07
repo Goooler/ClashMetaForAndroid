@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="delay">延遲</string>
+  <string name="delay_test">延遲測試</string>
+  <string name="doubles">雙欄</string>
+  <string name="layout">佈局</string>
+  <string name="mode_switch_tips">僅在本次工作階段中有效</string>
+  <string name="multiple">多欄</string>
+  <string name="not_selectable">不可選擇</string>
+  <string name="proxy_empty_tips">沒有可以顯示的分組</string>
+  <string name="single">單欄</string>
+</resources>

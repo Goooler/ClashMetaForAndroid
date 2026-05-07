@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="delay">レイテンシ</string>
+  <string name="delay_test">接続テスト</string>
+  <string name="doubles">ダブルカラム</string>
+  <string name="layout">レイアウト</string>
+  <string name="mode_switch_tips">このセッションでのみ有効です</string>
+  <string name="multiple">マルチカラム</string>
+  <string name="not_selectable">選択不可</string>
+  <string name="proxy_empty_tips">表示するグループがありません</string>
+  <string name="single">シングルカラム</string>
+</resources>

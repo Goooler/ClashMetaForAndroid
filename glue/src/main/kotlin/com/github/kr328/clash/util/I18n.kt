@@ -1,9 +1,9 @@
 package com.github.kr328.clash.util
 
 import android.content.Context
+import com.github.kr328.clash.common.R
 import com.github.kr328.clash.common.compat.preferredLocale
 import com.github.kr328.clash.core.model.Provider
-import com.github.kr328.clash.glue.R
 import com.github.kr328.clash.service.model.Profile
 import java.text.SimpleDateFormat
 import java.util.Date

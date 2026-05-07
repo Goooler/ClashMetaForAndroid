@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="PluralsCandidate">
+  <string name="about">About</string>
+  <string name="clash_meta_core">Clash Meta Core</string>
+  <string name="clash_meta_wiki">Clash Meta Wiki</string>
+  <string name="clash_wiki">Clash Wiki</string>
+  <string name="document">Document</string>
+  <string name="donate">Donate</string>
+  <string name="feedback">Feedback</string>
+  <string name="format_profile_activated">%s Activated</string>
+  <string name="format_traffic_forwarded">%s Forwarded</string>
+  <string name="github_issues">Github Issues</string>
+  <string name="google_play">Google Play</string>
+  <string name="google_play_url" translatable="false">https://play.google.com/store/apps/details?id=com.github.kr328.clash</string>
+  <string name="help">Help</string>
+  <string name="no_profile_selected">No profile selected</string>
+  <string name="profile">Profile</string>
+  <string name="sources">Sources</string>
+  <string name="stopped">Stopped</string>
+  <string name="tips_help"><![CDATA[Clash Meta for Android is a <strong>freeware</strong> and we do <strong>NOT</strong> provide any service for it]]></string>
+  <string name="version_updated">App Updated</string>
+  <string name="version_updated_tips">The settings have been reseted and the old profiles needs to be saved again.</string>
+</resources>

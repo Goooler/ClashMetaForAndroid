@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="clash_logcat">Clash 로그 수집 도구</string>
+  <string name="copied">복사됨</string>
+  <string name="delete_all_logs">전체 로그 삭제</string>
+  <string name="delete_all_logs_warn">전체 로그가 삭제됩니다.</string>
+  <string name="file_exported">파일 내보내기 완료</string>
+  <string name="history">히스토리</string>
+  <string name="invalid_log_file">유효하지 않은 로그 파일</string>
+  <string name="logcat">로그</string>
+</resources>

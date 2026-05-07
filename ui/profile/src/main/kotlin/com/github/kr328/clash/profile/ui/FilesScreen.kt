@@ -54,9 +54,10 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.github.kr328.clash.common.R
 import com.github.kr328.clash.common.util.grantPermissions
-import com.github.kr328.clash.glue.R
 import com.github.kr328.clash.model.ConfigFile
+import com.github.kr328.clash.profile.R as ProfileR
 import com.github.kr328.clash.profile.vm.FilesViewModel
 import com.github.kr328.clash.ui.component.MihomoScaffold
 import com.github.kr328.clash.ui.icon.BaselineAdd
@@ -180,7 +181,7 @@ private fun FilesContent(
       if (!file.isDirectory && (!currentInBaseDir || configurationEditable)) {
         FilesMenuAction(
           icon = MihomoIcons.BaselineGetApp,
-          text = stringResource(R.string.import_),
+          text = stringResource(ProfileR.string.import_),
           onClick = {
             menuConfigFile = null
             onImport(file)
@@ -200,7 +201,7 @@ private fun FilesContent(
       if (!currentInBaseDir) {
         FilesMenuAction(
           icon = MihomoIcons.BaselineEdit,
-          text = stringResource(R.string.rename),
+          text = stringResource(ProfileR.string.rename),
           onClick = {
             menuConfigFile = null
             renameConfigFile = file
@@ -225,7 +226,7 @@ private fun FilesContent(
   MihomoScaffold(
     modifier = modifier,
     snackbarHostState = snackbarHostState,
-    title = stringResource(R.string.files),
+    title = stringResource(ProfileR.string.files),
     onBack = onBack,
     actions = {
       if (!currentInBaseDir) {
@@ -264,10 +265,10 @@ private fun FilesContent(
 
   if (renameConfigFile != null) {
     TextInputDialog(
-      title = stringResource(R.string.file_name),
+      title = stringResource(ProfileR.string.file_name),
       initialValue = renameConfigFile!!.name,
-      hint = stringResource(R.string.file_name),
-      error = stringResource(R.string.invalid_file_name),
+      hint = stringResource(ProfileR.string.file_name),
+      error = stringResource(ProfileR.string.invalid_file_name),
       validator = ValidatorFileName,
       onDismiss = { renameConfigFile = null },
       onConfirm = { newName ->

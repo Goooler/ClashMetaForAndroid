@@ -10,7 +10,6 @@ import com.github.kr328.clash.common.Global
 import com.github.kr328.clash.common.constants.Intents
 import com.github.kr328.clash.common.log.Log
 import com.github.kr328.clash.common.util.unsafeLazy
-import com.github.kr328.clash.glue.R as GlueR
 import com.github.kr328.clash.remote.Remote
 import com.github.kr328.clash.service.util.sendServiceRecreated
 import com.github.kr328.clash.store.UiStore
@@ -71,8 +70,8 @@ class MainApplication : Application() {
 
     val toggle =
       ShortcutInfoCompat.Builder(this, "toggle_clash")
-        .setShortLabel(getString(GlueR.string.shortcut_toggle_short))
-        .setLongLabel(getString(GlueR.string.shortcut_toggle_long))
+        .setShortLabel(getString(R.string.shortcut_toggle_short))
+        .setLongLabel(getString(R.string.shortcut_toggle_long))
         .setIcon(icon)
         .setIntent(mainIntent(action = Intents.ACTION_TOGGLE_CLASH).addFlags(flags))
         .setRank(0)
@@ -80,8 +79,8 @@ class MainApplication : Application() {
 
     val start =
       ShortcutInfoCompat.Builder(this, "start_clash")
-        .setShortLabel(getString(GlueR.string.shortcut_start_short))
-        .setLongLabel(getString(GlueR.string.shortcut_start_long))
+        .setShortLabel(getString(R.string.shortcut_start_short))
+        .setLongLabel(getString(R.string.shortcut_start_long))
         .setIcon(icon)
         .setIntent(mainIntent(action = Intents.ACTION_START_CLASH).addFlags(flags))
         .setRank(1)
@@ -89,8 +88,8 @@ class MainApplication : Application() {
 
     val stop =
       ShortcutInfoCompat.Builder(this, "stop_clash")
-        .setShortLabel(getString(GlueR.string.shortcut_stop_short))
-        .setLongLabel(getString(GlueR.string.shortcut_stop_long))
+        .setShortLabel(getString(R.string.shortcut_stop_short))
+        .setLongLabel(getString(R.string.shortcut_stop_long))
         .setIcon(icon)
         .setIntent(mainIntent(action = Intents.ACTION_STOP_CLASH).addFlags(flags))
         .setRank(2)

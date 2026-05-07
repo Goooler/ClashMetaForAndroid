@@ -34,7 +34,8 @@ import androidx.compose.ui.tooling.preview.PreviewWrapper
 import androidx.compose.ui.unit.dp
 import androidx.navigation3.runtime.EntryProviderScope
 import androidx.navigation3.runtime.NavKey
-import com.github.kr328.clash.glue.R
+import com.github.kr328.clash.common.R
+import com.github.kr328.clash.settings.R as SettingsR
 import com.github.kr328.clash.ui.component.MihomoScaffold
 import com.github.kr328.clash.ui.icon.BaselineAdd
 import com.github.kr328.clash.ui.icon.MihomoIcons
@@ -158,16 +159,16 @@ private fun MapEntryInputDialog(
         OutlinedTextField(
           value = keyText,
           onValueChange = { keyText = it },
-          label = { Text(stringResource(R.string.key)) },
-          placeholder = { Text(stringResource(R.string.key)) },
+          label = { Text(stringResource(SettingsR.string.key)) },
+          placeholder = { Text(stringResource(SettingsR.string.key)) },
           singleLine = true,
           modifier = Modifier.fillMaxWidth().focusRequester(focusRequester),
         )
         OutlinedTextField(
           value = valueText,
           onValueChange = { valueText = it },
-          label = { Text(stringResource(R.string.value)) },
-          placeholder = { Text(stringResource(R.string.value)) },
+          label = { Text(stringResource(SettingsR.string.value)) },
+          placeholder = { Text(stringResource(SettingsR.string.value)) },
           singleLine = true,
           modifier = Modifier.fillMaxWidth(),
         )
@@ -190,7 +191,7 @@ private fun MapEntryInputDialog(
 @Composable
 private fun EditableTextMapScreenPreview() {
   EditableTextMapScreen(
-    title = R.string.hosts,
+    title = SettingsR.string.hosts,
     initialValues = mapOf("example.com" to "127.0.0.1", "test.com" to "192.168.1.1"),
     onDismiss = {},
     onApply = {},

@@ -22,7 +22,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.PreviewWrapper
-import com.github.kr328.clash.glue.R
+import com.github.kr328.clash.common.R
+import com.github.kr328.clash.settings.R as SettingsR
 import com.github.kr328.clash.ui.component.MihomoScaffold
 import com.github.kr328.clash.ui.icon.BaselineDns
 import com.github.kr328.clash.ui.icon.BaselineExtension
@@ -48,25 +49,25 @@ internal fun SettingsScreen(
     ) {
       SettingsEntryItem(
         icon = MihomoIcons.BaselineSettings,
-        titleRes = R.string.app,
+        titleRes = SettingsR.string.app,
         onClick = onOpenAppSettings,
       )
 
       SettingsEntryItem(
         icon = MihomoIcons.BaselineDns,
-        titleRes = R.string.network,
+        titleRes = SettingsR.string.network,
         onClick = onOpenNetworkSettings,
       )
 
       SettingsEntryItem(
         icon = MihomoIcons.BaselineExtension,
-        titleRes = R.string.override,
+        titleRes = SettingsR.string.override,
         onClick = onOpenOverrideSettings,
       )
 
       SettingsEntryItem(
         icon = MihomoIcons.BaselineMeta,
-        titleRes = R.string.meta_features,
+        titleRes = SettingsR.string.meta_features,
         onClick = onOpenMetaFeatureSettings,
       )
     }

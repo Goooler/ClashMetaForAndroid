@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="accept_http_content">僅接受 http(s) 和 content 類型</string>
+  <string name="active_unsaved_tips">設定檔需要在啟用之前儲存</string>
+  <string name="at_least_15_minutes">至少 15 分鐘</string>
+  <string name="auto_update">自動更新</string>
+  <string name="auto_update_minutes">自動更新 (分鐘)</string>
+  <string name="browse_configuration_providers">瀏覽設定檔和外部資源</string>
+  <string name="browse_files">瀏覽檔案</string>
+  <string name="create_profile">建立設定檔</string>
+  <string name="detail">詳細資料</string>
+  <string name="duplicate">複製</string>
+  <string name="edit">編輯</string>
+  <string name="empty_name">空白名稱</string>
+  <string name="exit_without_save">退出而不儲存</string>
+  <string name="exit_without_save_warning">所有變更將會丟失</string>
+  <string name="file_name">檔名</string>
+  <string name="files">檔案</string>
+  <string name="format_fetching_configuration">正在從 %s 下載設定檔</string>
+  <string name="format_fetching_provider">正在下載外部資源 %s</string>
+  <string name="format_minutes">%d 分鐘</string>
+  <string name="format_type_unsaved">%s (未儲存)</string>
+  <string name="format_update_provider_failure">更新 %1$s: %2$s</string>
+  <string name="import_">匯入</string>
+  <string name="import_from_file">從檔案匯入</string>
+  <string name="import_from_qr">從二維碼導入</string>
+  <string name="import_from_qr_exception">發生系統未知異常，操作失敗。</string>
+  <string name="import_from_qr_no_permission">相機權限受限，請前往設定開啟。</string>
+  <string name="import_from_url">從 URL 匯入</string>
+  <string name="initializing">正在初始化</string>
+  <string name="invalid_file_name">無效的檔案名稱</string>
+  <string name="invalid_url">無效 URL</string>
+  <string name="profile_name">設定檔名稱</string>
+  <string name="profile_url">設定檔 URL</string>
+  <string name="properties">性質</string>
+  <string name="rename">重新命名</string>
+  <string name="save">儲存</string>
+  <string name="should_not_be_blank">不能為空</string>
+  <string name="tips_properties"><![CDATA[僅接受 <strong>Clash 設定檔</strong> (包含<strong>Proxy</strong> /<strong>規則</strong>)]]></string>
+  <string name="toast_profile_updated_complete">Update profile %s completed</string>
+  <string name="toast_profile_updated_failed">Update profile %1$s failed: %2$s</string>
+  <string name="update">更新</string>
+  <string name="update_all">更新全部</string>
+  <string name="verifying">正在校驗</string>
+</resources>

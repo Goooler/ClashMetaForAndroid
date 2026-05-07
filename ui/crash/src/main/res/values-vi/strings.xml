@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="application_broken">Ứng dụng bị lỗi</string>
+  <string name="application_broken_tips">Ứng dụng thiếu các thành phần cần thiết, nguyên nhân thường là do tải xuống apk không đầy đủ.</string>
+  <string name="application_crashed">Ứng dụng bị dừng</string>
+  <string name="github_releases">Bản phát hành trên Github</string>
+  <string name="reinstall">Cài đặt lại</string>
+</resources>
