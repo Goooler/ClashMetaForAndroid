@@ -1,12 +1,11 @@
 package com.github.kr328.clash.profile.ui
 
 import androidx.activity.compose.BackHandler
-import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
@@ -53,9 +52,9 @@ import com.github.kr328.clash.util.ValidatorNotBlank
 import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.minutes
 import kotlin.uuid.Uuid
-import me.zhanghai.compose.preference.Preference
 import me.zhanghai.compose.preference.ProvidePreferenceLocals
-import me.zhanghai.compose.preference.TextFieldPreference
+import me.zhanghai.compose.preference.preference
+import me.zhanghai.compose.preference.textFieldPreference
 
 @Composable
 internal fun PropertiesScreen(
@@ -159,22 +158,20 @@ private fun PropertiesContent(
     },
   ) { innerPadding ->
     val dimens = mihomoDimens
-    Column(
-      modifier =
-        Modifier.fillMaxSize()
-          .padding(innerPadding)
-          .verticalScroll(rememberScrollState())
-          .padding(horizontal = dimens.itemHeaderMargin)
-    ) {
-      ProvidePreferenceLocals {
-        Preference(
+    ProvidePreferenceLocals {
+      LazyColumn(
+        modifier = Modifier.fillMaxSize().padding(innerPadding),
+        contentPadding = PaddingValues(horizontal = dimens.itemHeaderMargin),
+      ) {
+        preference(
+          key = "tip",
           title = { Text(stringResource(R.string.properties)) },
           summary = { Text(AnnotatedString.fromHtml(stringResource(R.string.tips_properties))) },
           icon = { Icon(imageVector = MihomoIcons.OutlineInfo, contentDescription = null) },
           enabled = false,
         )
-
-        TextFieldPreference(
+        textFieldPreference(
+          key = "name",
           value = profile.name,
           onValueChange = { newName ->
             if (newName != profile.name) {
@@ -186,8 +183,8 @@ private fun PropertiesContent(
           icon = { Icon(imageVector = MihomoIcons.OutlineLabel, contentDescription = null) },
           summary = { Text(profile.name.ifBlank { stringResource(R.string.profile_name) }) },
         )
-
-        TextFieldPreference(
+        textFieldPreference(
+          key = "source",
           value = profile.source,
           onValueChange = { newUrl ->
             if (newUrl != profile.source) {
@@ -202,15 +199,8 @@ private fun PropertiesContent(
             Text(profile.source.ifBlank { stringResource(R.string.accept_http_content) })
           },
         )
-
-        val intervalSummary =
-          if (profile.interval == 0L) {
-            stringResource(CommonR.string.disabled)
-          } else {
-            stringResource(R.string.format_minutes, profile.interval.milliseconds.inWholeMinutes)
-          }
-
-        TextFieldPreference(
+        textFieldPreference(
+          key = "interval",
           value = profile.interval,
           onValueChange = { interval ->
             if (interval != profile.interval) {
@@ -228,7 +218,18 @@ private fun PropertiesContent(
           },
           enabled = profile.type != File,
           icon = { Icon(imageVector = MihomoIcons.OutlineUpdate, contentDescription = null) },
-          summary = { Text(intervalSummary) },
+          summary = {
+            val intervalSummary =
+              if (profile.interval == 0L) {
+                stringResource(CommonR.string.disabled)
+              } else {
+                stringResource(
+                  R.string.format_minutes,
+                  profile.interval.milliseconds.inWholeMinutes,
+                )
+              }
+            Text(intervalSummary)
+          },
           valueToText = { interval ->
             if (interval == 0L) {
               ""
@@ -237,8 +238,8 @@ private fun PropertiesContent(
             }
           },
         )
-
-        Preference(
+        preference(
+          key = "browse_files",
           title = { Text(stringResource(R.string.browse_files)) },
           summary = { Text(stringResource(R.string.browse_configuration_providers)) },
           icon = { Icon(imageVector = MihomoIcons.OutlineFolder, contentDescription = null) },
