@@ -1,5 +1,8 @@
 pluginManagement {
   repositories {
+    maven("https://central.sonatype.com/repository/maven-snapshots/") {
+      mavenContent { includeGroupAndSubgroups("io.github.goooler.golang") }
+    }
     google {
       mavenContent {
         includeGroupAndSubgroups("androidx")
