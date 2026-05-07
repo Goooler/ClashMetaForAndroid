@@ -9,8 +9,6 @@ object Intents {
   val ACTION_STOP_CLASH = "$packageName.intent.action.STOP_CLASH"
   val ACTION_TOGGLE_CLASH = "$packageName.intent.action.TOGGLE_CLASH"
 
-  const val EXTRA_NAME = "name"
-
   // Routes
   val ACTION_PROPERTIES = "$packageName.intent.action.PROPERTIES"
   val ACTION_LOGCAT = "$packageName.intent.action.LOGCAT"
@@ -30,6 +28,7 @@ object Intents {
   val ACTION_PROFILE_LOADED = "$packageName.intent.action.PROFILE_LOADED"
   val ACTION_OVERRIDE_CHANGED = "$packageName.intent.action.OVERRIDE_CHANGED"
 
+  const val EXTRA_NAME = "name"
   const val EXTRA_STOP_REASON = "stop_reason"
   const val EXTRA_UUID = "uuid"
   const val EXTRA_FAIL_REASON = "fail_reason"
