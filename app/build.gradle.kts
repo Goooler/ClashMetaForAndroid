@@ -11,7 +11,7 @@ plugins {
 
 android {
   defaultConfig {
-    applicationId = "com.github.metacubex.clash.meta"
+    applicationId = "io.github.goooler.tabby"
     targetSdk = 35
     versionCode = 212101
     versionName = "2.12.1"
@@ -63,7 +63,7 @@ androidComponents {
         val abiName =
           filters.find { it.filterType == FilterConfiguration.FilterType.ABI }?.identifier
             ?: "universal"
-        val newApkName = "cmfa-${versionName.get()}-$abiName-${variant.buildType}.apk"
+        val newApkName = "Tabby-${versionName.get()}-$abiName-${variant.buildType}.apk"
         outputFileName = newApkName
       }
     }
