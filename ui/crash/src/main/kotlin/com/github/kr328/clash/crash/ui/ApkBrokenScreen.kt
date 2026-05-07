@@ -1,7 +1,6 @@
 package com.github.kr328.clash.crash.ui
 
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -27,7 +26,6 @@ internal fun ApkBrokenScreen() {
       LazyColumn(modifier = Modifier.fillMaxSize(), contentPadding = innerPadding) {
         preference(
           key = "tips_application_broken",
-          modifier = Modifier.fillMaxWidth(),
           title = { Text(stringResource(R.string.application_broken)) },
           summary = { Text(stringResource(R.string.application_broken_tips)) },
           enabled = false,
@@ -38,7 +36,6 @@ internal fun ApkBrokenScreen() {
         )
         preference(
           key = "github_releases",
-          modifier = Modifier.fillMaxWidth(),
           title = { Text(stringResource(R.string.github_releases)) },
           summary = { Text(CMFA_GITHUB) },
           onClick = { context.openLink(CMFA_GITHUB) },

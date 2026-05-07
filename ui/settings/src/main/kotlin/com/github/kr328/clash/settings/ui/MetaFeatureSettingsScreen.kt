@@ -4,7 +4,6 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts.GetContent
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.material3.AlertDialog
@@ -253,7 +252,6 @@ private fun LazyListScope.metaBasicPreferenceItems(
     value = configuration.unifiedDelay,
     onValueChange = actions::updateUnifiedDelay,
     values = booleanOptions,
-    modifier = Modifier.fillMaxWidth(),
     title = { Text(stringResource(R.string.unified_delay)) },
     summary = { Text(stringResource(configuration.unifiedDelay.textRes)) },
     valueToText = { AnnotatedString(stringResource(it.textRes)) },
@@ -263,7 +261,6 @@ private fun LazyListScope.metaBasicPreferenceItems(
     value = configuration.geodataMode,
     onValueChange = actions::updateGeodataMode,
     values = booleanOptions,
-    modifier = Modifier.fillMaxWidth(),
     title = { Text(stringResource(R.string.geodata_mode)) },
     summary = { Text(stringResource(configuration.geodataMode.textRes)) },
     valueToText = { AnnotatedString(stringResource(it.textRes)) },
@@ -273,7 +270,6 @@ private fun LazyListScope.metaBasicPreferenceItems(
     value = configuration.tcpConcurrent,
     onValueChange = actions::updateTcpConcurrent,
     values = booleanOptions,
-    modifier = Modifier.fillMaxWidth(),
     title = { Text(stringResource(R.string.tcp_concurrent)) },
     summary = { Text(stringResource(configuration.tcpConcurrent.textRes)) },
     valueToText = { AnnotatedString(stringResource(it.textRes)) },
@@ -283,7 +279,6 @@ private fun LazyListScope.metaBasicPreferenceItems(
     value = configuration.findProcessMode,
     onValueChange = actions::updateFindProcessMode,
     values = ConfigurationOverride.FindProcessMode.entries,
-    modifier = Modifier.fillMaxWidth(),
     title = { Text(stringResource(R.string.find_process_mode)) },
     summary = { Text(stringResource(configuration.findProcessMode.textRes)) },
     valueToText = { AnnotatedString(stringResource(it.textRes)) },
@@ -304,14 +299,12 @@ private fun LazyListScope.metaSnifferPreferenceItems(
     value = configuration.sniffer.enable,
     onValueChange = actions::updateSnifferEnable,
     values = booleanOptions,
-    modifier = Modifier.fillMaxWidth(),
     title = { Text(stringResource(R.string.strategy)) },
     summary = { Text(stringResource(configuration.sniffer.enable.textRes)) },
     valueToText = { AnnotatedString(stringResource(it.textRes)) },
   )
   preference(
     key = "sniffHttpPorts",
-    modifier = Modifier.fillMaxWidth(),
     title = { Text(stringResource(R.string.sniff_http_ports)) },
     summary = { Text(configuration.sniffer.sniff.http.ports.listSummary(R.string.dont_modify)) },
     enabled = configuration.sniffer.enable != false,
@@ -328,7 +321,6 @@ private fun LazyListScope.metaSnifferPreferenceItems(
     value = configuration.sniffer.sniff.http.overrideDestination,
     onValueChange = actions::updateSniffHttpOverrideDestination,
     values = booleanOptions,
-    modifier = Modifier.fillMaxWidth(),
     enabled = configuration.sniffer.enable != false,
     title = { Text(stringResource(R.string.sniff_http_override_destination)) },
     summary = {
@@ -338,7 +330,6 @@ private fun LazyListScope.metaSnifferPreferenceItems(
   )
   preference(
     key = "sniffTlsPorts",
-    modifier = Modifier.fillMaxWidth(),
     title = { Text(stringResource(R.string.sniff_tls_ports)) },
     summary = { Text(configuration.sniffer.sniff.tls.ports.listSummary(R.string.dont_modify)) },
     enabled = configuration.sniffer.enable != false,
@@ -355,7 +346,6 @@ private fun LazyListScope.metaSnifferPreferenceItems(
     value = configuration.sniffer.sniff.tls.overrideDestination,
     onValueChange = actions::updateSniffTlsOverrideDestination,
     values = booleanOptions,
-    modifier = Modifier.fillMaxWidth(),
     enabled = configuration.sniffer.enable != false,
     title = { Text(stringResource(R.string.sniff_tls_override_destination)) },
     summary = { Text(stringResource(configuration.sniffer.sniff.tls.overrideDestination.textRes)) },
@@ -363,7 +353,6 @@ private fun LazyListScope.metaSnifferPreferenceItems(
   )
   preference(
     key = "sniffQuicPorts",
-    modifier = Modifier.fillMaxWidth(),
     title = { Text(stringResource(R.string.sniff_quic_ports)) },
     summary = { Text(configuration.sniffer.sniff.quic.ports.listSummary(R.string.dont_modify)) },
     enabled = configuration.sniffer.enable != false,
@@ -380,7 +369,6 @@ private fun LazyListScope.metaSnifferPreferenceItems(
     value = configuration.sniffer.sniff.quic.overrideDestination,
     onValueChange = actions::updateSniffQuicOverrideDestination,
     values = booleanOptions,
-    modifier = Modifier.fillMaxWidth(),
     enabled = configuration.sniffer.enable != false,
     title = { Text(stringResource(R.string.sniff_quic_override_destination)) },
     summary = {
@@ -393,7 +381,6 @@ private fun LazyListScope.metaSnifferPreferenceItems(
     value = configuration.sniffer.forceDnsMapping,
     onValueChange = actions::updateForceDnsMapping,
     values = booleanOptions,
-    modifier = Modifier.fillMaxWidth(),
     enabled = configuration.sniffer.enable != false,
     title = { Text(stringResource(R.string.force_dns_mapping)) },
     summary = { Text(stringResource(configuration.sniffer.forceDnsMapping.textRes)) },
@@ -404,7 +391,6 @@ private fun LazyListScope.metaSnifferPreferenceItems(
     value = configuration.sniffer.parsePureIp,
     onValueChange = actions::updateParsePureIp,
     values = booleanOptions,
-    modifier = Modifier.fillMaxWidth(),
     enabled = configuration.sniffer.enable != false,
     title = { Text(stringResource(R.string.parse_pure_ip)) },
     summary = { Text(stringResource(configuration.sniffer.parsePureIp.textRes)) },
@@ -415,7 +401,6 @@ private fun LazyListScope.metaSnifferPreferenceItems(
     value = configuration.sniffer.overrideDestination,
     onValueChange = actions::updateOverrideDestination,
     values = booleanOptions,
-    modifier = Modifier.fillMaxWidth(),
     enabled = configuration.sniffer.enable != false,
     title = { Text(stringResource(R.string.override_destination)) },
     summary = { Text(stringResource(configuration.sniffer.overrideDestination.textRes)) },
@@ -423,7 +408,6 @@ private fun LazyListScope.metaSnifferPreferenceItems(
   )
   preference(
     key = "forceDomain",
-    modifier = Modifier.fillMaxWidth(),
     title = { Text(stringResource(R.string.force_domain)) },
     summary = { Text(configuration.sniffer.forceDomain.listSummary(R.string.dont_modify)) },
     enabled = configuration.sniffer.enable != false,
@@ -437,7 +421,6 @@ private fun LazyListScope.metaSnifferPreferenceItems(
   )
   preference(
     key = "skipDomain",
-    modifier = Modifier.fillMaxWidth(),
     title = { Text(stringResource(R.string.skip_domain)) },
     summary = { Text(configuration.sniffer.skipDomain.listSummary(R.string.dont_modify)) },
     enabled = configuration.sniffer.enable != false,
@@ -451,7 +434,6 @@ private fun LazyListScope.metaSnifferPreferenceItems(
   )
   preference(
     key = "skipSrcAddress",
-    modifier = Modifier.fillMaxWidth(),
     title = { Text(stringResource(R.string.skip_src_address)) },
     summary = { Text(configuration.sniffer.skipSrcAddress.listSummary(R.string.dont_modify)) },
     enabled = configuration.sniffer.enable != false,
@@ -465,7 +447,6 @@ private fun LazyListScope.metaSnifferPreferenceItems(
   )
   preference(
     key = "skipDstAddress",
-    modifier = Modifier.fillMaxWidth(),
     title = { Text(stringResource(R.string.skip_dst_address)) },
     summary = { Text(configuration.sniffer.skipDstAddress.listSummary(R.string.dont_modify)) },
     enabled = configuration.sniffer.enable != false,
@@ -489,28 +470,24 @@ private fun LazyListScope.metaGeoFileItems(
 
   preference(
     key = "importGeoIp",
-    modifier = Modifier.fillMaxWidth(),
     title = { Text(stringResource(R.string.import_geoip_file)) },
     summary = { Text(stringResource(R.string.press_to_import)) },
     onClick = onImportGeoIp,
   )
   preference(
     key = "importGeoSite",
-    modifier = Modifier.fillMaxWidth(),
     title = { Text(stringResource(R.string.import_geosite_file)) },
     summary = { Text(stringResource(R.string.press_to_import)) },
     onClick = onImportGeoSite,
   )
   preference(
     key = "importCountry",
-    modifier = Modifier.fillMaxWidth(),
     title = { Text(stringResource(R.string.import_country_file)) },
     summary = { Text(stringResource(R.string.press_to_import)) },
     onClick = onImportCountry,
   )
   preference(
     key = "importASN",
-    modifier = Modifier.fillMaxWidth(),
     title = { Text(stringResource(R.string.import_asn_file)) },
     summary = { Text(stringResource(R.string.press_to_import)) },
     onClick = onImportASN,

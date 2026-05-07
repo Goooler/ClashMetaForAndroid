@@ -2,7 +2,6 @@ package com.github.kr328.clash.settings.ui
 
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Icon
 import androidx.compose.material3.SnackbarDuration
@@ -173,7 +172,6 @@ private fun NetworkSettingsContent(
         )
         preference(
           key = "access_control_packages",
-          modifier = Modifier.fillMaxWidth(),
           title = { Text(stringResource(R.string.access_control_packages)) },
           summary = { Text(stringResource(R.string.access_control_packages_summary)) },
           onClick = onAccessControlPackagesClick,

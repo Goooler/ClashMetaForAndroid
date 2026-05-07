@@ -255,7 +255,6 @@ private fun LazyListScope.generalPreferenceItems(
   )
   preference(
     key = "authentication",
-    modifier = Modifier.fillMaxWidth(),
     title = { Text(stringResource(R.string.authentication)) },
     summary = { Text(configuration.authentication.listSummary(R.string.dont_modify)) },
     onClick = {
@@ -271,7 +270,6 @@ private fun LazyListScope.generalPreferenceItems(
     value = configuration.allowLan,
     onValueChange = actions::updateAllowLan,
     values = booleanOptions,
-    modifier = Modifier.fillMaxWidth(),
     title = { Text(stringResource(R.string.allow_lan)) },
     summary = { Text(stringResource(configuration.allowLan.textRes)) },
     valueToText = { AnnotatedString(stringResource(it.textRes)) },
@@ -281,7 +279,6 @@ private fun LazyListScope.generalPreferenceItems(
     value = configuration.ipv6,
     onValueChange = actions::updateIpv6,
     values = booleanOptions,
-    modifier = Modifier.fillMaxWidth(),
     title = { Text(stringResource(R.string.ipv6)) },
     summary = { Text(stringResource(configuration.ipv6.textRes)) },
     valueToText = { AnnotatedString(stringResource(it.textRes)) },
@@ -312,7 +309,6 @@ private fun LazyListScope.generalPreferenceItems(
   )
   preference(
     key = "allowOrigins",
-    modifier = Modifier.fillMaxWidth(),
     title = { Text(stringResource(R.string.allow_origins)) },
     summary = {
       Text(configuration.externalControllerCors.allowOrigins.listSummary(R.string.dont_modify))
@@ -330,7 +326,6 @@ private fun LazyListScope.generalPreferenceItems(
     value = configuration.externalControllerCors.allowPrivateNetwork,
     onValueChange = actions::updateAllowPrivateNetwork,
     values = booleanOptions,
-    modifier = Modifier.fillMaxWidth(),
     title = { Text(stringResource(R.string.allow_private_network)) },
     summary = {
       Text(stringResource(configuration.externalControllerCors.allowPrivateNetwork.textRes))
@@ -350,7 +345,6 @@ private fun LazyListScope.generalPreferenceItems(
     value = configuration.mode,
     onValueChange = actions::updateMode,
     values = TunnelState.Mode.entries,
-    modifier = Modifier.fillMaxWidth(),
     title = { Text(stringResource(CommonR.string.mode)) },
     summary = { Text(stringResource(configuration.mode.textRes)) },
     valueToText = { AnnotatedString(stringResource(it.textRes)) },
@@ -360,14 +354,12 @@ private fun LazyListScope.generalPreferenceItems(
     value = configuration.logLevel,
     onValueChange = actions::updateLogLevel,
     values = LogMessage.Level.entries,
-    modifier = Modifier.fillMaxWidth(),
     title = { Text(stringResource(R.string.log_level)) },
     summary = { Text(stringResource(configuration.logLevel.textRes)) },
     valueToText = { AnnotatedString(stringResource(it.textRes)) },
   )
   preference(
     key = "hosts",
-    modifier = Modifier.fillMaxWidth(),
     title = { Text(stringResource(R.string.hosts)) },
     summary = { Text(configuration.hosts.summary(R.string.dont_modify)) },
     onClick = { onOpenEditableTextMap(R.string.hosts, configuration.hosts, actions::updateHosts) },
@@ -387,7 +379,6 @@ private fun LazyListScope.dnsPreferenceItems(
     value = dnsEnabled,
     onValueChange = actions::updateDnsEnable,
     values = booleanOptions,
-    modifier = Modifier.fillMaxWidth(),
     title = { Text(stringResource(R.string.strategy)) },
     summary = { Text(stringResource(dnsEnabled.dnsStrategyTextRes)) },
     valueToText = { AnnotatedString(stringResource(it.dnsStrategyTextRes)) },
@@ -397,7 +388,6 @@ private fun LazyListScope.dnsPreferenceItems(
     value = configuration.dns.preferH3,
     onValueChange = actions::updateDnsPreferH3,
     values = booleanOptions,
-    modifier = Modifier.fillMaxWidth(),
     enabled = dnsEnabled != false,
     title = { Text(stringResource(R.string.prefer_h3)) },
     summary = { Text(stringResource(configuration.dns.preferH3.textRes)) },
@@ -417,7 +407,6 @@ private fun LazyListScope.dnsPreferenceItems(
     value = configuration.app.appendSystemDns,
     onValueChange = actions::updateAppendSystemDns,
     values = booleanOptions,
-    modifier = Modifier.fillMaxWidth(),
     enabled = dnsEnabled != false,
     title = { Text(stringResource(R.string.append_system_dns)) },
     summary = { Text(stringResource(configuration.app.appendSystemDns.textRes)) },
@@ -428,7 +417,6 @@ private fun LazyListScope.dnsPreferenceItems(
     value = configuration.dns.ipv6,
     onValueChange = actions::updateDnsIpv6,
     values = booleanOptions,
-    modifier = Modifier.fillMaxWidth(),
     enabled = dnsEnabled != false,
     title = { Text(stringResource(R.string.ipv6)) },
     summary = { Text(stringResource(configuration.dns.ipv6.textRes)) },
@@ -439,7 +427,6 @@ private fun LazyListScope.dnsPreferenceItems(
     value = configuration.dns.useHosts,
     onValueChange = actions::updateDnsUseHosts,
     values = booleanOptions,
-    modifier = Modifier.fillMaxWidth(),
     enabled = dnsEnabled != false,
     title = { Text(stringResource(R.string.use_hosts)) },
     summary = { Text(stringResource(configuration.dns.useHosts.textRes)) },
@@ -450,7 +437,6 @@ private fun LazyListScope.dnsPreferenceItems(
     value = configuration.dns.enhancedMode,
     onValueChange = actions::updateDnsEnhancedMode,
     values = ConfigurationOverride.DnsEnhancedMode.entries,
-    modifier = Modifier.fillMaxWidth(),
     enabled = dnsEnabled != false,
     title = { Text(stringResource(R.string.enhanced_mode)) },
     summary = { Text(stringResource(configuration.dns.enhancedMode.textRes)) },
@@ -458,7 +444,6 @@ private fun LazyListScope.dnsPreferenceItems(
   )
   preference(
     key = "dnsNameServer",
-    modifier = Modifier.fillMaxWidth(),
     title = { Text(stringResource(R.string.name_server)) },
     summary = { Text(configuration.dns.nameServer.listSummary(R.string.dont_modify)) },
     enabled = dnsEnabled != false,
@@ -472,7 +457,6 @@ private fun LazyListScope.dnsPreferenceItems(
   )
   preference(
     key = "dnsFallback",
-    modifier = Modifier.fillMaxWidth(),
     title = { Text(stringResource(R.string.fallback)) },
     summary = { Text(configuration.dns.fallback.listSummary(R.string.dont_modify)) },
     enabled = dnsEnabled != false,
@@ -486,7 +470,6 @@ private fun LazyListScope.dnsPreferenceItems(
   )
   preference(
     key = "dnsDefaultServer",
-    modifier = Modifier.fillMaxWidth(),
     title = { Text(stringResource(R.string.default_name_server)) },
     summary = { Text(configuration.dns.defaultServer.listSummary(R.string.dont_modify)) },
     enabled = dnsEnabled != false,
@@ -500,7 +483,6 @@ private fun LazyListScope.dnsPreferenceItems(
   )
   preference(
     key = "dnsFakeIpFilter",
-    modifier = Modifier.fillMaxWidth(),
     title = { Text(stringResource(R.string.fakeip_filter)) },
     summary = { Text(configuration.dns.fakeIpFilter.listSummary(R.string.dont_modify)) },
     enabled = dnsEnabled != false,
@@ -517,7 +499,6 @@ private fun LazyListScope.dnsPreferenceItems(
     value = configuration.dns.fakeIPFilterMode,
     onValueChange = actions::updateDnsFakeIpFilterMode,
     values = ConfigurationOverride.FilterMode.entries,
-    modifier = Modifier.fillMaxWidth(),
     enabled = dnsEnabled != false,
     title = { Text(stringResource(R.string.fakeip_filter_mode)) },
     summary = { Text(stringResource(configuration.dns.fakeIPFilterMode.textRes)) },
@@ -528,7 +509,6 @@ private fun LazyListScope.dnsPreferenceItems(
     value = configuration.dns.fallbackFilter.geoIp,
     onValueChange = actions::updateDnsGeoIpFallback,
     values = booleanOptions,
-    modifier = Modifier.fillMaxWidth(),
     enabled = dnsEnabled != false,
     title = { Text(stringResource(R.string.geoip_fallback)) },
     summary = { Text(stringResource(configuration.dns.fallbackFilter.geoIp.textRes)) },
@@ -545,7 +525,6 @@ private fun LazyListScope.dnsPreferenceItems(
   )
   preference(
     key = "dnsDomainFallback",
-    modifier = Modifier.fillMaxWidth(),
     title = { Text(stringResource(R.string.domain_fallback)) },
     summary = { Text(configuration.dns.fallbackFilter.domain.listSummary(R.string.dont_modify)) },
     enabled = dnsEnabled != false,
@@ -559,7 +538,6 @@ private fun LazyListScope.dnsPreferenceItems(
   )
   preference(
     key = "dnsIpcidrFallback",
-    modifier = Modifier.fillMaxWidth(),
     title = { Text(stringResource(R.string.ipcidr_fallback)) },
     summary = { Text(configuration.dns.fallbackFilter.ipcidr.listSummary(R.string.dont_modify)) },
     enabled = dnsEnabled != false,
@@ -573,7 +551,6 @@ private fun LazyListScope.dnsPreferenceItems(
   )
   preference(
     key = "dnsNameserverPolicy",
-    modifier = Modifier.fillMaxWidth(),
     title = { Text(stringResource(R.string.name_server_policy)) },
     summary = { Text(configuration.dns.nameserverPolicy.summary(R.string.dont_modify)) },
     enabled = dnsEnabled != false,
@@ -606,7 +583,6 @@ private fun LazyListScope.overrideEditTextPreferenceItem(
         else -> value
       }
     Preference(
-      modifier = Modifier.fillMaxWidth(),
       title = { Text(stringResource(title)) },
       summary = { Text(summary) },
       enabled = enabled,

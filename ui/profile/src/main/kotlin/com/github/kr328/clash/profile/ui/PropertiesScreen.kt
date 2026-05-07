@@ -3,7 +3,6 @@ package com.github.kr328.clash.profile.ui
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
@@ -169,7 +168,6 @@ private fun PropertiesContent(
     ) {
       ProvidePreferenceLocals {
         Preference(
-          modifier = Modifier.fillMaxWidth(),
           title = { Text(stringResource(R.string.properties)) },
           summary = { Text(AnnotatedString.fromHtml(stringResource(R.string.tips_properties))) },
           icon = { Icon(imageVector = MihomoIcons.OutlineInfo, contentDescription = null) },
@@ -185,7 +183,6 @@ private fun PropertiesContent(
           },
           title = { Text(stringResource(CommonR.string.name)) },
           textToValue = { input -> if (ValidatorNotBlank(input)) input else null },
-          modifier = Modifier.fillMaxWidth(),
           icon = { Icon(imageVector = MihomoIcons.OutlineLabel, contentDescription = null) },
           summary = { Text(profile.name.ifBlank { stringResource(R.string.profile_name) }) },
         )
@@ -199,7 +196,6 @@ private fun PropertiesContent(
           },
           title = { Text(stringResource(CommonR.string.url)) },
           textToValue = { input -> if (ValidatorHttpUrl(input)) input else null },
-          modifier = Modifier.fillMaxWidth(),
           enabled = profile.type != File && profile.type != External,
           icon = { Icon(imageVector = MihomoIcons.OutlineInbox, contentDescription = null) },
           summary = {
@@ -230,7 +226,6 @@ private fun PropertiesContent(
               minutes.minutes.inWholeMilliseconds
             }
           },
-          modifier = Modifier.fillMaxWidth(),
           enabled = profile.type != File,
           icon = { Icon(imageVector = MihomoIcons.OutlineUpdate, contentDescription = null) },
           summary = { Text(intervalSummary) },
@@ -244,7 +239,6 @@ private fun PropertiesContent(
         )
 
         Preference(
-          modifier = Modifier.fillMaxWidth(),
           title = { Text(stringResource(R.string.browse_files)) },
           summary = { Text(stringResource(R.string.browse_configuration_providers)) },
           icon = { Icon(imageVector = MihomoIcons.OutlineFolder, contentDescription = null) },
