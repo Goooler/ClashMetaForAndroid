@@ -214,25 +214,12 @@ private fun MetaFeatureSettingsContent(
     }
 
     if (showResetConfirmDialog) {
-      AlertDialog(
-        onDismissRequest = { onShowResetConfirmDialogChange(false) },
-        title = { Text(stringResource(R.string.reset_override_settings)) },
-        text = { Text(stringResource(R.string.reset_override_settings_message)) },
-        confirmButton = {
-          TextButton(
-            onClick = {
-              onShowResetConfirmDialogChange(false)
-              onResetConfirmed()
-            }
-          ) {
-            Text(stringResource(CommonR.string.ok))
-          }
+      ResetOverrideSettingsDialog(
+        onConfirm = {
+          onShowResetConfirmDialogChange(false)
+          onResetConfirmed()
         },
-        dismissButton = {
-          TextButton(onClick = { onShowResetConfirmDialogChange(false) }) {
-            Text(stringResource(CommonR.string.cancel))
-          }
-        },
+        onDismiss = { onShowResetConfirmDialogChange(false) },
       )
     }
   }
