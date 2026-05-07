@@ -10,7 +10,6 @@ plugins {
 }
 
 android {
-  namespace = "com.github.kr328.clash"
   defaultConfig {
     applicationId = "com.github.metacubex.clash.meta"
     targetSdk = 35
