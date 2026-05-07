@@ -1,7 +1,5 @@
 <resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="PluralsCandidate">
 
-  <!-- from https://github.com/shadowsocks/shadowsocks-android/blob/master/core/src/main/res/values/strings.xml -->
-  <string name="clash_meta_for_android">Clash Meta for Android</string>
   <string name="clash_service_status_channel">Clash Status</string>
   <string name="configuration_yaml">Configuration.yaml</string>
   <string name="format_update_complete">Update %s completed</string>

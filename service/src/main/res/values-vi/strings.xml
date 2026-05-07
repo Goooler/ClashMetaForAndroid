@@ -1,6 +1,5 @@
 <resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="PluralsCandidate">
 
-  <string name="clash_meta_for_android">Clash Meta cho Android</string>
   <string name="clash_service_status_channel">Trạng thái Clash</string>
   <string name="configuration_yaml">Configuration.yaml</string>
   <string name="format_update_complete">Cập nhật %s hoàn tất</string>

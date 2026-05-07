@@ -1,6 +1,5 @@
 <resources>
 
-  <string name="clash_meta_for_android">Clash Meta for Android</string>
   <string name="clash_service_status_channel">Clash 상태</string>
   <string name="configuration_yaml">구성 파일.yaml</string>
   <string name="format_update_complete">%s 업데이트 성공</string>
