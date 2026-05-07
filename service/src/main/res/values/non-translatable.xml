@@ -1,0 +1,4 @@
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="PluralsCandidate">
+
+  <string name="clash_notification_content" translatable="false">"%1$s↑\t%2$s↓"</string>
+</resources>

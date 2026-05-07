@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?>
 <resources>
+
   <string name="clash_logcat">Clash 日志捕捉工具</string>
   <string name="copied">已复制</string>
   <string name="delete_all_logs">删除所有日志</string>

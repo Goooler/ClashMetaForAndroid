@@ -1,7 +1,8 @@
-<?xml version="1.0" encoding="utf-8"?>
 <resources>
+
   <string name="delay">Độ trễ</string>
   <string name="delay_test">Kiểm tra độ trễ</string>
+  <string name="doubles">Hai cột</string>
   <string name="layout">Bố cục</string>
   <string name="mode_switch_tips">Chỉ hợp lệ cho phiên hiện tại</string>
   <string name="multiple">Nhiều</string>

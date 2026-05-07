@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?>
 <resources>
+
   <string name="access_control_mode">アクセスコントロールモード</string>
   <string name="access_control_packages">アクセスコントロールリスト</string>
   <string name="access_control_packages_summary">アプリプロファイルへのアクセスを許可</string>
@@ -7,7 +7,11 @@
   <string name="allow_bypass">アプリのバイパスを許可</string>
   <string name="allow_bypass_summary">アプリにVPNのバイパスを許可</string>
   <string name="allow_clash_auto_restart">Clashの自動リスタートを許可</string>
+  <string name="allow_ipv6">IPv6 を許可</string>
+  <string name="allow_ipv6_summary">VpnService を介して IPv6 トラフィックを許可する</string>
   <string name="allow_lan">LANからの接続を許可</string>
+  <string name="allow_origins">外部コントローラーの許可オリジン (Allow Origins)</string>
+  <string name="allow_private_network">外部コントローラーのプライベートネットワークを許可 (Allow Private Network)</string>
   <string name="allow_selected_apps">選択したアプリのみを許可</string>
   <string name="always">Always</string>
   <string name="always_dark">常にダークモード</string>
@@ -18,6 +22,7 @@
   <string name="auto_restart">自動リスタート</string>
   <string name="behavior">動作</string>
   <string name="bind_address">リスニングアドレス</string>
+  <string name="blacklist">ブラックリスト</string>
   <string name="block_loopback">ループバックをブロックする</string>
   <string name="block_loopback_summary">ループバックをブロック</string>
   <string name="bypass_private_network">プライベートネットワークをバイパスする</string>
@@ -37,8 +42,11 @@
   <string name="enhanced_mode">拡張モード</string>
   <string name="error">エラー</string>
   <string name="export_to_clipboard">クリップボードにエクスポート</string>
+  <string name="external_controller">外部コントローラー</string>
+  <string name="external_controller_tls">外部コントローラー TLS</string>
   <string name="fakeip">Fake-IPをドメインマッピング</string>
   <string name="fakeip_filter">Fake-IPフィルター</string>
+  <string name="fakeip_filter_mode">Fake-IP フィルターモード</string>
   <string name="fallback">フォールバックネームサーバー</string>
   <string name="find_process_mode">Find Process Mode</string>
   <string name="follow_system_android_10">システム (Android 10+)</string>
@@ -58,8 +66,13 @@
   <string name="geox_geosite">Geosite URL</string>
   <string name="geox_mmdb">MMDB URL</string>
   <string name="geox_url_setting">GeoX URL Setting</string>
+  <string name="hide_app_icon_desc">*#*#252746382#*#* をダイヤルしてこのアプリを開くことができます</string>
+  <string name="hide_app_icon_title">アプリのアイコンを隠す</string>
+  <string name="hide_from_recents_desc">最近使用したアプリ画面からアプリを隠す</string>
+  <string name="hide_from_recents_title">最近のタスクから隠す</string>
   <string name="hosts">ホスト</string>
   <string name="http_port">HTTPポート</string>
+  <string name="import_asn_file">ASN データベースをインポート</string>
   <string name="import_country_file">Import Country Database</string>
   <string name="import_from_clipboard">クリップボードからインポート</string>
   <string name="import_geoip_file">Import GeoIP Database</string>
@@ -94,15 +107,28 @@
   <string name="reverse">リバース</string>
   <string name="route_system_traffic">ルートシステムトラフィック</string>
   <string name="routing_via_vpn_service">全てのトラフィックをVPNサービス経由でルーティング</string>
+  <string name="script_mode">スクリプトモード</string>
   <string name="search">検索</string>
+  <string name="secret">シークレット</string>
   <string name="select_all">すべてを選択</string>
   <string name="select_invert">選択を解除</string>
   <string name="select_none">クリア</string>
   <string name="service">サービス</string>
   <string name="show_traffic">通信量を表示</string>
   <string name="show_traffic_summary">通知時に通信量を自動更新</string>
+  <string name="sideload_geoip">Sideload GEOIP</string>
+  <string name="sideload_geoip_summary">Sideload GEOIP データベース</string>
   <string name="silent">無効にする</string>
   <string name="skip_domain">Skip Domain</string>
+  <string name="skip_dst_address">宛先アドレスをスキップ</string>
+  <string name="skip_src_address">ソースアドレスをスキップ</string>
+  <string name="sniff">スニッフィング</string>
+  <string name="sniff_http_override_destination">HTTP スニッフィング宛先の上書き</string>
+  <string name="sniff_http_ports">HTTP スニッフィングポート</string>
+  <string name="sniff_quic_override_destination">QUIC スニッフィング宛先の上書き</string>
+  <string name="sniff_quic_ports">QUIC スニッフィングポート</string>
+  <string name="sniff_tls_override_destination">TLS スニッフィング宛先の上書き</string>
+  <string name="sniff_tls_ports">TLS スニッフィングポート</string>
   <string name="sniffer">Sniffer</string>
   <string name="sniffer_config">Load Sniffer From Config</string>
   <string name="sniffer_override">Override Sniffer Config</string>
@@ -116,6 +142,10 @@
   <string name="system_proxy_summary">VPNサービスにHTTPプロキシを追加</string>
   <string name="tcp_concurrent">TCP Concurrent</string>
   <string name="tproxy_port">TProxyポート</string>
+  <string name="tun_stack_gvisor">Gvisor スタック</string>
+  <string name="tun_stack_mixed">混合スタック</string>
+  <string name="tun_stack_mode">スタックモード</string>
+  <string name="tun_stack_system">システムスタック</string>
   <string name="unified_delay">Unified Delay</string>
   <string name="update_time">更新日時</string>
   <string name="use_built_in">ビルトイン</string>
@@ -123,4 +153,5 @@
   <string name="value">値</string>
   <string name="vpn_service_options">VPNサービスのオプション</string>
   <string name="warning">警告</string>
+  <string name="whitelist">ホワイトリスト</string>
 </resources>

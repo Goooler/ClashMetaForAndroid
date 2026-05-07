@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?>
 <resources>
+
   <string name="about">アプリについて</string>
   <string name="clash_meta_core">Clash Meta Core</string>
   <string name="clash_meta_wiki">Clash Meta Wiki</string>

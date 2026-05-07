@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?>
 <resources>
+
   <string name="clash_meta_for_android">Clash Meta for Android</string>
   <string name="clash_service_status_channel">Clashステータス</string>
   <string name="configuration_yaml">コンフィグ.yaml</string>

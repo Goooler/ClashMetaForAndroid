@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="PluralsCandidate">
+
   <string name="delay">Задержка</string>
   <string name="delay_test">Проверка задержки</string>
   <string name="doubles">Двойное</string>

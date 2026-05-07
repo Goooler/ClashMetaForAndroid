@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?>
 <resources>
+
   <string name="_new">新增</string>
   <string name="cancel">取消</string>
   <string name="clash_meta_for_android">Clash Meta for Android</string>
@@ -9,6 +9,7 @@
   <string name="delete">刪除</string>
   <string name="direct_mode">直連模式</string>
   <string name="disabled">已停用</string>
+  <string name="dont_modify">不要修改</string>
   <string name="export">匯出</string>
   <string name="external">外部</string>
   <string name="file">檔案</string>
@@ -22,6 +23,7 @@
   <string name="format_years_ago">%d 年前</string>
   <string name="global_mode">全域模式</string>
   <string name="http">HTTP</string>
+  <string name="inline">內嵌</string>
   <string name="loading">載入中</string>
   <string name="logs">日誌</string>
   <string name="mode">模式</string>
@@ -33,6 +35,8 @@
   <string name="profiles">設定檔</string>
   <string name="providers">提供者</string>
   <string name="proxy">Proxy</string>
+  <string name="receive_broadcasts_of_clash">接收 Clash 服務的廣播</string>
+  <string name="receive_clash_broadcasts">接收 Clash 廣播</string>
   <string name="recently">最近</string>
   <string name="reset">重設</string>
   <string name="rule">規則</string>

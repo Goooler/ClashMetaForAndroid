@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?>
 <resources>
+
   <string name="access_control_mode">访问控制模式</string>
   <string name="access_control_packages">访问控制应用包列表</string>
   <string name="access_control_packages_summary">为应用配置访问权限</string>
@@ -10,6 +10,8 @@
   <string name="allow_ipv6">允许 Ipv6</string>
   <string name="allow_ipv6_summary">通过 VpnService 代理 Ipv6 流量</string>
   <string name="allow_lan">允许来自局域网的连接</string>
+  <string name="allow_origins">外部控制允许来源</string>
+  <string name="allow_private_network">外部控制允许私有网络</string>
   <string name="allow_selected_apps">仅允许已选择的应用</string>
   <string name="always">强制开启</string>
   <string name="always_dark">总是暗黑模式</string>
@@ -29,6 +31,7 @@
   <string name="debug">调试</string>
   <string name="default_name_server">Default Name Server</string>
   <string name="deny_selected_apps">不允许已选择的应用</string>
+  <string name="disable_sniffer">禁用嗅探器</string>
   <string name="dns">DNS</string>
   <string name="dns_hijacking">DNS 劫持</string>
   <string name="dns_hijacking_summary">处理所有 DNS 数据包</string>
@@ -39,6 +42,8 @@
   <string name="enhanced_mode">增强模式</string>
   <string name="error">错误</string>
   <string name="export_to_clipboard">导出至剪切板</string>
+  <string name="external_controller">外部控制</string>
+  <string name="external_controller_tls">外部控制 TLS</string>
   <string name="fakeip">Fake-IP 至 域名映射</string>
   <string name="fakeip_filter">FakeIP 过滤器</string>
   <string name="fakeip_filter_mode">FakeIP 过滤器模式</string>
@@ -93,6 +98,7 @@
   <string name="override_destination">覆盖目标地址</string>
   <string name="package_name">应用包名称</string>
   <string name="parse_pure_ip">解析纯 IP 连接</string>
+  <string name="port_whitelist">端口白名单</string>
   <string name="prefer_h3">H3 优先</string>
   <string name="press_to_import">点击导入...</string>
   <string name="redirect_port">Redirect 端口</string>
@@ -101,20 +107,33 @@
   <string name="reverse">反转</string>
   <string name="route_system_traffic">自动路由系统流量</string>
   <string name="routing_via_vpn_service">通过 VpnService 自动路由所有系统流量</string>
+  <string name="script_mode">脚本模式</string>
   <string name="search">查找</string>
+  <string name="secret">密钥</string>
   <string name="select_all">全选</string>
   <string name="select_invert">反选</string>
   <string name="select_none">清除</string>
   <string name="service">服务</string>
   <string name="show_traffic">显示流量</string>
   <string name="show_traffic_summary">在通知中自动刷新流量</string>
+  <string name="sideload_geoip">Sideload GEOIP</string>
+  <string name="sideload_geoip_summary">从本地加载 GEOIP 数据库</string>
   <string name="silent">停用</string>
   <string name="skip_domain">跳过域名</string>
   <string name="skip_dst_address">跳过目标 IP</string>
   <string name="skip_src_address">跳过源 IP</string>
   <string name="sniff">嗅探</string>
+  <string name="sniff_http_override_destination">嗅探 HTTP 覆盖目标地址</string>
+  <string name="sniff_http_ports">嗅探 HTTP 端口</string>
+  <string name="sniff_quic_override_destination">嗅探 QUIC 覆盖目标地址</string>
+  <string name="sniff_quic_ports">嗅探 QUIC 端口</string>
+  <string name="sniff_tls_override_destination">嗅探 TLS 覆盖目标地址</string>
+  <string name="sniff_tls_ports">嗅探 TLS 端口</string>
   <string name="sniffer">嗅探器</string>
+  <string name="sniffer_config">从配置加载嗅探器</string>
+  <string name="sniffer_override">覆写嗅探器配置</string>
   <string name="sniffer_setting">嗅探设置</string>
+  <string name="sniffing">嗅探模式</string>
   <string name="socks_port">Socks 端口</string>
   <string name="strategy">策略</string>
   <string name="strict">严格</string>
@@ -123,6 +142,10 @@
   <string name="system_proxy_summary">为 VpnService 附加 HTTP 代理</string>
   <string name="tcp_concurrent">TCP 并发</string>
   <string name="tproxy_port">TProxy 端口</string>
+  <string name="tun_stack_gvisor">Gvisor 栈</string>
+  <string name="tun_stack_mixed">混合栈</string>
+  <string name="tun_stack_mode">栈模式</string>
+  <string name="tun_stack_system">系统栈</string>
   <string name="unified_delay">统一延迟</string>
   <string name="update_time">更新时间</string>
   <string name="use_built_in">使用内置</string>

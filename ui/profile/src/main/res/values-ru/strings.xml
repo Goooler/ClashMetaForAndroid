@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="PluralsCandidate">
+
   <string name="accept_http_content">Принимать только http(s)</string>
   <string name="active_unsaved_tips">Профиль должен быть сохранён перед активацией</string>
   <string name="at_least_15_minutes">Не менее 15 минут или пустой</string>

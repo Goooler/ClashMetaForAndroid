@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="PluralsCandidate">
+
   <string name="application_broken">Application Broken</string>
   <string name="application_broken_tips">App lacks the necessary runtime components, which is usually caused by downloading an incomplete apk.</string>
   <string name="application_crashed">Application Crashed</string>

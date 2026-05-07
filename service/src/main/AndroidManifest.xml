@@ -14,9 +14,9 @@
     <service
       android:name=".ClashService"
       android:exported="false"
+      android:foregroundServiceType="specialUse"
       android:label="@string/clash_meta_for_android"
-      android:process=":background"
-      android:foregroundServiceType="specialUse">
+      android:process=":background">
       <property
         android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
         android:value="explanation_for_special_use" />
@@ -24,10 +24,10 @@
     <service
       android:name=".TunService"
       android:exported="false"
+      android:foregroundServiceType="specialUse"
       android:label="@string/clash_meta_for_android"
       android:permission="android.permission.BIND_VPN_SERVICE"
-      android:process=":background"
-      android:foregroundServiceType="specialUse">
+      android:process=":background">
       <property
         android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
         android:value="explanation_for_special_use" />
@@ -42,8 +42,8 @@
     <service
       android:name=".ProfileWorker"
       android:exported="false"
-      android:process=":background"
-      android:foregroundServiceType="specialUse">
+      android:foregroundServiceType="specialUse"
+      android:process=":background">
       <property
         android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
         android:value="explanation_for_special_use" />

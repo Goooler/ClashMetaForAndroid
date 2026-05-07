@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?>
 <resources>
+
   <string name="delay">延迟</string>
   <string name="delay_test">延迟测试</string>
   <string name="doubles">双列</string>

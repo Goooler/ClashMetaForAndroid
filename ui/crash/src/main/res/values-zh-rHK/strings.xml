@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?>
 <resources>
+
   <string name="application_broken">應用損壞</string>
   <string name="application_broken_tips">應用缺少必要的運行組件，這通常由於下載不完整的 apk 導致。</string>
   <string name="application_crashed">應用崩潰</string>

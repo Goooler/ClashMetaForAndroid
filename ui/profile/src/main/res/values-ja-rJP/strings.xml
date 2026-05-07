@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?>
 <resources>
+
   <string name="accept_http_content">http(s) のみを許可</string>
   <string name="active_unsaved_tips">プロファイルを有効にする前に保存する必要があります</string>
   <string name="at_least_15_minutes">15分以上か空白にしてください</string>

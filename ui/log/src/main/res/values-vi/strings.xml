@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?>
 <resources>
+
   <string name="clash_logcat">Nhật ký Clash</string>
   <string name="copied">Đã sao chép</string>
   <string name="delete_all_logs">Xóa tất cả nhật ký</string>

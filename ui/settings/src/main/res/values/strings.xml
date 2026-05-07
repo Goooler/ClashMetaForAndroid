@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="PluralsCandidate">
+
   <string name="access_control_mode">Access Control Mode</string>
   <string name="access_control_packages">Access Control Packages</string>
   <string name="access_control_packages_summary">Configure access permission for apps</string>
@@ -61,8 +61,6 @@
   <string name="geofile_unknown_db_format_message">Only %1$s are supported</string>
   <string name="geoip_fallback">GeoIP Fallback</string>
   <string name="geoip_fallback_code">GeoIP Fallback Code</string>
-  <string name="geoip_url" translatable="false">https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/release/geoip.dat</string>
-  <string name="geosite_url" translatable="false">https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/release/geosite.dat</string>
   <string name="geox_files">Geo Files</string>
   <string name="geox_geoip">GeoIp Url</string>
   <string name="geox_geosite">Geosite Url</string>
@@ -91,7 +89,6 @@
   <string name="mapping">Real-IP to domain mapping</string>
   <string name="meta_features">Meta Features</string>
   <string name="mixed_port">Mixed Port</string>
-  <string name="mmdb_url" translatable="false">https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/release/country.mmdb</string>
   <string name="name_server">Name Server</string>
   <string name="name_server_policy">Name Server Policy</string>
   <string name="network">Network</string>
@@ -104,7 +101,6 @@
   <string name="port_whitelist">Port Whitelist</string>
   <string name="prefer_h3">Prefer h3</string>
   <string name="press_to_import">Press to import...</string>
-  <string name="raw_cn" translatable="false">cn</string>
   <string name="redirect_port">Redirect Port</string>
   <string name="reset_override_settings">Reset Override Settings</string>
   <string name="reset_override_settings_message">All override settings will be discarded</string>

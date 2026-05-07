@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="PluralsCandidate">
+
   <string name="accept_http_content">Accept only http(s)</string>
   <string name="active_unsaved_tips">Profile needs to be saved before activation</string>
   <string name="at_least_15_minutes">At least 15 minutes or empty</string>
@@ -33,7 +33,6 @@
   <string name="profile_name">Profile Name</string>
   <string name="profile_url">Profile URL</string>
   <string name="properties">Properties</string>
-  <string name="qr" translatable="false">QR Code</string>
   <string name="rename">Rename</string>
   <string name="save">Save</string>
   <string name="should_not_be_blank">Should not be blank</string>

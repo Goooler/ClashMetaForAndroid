@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="PluralsCandidate">
+
   <string name="access_control_mode">Режим контроля доступа</string>
   <string name="access_control_packages">Приложения с контролируемым доступом</string>
   <string name="access_control_packages_summary">Настройте доступ для приложения</string>
@@ -7,7 +7,11 @@
   <string name="allow_bypass">Разрешить обход</string>
   <string name="allow_bypass_summary">Разрешить приложениям обходить VPN соединение</string>
   <string name="allow_clash_auto_restart">Разрешить Clash автоматически перезапускаться</string>
+  <string name="allow_ipv6">Разрешить IPv6</string>
+  <string name="allow_ipv6_summary">Разрешить трафик IPv6 через VpnService</string>
   <string name="allow_lan">Разрешить LAN</string>
+  <string name="allow_origins">Разрешенные источники (Allow Origins)</string>
+  <string name="allow_private_network">Разрешить частные сети (Allow Private Network)</string>
   <string name="allow_selected_apps">Разрешить выбранные приложения</string>
   <string name="always">Принудительно включить</string>
   <string name="always_dark">Всегда тёмная</string>
@@ -18,6 +22,7 @@
   <string name="auto_restart">Автоматический перезапуск</string>
   <string name="behavior">Поведение</string>
   <string name="bind_address">Задать адрес</string>
+  <string name="blacklist">Черный список</string>
   <string name="block_loopback">Заблокировать loopback</string>
   <string name="block_loopback_summary">Заблокировать loopback-соединения</string>
   <string name="bypass_private_network">Игнорировать частные сети</string>
@@ -37,8 +42,11 @@
   <string name="enhanced_mode">Расширенный режим</string>
   <string name="error">Ошибка</string>
   <string name="export_to_clipboard">Экспорт в буфер обмена</string>
+  <string name="external_controller">Внешний контроллер</string>
+  <string name="external_controller_tls">Внешний контроллер TLS</string>
   <string name="fakeip">Сопоставление подставных IP доменам</string>
   <string name="fakeip_filter">Фильтр подставных IP</string>
+  <string name="fakeip_filter_mode">Режим фильтрации Fake-IP</string>
   <string name="fallback">Резервный сервер имён</string>
   <string name="find_process_mode">Найти режим процесса</string>
   <string name="follow_system_android_10">Как в системе (Android 10+)</string>
@@ -53,15 +61,18 @@
   <string name="geofile_unknown_db_format_message">Only %1$s are supported</string>
   <string name="geoip_fallback">Резервный GeoIP</string>
   <string name="geoip_fallback_code">Код резервного GeoIP</string>
-  <string name="geoip_url" translatable="false">https://raw.githubusercontent.com/Loyalsoldier/v2ray-rules-dat/release/geoip.dat</string>
-  <string name="geosite_url" translatable="false">https://raw.githubusercontent.com/Loyalsoldier/v2ray-rules-dat/release/geosite.dat</string>
   <string name="geox_files">Geo Files</string>
   <string name="geox_geoip">GeoIP URL</string>
   <string name="geox_geosite">Geosite URL</string>
   <string name="geox_mmdb">MMDB URL</string>
   <string name="geox_url_setting">Настройка GeoX URL</string>
+  <string name="hide_app_icon_desc">Вы можете набрать *#*#252746382#*#*, чтобы открыть это приложение</string>
+  <string name="hide_app_icon_title">Скрыть иконку приложения</string>
+  <string name="hide_from_recents_desc">Скрыть приложение из списка недавно запущенных</string>
+  <string name="hide_from_recents_title">Скрыть из недавних</string>
   <string name="hosts">Hosts</string>
   <string name="http_port">Порт HTTP</string>
+  <string name="import_asn_file">Импорт базы данных ASN</string>
   <string name="import_country_file">Import Country Database</string>
   <string name="import_from_clipboard">Импорт из буфера обмена</string>
   <string name="import_geoip_file">Import GeoIP Database</string>
@@ -78,7 +89,6 @@
   <string name="mapping">Сопоставление реальных IP доменам</string>
   <string name="meta_features">Функции Meta</string>
   <string name="mixed_port">Смешанный порт</string>
-  <string name="mmdb_url" translatable="false">https://raw.githubusercontent.com/Loyalsoldier/geoip/release/Country.mmdb</string>
   <string name="name_server">Сервер имён</string>
   <string name="name_server_policy">Политика сервера имён</string>
   <string name="network">Сеть</string>
@@ -91,22 +101,34 @@
   <string name="port_whitelist">Список портов для перехвата</string>
   <string name="prefer_h3">Предпочитать HTTP/3</string>
   <string name="press_to_import">Press to import...</string>
-  <string name="raw_cn" translatable="false">cn</string>
   <string name="redirect_port">Порт перенаправления</string>
   <string name="reset_override_settings">Сбросить переопределённые настройки</string>
   <string name="reset_override_settings_message">Все переопределённые настройки будут сброшены</string>
   <string name="reverse">В обратном порядке</string>
   <string name="route_system_traffic">Маршрутизировать системный трафик</string>
   <string name="routing_via_vpn_service">Автоматически маршрутизировать весь системный трафик через VPN</string>
+  <string name="script_mode">Режим скрипта</string>
   <string name="search">Поиск</string>
+  <string name="secret">Секрет</string>
   <string name="select_all">Выбрать всё</string>
   <string name="select_invert">Обратить выделение</string>
   <string name="select_none">Отменить выделение</string>
   <string name="service">Сервис</string>
   <string name="show_traffic">Показывать трафик</string>
   <string name="show_traffic_summary">Автоматически обновлять счётчик трафика в уведомлении</string>
+  <string name="sideload_geoip">Sideload GEOIP</string>
+  <string name="sideload_geoip_summary">Sideload базы данных GEOIP</string>
   <string name="silent">Тихий</string>
   <string name="skip_domain">Исключения перехвата доменов</string>
+  <string name="skip_dst_address">Пропустить адрес назначения</string>
+  <string name="skip_src_address">Пропустить адрес источника</string>
+  <string name="sniff">Сниффинг</string>
+  <string name="sniff_http_override_destination">Сниффинг HTTP: Переопределить назначение</string>
+  <string name="sniff_http_ports">Сниффинг HTTP: Порты</string>
+  <string name="sniff_quic_override_destination">Сниффинг QUIC: Переопределить назначение</string>
+  <string name="sniff_quic_ports">Сниффинг QUIC: Порты</string>
+  <string name="sniff_tls_override_destination">Сниффинг TLS: Переопределить назначение</string>
+  <string name="sniff_tls_ports">Сниффинг TLS: Порты</string>
   <string name="sniffer">Перехват доменов</string>
   <string name="sniffer_config">Использовать перехват доменов из конфига</string>
   <string name="sniffer_override">Переопределить настройки перехвата доменов</string>
@@ -120,6 +142,10 @@
   <string name="system_proxy_summary">Дополнительно запустить HTTP прокси, помимо VPN</string>
   <string name="tcp_concurrent">Многопоточный TCP</string>
   <string name="tproxy_port">Порт TProxy</string>
+  <string name="tun_stack_gvisor">Стек Gvisor</string>
+  <string name="tun_stack_mixed">Смешанный стек</string>
+  <string name="tun_stack_mode">Режим стека</string>
+  <string name="tun_stack_system">Системный стек</string>
   <string name="unified_delay">Унифицированная задержка</string>
   <string name="update_time">Время обновления</string>
   <string name="use_built_in">Использовать встроенный</string>
@@ -127,4 +153,5 @@
   <string name="value">Значение</string>
   <string name="vpn_service_options">Настройки VPN</string>
   <string name="warning">Предупреждение</string>
+  <string name="whitelist">Белый список</string>
 </resources>

@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?>
 <resources>
+
   <string name="clash_logcat">Clash 로그 수집 도구</string>
   <string name="copied">복사됨</string>
   <string name="delete_all_logs">전체 로그 삭제</string>

@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="PluralsCandidate">
+
   <string name="_new">Новый</string>
   <string name="cancel">Отмена</string>
   <string name="clash_meta_for_android">Clash Meta для Android</string>

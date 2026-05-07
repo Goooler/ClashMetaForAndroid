@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?>
 <resources>
+
   <string name="accept_http_content">Chỉ chấp nhận http(s)</string>
   <string name="active_unsaved_tips">Hồ sơ cần được lưu trước khi kích hoạt</string>
   <string name="at_least_15_minutes">Ít nhất 15 phút hoặc để trống</string>

@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?>
 <resources>
+
   <string name="delay">지연 수치</string>
   <string name="delay_test">지연 수치 테스트</string>
   <string name="doubles">더블</string>

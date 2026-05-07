@@ -1,7 +1,6 @@
-<?xml version="1.0" encoding="utf-8"?>
 <resources>
+
   <string name="_new">Mới</string>
-  <string name="application_name_meta">Clash Meta</string>
   <string name="cancel">Huỷ bỏ</string>
   <string name="clash_meta_for_android">Clash Meta</string>
   <string name="close">Đóng</string>
@@ -23,7 +22,6 @@
   <string name="format_years_ago">%d năm trước</string>
   <string name="global_mode">Chế độ toàn cầu</string>
   <string name="http">HTTP</string>
-  <string name="launch_name_meta">Clash Meta</string>
   <string name="loading">Đang tải</string>
   <string name="logs">Nhật ký</string>
   <string name="mode">Chế độ</string>
