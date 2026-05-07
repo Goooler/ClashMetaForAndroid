@@ -12,7 +12,7 @@ import com.github.kr328.clash.crash.R
 import com.github.kr328.clash.ui.component.TabbyScaffold
 import com.github.kr328.clash.ui.theme.PreviewTabby
 import com.github.kr328.clash.ui.theme.TabbyThemeWrapper
-import com.github.kr328.clash.util.CMFA_GITHUB
+import com.github.kr328.clash.util.TABBY_GITHUB
 import com.github.kr328.clash.util.openLink
 import me.zhanghai.compose.preference.ProvidePreferenceLocals
 import me.zhanghai.compose.preference.preference
@@ -37,8 +37,8 @@ internal fun ApkBrokenScreen() {
         preference(
           key = "github_releases",
           title = { Text(stringResource(R.string.github_releases)) },
-          summary = { Text(CMFA_GITHUB) },
-          onClick = { context.openLink(CMFA_GITHUB) },
+          summary = { Text(TABBY_GITHUB) },
+          onClick = { context.openLink(TABBY_GITHUB) },
         )
       }
     }

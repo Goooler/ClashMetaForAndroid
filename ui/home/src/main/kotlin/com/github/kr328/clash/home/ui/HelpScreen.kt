@@ -18,7 +18,7 @@ import com.github.kr328.clash.ui.theme.TabbyThemeWrapper
 import com.github.kr328.clash.util.CLASH_META_CORE
 import com.github.kr328.clash.util.CLASH_META_WIKI
 import com.github.kr328.clash.util.CLASH_WIKI
-import com.github.kr328.clash.util.CMFA_GITHUB
+import com.github.kr328.clash.util.TABBY_GITHUB
 import com.github.kr328.clash.util.openLink
 import me.zhanghai.compose.preference.ProvidePreferenceLocals
 import me.zhanghai.compose.preference.preference
@@ -62,8 +62,8 @@ internal fun HelpScreen(modifier: Modifier = Modifier) {
         preference(
           key = "clash_meta_for_android",
           title = { Text(stringResource(CommonR.string.tabby)) },
-          summary = { Text(CMFA_GITHUB) },
-          onClick = { context.openLink(CMFA_GITHUB) },
+          summary = { Text(TABBY_GITHUB) },
+          onClick = { context.openLink(TABBY_GITHUB) },
         )
       }
     }
