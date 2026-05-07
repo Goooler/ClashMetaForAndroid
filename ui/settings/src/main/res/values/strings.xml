@@ -7,8 +7,8 @@
   <string name="allow_bypass">Allow Bypass</string>
   <string name="allow_bypass_summary">Allows all apps to bypass this VPN connection</string>
   <string name="allow_clash_auto_restart">Allow clash auto restart</string>
-  <string name="allow_ipv6">Allow Ipv6</string>
-  <string name="allow_ipv6_summary">Allows ipv6 traffic via VpnService</string>
+  <string name="allow_ipv6">Allow IPv6</string>
+  <string name="allow_ipv6_summary">Allows IPv6 traffic via VpnService</string>
   <string name="allow_lan">Allow LAN</string>
   <string name="allow_origins">External Controller Allow Origins</string>
   <string name="allow_private_network">External Controller Allow Private Network</string>

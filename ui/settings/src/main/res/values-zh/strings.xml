@@ -7,8 +7,8 @@
   <string name="allow_bypass">允许应用绕过</string>
   <string name="allow_bypass_summary">允许其他应用绕过 VPN</string>
   <string name="allow_clash_auto_restart">允许 Clash 自动重启</string>
-  <string name="allow_ipv6">允许 Ipv6</string>
-  <string name="allow_ipv6_summary">通过 VpnService 代理 Ipv6 流量</string>
+  <string name="allow_ipv6">允许 IPv6</string>
+  <string name="allow_ipv6_summary">通过 VpnService 代理 IPv6 流量</string>
   <string name="allow_lan">允许来自局域网的连接</string>
   <string name="allow_origins">外部控制允许来源</string>
   <string name="allow_private_network">外部控制允许私有网络</string>

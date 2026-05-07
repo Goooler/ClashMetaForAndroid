@@ -7,8 +7,8 @@
   <string name="allow_bypass">Cho phép bỏ qua</string>
   <string name="allow_bypass_summary">Cho phép tất cả các ứng dụng bỏ qua kết nối VPN này</string>
   <string name="allow_clash_auto_restart">Cho phép Clash tự khởi động lại</string>
-  <string name="allow_ipv6">Cho phép Ipv6</string>
-  <string name="allow_ipv6_summary">Cho phép lưu lượng ipv6 qua hệ thống Vpn</string>
+  <string name="allow_ipv6">Cho phép IPv6</string>
+  <string name="allow_ipv6_summary">Cho phép lưu lượng IPv6 qua hệ thống Vpn</string>
   <string name="allow_lan">Cho phép mạng LAN</string>
   <string name="allow_origins">Cho phép nguồn gốc bộ điều khiển bên ngoài</string>
   <string name="allow_private_network">Cho phép mạng riêng cho bộ điều khiển bên ngoài</string>
