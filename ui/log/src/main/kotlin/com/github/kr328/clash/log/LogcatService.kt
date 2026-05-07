@@ -149,7 +149,7 @@ internal class LogcatService :
     val notification =
       NotificationCompat.Builder(this, CHANNEL_ID)
         .setSmallIcon(CommonR.drawable.ic_logo_service)
-        .setColor(getColorCompat(R.color.color_clash_light))
+        .setColor(getColorCompat(CommonR.color.color_clash_light))
         .setContentTitle(getString(R.string.clash_logcat))
         .setContentText(getString(CommonR.string.running))
         .setContentIntent(

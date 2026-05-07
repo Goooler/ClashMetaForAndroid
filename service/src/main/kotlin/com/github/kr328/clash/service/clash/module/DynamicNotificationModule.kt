@@ -28,7 +28,7 @@ class DynamicNotificationModule(service: Service) : Module<Unit>(service) {
     NotificationCompat.Builder(service, StaticNotificationModule.CHANNEL_ID)
       .setSmallIcon(CommonR.drawable.ic_logo_service)
       .setOngoing(true)
-      .setColor(service.getColorCompat(R.color.color_clash))
+      .setColor(service.getColorCompat(CommonR.color.color_clash_light))
       .setOnlyAlertOnce(true)
       .setShowWhen(false)
       .setContentTitle("Not Selected")
