@@ -7,9 +7,10 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.application
 import androidx.lifecycle.viewModelScope
 import com.github.kr328.clash.common.Global
+import com.github.kr328.clash.common.R as CommonR
 import com.github.kr328.clash.common.log.Log
 import com.github.kr328.clash.core.model.FetchStatus
-import com.github.kr328.clash.glue.R
+import com.github.kr328.clash.profile.R
 import com.github.kr328.clash.service.model.Profile
 import com.github.kr328.clash.util.withProfile
 import kotlin.uuid.Uuid
@@ -145,7 +146,7 @@ internal class PropertiesViewModel(app: Application) :
       } catch (e: Exception) {
         Log.e("Commit profile failed: ${e.message}", e)
         eventState.value =
-          EventState.ShowMessage(e.message ?: application.getString(R.string.unknown))
+          EventState.ShowMessage(e.message ?: application.getString(CommonR.string.unknown))
       }
     }
   }

@@ -22,7 +22,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.PreviewWrapper
-import com.github.kr328.clash.glue.R
+import com.github.kr328.clash.common.R as CommonR
+import com.github.kr328.clash.settings.R
 import com.github.kr328.clash.ui.component.MihomoScaffold
 import com.github.kr328.clash.ui.icon.BaselineDns
 import com.github.kr328.clash.ui.icon.BaselineExtension
@@ -41,8 +42,10 @@ internal fun SettingsScreen(
   onOpenOverrideSettings: () -> Unit,
   onOpenMetaFeatureSettings: () -> Unit,
 ) {
-  MihomoScaffold(title = stringResource(R.string.settings), modifier = modifier.fillMaxSize()) {
-    innerPadding ->
+  MihomoScaffold(
+    title = stringResource(CommonR.string.settings),
+    modifier = modifier.fillMaxSize(),
+  ) { innerPadding ->
     Column(
       modifier = Modifier.fillMaxSize().padding(innerPadding).verticalScroll(rememberScrollState())
     ) {

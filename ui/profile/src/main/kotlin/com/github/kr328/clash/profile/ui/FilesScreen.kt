@@ -54,9 +54,10 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.github.kr328.clash.common.R as CommonR
 import com.github.kr328.clash.common.util.grantPermissions
-import com.github.kr328.clash.glue.R
 import com.github.kr328.clash.model.ConfigFile
+import com.github.kr328.clash.profile.R
 import com.github.kr328.clash.profile.vm.FilesViewModel
 import com.github.kr328.clash.ui.component.MihomoScaffold
 import com.github.kr328.clash.ui.icon.BaselineAdd
@@ -190,7 +191,7 @@ private fun FilesContent(
       if (!file.isDirectory && file.size > 0) {
         FilesMenuAction(
           icon = MihomoIcons.BaselineSave,
-          text = stringResource(R.string.export),
+          text = stringResource(CommonR.string.export),
           onClick = {
             menuConfigFile = null
             onExport(file)
@@ -208,7 +209,7 @@ private fun FilesContent(
         )
         FilesMenuAction(
           icon = MihomoIcons.OutlineDelete,
-          text = stringResource(R.string.delete),
+          text = stringResource(CommonR.string.delete),
           tint = MaterialTheme.colorScheme.error,
           onClick = {
             menuConfigFile = null
@@ -232,7 +233,7 @@ private fun FilesContent(
         IconButton(onClick = onNew) {
           Icon(
             imageVector = MihomoIcons.BaselineAdd,
-            contentDescription = stringResource(R.string._new),
+            contentDescription = stringResource(CommonR.string._new),
           )
         }
       }
@@ -330,10 +331,12 @@ private fun TextInputDialog(
     },
     confirmButton = {
       TextButton(onClick = { onConfirm(inputText.text) }, enabled = isValidInput) {
-        Text(stringResource(R.string.ok))
+        Text(stringResource(CommonR.string.ok))
       }
     },
-    dismissButton = { TextButton(onClick = onDismiss) { Text(stringResource(R.string.cancel)) } },
+    dismissButton = {
+      TextButton(onClick = onDismiss) { Text(stringResource(CommonR.string.cancel)) }
+    },
   )
 }
 
@@ -387,7 +390,7 @@ private fun FileItem(
     IconButton(onClick = onMore) {
       Icon(
         imageVector = MihomoIcons.BaselineMoreVert,
-        contentDescription = stringResource(R.string.more),
+        contentDescription = stringResource(CommonR.string.more),
       )
     }
   }

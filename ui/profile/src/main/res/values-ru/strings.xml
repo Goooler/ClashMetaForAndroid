@@ -1,0 +1,45 @@
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="PluralsCandidate">
+
+  <string name="accept_http_content">Принимать только http(s)</string>
+  <string name="active_unsaved_tips">Профиль должен быть сохранён перед активацией</string>
+  <string name="at_least_15_minutes">Не менее 15 минут или пустой</string>
+  <string name="auto_update">Автообновление</string>
+  <string name="auto_update_minutes">Автообновление (минут)</string>
+  <string name="browse_configuration_providers"><![CDATA[Обзор конфигурации и провайдеров]]></string>
+  <string name="browse_files">Обзор файлов</string>
+  <string name="create_profile">Создать профиль</string>
+  <string name="detail">Детали</string>
+  <string name="duplicate">Создать копию</string>
+  <string name="edit">Изменить</string>
+  <string name="empty_name">Пустое название</string>
+  <string name="exit_without_save">Выйти без сохранения</string>
+  <string name="exit_without_save_warning">Все изменения будут ПОТЕРЯНЫ</string>
+  <string name="file_name">Название файла</string>
+  <string name="files">Файлы</string>
+  <string name="format_fetching_configuration">Загрузка настроек из \'%s\'</string>
+  <string name="format_fetching_provider">Загрузка провайдера из \'%s\'</string>
+  <string name="format_minutes">%d мин.</string>
+  <string name="format_type_unsaved">%s (не сохранён)</string>
+  <string name="format_update_provider_failure">Обновление %1$s: %2$s</string>
+  <string name="import_">Импорт</string>
+  <string name="import_from_file">Импорт из файла</string>
+  <string name="import_from_qr">Импорт из QR-кода</string>
+  <string name="import_from_qr_exception">Произошла не обрабатываемая системная ошибка.</string>
+  <string name="import_from_qr_no_permission">Доступ к камере ограничен. Разрешите его в настройках.</string>
+  <string name="import_from_url">Импорт из URL</string>
+  <string name="initializing">Инициализация</string>
+  <string name="invalid_file_name">Недопустимое название файла</string>
+  <string name="invalid_url">Неверный URL</string>
+  <string name="profile_name">Название профиля</string>
+  <string name="profile_url">URL профиля</string>
+  <string name="properties">Свойства</string>
+  <string name="rename">Переименовать</string>
+  <string name="save">Сохранить</string>
+  <string name="should_not_be_blank">Не должно быть пустым</string>
+  <string name="tips_properties"><![CDATA[Принимается только <strong>конфиг Clash</strong> (включая <strong>Прокси</strong>/<strong>Правила</strong>)]]></string>
+  <string name="toast_profile_updated_complete">Update profile %s completed</string>
+  <string name="toast_profile_updated_failed">Update profile %1$s failed: %2$s</string>
+  <string name="update">Обновить</string>
+  <string name="update_all">Обновить всё</string>
+  <string name="verifying">Проверка</string>
+</resources>

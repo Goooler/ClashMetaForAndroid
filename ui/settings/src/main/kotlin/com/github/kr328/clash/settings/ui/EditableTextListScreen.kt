@@ -33,7 +33,8 @@ import androidx.compose.ui.tooling.preview.PreviewWrapper
 import androidx.compose.ui.unit.dp
 import androidx.navigation3.runtime.EntryProviderScope
 import androidx.navigation3.runtime.NavKey
-import com.github.kr328.clash.glue.R
+import com.github.kr328.clash.common.R as CommonR
+import com.github.kr328.clash.settings.R
 import com.github.kr328.clash.ui.component.MihomoScaffold
 import com.github.kr328.clash.ui.icon.BaselineAdd
 import com.github.kr328.clash.ui.icon.MihomoIcons
@@ -76,7 +77,7 @@ private fun EditableTextListScreen(
       IconButton(onClick = { showAddDialog = true }) {
         Icon(
           imageVector = MihomoIcons.BaselineAdd,
-          contentDescription = stringResource(R.string._new),
+          contentDescription = stringResource(CommonR.string._new),
         )
       }
     },
@@ -93,7 +94,7 @@ private fun EditableTextListScreen(
                 IconButton(onClick = { values.removeAt(index) }) {
                   Icon(
                     imageVector = MihomoIcons.OutlineDelete,
-                    contentDescription = stringResource(R.string.delete),
+                    contentDescription = stringResource(CommonR.string.delete),
                   )
                 }
               },
@@ -107,9 +108,11 @@ private fun EditableTextListScreen(
         modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 8.dp),
         horizontalArrangement = Arrangement.End,
       ) {
-        TextButton(onClick = { onApply(null) }) { Text(stringResource(R.string.reset)) }
-        TextButton(onClick = onDismiss) { Text(stringResource(R.string.cancel)) }
-        TextButton(onClick = { onApply(values.toList()) }) { Text(stringResource(R.string.ok)) }
+        TextButton(onClick = { onApply(null) }) { Text(stringResource(CommonR.string.reset)) }
+        TextButton(onClick = onDismiss) { Text(stringResource(CommonR.string.cancel)) }
+        TextButton(onClick = { onApply(values.toList()) }) {
+          Text(stringResource(CommonR.string.ok))
+        }
       }
     }
   }
@@ -155,9 +158,13 @@ private fun SingleTextInputDialog(
       )
     },
     confirmButton = {
-      TextButton(onClick = { onConfirm(inputText.text) }) { Text(stringResource(R.string.ok)) }
+      TextButton(onClick = { onConfirm(inputText.text) }) {
+        Text(stringResource(CommonR.string.ok))
+      }
     },
-    dismissButton = { TextButton(onClick = onDismiss) { Text(stringResource(R.string.cancel)) } },
+    dismissButton = {
+      TextButton(onClick = onDismiss) { Text(stringResource(CommonR.string.cancel)) }
+    },
   )
 }
 

@@ -11,11 +11,12 @@ import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.application
 import androidx.lifecycle.viewModelScope
+import com.github.kr328.clash.common.R as CommonR
 import com.github.kr328.clash.common.log.Log
 import com.github.kr328.clash.common.util.intent
 import com.github.kr328.clash.core.model.LogMessage
-import com.github.kr328.clash.glue.R
 import com.github.kr328.clash.log.LogcatService
+import com.github.kr328.clash.log.R
 import com.github.kr328.clash.log.model.LogFile
 import com.github.kr328.clash.log.util.LogcatFilter
 import com.github.kr328.clash.log.util.LogcatReader
@@ -109,7 +110,7 @@ internal class LogcatViewModel(app: Application) : AndroidViewModel(app), Defaul
           EventState.ShowMessage(application.getString(R.string.file_exported))
         } catch (e: Exception) {
           Log.e("Export log file failed: ${e.message}", e)
-          EventState.ShowMessage(e.message ?: application.getString(R.string.unknown))
+          EventState.ShowMessage(e.message ?: application.getString(CommonR.string.unknown))
         }
     }
   }

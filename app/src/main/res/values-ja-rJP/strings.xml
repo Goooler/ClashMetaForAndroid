@@ -1,0 +1,12 @@
+<resources>
+
+  <string name="external_control_activity">外部制御</string>
+  <string name="external_control_started">Clash.Meta サービスが開始されました</string>
+  <string name="external_control_stopped">Clash.Meta サービスが停止されました</string>
+  <string name="shortcut_start_long">Clash サービスを開始</string>
+  <string name="shortcut_start_short">Clash を開始</string>
+  <string name="shortcut_stop_long">Clash サービスを停止</string>
+  <string name="shortcut_stop_short">Clash を停止</string>
+  <string name="shortcut_toggle_long">Clash サービスのオン/オフを切り替え</string>
+  <string name="shortcut_toggle_short">Clash を切り替え</string>
+</resources>

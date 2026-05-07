@@ -1,0 +1,8 @@
+<resources>
+
+  <string name="application_broken">アプリが破損しています</string>
+  <string name="application_broken_tips">アプリに必要なコンポーネントに問題があります。不完全なapkのダウンロードが原因のようです。</string>
+  <string name="application_crashed">アプリがクラッシュしました</string>
+  <string name="github_releases">GitHub Releases</string>
+  <string name="reinstall">再インストール</string>
+</resources>

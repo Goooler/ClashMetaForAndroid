@@ -36,10 +36,11 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entryProvider
+import com.github.kr328.clash.common.R as CommonR
 import com.github.kr328.clash.core.model.ConfigurationOverride
 import com.github.kr328.clash.core.model.LogMessage
 import com.github.kr328.clash.core.model.TunnelState
-import com.github.kr328.clash.glue.R
+import com.github.kr328.clash.settings.R
 import com.github.kr328.clash.settings.vm.OverrideSettingsViewModel
 import com.github.kr328.clash.ui.component.MihomoScaffold
 import com.github.kr328.clash.ui.icon.BaselineReplay
@@ -152,7 +153,7 @@ private fun OverrideSettingsContent(
       IconButton(onClick = { onShowResetConfirmDialogChange(true) }) {
         Icon(
           imageVector = MihomoIcons.BaselineReplay,
-          contentDescription = stringResource(R.string.reset),
+          contentDescription = stringResource(CommonR.string.reset),
         )
       }
     },
@@ -186,12 +187,12 @@ private fun OverrideSettingsContent(
                 onResetConfirmed()
               }
             ) {
-              Text(stringResource(R.string.ok))
+              Text(stringResource(CommonR.string.ok))
             }
           },
           dismissButton = {
             TextButton(onClick = { onShowResetConfirmDialogChange(false) }) {
-              Text(stringResource(R.string.cancel))
+              Text(stringResource(CommonR.string.cancel))
             }
           },
         )
@@ -211,7 +212,7 @@ private fun LazyListScope.generalPreferenceItems(
     key = "httpPort",
     title = R.string.http_port,
     placeholder = R.string.dont_modify,
-    emptyLabel = R.string.disabled,
+    emptyLabel = CommonR.string.disabled,
     value = portText(configuration.httpPort),
     onValueChange = { actions.updateHttpPort(parsePort(it)) },
     numericOnly = true,
@@ -220,7 +221,7 @@ private fun LazyListScope.generalPreferenceItems(
     key = "socksPort",
     title = R.string.socks_port,
     placeholder = R.string.dont_modify,
-    emptyLabel = R.string.disabled,
+    emptyLabel = CommonR.string.disabled,
     value = portText(configuration.socksPort),
     onValueChange = { actions.updateSocksPort(parsePort(it)) },
     numericOnly = true,
@@ -229,7 +230,7 @@ private fun LazyListScope.generalPreferenceItems(
     key = "redirectPort",
     title = R.string.redirect_port,
     placeholder = R.string.dont_modify,
-    emptyLabel = R.string.disabled,
+    emptyLabel = CommonR.string.disabled,
     value = portText(configuration.redirectPort),
     onValueChange = { actions.updateRedirectPort(parsePort(it)) },
     numericOnly = true,
@@ -238,7 +239,7 @@ private fun LazyListScope.generalPreferenceItems(
     key = "tproxyPort",
     title = R.string.tproxy_port,
     placeholder = R.string.dont_modify,
-    emptyLabel = R.string.disabled,
+    emptyLabel = CommonR.string.disabled,
     value = portText(configuration.tproxyPort),
     onValueChange = { actions.updateTproxyPort(parsePort(it)) },
     numericOnly = true,
@@ -247,7 +248,7 @@ private fun LazyListScope.generalPreferenceItems(
     key = "mixedPort",
     title = R.string.mixed_port,
     placeholder = R.string.dont_modify,
-    emptyLabel = R.string.disabled,
+    emptyLabel = CommonR.string.disabled,
     value = portText(configuration.mixedPort),
     onValueChange = { actions.updateMixedPort(parsePort(it)) },
     numericOnly = true,
@@ -289,7 +290,7 @@ private fun LazyListScope.generalPreferenceItems(
     key = "bindAddress",
     title = R.string.bind_address,
     placeholder = R.string.dont_modify,
-    emptyLabel = R.string.default_,
+    emptyLabel = CommonR.string.default_,
     value = configuration.bindAddress,
     onValueChange = actions::updateBindAddress,
   )
@@ -297,7 +298,7 @@ private fun LazyListScope.generalPreferenceItems(
     key = "externalController",
     title = R.string.external_controller,
     placeholder = R.string.dont_modify,
-    emptyLabel = R.string.default_,
+    emptyLabel = CommonR.string.default_,
     value = configuration.externalController,
     onValueChange = actions::updateExternalController,
   )
@@ -305,7 +306,7 @@ private fun LazyListScope.generalPreferenceItems(
     key = "externalControllerTls",
     title = R.string.external_controller_tls,
     placeholder = R.string.dont_modify,
-    emptyLabel = R.string.default_,
+    emptyLabel = CommonR.string.default_,
     value = configuration.externalControllerTLS,
     onValueChange = actions::updateExternalControllerTls,
   )
@@ -340,7 +341,7 @@ private fun LazyListScope.generalPreferenceItems(
     key = "secret",
     title = R.string.secret,
     placeholder = R.string.dont_modify,
-    emptyLabel = R.string.default_,
+    emptyLabel = CommonR.string.default_,
     value = configuration.secret,
     onValueChange = actions::updateSecret,
   )
@@ -350,7 +351,7 @@ private fun LazyListScope.generalPreferenceItems(
     onValueChange = actions::updateMode,
     values = TunnelState.Mode.entries,
     modifier = Modifier.fillMaxWidth(),
-    title = { Text(stringResource(R.string.mode)) },
+    title = { Text(stringResource(CommonR.string.mode)) },
     summary = { Text(stringResource(configuration.mode.textRes)) },
     valueToText = { AnnotatedString(stringResource(it.textRes)) },
   )
@@ -406,7 +407,7 @@ private fun LazyListScope.dnsPreferenceItems(
     key = "dnsListen",
     title = R.string.listen,
     placeholder = R.string.dont_modify,
-    emptyLabel = R.string.disabled,
+    emptyLabel = CommonR.string.disabled,
     value = configuration.dns.listen,
     onValueChange = actions::updateDnsListen,
     enabled = dnsEnabled != false,
@@ -654,7 +655,7 @@ private fun LazyListScope.overrideEditTextPreferenceItem(
               showDialog = false
             }
           ) {
-            Text(stringResource(R.string.ok))
+            Text(stringResource(CommonR.string.ok))
           }
         },
         dismissButton = {
@@ -665,9 +666,11 @@ private fun LazyListScope.overrideEditTextPreferenceItem(
                 showDialog = false
               }
             ) {
-              Text(stringResource(R.string.reset))
+              Text(stringResource(CommonR.string.reset))
             }
-            TextButton(onClick = { showDialog = false }) { Text(stringResource(R.string.cancel)) }
+            TextButton(onClick = { showDialog = false }) {
+              Text(stringResource(CommonR.string.cancel))
+            }
           }
         },
       )
@@ -688,7 +691,7 @@ private fun Map<String, String>?.summary(@StringRes placeholder: Int) =
   when {
     this == null -> stringResource(placeholder)
     isEmpty() -> stringResource(R.string.empty)
-    else -> stringResource(R.string.format_elements, size)
+    else -> stringResource(CommonR.string.format_elements, size)
   }
 
 internal val Boolean?.textRes: Int
@@ -696,7 +699,7 @@ internal val Boolean?.textRes: Int
   get() =
     when (this) {
       true -> R.string.enabled
-      false -> R.string.disabled
+      false -> CommonR.string.disabled
       null -> R.string.dont_modify
     }
 
@@ -713,9 +716,9 @@ private val TunnelState.Mode?.textRes: Int
   @StringRes
   get() =
     when (this) {
-      Direct -> R.string.direct_mode
-      Global -> R.string.global_mode
-      Rule -> R.string.rule_mode
+      Direct -> CommonR.string.direct_mode
+      Global -> CommonR.string.global_mode
+      Rule -> CommonR.string.rule_mode
       null -> R.string.dont_modify
     }
 
@@ -728,7 +731,7 @@ private val LogMessage.Level?.textRes: Int
       LogMessage.Level.Error -> R.string.error
       Debug -> R.string.debug
       Silent -> R.string.silent
-      Unknown -> R.string.unknown
+      Unknown -> CommonR.string.unknown
       null -> R.string.dont_modify
     }
 
@@ -736,7 +739,7 @@ private val ConfigurationOverride.DnsEnhancedMode?.textRes: Int
   @StringRes
   get() =
     when (this) {
-      None -> R.string.disabled
+      None -> CommonR.string.disabled
       FakeIp -> R.string.fakeip
       Mapping -> R.string.mapping
       null -> R.string.dont_modify

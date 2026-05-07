@@ -1,0 +1,22 @@
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="PluralsCandidate">
+
+  <string name="about">О программе</string>
+  <string name="clash_meta_core">Ядро Clash Meta</string>
+  <string name="clash_meta_wiki">Clash Meta Wiki</string>
+  <string name="clash_wiki">Clash Wiki</string>
+  <string name="document">Документ</string>
+  <string name="donate">Сделать пожертвование</string>
+  <string name="feedback">Обратная связь</string>
+  <string name="format_profile_activated">%s активирован</string>
+  <string name="format_traffic_forwarded">%s перенаправлено</string>
+  <string name="github_issues">Сообщения об ошибках на GitHub</string>
+  <string name="google_play">Google Play</string>
+  <string name="help">Помощь</string>
+  <string name="no_profile_selected">Профиль не выбран</string>
+  <string name="profile">Профиль</string>
+  <string name="sources">Исходный код</string>
+  <string name="stopped">Остановлен</string>
+  <string name="tips_help"><![CDATA[Clash Meta для Android — <strong>бесплатен</strong> и мы <strong>НЕ</strong> предоставляем по нему поддержку]]></string>
+  <string name="version_updated">Приложение обновлено</string>
+  <string name="version_updated_tips">Настройки были сброшены, старые профили необходимо сохранить повторно</string>
+</resources>

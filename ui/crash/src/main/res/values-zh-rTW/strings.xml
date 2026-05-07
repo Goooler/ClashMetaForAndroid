@@ -1,0 +1,8 @@
+<resources>
+
+  <string name="application_broken">應用程式損毀</string>
+  <string name="application_broken_tips">應用程式缺少必要的執行元件，這通常是由於下載了不完整的 Apk 而導致。</string>
+  <string name="application_crashed">應用程式崩潰</string>
+  <string name="github_releases">GitHub Releases</string>
+  <string name="reinstall">重新安裝</string>
+</resources>

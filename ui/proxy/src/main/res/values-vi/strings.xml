@@ -1,0 +1,12 @@
+<resources>
+
+  <string name="delay">Độ trễ</string>
+  <string name="delay_test">Kiểm tra độ trễ</string>
+  <string name="doubles">Hai cột</string>
+  <string name="layout">Bố cục</string>
+  <string name="mode_switch_tips">Chỉ hợp lệ cho phiên hiện tại</string>
+  <string name="multiple">Nhiều</string>
+  <string name="not_selectable">Không thể chọn</string>
+  <string name="proxy_empty_tips">Không có nhóm nào được hiển thị</string>
+  <string name="single">Đơn</string>
+</resources>

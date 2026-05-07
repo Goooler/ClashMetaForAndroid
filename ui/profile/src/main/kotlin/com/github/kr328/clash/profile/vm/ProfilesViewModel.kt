@@ -6,7 +6,8 @@ import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.application
 import androidx.lifecycle.viewModelScope
-import com.github.kr328.clash.glue.R
+import com.github.kr328.clash.common.R as CommonR
+import com.github.kr328.clash.profile.R
 import com.github.kr328.clash.remote.Remote
 import com.github.kr328.clash.service.model.Profile
 import com.github.kr328.clash.util.withProfile
@@ -162,7 +163,7 @@ internal class ProfilesViewModel(app: Application) :
   private suspend fun showProfileUpdateFailed(uuid: Uuid, reason: String?) {
     val name = withProfile { queryByUUID(uuid)?.name }
     val displayReason =
-      reason?.takeUnless { it.isBlank() } ?: application.getString(R.string.unknown)
+      reason?.takeUnless { it.isBlank() } ?: application.getString(CommonR.string.unknown)
     eventState.value =
       EventState.ShowEditableMessage(
         application.getString(R.string.toast_profile_updated_failed, name, displayReason),

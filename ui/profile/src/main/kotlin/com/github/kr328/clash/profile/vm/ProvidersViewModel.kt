@@ -8,7 +8,7 @@ import androidx.lifecycle.application
 import androidx.lifecycle.viewModelScope
 import com.github.kr328.clash.common.log.Log
 import com.github.kr328.clash.core.model.Provider
-import com.github.kr328.clash.glue.R
+import com.github.kr328.clash.profile.R
 import com.github.kr328.clash.remote.Remote
 import com.github.kr328.clash.util.withClash
 import kotlin.time.Duration.Companion.minutes

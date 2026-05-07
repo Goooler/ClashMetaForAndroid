@@ -34,8 +34,9 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.github.kr328.clash.common.R as CommonR
 import com.github.kr328.clash.core.model.Provider
-import com.github.kr328.clash.glue.R
+import com.github.kr328.clash.profile.R
 import com.github.kr328.clash.profile.vm.ProvidersViewModel
 import com.github.kr328.clash.profile.vm.ProvidersViewModel.UiState.ProviderItemState
 import com.github.kr328.clash.ui.component.MihomoScaffold
@@ -93,7 +94,7 @@ private fun ProvidersContent(
   onUpdate: (Int, Provider) -> Unit,
 ) {
   MihomoScaffold(
-    title = stringResource(R.string.providers),
+    title = stringResource(CommonR.string.providers),
     modifier = modifier,
     snackbarHostState = snackbarHostState,
     actions = {

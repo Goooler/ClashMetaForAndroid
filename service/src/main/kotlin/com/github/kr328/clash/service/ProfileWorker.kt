@@ -7,6 +7,7 @@ import android.os.IBinder
 import androidx.core.app.NotificationChannelCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import com.github.kr328.clash.common.R as CommonR
 import com.github.kr328.clash.common.compat.getColorCompat
 import com.github.kr328.clash.common.compat.pendingIntentFlags
 import com.github.kr328.clash.common.compat.startForegroundCompat
@@ -130,7 +131,7 @@ class ProfileWorker : BaseService() {
         .setContentTitle(getString(R.string.profile_updater))
         .setContentText(getString(R.string.running))
         .setColor(getColorCompat(R.color.color_clash))
-        .setSmallIcon(R.drawable.ic_logo_service)
+        .setSmallIcon(CommonR.drawable.ic_logo_service)
         .setOngoing(true)
         .setOnlyAlertOnce(true)
         .build()
@@ -146,7 +147,7 @@ class ProfileWorker : BaseService() {
         .setContentTitle(getString(R.string.profile_updating))
         .setContentText(name)
         .setColor(getColorCompat(R.color.color_clash))
-        .setSmallIcon(R.drawable.ic_logo_service)
+        .setSmallIcon(CommonR.drawable.ic_logo_service)
         .setOngoing(true)
         .setOnlyAlertOnce(true)
         .setGroup(STATUS_CHANNEL)
@@ -174,7 +175,7 @@ class ProfileWorker : BaseService() {
 
     return NotificationCompat.Builder(this, RESULT_CHANNEL)
       .setColor(getColorCompat(R.color.color_clash))
-      .setSmallIcon(R.drawable.ic_logo_service)
+      .setSmallIcon(CommonR.drawable.ic_logo_service)
       .setOnlyAlertOnce(true)
       .setContentIntent(intent)
       .setAutoCancel(true)

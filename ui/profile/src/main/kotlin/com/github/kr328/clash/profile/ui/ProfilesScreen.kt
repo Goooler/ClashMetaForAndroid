@@ -49,7 +49,8 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.github.kr328.clash.glue.R
+import com.github.kr328.clash.common.R as CommonR
+import com.github.kr328.clash.profile.R
 import com.github.kr328.clash.profile.vm.ProfilesViewModel
 import com.github.kr328.clash.service.model.Profile
 import com.github.kr328.clash.ui.component.MihomoScaffold
@@ -181,7 +182,7 @@ private fun ProfilesContent(
       }
       ProfilesMenuAction(
         icon = MihomoIcons.OutlineDelete,
-        text = stringResource(R.string.delete),
+        text = stringResource(CommonR.string.delete),
         tint = MaterialTheme.colorScheme.error,
         onClick = {
           menuProfile = null
@@ -193,7 +194,7 @@ private fun ProfilesContent(
   }
 
   MihomoScaffold(
-    title = stringResource(R.string.profiles),
+    title = stringResource(CommonR.string.profiles),
     modifier = modifier,
     snackbarHostState = snackbarHostState,
     actions = {
@@ -212,7 +213,7 @@ private fun ProfilesContent(
       IconButton(onClick = onCreate) {
         Icon(
           imageVector = MihomoIcons.BaselineAdd,
-          contentDescription = stringResource(R.string.new_profile),
+          contentDescription = stringResource(CommonR.string.new_profile),
         )
       }
     },
@@ -319,7 +320,7 @@ private fun ProfileItem(
       IconButton(onClick = onMenuClick, modifier = Modifier.padding(horizontal = 4.dp)) {
         Icon(
           imageVector = MihomoIcons.BaselineMoreVert,
-          contentDescription = stringResource(R.string.more),
+          contentDescription = stringResource(CommonR.string.more),
         )
       }
     }

@@ -1,0 +1,11 @@
+<resources>
+
+  <string name="clash_logcat">Clash Logcat</string>
+  <string name="copied">コピーしました</string>
+  <string name="delete_all_logs">すべてのログを削除</string>
+  <string name="delete_all_logs_warn">すべてのログが削除されます</string>
+  <string name="file_exported">ファイルをエクスポートしました</string>
+  <string name="history">履歴</string>
+  <string name="invalid_log_file">無効なログファイル</string>
+  <string name="logcat">Logcat</string>
+</resources>

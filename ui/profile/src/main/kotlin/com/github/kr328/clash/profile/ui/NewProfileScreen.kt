@@ -38,8 +38,8 @@ import androidx.compose.ui.tooling.preview.PreviewWrapper
 import androidx.core.graphics.drawable.toBitmap
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.github.kr328.clash.common.R as CommonR
 import com.github.kr328.clash.common.constants.Intents
-import com.github.kr328.clash.glue.R
 import com.github.kr328.clash.profile.model.ProfileProvider
 import com.github.kr328.clash.profile.vm.NewProfileViewModel
 import com.github.kr328.clash.ui.component.MihomoScaffold
@@ -110,7 +110,7 @@ private fun NewProfileContent(
   onDetail: (ProfileProvider.External) -> Unit,
 ) {
   MihomoScaffold(
-    title = stringResource(R.string.new_profile),
+    title = stringResource(CommonR.string.new_profile),
     modifier = modifier,
     snackbarHostState = snackbarHostState,
   ) { innerPadding ->

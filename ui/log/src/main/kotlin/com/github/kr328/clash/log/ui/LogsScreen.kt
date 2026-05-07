@@ -33,7 +33,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.PreviewWrapper
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.github.kr328.clash.glue.R
+import com.github.kr328.clash.common.R as CommonR
+import com.github.kr328.clash.log.R
 import com.github.kr328.clash.log.model.LogFile
 import com.github.kr328.clash.log.vm.LogsViewModel
 import com.github.kr328.clash.ui.component.MihomoScaffold
@@ -66,12 +67,12 @@ internal fun LogsScreen(
             viewModel.deleteAll()
           }
         ) {
-          Text(text = stringResource(R.string.ok))
+          Text(text = stringResource(CommonR.string.ok))
         }
       },
       dismissButton = {
         TextButton(onClick = { showDeleteAllDialog = false }) {
-          Text(text = stringResource(R.string.cancel))
+          Text(text = stringResource(CommonR.string.cancel))
         }
       },
     )
@@ -98,7 +99,7 @@ private fun LogsContent(
 ) {
   MihomoScaffold(
     modifier = modifier,
-    title = stringResource(R.string.logs),
+    title = stringResource(CommonR.string.logs),
     actions = {
       IconButton(onClick = onDeleteAllConfirm) {
         Icon(
@@ -115,7 +116,7 @@ private fun LogsContent(
       item {
         LogsActionItem(
           title = stringResource(R.string.clash_logcat),
-          summary = stringResource(R.string.tap_to_start),
+          summary = stringResource(CommonR.string.tap_to_start),
           icon = MihomoIcons.BaselineAdb,
           onClick = onStartLogcat,
         )

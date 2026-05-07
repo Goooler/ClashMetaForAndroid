@@ -32,7 +32,8 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.github.kr328.clash.glue.R
+import com.github.kr328.clash.common.R as CommonR
+import com.github.kr328.clash.profile.R
 import com.github.kr328.clash.profile.vm.PropertiesViewModel
 import com.github.kr328.clash.service.model.Profile
 import com.github.kr328.clash.ui.component.MihomoScaffold
@@ -182,7 +183,7 @@ private fun PropertiesContent(
               onNameChanged(newName)
             }
           },
-          title = { Text(stringResource(R.string.name)) },
+          title = { Text(stringResource(CommonR.string.name)) },
           textToValue = { input -> if (ValidatorNotBlank(input)) input else null },
           modifier = Modifier.fillMaxWidth(),
           icon = { Icon(imageVector = MihomoIcons.OutlineLabel, contentDescription = null) },
@@ -196,7 +197,7 @@ private fun PropertiesContent(
               onUrlChanged(newUrl)
             }
           },
-          title = { Text(stringResource(R.string.url)) },
+          title = { Text(stringResource(CommonR.string.url)) },
           textToValue = { input -> if (ValidatorHttpUrl(input)) input else null },
           modifier = Modifier.fillMaxWidth(),
           enabled = profile.type != File && profile.type != External,
@@ -208,7 +209,7 @@ private fun PropertiesContent(
 
         val intervalSummary =
           if (profile.interval == 0L) {
-            stringResource(R.string.disabled)
+            stringResource(CommonR.string.disabled)
           } else {
             stringResource(R.string.format_minutes, profile.interval.milliseconds.inWholeMinutes)
           }
@@ -276,10 +277,10 @@ private fun ExitWithoutSavingDialog(onConfirm: () -> Unit, onDismiss: () -> Unit
     title = { Text(text = stringResource(R.string.exit_without_save)) },
     text = { Text(text = stringResource(R.string.exit_without_save_warning)) },
     confirmButton = {
-      TextButton(onClick = onConfirm) { Text(text = stringResource(R.string.ok)) }
+      TextButton(onClick = onConfirm) { Text(text = stringResource(CommonR.string.ok)) }
     },
     dismissButton = {
-      TextButton(onClick = onDismiss) { Text(text = stringResource(R.string.cancel)) }
+      TextButton(onClick = onDismiss) { Text(text = stringResource(CommonR.string.cancel)) }
     },
   )
 }

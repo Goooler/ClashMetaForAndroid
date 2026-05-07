@@ -1,0 +1,22 @@
+<resources>
+
+  <string name="about">アプリについて</string>
+  <string name="clash_meta_core">Clash Meta Core</string>
+  <string name="clash_meta_wiki">Clash Meta Wiki</string>
+  <string name="clash_wiki">Clash Wiki</string>
+  <string name="document">ドキュメント</string>
+  <string name="donate">寄付</string>
+  <string name="feedback">フィードバック</string>
+  <string name="format_profile_activated">%sがアクティベートされました</string>
+  <string name="format_traffic_forwarded">%sが転送されました</string>
+  <string name="github_issues">GitHub Issues</string>
+  <string name="google_play">Google Play</string>
+  <string name="help">ヘルプ</string>
+  <string name="no_profile_selected">プロファイルが選択されていません</string>
+  <string name="profile">プロファイル</string>
+  <string name="sources">ソース</string>
+  <string name="stopped">停止中</string>
+  <string name="tips_help"><![CDATA[Clash Meta for Androidは<strong>無料アプリ</strong>です。当開発者は<strong>一切のプロキシサービスを提供していません。</strong> <strong>サービスに関する問い合わせはご遠慮ください。</strong>]]></string>
+  <string name="version_updated">アプリを更新しました</string>
+  <string name="version_updated_tips">未設定のプロファイルは、再度保存する必要があります。</string>
+</resources>

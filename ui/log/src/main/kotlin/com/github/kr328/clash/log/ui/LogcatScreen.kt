@@ -38,8 +38,9 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.github.kr328.clash.common.R as CommonR
 import com.github.kr328.clash.core.model.LogMessage
-import com.github.kr328.clash.glue.R
+import com.github.kr328.clash.log.R
 import com.github.kr328.clash.log.vm.LogcatViewModel
 import com.github.kr328.clash.ui.component.MihomoScaffold
 import com.github.kr328.clash.ui.component.ModelProgressBarDialog
@@ -161,20 +162,20 @@ private fun LogcatContent(
         IconButton(onClick = onClose) {
           Icon(
             imageVector = MihomoIcons.BaselineStop,
-            contentDescription = stringResource(R.string.close),
+            contentDescription = stringResource(CommonR.string.close),
           )
         }
       } else {
         IconButton(onClick = onDelete) {
           Icon(
             imageVector = MihomoIcons.BaselineDelete,
-            contentDescription = stringResource(R.string.delete),
+            contentDescription = stringResource(CommonR.string.delete),
           )
         }
         IconButton(onClick = onExport) {
           Icon(
             imageVector = MihomoIcons.BaselineSave,
-            contentDescription = stringResource(R.string.export),
+            contentDescription = stringResource(CommonR.string.export),
           )
         }
       }

@@ -1,0 +1,3 @@
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="PluralsCandidate">
+  <string name="raw_cn" translatable="false">cn</string>
+</resources>

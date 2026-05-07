@@ -3,7 +3,8 @@ package com.github.kr328.clash.profile.model
 import android.content.Context
 import android.content.Intent
 import androidx.compose.ui.graphics.vector.ImageVector
-import com.github.kr328.clash.glue.R
+import com.github.kr328.clash.common.R as CommonR
+import com.github.kr328.clash.profile.R
 import com.github.kr328.clash.ui.icon.BaselineAttachFile
 import com.github.kr328.clash.ui.icon.BaselineCloudDownload
 import com.github.kr328.clash.ui.icon.BaselineQrCodeScanner
@@ -12,7 +13,7 @@ import com.github.kr328.clash.ui.icon.MihomoIcons
 internal sealed class ProfileProvider {
   class File(private val context: Context) : ProfileProvider() {
     override val name: String
-      get() = context.getString(R.string.file)
+      get() = context.getString(CommonR.string.file)
 
     override val summary: String
       get() = context.getString(R.string.import_from_file)
@@ -22,7 +23,7 @@ internal sealed class ProfileProvider {
 
   class Url(private val context: Context) : ProfileProvider() {
     override val name: String
-      get() = context.getString(R.string.url)
+      get() = context.getString(CommonR.string.url)
 
     override val summary: String
       get() = context.getString(R.string.import_from_url)

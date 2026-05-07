@@ -1,0 +1,8 @@
+<resources>
+
+  <string name="application_broken">应用损坏</string>
+  <string name="application_broken_tips">应用缺少必要的运行组件，这通常由于下载不完整的 apk 导致。</string>
+  <string name="application_crashed">应用崩溃</string>
+  <string name="github_releases">GitHub Releases</string>
+  <string name="reinstall">重新安装</string>
+</resources>

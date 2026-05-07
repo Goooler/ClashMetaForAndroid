@@ -11,7 +11,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.fromHtml
 import androidx.compose.ui.tooling.preview.PreviewWrapper
-import com.github.kr328.clash.glue.R
+import com.github.kr328.clash.common.R as CommonR
+import com.github.kr328.clash.home.R
 import com.github.kr328.clash.ui.component.MihomoScaffold
 import com.github.kr328.clash.ui.theme.MihomoThemeWrapper
 import com.github.kr328.clash.ui.theme.PreviewMihomo
@@ -66,7 +67,7 @@ internal fun HelpScreen(modifier: Modifier = Modifier) {
         preference(
           key = "clash_meta_for_android",
           modifier = Modifier.fillMaxWidth(),
-          title = { Text(stringResource(R.string.clash_meta_for_android)) },
+          title = { Text(stringResource(CommonR.string.clash_meta_for_android)) },
           summary = { Text(CMFA_GITHUB) },
           onClick = { context.openLink(CMFA_GITHUB) },
         )

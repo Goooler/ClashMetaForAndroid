@@ -1,0 +1,45 @@
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="PluralsCandidate">
+
+  <string name="accept_http_content">Accept only http(s)</string>
+  <string name="active_unsaved_tips">Profile needs to be saved before activation</string>
+  <string name="at_least_15_minutes">At least 15 minutes or empty</string>
+  <string name="auto_update">Auto Update</string>
+  <string name="auto_update_minutes">Auto Update (Minutes)</string>
+  <string name="browse_configuration_providers"><![CDATA[Browse configuration & providers]]></string>
+  <string name="browse_files">Browse Files</string>
+  <string name="create_profile">Create Profile</string>
+  <string name="detail">Detail</string>
+  <string name="duplicate">Duplicate</string>
+  <string name="edit">Edit</string>
+  <string name="empty_name">Empty Name</string>
+  <string name="exit_without_save">Exit without Save</string>
+  <string name="exit_without_save_warning">All changed will *LOST*</string>
+  <string name="file_name">File Name</string>
+  <string name="files">Files</string>
+  <string name="format_fetching_configuration">Fetching configuration from \'%s\'</string>
+  <string name="format_fetching_provider">Fetching provider \'%s\'</string>
+  <string name="format_minutes">%d min</string>
+  <string name="format_type_unsaved">%s (Unsaved)</string>
+  <string name="format_update_provider_failure">Update %1$s: %2$s</string>
+  <string name="import_">Import</string>
+  <string name="import_from_file">Import from File</string>
+  <string name="import_from_qr">Import from QR Code</string>
+  <string name="import_from_qr_exception">An unhandled system exception occurred.</string>
+  <string name="import_from_qr_no_permission">Camera access is restricted. Please enable it in Settings.</string>
+  <string name="import_from_url">Import from URL</string>
+  <string name="initializing">Initializing</string>
+  <string name="invalid_file_name">Invalid file name</string>
+  <string name="invalid_url">Invalid URL</string>
+  <string name="profile_name">Profile Name</string>
+  <string name="profile_url">Profile URL</string>
+  <string name="properties">Properties</string>
+  <string name="rename">Rename</string>
+  <string name="save">Save</string>
+  <string name="should_not_be_blank">Should not be blank</string>
+  <string name="tips_properties"><![CDATA[Accept Only <strong>Clash Config</strong>(including <strong>Proxy</strong>/<strong>Rules</strong>)]]></string>
+  <string name="toast_profile_updated_complete">Update profile %s completed</string>
+  <string name="toast_profile_updated_failed">Update profile %1$s failed: %2$s</string>
+  <string name="update">Update</string>
+  <string name="update_all">Update All</string>
+  <string name="verifying">Verifying</string>
+</resources>

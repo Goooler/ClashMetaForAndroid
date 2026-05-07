@@ -30,8 +30,9 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entryProvider
+import com.github.kr328.clash.common.R as CommonR
 import com.github.kr328.clash.core.model.ConfigurationOverride
-import com.github.kr328.clash.glue.R
+import com.github.kr328.clash.settings.R
 import com.github.kr328.clash.settings.vm.MetaFeatureSettingsViewModel
 import com.github.kr328.clash.settings.vm.MetaFeatureSettingsViewModel.ImportType
 import com.github.kr328.clash.ui.component.MihomoScaffold
@@ -149,7 +150,7 @@ internal fun MetaFeatureSettingsScreen(
               },
               confirmButton = {
                 TextButton(onClick = { showUnsupportedFormatDialog = false }) {
-                  Text(text = stringResource(R.string.ok))
+                  Text(text = stringResource(CommonR.string.ok))
                 }
               },
             )
@@ -195,7 +196,7 @@ private fun MetaFeatureSettingsContent(
       IconButton(onClick = { onShowResetConfirmDialogChange(true) }) {
         Icon(
           imageVector = MihomoIcons.BaselineReplay,
-          contentDescription = stringResource(R.string.reset),
+          contentDescription = stringResource(CommonR.string.reset),
         )
       }
     },
@@ -225,12 +226,12 @@ private fun MetaFeatureSettingsContent(
               onResetConfirmed()
             }
           ) {
-            Text(stringResource(R.string.ok))
+            Text(stringResource(CommonR.string.ok))
           }
         },
         dismissButton = {
           TextButton(onClick = { onShowResetConfirmDialogChange(false) }) {
-            Text(stringResource(R.string.cancel))
+            Text(stringResource(CommonR.string.cancel))
           }
         },
       )
@@ -242,7 +243,10 @@ private fun LazyListScope.metaBasicPreferenceItems(
   configuration: ConfigurationOverride,
   actions: MetaFeatureSettingsActions,
 ) {
-  preferenceCategory(key = "cat_settings", title = { Text(stringResource(R.string.settings)) })
+  preferenceCategory(
+    key = "cat_settings",
+    title = { Text(stringResource(CommonR.string.settings)) },
+  )
 
   listPreference(
     key = "unifiedDelay",
