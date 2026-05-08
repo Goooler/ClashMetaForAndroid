@@ -2,7 +2,6 @@ package com.github.kr328.clash.settings.vm
 
 import android.app.Application
 import android.content.pm.PackageManager
-import androidx.core.content.pm.ShortcutManagerCompat
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.application
 import com.github.kr328.clash.common.util.componentName
@@ -93,10 +92,6 @@ internal class AppSettingsViewModel(app: Application) : AndroidViewModel(app) {
       newState,
       PackageManager.DONT_KILL_APP,
     )
-    if (hide) {
-      // Prevent launcher activity not found.
-      ShortcutManagerCompat.removeAllDynamicShortcuts(application)
-    }
   }
 
   data class UiState(

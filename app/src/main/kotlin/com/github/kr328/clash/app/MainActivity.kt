@@ -24,6 +24,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.core.content.ContextCompat
 import androidx.core.content.getSystemService
+import androidx.core.content.pm.ShortcutInfoCompat
+import androidx.core.content.pm.ShortcutManagerCompat
+import androidx.core.graphics.drawable.IconCompat
 import androidx.core.view.ViewCompat
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -41,6 +44,7 @@ import com.github.kr328.clash.crash.crashEntries
 import com.github.kr328.clash.glue.model.DarkMode
 import com.github.kr328.clash.glue.remote.Remote
 import com.github.kr328.clash.glue.store.UiStore
+import com.github.kr328.clash.glue.util.mainIntent
 import com.github.kr328.clash.glue.util.startClashService
 import com.github.kr328.clash.glue.util.stopClashService
 import com.github.kr328.clash.glue.util.withProfile
@@ -111,6 +115,7 @@ class MainActivity : ComponentActivity() {
 
     requestNotificationPermission()
     setExcludeFromRecents()
+    setupShortcuts()
   }
 
   override fun onNewIntent(intent: Intent) {
@@ -204,6 +209,46 @@ class MainActivity : ComponentActivity() {
     // TODO: https://issuetracker.google.com/issues/298296168
     //  Fix for three-button nav not properly going edge-to-edge.
     ViewCompat.setOnApplyWindowInsetsListener(window.decorView) { _, insets -> insets }
+  }
+
+  private fun setupShortcuts() {
+    // Prevent launcher activity not found.
+    if (uiStore.hideAppIcon) return
+
+    val icon = IconCompat.createWithResource(this, R.mipmap.ic_launcher)
+    val flags =
+      Intent.FLAG_ACTIVITY_NEW_TASK or
+        Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS or
+        Intent.FLAG_ACTIVITY_NO_ANIMATION
+
+    val toggle =
+      ShortcutInfoCompat.Builder(this, "toggle_clash")
+        .setShortLabel(getString(R.string.shortcut_toggle_short))
+        .setLongLabel(getString(R.string.shortcut_toggle_long))
+        .setIcon(icon)
+        .setIntent(mainIntent(action = Intents.ACTION_TOGGLE_CLASH).addFlags(flags))
+        .setRank(0)
+        .build()
+
+    val start =
+      ShortcutInfoCompat.Builder(this, "start_clash")
+        .setShortLabel(getString(R.string.shortcut_start_short))
+        .setLongLabel(getString(R.string.shortcut_start_long))
+        .setIcon(icon)
+        .setIntent(mainIntent(action = Intents.ACTION_START_CLASH).addFlags(flags))
+        .setRank(1)
+        .build()
+
+    val stop =
+      ShortcutInfoCompat.Builder(this, "stop_clash")
+        .setShortLabel(getString(R.string.shortcut_stop_short))
+        .setLongLabel(getString(R.string.shortcut_stop_long))
+        .setIcon(icon)
+        .setIntent(mainIntent(action = Intents.ACTION_STOP_CLASH).addFlags(flags))
+        .setRank(2)
+        .build()
+
+    ShortcutManagerCompat.setDynamicShortcuts(this, listOf(toggle, start, stop))
   }
 
   private class ViewModel(application: Application) : AndroidViewModel(application) {
