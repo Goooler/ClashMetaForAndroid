@@ -9,10 +9,10 @@ import androidx.compose.ui.unit.dp
 @Suppress("UnusedReceiverParameter")
 val TabbyIcons.BaselineMihomo: ImageVector
   get() {
-    if (_BaselineMeta != null) {
-      return _BaselineMeta!!
+    if (_BaselineMihomo != null) {
+      return _BaselineMihomo!!
     }
-    _BaselineMeta =
+    _BaselineMihomo =
       ImageVector.Builder(
           name = "BaselineMeta",
           defaultWidth = 24.dp,
@@ -139,7 +139,7 @@ val TabbyIcons.BaselineMihomo: ImageVector
         }
         .build()
 
-    return _BaselineMeta!!
+    return _BaselineMihomo!!
   }
 
-@Suppress("ObjectPropertyName") private var _BaselineMeta: ImageVector? = null
+@Suppress("ObjectPropertyName") private var _BaselineMihomo: ImageVector? = null
