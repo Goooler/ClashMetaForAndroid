@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shortcuts xmlns:android="http://schemas.android.com/apk/res/android">
+  <shortcut
+    android:enabled="true"
+    android:icon="@mipmap/ic_launcher"
+    android:shortcutId="toggle_clash"
+    android:shortcutLongLabel="@string/shortcut_toggle_long"
+    android:shortcutShortLabel="@string/shortcut_toggle_short">
+    <intent
+      android:action="io.github.goooler.tabby.intent.action.TOGGLE_CLASH"
+      android:targetClass="com.github.kr328.clash.app.MainActivity"
+      android:targetPackage="io.github.goooler.tabby" />
+  </shortcut>
+
+  <shortcut
+    android:enabled="true"
+    android:icon="@mipmap/ic_launcher"
+    android:shortcutId="start_clash"
+    android:shortcutLongLabel="@string/shortcut_start_long"
+    android:shortcutShortLabel="@string/shortcut_start_short">
+    <intent
+      android:action="io.github.goooler.tabby.intent.action.START_CLASH"
+      android:targetClass="com.github.kr328.clash.app.MainActivity"
+      android:targetPackage="io.github.goooler.tabby" />
+  </shortcut>
+
+  <shortcut
+    android:enabled="true"
+    android:icon="@mipmap/ic_launcher"
+    android:shortcutId="stop_clash"
+    android:shortcutLongLabel="@string/shortcut_stop_long"
+    android:shortcutShortLabel="@string/shortcut_stop_short">
+    <intent
+      android:action="io.github.goooler.tabby.intent.action.STOP_CLASH"
+      android:targetClass="com.github.kr328.clash.app.MainActivity"
+      android:targetPackage="io.github.goooler.tabby" />
+  </shortcut>
+</shortcuts>

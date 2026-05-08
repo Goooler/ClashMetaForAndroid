@@ -66,6 +66,9 @@
       android:name=".MainActivityAlias"
       android:exported="true"
       android:targetActivity=".MainActivity">
+      <meta-data
+        android:name="android.app.shortcuts"
+        android:resource="@xml/shortcuts" />
       <intent-filter>
         <action android:name="android.intent.action.MAIN" />
 
