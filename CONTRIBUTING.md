@@ -14,14 +14,14 @@ Thank you for contributing to this project.
 2. Initialize submodules:
 
    ```bash
-   git submodule update --init --recursive --force
+   git submodule update --init --recursive
    ```
 
 3. Install required tools:
    - JDK 21
    - Android SDK
    - CMake
-   - Go 1.26
+   - Go 1.26 or above
 
 4. Create `local.properties` in the project root:
 
@@ -29,15 +29,13 @@ Thank you for contributing to this project.
    sdk.dir=/path/to/android-sdk
    ```
 
-### Code style and validation
-
-Please use Android Studio or IntelliJ IDEA with the project style settings.
+### Validations
 
 Run checks before submitting a pull request:
 
 ```bash
-./gradlew spotlessCheck
-./gradlew app:assembleRelease
+./gradlew spotlessCheck # for checking code style.
+./gradlew app:assembleRelease # for checking build.
 ```
 
 ### Pull request guidelines
