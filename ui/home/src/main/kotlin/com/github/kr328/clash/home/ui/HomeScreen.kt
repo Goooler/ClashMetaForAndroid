@@ -38,6 +38,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.PreviewWrapper
@@ -58,7 +59,6 @@ import com.github.kr328.clash.ui.icon.BaselineSwapVerticalCircle
 import com.github.kr328.clash.ui.icon.BaselineViewList
 import com.github.kr328.clash.ui.icon.OutlineCheckCircle
 import com.github.kr328.clash.ui.icon.OutlineNotInterested
-import com.github.kr328.clash.ui.icon.Tabby
 import com.github.kr328.clash.ui.icon.TabbyIcons
 import com.github.kr328.clash.ui.theme.PreviewTabby
 import com.github.kr328.clash.ui.theme.TabbyDarkSurface
@@ -181,7 +181,7 @@ private fun HomeContent(
         verticalAlignment = Alignment.CenterVertically,
       ) {
         Image(
-          imageVector = TabbyIcons.Tabby,
+          painter = painterResource(CommonR.drawable.ic_tabby_foreground),
           contentDescription = null,
           modifier = Modifier.size(logoSize),
         )
@@ -340,7 +340,7 @@ private fun AboutDialog(versionName: String, onDismiss: () -> Unit) {
     },
     icon = {
       Image(
-        imageVector = TabbyIcons.Tabby,
+        painter = painterResource(CommonR.drawable.ic_tabby_foreground),
         contentDescription = null,
         modifier = Modifier.size(logoSize),
       )
