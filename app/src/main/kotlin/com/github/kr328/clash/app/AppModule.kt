@@ -1,4 +1,4 @@
-package com.github.kr328.clash
+package com.github.kr328.clash.app
 
 import android.app.Activity
 import com.github.kr328.clash.di.AppInfoProvider

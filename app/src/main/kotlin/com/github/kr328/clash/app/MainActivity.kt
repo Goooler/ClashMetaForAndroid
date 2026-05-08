@@ -1,4 +1,4 @@
-package com.github.kr328.clash
+package com.github.kr328.clash.app
 
 import android.Manifest.permission.POST_NOTIFICATIONS
 import android.app.Activity
@@ -32,7 +32,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entryProvider
-import com.github.kr328.clash.app.R
 import com.github.kr328.clash.common.R as CommonR
 import com.github.kr328.clash.common.constants.Intents
 import com.github.kr328.clash.common.util.unsafeLazy

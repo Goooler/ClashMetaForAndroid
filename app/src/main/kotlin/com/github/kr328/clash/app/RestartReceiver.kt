@@ -1,4 +1,4 @@
-package com.github.kr328.clash
+package com.github.kr328.clash.app
 
 import android.content.BroadcastReceiver
 import android.content.Context
