@@ -9,7 +9,7 @@ jvmTarget = "21"
 navigation3 = "1.1.1"
 
 [libraries]
-kotlin-coroutine = "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.10.2"
+kotlin-coroutine = "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.11.0"
 kotlin-serialization-json = "org.jetbrains.kotlinx:kotlinx-serialization-json:1.11.0"
 
 androidx-activity-compose = "androidx.activity:activity-compose:1.13.0"
