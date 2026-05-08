@@ -6,7 +6,6 @@ import android.content.Intent
 import androidx.core.content.pm.ShortcutInfoCompat
 import androidx.core.content.pm.ShortcutManagerCompat
 import androidx.core.graphics.drawable.IconCompat
-import com.github.kr328.clash.app.R
 import com.github.kr328.clash.common.Global
 import com.github.kr328.clash.common.constants.Intents
 import com.github.kr328.clash.common.log.Log
