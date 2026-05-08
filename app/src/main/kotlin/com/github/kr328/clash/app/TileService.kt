@@ -6,7 +6,6 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.graphics.drawable.Icon
 import android.service.quicksettings.Tile
-import android.service.quicksettings.TileService
 import com.github.kr328.clash.common.R as CommonR
 import com.github.kr328.clash.common.compat.registerReceiverCompat
 import com.github.kr328.clash.common.constants.Intents
@@ -15,7 +14,7 @@ import com.github.kr328.clash.glue.remote.StatusClient
 import com.github.kr328.clash.glue.util.startClashService
 import com.github.kr328.clash.glue.util.stopClashService
 
-class TileService : TileService() {
+class TileService : android.service.quicksettings.TileService() {
   private var currentProfile = ""
   private var clashRunning = false
 
