@@ -18,7 +18,7 @@
   <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
   <application
-    android:name="com.github.kr328.clash.MainApplication"
+    android:name=".MainApplication"
     android:allowBackup="true"
     android:banner="@mipmap/ic_banner"
     android:fullBackupContent="@xml/full_backup_content"
@@ -31,7 +31,7 @@
     tools:ignore="GoogleAppIndexingWarning">
 
     <activity
-      android:name="com.github.kr328.clash.MainActivity"
+      android:name=".MainActivity"
       android:exported="true"
       android:launchMode="singleTask">
       <intent-filter>
@@ -65,9 +65,9 @@
       </intent-filter>
     </activity>
     <activity-alias
-      android:name="com.github.kr328.clash.MainActivityAlias"
+      android:name=".MainActivityAlias"
       android:exported="true"
-      android:targetActivity="com.github.kr328.clash.MainActivity">
+      android:targetActivity=".MainActivity">
       <intent-filter>
         <action android:name="android.intent.action.MAIN" />
 
@@ -78,7 +78,7 @@
     </activity-alias>
 
     <service
-      android:name="com.github.kr328.clash.TileService"
+      android:name=".TileService"
       android:exported="true"
       android:icon="@drawable/ic_logo_service"
       android:label="@string/tabby"
@@ -89,7 +89,7 @@
     </service>
 
     <receiver
-      android:name="com.github.kr328.clash.RestartReceiver"
+      android:name=".RestartReceiver"
       android:enabled="false"
       android:exported="true">
       <intent-filter>
@@ -99,7 +99,7 @@
     </receiver>
 
     <receiver
-      android:name="com.github.kr328.clash.DialerReceiver"
+      android:name=".DialerReceiver"
       android:exported="true">
       <intent-filter>
         <action android:name="android.provider.Telephony.SECRET_CODE" />
