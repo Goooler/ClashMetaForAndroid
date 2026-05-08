@@ -9,4 +9,7 @@ dependencies {
   implementation(projects.ui)
 
   implementation(libs.composePreference)
+
+  implementation(platform(libs.koin.bom))
+  implementation(libs.koin.core)
 }

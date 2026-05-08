@@ -6,6 +6,7 @@ import androidx.core.content.pm.ShortcutManagerCompat
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.application
 import com.github.kr328.clash.common.util.componentName
+import com.github.kr328.clash.glue.di.AppInfoProvider.Companion.instance as appInfoProvider
 import com.github.kr328.clash.glue.model.DarkMode
 import com.github.kr328.clash.glue.remote.Remote
 import com.github.kr328.clash.glue.store.UiStore
@@ -20,6 +21,7 @@ internal class AppSettingsViewModel(app: Application) : AndroidViewModel(app) {
   private val uiStore = UiStore(app)
   private val serviceStore = ServiceStore(app)
   private val pm = app.packageManager
+  private val restartReceiverClass = appInfoProvider.restartReceiverClass
 
   val clashRunning: StateFlow<Boolean> = Remote.broadcasts.clashRunningFlow
 
@@ -64,7 +66,7 @@ internal class AppSettingsViewModel(app: Application) : AndroidViewModel(app) {
 
   private var autoRestartValue: Boolean
     get() {
-      val status = pm.getComponentEnabledSetting(RestartReceiverClass.componentName)
+      val status = pm.getComponentEnabledSetting(restartReceiverClass.componentName)
       return status == PackageManager.COMPONENT_ENABLED_STATE_ENABLED
     }
     set(value) {
@@ -73,7 +75,7 @@ internal class AppSettingsViewModel(app: Application) : AndroidViewModel(app) {
         else PackageManager.COMPONENT_ENABLED_STATE_DISABLED
 
       pm.setComponentEnabledSetting(
-        RestartReceiverClass.componentName,
+        restartReceiverClass.componentName,
         status,
         PackageManager.DONT_KILL_APP,
       )
@@ -105,5 +107,3 @@ internal class AppSettingsViewModel(app: Application) : AndroidViewModel(app) {
     val dynamicNotification: Boolean,
   )
 }
-
-private val RestartReceiverClass = Class.forName("com.github.kr328.clash.RestartReceiver")
