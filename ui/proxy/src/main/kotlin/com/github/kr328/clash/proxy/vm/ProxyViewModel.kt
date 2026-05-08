@@ -10,9 +10,9 @@ import com.github.kr328.clash.core.Clash
 import com.github.kr328.clash.core.model.Proxy
 import com.github.kr328.clash.core.model.ProxySort
 import com.github.kr328.clash.core.model.TunnelState
-import com.github.kr328.clash.remote.Remote
-import com.github.kr328.clash.store.UiStore
-import com.github.kr328.clash.util.withClash
+import com.github.kr328.clash.glue.remote.Remote
+import com.github.kr328.clash.glue.store.UiStore
+import com.github.kr328.clash.glue.util.withClash
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow

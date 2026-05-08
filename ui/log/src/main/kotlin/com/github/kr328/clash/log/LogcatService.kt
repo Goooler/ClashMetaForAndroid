@@ -19,14 +19,14 @@ import com.github.kr328.clash.common.constants.Intents
 import com.github.kr328.clash.common.log.Log
 import com.github.kr328.clash.common.util.intent
 import com.github.kr328.clash.core.model.LogMessage
+import com.github.kr328.clash.glue.util.logsDir
+import com.github.kr328.clash.glue.util.mainIntent
 import com.github.kr328.clash.log.util.LogcatCache
 import com.github.kr328.clash.log.util.LogcatWriter
 import com.github.kr328.clash.service.RemoteService
 import com.github.kr328.clash.service.remote.ILogObserver
 import com.github.kr328.clash.service.remote.IRemoteService
 import com.github.kr328.clash.service.remote.unwrap
-import com.github.kr328.clash.util.logsDir
-import com.github.kr328.clash.util.mainIntent
 import java.io.IOException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

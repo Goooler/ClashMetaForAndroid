@@ -7,10 +7,10 @@ import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.viewModelScope
 import com.github.kr328.clash.common.log.Log
-import com.github.kr328.clash.model.ConfigFile
-import com.github.kr328.clash.remote.FilesClient
-import com.github.kr328.clash.util.fileName
-import com.github.kr328.clash.util.withProfile
+import com.github.kr328.clash.glue.model.ConfigFile
+import com.github.kr328.clash.glue.remote.FilesClient
+import com.github.kr328.clash.glue.util.fileName
+import com.github.kr328.clash.glue.util.withProfile
 import kotlin.uuid.Uuid
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow

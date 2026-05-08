@@ -2,7 +2,7 @@ package com.github.kr328.clash.log.util
 
 import android.content.Context
 import com.github.kr328.clash.core.model.LogMessage
-import com.github.kr328.clash.util.format
+import com.github.kr328.clash.glue.util.format
 import java.io.BufferedWriter
 import java.io.Writer
 import java.util.Date

@@ -36,6 +36,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.github.kr328.clash.common.R as CommonR
 import com.github.kr328.clash.core.model.Provider
+import com.github.kr328.clash.glue.util.elapsedIntervalString
+import com.github.kr328.clash.glue.util.type
 import com.github.kr328.clash.profile.R
 import com.github.kr328.clash.profile.vm.ProvidersViewModel
 import com.github.kr328.clash.profile.vm.ProvidersViewModel.UiState.ProviderItemState
@@ -46,8 +48,6 @@ import com.github.kr328.clash.ui.icon.TabbyIcons
 import com.github.kr328.clash.ui.theme.PreviewTabby
 import com.github.kr328.clash.ui.theme.TabbyThemeWrapper
 import com.github.kr328.clash.ui.theme.tabbyDimens
-import com.github.kr328.clash.util.elapsedIntervalString
-import com.github.kr328.clash.util.type
 
 @Composable
 internal fun ProvidersScreen(

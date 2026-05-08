@@ -2,8 +2,8 @@ package com.github.kr328.clash.log.util
 
 import android.content.Context
 import com.github.kr328.clash.core.model.LogMessage
+import com.github.kr328.clash.glue.util.logsDir
 import com.github.kr328.clash.log.model.LogFile
-import com.github.kr328.clash.util.logsDir
 import java.io.BufferedWriter
 
 internal class LogcatWriter(

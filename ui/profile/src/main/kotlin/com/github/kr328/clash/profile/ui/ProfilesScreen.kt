@@ -50,6 +50,9 @@ import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.github.kr328.clash.common.R as CommonR
+import com.github.kr328.clash.glue.util.elapsedIntervalString
+import com.github.kr328.clash.glue.util.toDateStr
+import com.github.kr328.clash.glue.util.toString
 import com.github.kr328.clash.profile.R
 import com.github.kr328.clash.profile.vm.ProfilesViewModel
 import com.github.kr328.clash.service.model.Profile
@@ -65,9 +68,6 @@ import com.github.kr328.clash.ui.icon.TabbyIcons
 import com.github.kr328.clash.ui.theme.PreviewTabby
 import com.github.kr328.clash.ui.theme.TabbyThemeWrapper
 import com.github.kr328.clash.ui.theme.tabbyDimens
-import com.github.kr328.clash.util.elapsedIntervalString
-import com.github.kr328.clash.util.toDateStr
-import com.github.kr328.clash.util.toString
 import kotlin.time.Duration.Companion.minutes
 import kotlin.uuid.Uuid
 import me.saket.bytesize.binaryBytes

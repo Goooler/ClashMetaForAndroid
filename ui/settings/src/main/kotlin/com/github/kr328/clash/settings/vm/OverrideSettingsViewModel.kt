@@ -8,8 +8,8 @@ import com.github.kr328.clash.core.Clash
 import com.github.kr328.clash.core.model.ConfigurationOverride
 import com.github.kr328.clash.core.model.LogMessage
 import com.github.kr328.clash.core.model.TunnelState
+import com.github.kr328.clash.glue.util.withClash
 import com.github.kr328.clash.settings.ui.OverrideSettingsActions
-import com.github.kr328.clash.util.withClash
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
