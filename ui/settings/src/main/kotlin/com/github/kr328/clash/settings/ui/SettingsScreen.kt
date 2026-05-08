@@ -27,7 +27,7 @@ import com.github.kr328.clash.settings.R
 import com.github.kr328.clash.ui.component.TabbyScaffold
 import com.github.kr328.clash.ui.icon.BaselineDns
 import com.github.kr328.clash.ui.icon.BaselineExtension
-import com.github.kr328.clash.ui.icon.BaselineMeta
+import com.github.kr328.clash.ui.icon.BaselineMihomo
 import com.github.kr328.clash.ui.icon.BaselineSettings
 import com.github.kr328.clash.ui.icon.TabbyIcons
 import com.github.kr328.clash.ui.theme.PreviewTabby
@@ -68,7 +68,7 @@ internal fun SettingsScreen(
       )
 
       SettingsEntryItem(
-        icon = TabbyIcons.BaselineMeta,
+        icon = TabbyIcons.BaselineMihomo,
         titleRes = R.string.meta_features,
         onClick = onOpenMetaFeatureSettings,
       )
