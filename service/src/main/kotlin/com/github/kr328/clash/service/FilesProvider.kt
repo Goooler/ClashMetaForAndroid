@@ -156,7 +156,7 @@ class FilesProvider : DocumentsProvider() {
       newRow().apply {
         add(Root.COLUMN_ROOT_ID, DEFAULT_ROOT_ID)
         add(Root.COLUMN_FLAGS, flags)
-        add(Root.COLUMN_ICON, CommonR.drawable.ic_logo_service)
+        add(Root.COLUMN_ICON, CommonR.drawable.ic_tabby_small)
         add(Root.COLUMN_TITLE, context!!.getString(CommonR.string.tabby))
         add(Root.COLUMN_SUMMARY, context!!.getString(R.string.profiles_and_providers))
         add(Root.COLUMN_DOCUMENT_ID, "/")

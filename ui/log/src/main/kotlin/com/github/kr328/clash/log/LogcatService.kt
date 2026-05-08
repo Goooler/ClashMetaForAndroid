@@ -148,7 +148,7 @@ internal class LogcatService :
   private fun showNotification() {
     val notification =
       NotificationCompat.Builder(this, CHANNEL_ID)
-        .setSmallIcon(CommonR.drawable.ic_logo_service)
+        .setSmallIcon(CommonR.drawable.ic_tabby_small)
         .setColor(getColorCompat(CommonR.color.color_tabby_light))
         .setContentTitle(getString(R.string.tabby_logcat))
         .setContentText(getString(CommonR.string.running))

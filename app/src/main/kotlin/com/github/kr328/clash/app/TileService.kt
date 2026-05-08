@@ -67,7 +67,7 @@ class TileService : android.service.quicksettings.TileService() {
 
     tile.label = currentProfile.ifEmpty { getText(CommonR.string.tabby) }
 
-    tile.icon = Icon.createWithResource(this, CommonR.drawable.ic_logo_service)
+    tile.icon = Icon.createWithResource(this, CommonR.drawable.ic_tabby_small)
 
     tile.updateTile()
   }

@@ -26,7 +26,7 @@ import kotlinx.coroutines.selects.select
 class DynamicNotificationModule(service: Service) : Module<Unit>(service) {
   private val builder =
     NotificationCompat.Builder(service, StaticNotificationModule.CHANNEL_ID)
-      .setSmallIcon(CommonR.drawable.ic_logo_service)
+      .setSmallIcon(CommonR.drawable.ic_tabby_small)
       .setOngoing(true)
       .setColor(service.getColorCompat(CommonR.color.color_tabby_light))
       .setOnlyAlertOnce(true)
