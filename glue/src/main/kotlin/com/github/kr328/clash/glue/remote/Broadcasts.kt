@@ -1,4 +1,4 @@
-package com.github.kr328.clash.remote
+package com.github.kr328.clash.glue.remote
 
 import android.app.Application
 import android.content.BroadcastReceiver

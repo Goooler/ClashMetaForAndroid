@@ -1,11 +1,11 @@
-package com.github.kr328.clash.remote
+package com.github.kr328.clash.glue.remote
 
 import android.content.Context
 import android.net.Uri
 import android.provider.DocumentsContract as DC
 import com.github.kr328.clash.common.constants.Authorities
-import com.github.kr328.clash.model.ConfigFile
-import com.github.kr328.clash.util.copyContentTo
+import com.github.kr328.clash.glue.model.ConfigFile
+import com.github.kr328.clash.glue.util.copyContentTo
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 

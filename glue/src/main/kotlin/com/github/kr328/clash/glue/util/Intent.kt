@@ -1,10 +1,10 @@
-package com.github.kr328.clash.util
+package com.github.kr328.clash.glue.util
 
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import com.github.kr328.clash.di.AppInfoProvider.Companion.instance as appInfoProvider
+import com.github.kr328.clash.glue.di.AppInfoProvider.Companion.instance as appInfoProvider
 
 fun Context.mainIntent(action: String? = null): Intent {
   val mainActivityClass = appInfoProvider.mainActivityClass

@@ -6,12 +6,12 @@ import androidx.core.content.pm.ShortcutManagerCompat
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.application
 import com.github.kr328.clash.common.util.componentName
-import com.github.kr328.clash.model.DarkMode
-import com.github.kr328.clash.remote.Remote
+import com.github.kr328.clash.glue.model.DarkMode
+import com.github.kr328.clash.glue.remote.Remote
+import com.github.kr328.clash.glue.store.UiStore
+import com.github.kr328.clash.glue.util.ApplicationObserver
+import com.github.kr328.clash.glue.util.mainActivityAlias
 import com.github.kr328.clash.service.store.ServiceStore
-import com.github.kr328.clash.store.UiStore
-import com.github.kr328.clash.util.ApplicationObserver
-import com.github.kr328.clash.util.mainActivityAlias
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update

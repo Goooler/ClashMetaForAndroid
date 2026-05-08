@@ -10,11 +10,11 @@ import com.github.kr328.clash.common.Global
 import com.github.kr328.clash.common.constants.Intents
 import com.github.kr328.clash.common.log.Log
 import com.github.kr328.clash.common.util.unsafeLazy
-import com.github.kr328.clash.remote.Remote
+import com.github.kr328.clash.glue.remote.Remote
+import com.github.kr328.clash.glue.store.UiStore
+import com.github.kr328.clash.glue.util.clashDir
+import com.github.kr328.clash.glue.util.mainIntent
 import com.github.kr328.clash.service.util.sendServiceRecreated
-import com.github.kr328.clash.store.UiStore
-import com.github.kr328.clash.util.clashDir
-import com.github.kr328.clash.util.mainIntent
 import java.io.File
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger

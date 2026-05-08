@@ -10,9 +10,9 @@ import com.github.kr328.clash.common.Global
 import com.github.kr328.clash.common.log.Log
 import com.github.kr328.clash.core.Clash
 import com.github.kr328.clash.core.model.ConfigurationOverride
+import com.github.kr328.clash.glue.util.clashDir
+import com.github.kr328.clash.glue.util.withClash
 import com.github.kr328.clash.settings.ui.MetaFeatureSettingsActions
-import com.github.kr328.clash.util.clashDir
-import com.github.kr328.clash.util.withClash
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

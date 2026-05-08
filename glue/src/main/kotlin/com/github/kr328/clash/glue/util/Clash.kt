@@ -1,14 +1,14 @@
-package com.github.kr328.clash.util
+package com.github.kr328.clash.glue.util
 
 import android.content.Context
 import android.content.Intent
 import android.net.VpnService
 import com.github.kr328.clash.common.constants.Intents
 import com.github.kr328.clash.common.util.intent
+import com.github.kr328.clash.glue.store.UiStore
 import com.github.kr328.clash.service.ClashService
 import com.github.kr328.clash.service.TunService
 import com.github.kr328.clash.service.util.sendBroadcastSelf
-import com.github.kr328.clash.store.UiStore
 
 fun Context.startClashService(): Intent? {
   val startTun = UiStore(this).enableVpn

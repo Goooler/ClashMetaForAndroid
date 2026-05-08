@@ -1,4 +1,4 @@
-package com.github.kr328.clash.remote
+package com.github.kr328.clash.glue.remote
 
 import android.content.Context
 import android.net.Uri

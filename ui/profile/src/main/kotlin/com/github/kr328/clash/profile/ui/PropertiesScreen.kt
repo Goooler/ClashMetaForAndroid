@@ -29,6 +29,9 @@ import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.github.kr328.clash.common.R as CommonR
+import com.github.kr328.clash.glue.util.ValidatorAutoUpdateInterval
+import com.github.kr328.clash.glue.util.ValidatorHttpUrl
+import com.github.kr328.clash.glue.util.ValidatorNotBlank
 import com.github.kr328.clash.profile.R
 import com.github.kr328.clash.profile.vm.PropertiesViewModel
 import com.github.kr328.clash.service.model.Profile
@@ -43,9 +46,6 @@ import com.github.kr328.clash.ui.icon.OutlineUpdate
 import com.github.kr328.clash.ui.icon.TabbyIcons
 import com.github.kr328.clash.ui.theme.PreviewTabby
 import com.github.kr328.clash.ui.theme.TabbyThemeWrapper
-import com.github.kr328.clash.util.ValidatorAutoUpdateInterval
-import com.github.kr328.clash.util.ValidatorHttpUrl
-import com.github.kr328.clash.util.ValidatorNotBlank
 import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.minutes
 import kotlin.uuid.Uuid

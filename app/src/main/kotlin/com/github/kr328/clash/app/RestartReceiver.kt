@@ -3,8 +3,8 @@ package com.github.kr328.clash.app
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import com.github.kr328.clash.glue.util.startClashService
 import com.github.kr328.clash.service.StatusProvider
-import com.github.kr328.clash.util.startClashService
 
 class RestartReceiver : BroadcastReceiver() {
   override fun onReceive(context: Context, intent: Intent) {

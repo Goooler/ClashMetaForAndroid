@@ -1,8 +1,8 @@
-package com.github.kr328.clash.util
+package com.github.kr328.clash.glue.util
 
 import android.os.DeadObjectException
 import com.github.kr328.clash.common.log.Log
-import com.github.kr328.clash.remote.Remote
+import com.github.kr328.clash.glue.remote.Remote
 import com.github.kr328.clash.service.remote.IClashManager
 import com.github.kr328.clash.service.remote.IProfileManager
 import kotlin.coroutines.CoroutineContext

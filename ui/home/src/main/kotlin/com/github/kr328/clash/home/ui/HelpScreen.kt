@@ -11,15 +11,15 @@ import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.fromHtml
 import androidx.compose.ui.tooling.preview.PreviewWrapper
 import com.github.kr328.clash.common.R as CommonR
+import com.github.kr328.clash.glue.util.CLASH_META_CORE
+import com.github.kr328.clash.glue.util.CLASH_META_WIKI
+import com.github.kr328.clash.glue.util.CLASH_WIKI
+import com.github.kr328.clash.glue.util.TABBY_GITHUB
+import com.github.kr328.clash.glue.util.openLink
 import com.github.kr328.clash.home.R
 import com.github.kr328.clash.ui.component.TabbyScaffold
 import com.github.kr328.clash.ui.theme.PreviewTabby
 import com.github.kr328.clash.ui.theme.TabbyThemeWrapper
-import com.github.kr328.clash.util.CLASH_META_CORE
-import com.github.kr328.clash.util.CLASH_META_WIKI
-import com.github.kr328.clash.util.CLASH_WIKI
-import com.github.kr328.clash.util.TABBY_GITHUB
-import com.github.kr328.clash.util.openLink
 import me.zhanghai.compose.preference.ProvidePreferenceLocals
 import me.zhanghai.compose.preference.preference
 import me.zhanghai.compose.preference.preferenceCategory

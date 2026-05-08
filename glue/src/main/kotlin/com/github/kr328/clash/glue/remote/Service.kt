@@ -1,4 +1,4 @@
-package com.github.kr328.clash.remote
+package com.github.kr328.clash.glue.remote
 
 import android.app.Application
 import android.content.ComponentName
@@ -7,10 +7,10 @@ import android.content.ServiceConnection
 import android.os.IBinder
 import com.github.kr328.clash.common.log.Log
 import com.github.kr328.clash.common.util.intent
+import com.github.kr328.clash.glue.util.unbindServiceSilent
 import com.github.kr328.clash.service.RemoteService
 import com.github.kr328.clash.service.remote.IRemoteService
 import com.github.kr328.clash.service.remote.unwrap
-import com.github.kr328.clash.util.unbindServiceSilent
 import kotlin.time.Duration.Companion.seconds
 
 class Service(private val context: Application, val crashed: () -> Unit) {

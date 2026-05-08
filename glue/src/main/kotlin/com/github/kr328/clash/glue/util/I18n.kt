@@ -1,4 +1,4 @@
-package com.github.kr328.clash.util
+package com.github.kr328.clash.glue.util
 
 import android.content.Context
 import com.github.kr328.clash.common.R as CommonR

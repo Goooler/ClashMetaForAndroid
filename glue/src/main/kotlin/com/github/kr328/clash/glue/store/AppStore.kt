@@ -1,4 +1,4 @@
-package com.github.kr328.clash.store
+package com.github.kr328.clash.glue.store
 
 import android.content.Context
 import com.github.kr328.clash.common.store.Store

@@ -10,9 +10,9 @@ import com.github.kr328.clash.common.Global
 import com.github.kr328.clash.common.R as CommonR
 import com.github.kr328.clash.common.log.Log
 import com.github.kr328.clash.core.model.FetchStatus
+import com.github.kr328.clash.glue.util.withProfile
 import com.github.kr328.clash.profile.R
 import com.github.kr328.clash.service.model.Profile
-import com.github.kr328.clash.util.withProfile
 import kotlin.uuid.Uuid
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.coroutineScope

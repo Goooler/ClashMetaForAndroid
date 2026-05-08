@@ -7,10 +7,10 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.application
 import androidx.lifecycle.viewModelScope
 import com.github.kr328.clash.common.R as CommonR
+import com.github.kr328.clash.glue.remote.Remote
+import com.github.kr328.clash.glue.util.withProfile
 import com.github.kr328.clash.profile.R
-import com.github.kr328.clash.remote.Remote
 import com.github.kr328.clash.service.model.Profile
-import com.github.kr328.clash.util.withProfile
 import kotlin.time.Duration.Companion.minutes
 import kotlin.uuid.Uuid
 import kotlinx.coroutines.Dispatchers

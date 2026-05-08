@@ -1,4 +1,4 @@
-package com.github.kr328.clash.di
+package com.github.kr328.clash.glue.di
 
 import android.app.Activity
 import org.koin.core.component.KoinComponent

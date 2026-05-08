@@ -1,4 +1,4 @@
-package com.github.kr328.clash.model
+package com.github.kr328.clash.glue.model
 
 data class ConfigFile(
   val id: String,

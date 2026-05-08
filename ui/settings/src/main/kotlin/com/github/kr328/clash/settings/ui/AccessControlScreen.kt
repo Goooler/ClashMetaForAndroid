@@ -53,7 +53,7 @@ import androidx.core.graphics.drawable.toDrawable
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.github.kr328.clash.common.R as CommonR
-import com.github.kr328.clash.model.AppInfo
+import com.github.kr328.clash.glue.model.AppInfo
 import com.github.kr328.clash.settings.R
 import com.github.kr328.clash.settings.vm.AccessControlViewModel
 import com.github.kr328.clash.ui.component.TabbyScaffold

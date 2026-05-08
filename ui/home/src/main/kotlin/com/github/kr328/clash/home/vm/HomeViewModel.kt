@@ -11,11 +11,11 @@ import com.github.kr328.clash.common.R as CommonR
 import com.github.kr328.clash.common.log.Log
 import com.github.kr328.clash.core.bridge.Bridge
 import com.github.kr328.clash.core.util.trafficTotal
-import com.github.kr328.clash.remote.Remote
-import com.github.kr328.clash.util.startClashService
-import com.github.kr328.clash.util.stopClashService
-import com.github.kr328.clash.util.withClash
-import com.github.kr328.clash.util.withProfile
+import com.github.kr328.clash.glue.remote.Remote
+import com.github.kr328.clash.glue.util.startClashService
+import com.github.kr328.clash.glue.util.stopClashService
+import com.github.kr328.clash.glue.util.withClash
+import com.github.kr328.clash.glue.util.withProfile
 import kotlin.time.Duration.Companion.seconds
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job

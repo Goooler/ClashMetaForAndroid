@@ -56,7 +56,10 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.github.kr328.clash.common.R as CommonR
 import com.github.kr328.clash.common.util.grantPermissions
-import com.github.kr328.clash.model.ConfigFile
+import com.github.kr328.clash.glue.model.ConfigFile
+import com.github.kr328.clash.glue.util.Validator
+import com.github.kr328.clash.glue.util.ValidatorFileName
+import com.github.kr328.clash.glue.util.elapsedIntervalString
 import com.github.kr328.clash.profile.R
 import com.github.kr328.clash.profile.vm.FilesViewModel
 import com.github.kr328.clash.ui.component.TabbyScaffold
@@ -71,9 +74,6 @@ import com.github.kr328.clash.ui.icon.OutlineFolder
 import com.github.kr328.clash.ui.icon.TabbyIcons
 import com.github.kr328.clash.ui.theme.PreviewTabby
 import com.github.kr328.clash.ui.theme.TabbyThemeWrapper
-import com.github.kr328.clash.util.Validator
-import com.github.kr328.clash.util.ValidatorFileName
-import com.github.kr328.clash.util.elapsedIntervalString
 import kotlin.time.Duration.Companion.minutes
 import kotlin.uuid.Uuid
 import kotlinx.coroutines.delay
