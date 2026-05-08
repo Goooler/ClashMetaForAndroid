@@ -10,7 +10,6 @@ plugins {
 }
 
 android {
-  namespace = "com.github.kr328.clash"
   defaultConfig {
     applicationId = "io.github.goooler.tabby"
     targetSdk = 35
