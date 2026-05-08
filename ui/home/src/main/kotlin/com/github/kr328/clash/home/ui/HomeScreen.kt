@@ -180,12 +180,13 @@ private fun HomeContent(
         modifier = Modifier.fillMaxWidth().height(90.dp),
         verticalAlignment = Alignment.CenterVertically,
       ) {
+        Spacer(modifier = Modifier.width(10.dp))
         Image(
           painter = painterResource(CommonR.drawable.ic_tabby_foreground),
           contentDescription = null,
           modifier = Modifier.size(logoSize),
         )
-        Spacer(modifier = Modifier.width(4.dp))
+        Spacer(modifier = Modifier.width(10.dp))
         Text(
           text = stringResource(CommonR.string.tabby),
           style = MaterialTheme.typography.titleLarge,
@@ -358,7 +359,7 @@ private fun AboutDialog(versionName: String, onDismiss: () -> Unit) {
   )
 }
 
-private val logoSize = 50.dp
+private val logoSize = 55.dp
 private val cardMarginVertical = 5.dp
 private val labelMarginVertical = 2.dp
 private val actionItemPaddingHorizontal = 20.dp
