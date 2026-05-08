@@ -101,9 +101,9 @@
       android:exported="true">
       <intent-filter>
         <action android:name="android.provider.Telephony.SECRET_CODE" />
-        <!-- 252746382 is the name of ClashMeta in T9 -->
+        <!-- 82229 is the name of Tabby in T9 -->
         <data
-          android:host="252746382"
+          android:host="82229"
           android:scheme="android_secret_code" />
       </intent-filter>
     </receiver>

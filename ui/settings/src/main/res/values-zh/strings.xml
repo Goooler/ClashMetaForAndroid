@@ -66,7 +66,7 @@
   <string name="geox_geosite">Geosite 链接</string>
   <string name="geox_mmdb">MMDB 链接</string>
   <string name="geox_url_setting">GeoX 链接设置</string>
-  <string name="hide_app_icon_desc">可以在拨号盘输入 *#*#252746382#*#* 打开应用</string>
+  <string name="hide_app_icon_desc">可以在拨号盘输入 *#*#82229#*#* 打开应用</string>
   <string name="hide_app_icon_title">隐藏应用图标</string>
   <string name="hide_from_recents_desc">在最近任务中隐藏应用</string>
   <string name="hide_from_recents_title">从最近任务隐藏</string>
