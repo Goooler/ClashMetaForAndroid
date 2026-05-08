@@ -38,6 +38,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.PreviewWrapper
@@ -58,7 +59,6 @@ import com.github.kr328.clash.ui.icon.BaselineSwapVerticalCircle
 import com.github.kr328.clash.ui.icon.BaselineViewList
 import com.github.kr328.clash.ui.icon.OutlineCheckCircle
 import com.github.kr328.clash.ui.icon.OutlineNotInterested
-import com.github.kr328.clash.ui.icon.Tabby
 import com.github.kr328.clash.ui.icon.TabbyIcons
 import com.github.kr328.clash.ui.theme.PreviewTabby
 import com.github.kr328.clash.ui.theme.TabbyDarkSurface
@@ -180,12 +180,13 @@ private fun HomeContent(
         modifier = Modifier.fillMaxWidth().height(90.dp),
         verticalAlignment = Alignment.CenterVertically,
       ) {
+        Spacer(modifier = Modifier.width(10.dp))
         Image(
-          imageVector = TabbyIcons.Tabby,
+          painter = painterResource(CommonR.drawable.ic_tabby_foreground),
           contentDescription = null,
           modifier = Modifier.size(logoSize),
         )
-        Spacer(modifier = Modifier.width(4.dp))
+        Spacer(modifier = Modifier.width(10.dp))
         Text(
           text = stringResource(CommonR.string.tabby),
           style = MaterialTheme.typography.titleLarge,
@@ -340,7 +341,7 @@ private fun AboutDialog(versionName: String, onDismiss: () -> Unit) {
     },
     icon = {
       Image(
-        imageVector = TabbyIcons.Tabby,
+        painter = painterResource(CommonR.drawable.ic_tabby_foreground),
         contentDescription = null,
         modifier = Modifier.size(logoSize),
       )
@@ -358,7 +359,7 @@ private fun AboutDialog(versionName: String, onDismiss: () -> Unit) {
   )
 }
 
-private val logoSize = 50.dp
+private val logoSize = 55.dp
 private val cardMarginVertical = 5.dp
 private val labelMarginVertical = 2.dp
 private val actionItemPaddingHorizontal = 20.dp
