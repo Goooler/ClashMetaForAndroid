@@ -13,8 +13,8 @@ android {
   defaultConfig {
     applicationId = "io.github.goooler.tabby"
     targetSdk = 35
-    versionCode = 212101
     versionName = "2.12.1"
+    versionCode = checkNotNull(versionName).toVersionCode()
   }
 
   val keystore = rootProject.file("signing.properties")
@@ -122,3 +122,8 @@ val downloadGeoFiles by
 tasks.preBuild { dependsOn(downloadGeoFiles) }
 
 tasks.clean { delete(downloadGeoFiles) }
+
+fun String.toVersionCode(): Int {
+  val (major, minor, patch) = split('.').map { it.toInt() }
+  return major * 1_000_000 + minor * 1_000 + patch
+}
