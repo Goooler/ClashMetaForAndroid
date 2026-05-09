@@ -28,7 +28,7 @@ object Remote {
     }
 
   fun launch() {
-    broadcasts.register()
+    Global.launch(Dispatchers.IO) { broadcasts.register() }
     ApplicationObserver.attach(application)
     ApplicationObserver.onVisibleChanged {
       if (it) {
