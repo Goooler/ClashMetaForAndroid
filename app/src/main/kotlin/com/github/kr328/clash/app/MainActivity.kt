@@ -42,7 +42,7 @@ import com.github.kr328.clash.common.util.uuid
 import com.github.kr328.clash.crash.CrashRoute
 import com.github.kr328.clash.crash.crashEntries
 import com.github.kr328.clash.glue.model.DarkMode
-import com.github.kr328.clash.glue.remote.StatusClient
+import com.github.kr328.clash.glue.remote.Remote
 import com.github.kr328.clash.glue.store.UiStore
 import com.github.kr328.clash.glue.util.mainIntent
 import com.github.kr328.clash.glue.util.startClashService
@@ -148,19 +148,19 @@ class MainActivity : ComponentActivity() {
   }
 
   private fun Intent.handleExternalQuickAction(): Boolean {
-    val clashRunning = StatusClient(this@MainActivity).currentProfile() != null
-
     return when (action) {
       Intents.ACTION_TOGGLE_CLASH -> {
-        if (clashRunning) stopClash() else startClash()
+        if (Remote.broadcasts.clashRunning) stopClash() else startClash()
         true
       }
       Intents.ACTION_START_CLASH -> {
-        if (!clashRunning) startClash() else toast(R.string.external_control_started)
+        if (!Remote.broadcasts.clashRunning) startClash()
+        else toast(R.string.external_control_started)
         true
       }
       Intents.ACTION_STOP_CLASH -> {
-        if (clashRunning) stopClash() else toast(R.string.external_control_stopped)
+        if (Remote.broadcasts.clashRunning) stopClash()
+        else toast(R.string.external_control_stopped)
         true
       }
       else -> false
