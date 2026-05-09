@@ -103,17 +103,4 @@ class Broadcasts(private val context: Application) {
       Log.w("Register global receiver: $e", e)
     }
   }
-
-  fun unregister() {
-    if (!registered) return
-
-    try {
-      context.unregisterReceiver(broadcastReceiver)
-      registered = false
-
-      clashRunning = false
-    } catch (e: Exception) {
-      Log.w("Unregister global receiver: $e", e)
-    }
-  }
 }
