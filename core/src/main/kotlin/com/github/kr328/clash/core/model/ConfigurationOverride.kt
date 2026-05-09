@@ -13,38 +13,38 @@ data class ConfigurationOverride(
   @SerialName("redir-port") val redirectPort: Int? = null,
   @SerialName("tproxy-port") val tproxyPort: Int? = null,
   @SerialName("mixed-port") val mixedPort: Int? = null,
-  @SerialName("authentication") val authentication: List<String>? = null,
+  val authentication: List<String>? = null,
   @SerialName("allow-lan") val allowLan: Boolean? = null,
   @SerialName("bind-address") val bindAddress: String? = null,
-  @SerialName("mode") val mode: TunnelState.Mode? = null,
+  val mode: TunnelState.Mode? = null,
   @SerialName("log-level") val logLevel: LogMessage.Level? = null,
-  @SerialName("ipv6") val ipv6: Boolean? = null,
+  val ipv6: Boolean? = null,
   @SerialName("external-controller") val externalController: String? = null,
   @SerialName("external-controller-tls") val externalControllerTLS: String? = null,
   @SerialName("external-controller-cors")
   val externalControllerCors: ExternalControllerCors = ExternalControllerCors(),
-  @SerialName("secret") val secret: String? = null,
-  @SerialName("hosts") val hosts: Map<String, String>? = null,
+  val secret: String? = null,
+  val hosts: Map<String, String>? = null,
   @SerialName("unified-delay") val unifiedDelay: Boolean? = null,
   @SerialName("geodata-mode") val geodataMode: Boolean? = null,
   @SerialName("tcp-concurrent") val tcpConcurrent: Boolean? = null,
   @SerialName("find-process-mode") val findProcessMode: FindProcessMode? = null,
-  @SerialName("dns") val dns: Dns = Dns(),
+  val dns: Dns = Dns(),
   @SerialName("clash-for-android") val app: App = App(),
-  @SerialName("sniffer") val sniffer: Sniffer = Sniffer(),
+  val sniffer: Sniffer = Sniffer(),
   @SerialName("geox-url") val geoxurl: GeoXUrl = GeoXUrl(),
 ) : Parcelable {
   @Serializable
   @Parcelize
   data class Dns(
-    @SerialName("enable") val enable: Boolean? = null,
+    val enable: Boolean? = null,
     @SerialName("prefer-h3") val preferH3: Boolean? = null,
-    @SerialName("listen") val listen: String? = null,
-    @SerialName("ipv6") val ipv6: Boolean? = null,
+    val listen: String? = null,
+    val ipv6: Boolean? = null,
     @SerialName("use-hosts") val useHosts: Boolean? = null,
     @SerialName("enhanced-mode") val enhancedMode: DnsEnhancedMode? = null,
     @SerialName("nameserver") val nameServer: List<String>? = null,
-    @SerialName("fallback") val fallback: List<String>? = null,
+    val fallback: List<String>? = null,
     @SerialName("default-nameserver") val defaultServer: List<String>? = null,
     @SerialName("fake-ip-filter") val fakeIpFilter: List<String>? = null,
     @SerialName("fake-ip-filter-mode") val fakeIPFilterMode: FilterMode? = null,
@@ -57,8 +57,8 @@ data class ConfigurationOverride(
   data class DnsFallbackFilter(
     @SerialName("geoip") val geoIp: Boolean? = null,
     @SerialName("geoip-code") val geoIpCode: String? = null,
-    @SerialName("ipcidr") val ipcidr: List<String>? = null,
-    @SerialName("domain") val domain: List<String>? = null,
+    val ipcidr: List<String>? = null,
+    val domain: List<String>? = null,
   ) : Parcelable
 
   @Serializable
@@ -88,8 +88,8 @@ data class ConfigurationOverride(
   @Serializable
   @Parcelize
   data class Sniffer(
-    @SerialName("enable") val enable: Boolean? = null,
-    @SerialName("sniff") val sniff: Sniff = Sniff(),
+    val enable: Boolean? = null,
+    val sniff: Sniff = Sniff(),
     @SerialName("force-dns-mapping") val forceDnsMapping: Boolean? = null,
     @SerialName("parse-pure-ip") val parsePureIp: Boolean? = null,
     @SerialName("override-destination") val overrideDestination: Boolean? = null,
@@ -102,9 +102,9 @@ data class ConfigurationOverride(
   @Serializable
   @Parcelize
   data class GeoXUrl(
-    @SerialName("geoip") val geoip: String? = null,
-    @SerialName("mmdb") val mmdb: String? = null,
-    @SerialName("geosite") val geosite: String? = null,
+    val geoip: String? = null,
+    val mmdb: String? = null,
+    val geosite: String? = null,
   ) : Parcelable
 
   @Serializable
@@ -125,7 +125,7 @@ data class ConfigurationOverride(
   @Serializable
   @Parcelize
   data class ProtocolConfig(
-    @SerialName("ports") val ports: List<String>? = null,
+    val ports: List<String>? = null,
     @SerialName("override-destination") val overrideDestination: Boolean? = null,
   ) : Parcelable
 }
