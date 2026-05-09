@@ -116,8 +116,8 @@ class MainActivity : BaseActivity<MainDesign>() {
         val active = withProfile { queryActive() }
 
         if (active == null || !active.imported) {
-            showToast(R.string.no_profile_selected, ToastDuration.Long) {
-                setAction(R.string.profiles) {
+            showToast(DesignR.string.no_profile_selected, ToastDuration.Long) {
+                setAction(DesignR.string.profiles) {
                     startActivity(ProfilesActivity::class.intent)
                 }
             }
@@ -138,7 +138,7 @@ class MainActivity : BaseActivity<MainDesign>() {
                     startClashService()
             }
         } catch (e: Exception) {
-            design?.showToast(R.string.unable_to_start_vpn, ToastDuration.Long)
+            design?.showToast(DesignR.string.unable_to_start_vpn, ToastDuration.Long)
         }
     }
 
