@@ -166,7 +166,7 @@ class MainActivity : BaseActivity<MainDesign>() {
     }
 
     private fun setupShortcuts() {
-        // Prevent launcher activity not found.
+        // Skip dynamic shortcut setup when the app icon is hidden.
         if (uiStore.hideAppIcon) return
 
         val icon = IconCompat.createWithResource(this, R.mipmap.ic_launcher)
