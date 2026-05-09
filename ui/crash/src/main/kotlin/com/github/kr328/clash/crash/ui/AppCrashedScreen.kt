@@ -54,7 +54,7 @@ private fun AppCrashedContent(modifier: Modifier = Modifier, logs: String) {
 
 @PreviewTabby
 @Composable
-private fun AppCrashedScreenPreview() = TabbyTheme {
+internal fun AppCrashedScreenPreview() = TabbyTheme {
   AppCrashedContent(
     logs =
       "04-20 10:10:10.000 I/App( 1234): App version: 2.0.0\n" +

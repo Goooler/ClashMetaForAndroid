@@ -16,6 +16,7 @@ plugins {
   alias(libs.plugins.ksp) apply false
   alias(libs.plugins.golang) apply false
   alias(libs.plugins.spotless) apply false
+  alias(libs.plugins.screenshot) apply false
 }
 
 allprojects {
@@ -33,6 +34,8 @@ allprojects {
         sourceCompatibility(libs.versions.jvmTarget.get())
         targetCompatibility(libs.versions.jvmTarget.get())
       }
+
+      experimentalProperties["android.experimental.enableScreenshotTest"] = true
     }
   }
 
@@ -62,6 +65,9 @@ allprojects {
   }
 
   plugins.withId(rootProject.libs.plugins.kotlin.compose.get().pluginId) {
+    project.ext["android.experimental.enableScreenshotTest"] = true
+    plugins.apply(libs.plugins.screenshot.get().pluginId)
+
     extensions.configure<KotlinAndroidProjectExtension> {
       compilerOptions.optIn.addAll(
         "androidx.compose.foundation.ExperimentalFoundationApi",
@@ -83,6 +89,9 @@ allprojects {
       "implementation"(libs.androidx.lifecycle.viewmodel.navigation3)
       "implementation"(libs.androidx.navigation3.runtime)
       "implementation"(libs.androidx.navigation3.ui)
+
+      "screenshotTestImplementation"(libs.androidx.compose.ui.tooling)
+      "screenshotTestImplementation"(libs.screenshot.validation.api)
     }
   }
 }

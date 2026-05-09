@@ -69,4 +69,4 @@ internal fun HelpScreen(modifier: Modifier = Modifier) {
   }
 }
 
-@PreviewTabby @Composable private fun HelpScreenPreview() = TabbyTheme { HelpScreen() }
+@PreviewTabby @Composable internal fun HelpScreenPreview() = TabbyTheme { HelpScreen() }

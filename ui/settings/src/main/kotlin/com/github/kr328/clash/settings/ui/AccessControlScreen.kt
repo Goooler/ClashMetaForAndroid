@@ -424,7 +424,7 @@ interface AccessControlActions {
 
 @PreviewTabby
 @Composable
-private fun AccessControlContentPreview() = TabbyTheme {
+internal fun AccessControlContentPreview() = TabbyTheme {
   AccessControlContent(
     apps =
       listOf(
@@ -453,7 +453,7 @@ private fun AccessControlContentPreview() = TabbyTheme {
 
 @PreviewTabby
 @Composable
-private fun AccessControlMenuSheetPreview() = TabbyTheme {
+internal fun AccessControlMenuSheetPreview() = TabbyTheme {
   Surface {
     Column {
       AccessControlMenuContent(
@@ -475,7 +475,7 @@ private fun AccessControlMenuSheetPreview() = TabbyTheme {
 
 @PreviewTabby
 @Composable
-private fun AccessControlSearchSheetPreview() = TabbyTheme {
+internal fun AccessControlSearchSheetPreview() = TabbyTheme {
   Surface {
     Column {
       AccessControlSearchContent(

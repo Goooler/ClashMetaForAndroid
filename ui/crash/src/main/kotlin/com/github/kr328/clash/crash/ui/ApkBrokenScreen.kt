@@ -44,4 +44,4 @@ internal fun ApkBrokenScreen() {
   }
 }
 
-@PreviewTabby @Composable private fun ApkBrokenScreenPreview() = TabbyTheme { ApkBrokenScreen() }
+@PreviewTabby @Composable internal fun ApkBrokenScreenPreview() = TabbyTheme { ApkBrokenScreen() }

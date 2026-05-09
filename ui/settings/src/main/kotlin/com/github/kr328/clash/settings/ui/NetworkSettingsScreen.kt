@@ -212,7 +212,7 @@ private val AccessControlMode.summaryRes: Int
 
 @PreviewTabby
 @Composable
-private fun NetworkSettingsScreenPreview() = TabbyTheme {
+internal fun NetworkSettingsScreenPreview() = TabbyTheme {
   NetworkSettingsContent(
     clashRunning = false,
     uiState =
@@ -241,7 +241,7 @@ private fun NetworkSettingsScreenPreview() = TabbyTheme {
 
 @PreviewTabby
 @Composable
-private fun NetworkSettingsScreenRunningPreview() = TabbyTheme {
+internal fun NetworkSettingsScreenRunningPreview() = TabbyTheme {
   NetworkSettingsContent(
     clashRunning = true,
     uiState =

@@ -230,7 +230,7 @@ private val LazyListState.isBottom: Boolean
 
 @PreviewTabby
 @Composable
-private fun LogcatContentPreview() = TabbyTheme {
+internal fun LogcatContentPreview() = TabbyTheme {
   LogcatContent(
     streaming = false,
     messages =

@@ -274,7 +274,7 @@ private fun ExitWithoutSavingDialog(onConfirm: () -> Unit, onDismiss: () -> Unit
 
 @PreviewTabby
 @Composable
-private fun PropertiesContentPreview() = TabbyTheme {
+internal fun PropertiesContentPreview() = TabbyTheme {
   PropertiesContent(
     snackbarHostState = SnackbarHostState(),
     profile =

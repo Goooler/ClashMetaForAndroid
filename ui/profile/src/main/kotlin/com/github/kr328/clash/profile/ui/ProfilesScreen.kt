@@ -355,7 +355,7 @@ private fun ProfilesMenuAction(
 
 @PreviewTabby
 @Composable
-private fun ProfilesContentPreview() = TabbyTheme {
+internal fun ProfilesContentPreview() = TabbyTheme {
   ProfilesContent(
     snackbarHostState = SnackbarHostState(),
     profiles =

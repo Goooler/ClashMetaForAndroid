@@ -109,7 +109,7 @@ private fun SettingsEntryItem(
 
 @PreviewTabby
 @Composable
-private fun SettingsScreenPreview() = TabbyTheme {
+internal fun SettingsScreenPreview() = TabbyTheme {
   SettingsScreen(
     onOpenAppSettings = {},
     onOpenNetworkSettings = {},

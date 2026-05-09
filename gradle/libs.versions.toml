@@ -7,6 +7,7 @@ room = "2.8.4"
 okhttp = "5.3.2"
 jvmTarget = "21"
 navigation3 = "1.1.1"
+screenshot = "0.0.1-alpha14"
 
 [libraries]
 kotlin-coroutine = "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.11.0"
@@ -24,6 +25,7 @@ androidx-lifecycle-viewmodel-compose = { module = "androidx.lifecycle:lifecycle-
 androidx-lifecycle-viewmodel-navigation3 = { module = "androidx.lifecycle:lifecycle-viewmodel-navigation3", version.ref = "androidx-lifecycle" }
 androidx-navigation3-runtime = { module = "androidx.navigation3:navigation3-runtime", version.ref = "navigation3" }
 androidx-navigation3-ui = { module = "androidx.navigation3:navigation3-ui", version.ref = "navigation3" }
+screenshot-validation-api = { group = "com.android.tools.screenshot", name = "screenshot-validation-api", version.ref = "screenshot"}
 
 androidx-core = "androidx.core:core:1.19.0-alpha02"
 androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
@@ -57,3 +59,5 @@ ksp = "com.google.devtools.ksp:2.3.7"
 golang = "io.github.goooler.golang:0.2.2"
 download = "de.undercouch.download:5.7.0"
 spotless = "com.diffplug.spotless:8.4.0"
+screenshot = { id = "com.android.compose.screenshot", version.ref = "screenshot"}
+

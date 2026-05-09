@@ -367,7 +367,7 @@ private val actionIconSize = 30.dp
 
 @PreviewTabby
 @Composable
-private fun HomeContentRunningPreview() = TabbyTheme {
+internal fun HomeContentRunningPreview() = TabbyTheme {
   HomeContent(
     snackbarHostState = SnackbarHostState(),
     clashRunning = true,
@@ -390,7 +390,7 @@ private fun HomeContentRunningPreview() = TabbyTheme {
 
 @PreviewTabby
 @Composable
-private fun HomeContentStoppedPreview() = TabbyTheme {
+internal fun HomeContentStoppedPreview() = TabbyTheme {
   HomeContent(
     snackbarHostState = SnackbarHostState(),
     clashRunning = false,

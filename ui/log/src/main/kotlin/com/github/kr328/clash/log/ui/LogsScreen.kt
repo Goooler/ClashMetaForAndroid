@@ -190,7 +190,7 @@ private fun LogsActionItem(
 
 @PreviewTabby
 @Composable
-private fun LogsScreenPreview() = TabbyTheme {
+internal fun LogsScreenPreview() = TabbyTheme {
   LogsContent(
     logs =
       listOf(

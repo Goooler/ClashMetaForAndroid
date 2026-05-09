@@ -493,7 +493,7 @@ private fun columnsForProxyLine(proxyLine: Int): Int =
 
 @PreviewTabby
 @Composable
-private fun ProxyContentPreview() = TabbyTheme {
+internal fun ProxyContentPreview() = TabbyTheme {
   val groups = remember {
     listOf(
       ProxyViewModel.UiState.ProxyGroupUiState(

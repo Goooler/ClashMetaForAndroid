@@ -133,7 +133,7 @@ private val DarkMode.summaryRes: Int
 
 @PreviewTabby
 @Composable
-private fun AppSettingsScreenPreview() = TabbyTheme {
+internal fun AppSettingsScreenPreview() = TabbyTheme {
   AppSettingsContent(
     clashRunning = false,
     uiState =
@@ -154,7 +154,7 @@ private fun AppSettingsScreenPreview() = TabbyTheme {
 
 @PreviewTabby
 @Composable
-private fun AppSettingsScreenRunningPreview() = TabbyTheme {
+internal fun AppSettingsScreenRunningPreview() = TabbyTheme {
   AppSettingsContent(
     clashRunning = true,
     uiState =
