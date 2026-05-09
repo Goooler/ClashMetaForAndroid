@@ -215,7 +215,6 @@ class MainActivity : ComponentActivity() {
     // Prevent launcher activity not found.
     if (uiStore.hideAppIcon) return
 
-    val icon = IconCompat.createWithResource(this, R.mipmap.ic_launcher)
     val flags =
       Intent.FLAG_ACTIVITY_NEW_TASK or
         Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS or
@@ -225,7 +224,7 @@ class MainActivity : ComponentActivity() {
       ShortcutInfoCompat.Builder(this, "toggle_clash")
         .setShortLabel(getString(R.string.shortcut_toggle_short))
         .setLongLabel(getString(R.string.shortcut_toggle_long))
-        .setIcon(icon)
+        .setIcon(IconCompat.createWithResource(this, R.drawable.ic_toggle_all))
         .setIntent(mainIntent(action = Intents.ACTION_TOGGLE_CLASH).addFlags(flags))
         .setRank(0)
         .build()
@@ -234,7 +233,7 @@ class MainActivity : ComponentActivity() {
       ShortcutInfoCompat.Builder(this, "start_clash")
         .setShortLabel(getString(R.string.shortcut_start_short))
         .setLongLabel(getString(R.string.shortcut_start_long))
-        .setIcon(icon)
+        .setIcon(IconCompat.createWithResource(this, R.drawable.ic_toggle_on))
         .setIntent(mainIntent(action = Intents.ACTION_START_CLASH).addFlags(flags))
         .setRank(1)
         .build()
@@ -243,7 +242,7 @@ class MainActivity : ComponentActivity() {
       ShortcutInfoCompat.Builder(this, "stop_clash")
         .setShortLabel(getString(R.string.shortcut_stop_short))
         .setLongLabel(getString(R.string.shortcut_stop_long))
-        .setIcon(icon)
+        .setIcon(IconCompat.createWithResource(this, R.drawable.ic_toggle_off))
         .setIntent(mainIntent(action = Intents.ACTION_STOP_CLASH).addFlags(flags))
         .setRank(2)
         .build()
