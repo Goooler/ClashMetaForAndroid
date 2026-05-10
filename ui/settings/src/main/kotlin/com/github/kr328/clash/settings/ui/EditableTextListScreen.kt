@@ -29,7 +29,6 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.PreviewWrapper
 import androidx.compose.ui.unit.dp
 import androidx.navigation3.runtime.EntryProviderScope
 import androidx.navigation3.runtime.NavKey
@@ -40,7 +39,7 @@ import com.github.kr328.clash.ui.icon.BaselineAdd
 import com.github.kr328.clash.ui.icon.OutlineDelete
 import com.github.kr328.clash.ui.icon.TabbyIcons
 import com.github.kr328.clash.ui.theme.PreviewTabby
-import com.github.kr328.clash.ui.theme.TabbyThemeWrapper
+import com.github.kr328.clash.ui.theme.TabbyTheme
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -168,10 +167,9 @@ private fun SingleTextInputDialog(
   )
 }
 
-@PreviewWrapper(TabbyThemeWrapper::class)
 @PreviewTabby
 @Composable
-private fun EditableTextListScreenPreview() {
+private fun EditableTextListScreenPreview() = TabbyTheme {
   EditableTextListScreen(
     title = R.string.sniff_http_ports,
     initialValues = listOf("80", "8080"),

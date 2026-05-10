@@ -7,13 +7,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.PreviewWrapper
 import com.github.kr328.clash.crash.R
 import com.github.kr328.clash.glue.util.TABBY_GITHUB
 import com.github.kr328.clash.glue.util.openLink
 import com.github.kr328.clash.ui.component.TabbyScaffold
 import com.github.kr328.clash.ui.theme.PreviewTabby
-import com.github.kr328.clash.ui.theme.TabbyThemeWrapper
+import com.github.kr328.clash.ui.theme.TabbyTheme
 import me.zhanghai.compose.preference.ProvidePreferenceLocals
 import me.zhanghai.compose.preference.preference
 import me.zhanghai.compose.preference.preferenceCategory
@@ -45,9 +44,4 @@ internal fun ApkBrokenScreen() {
   }
 }
 
-@PreviewWrapper(TabbyThemeWrapper::class)
-@PreviewTabby
-@Composable
-private fun ApkBrokenScreenPreview() {
-  ApkBrokenScreen()
-}
+@PreviewTabby @Composable private fun ApkBrokenScreenPreview() = TabbyTheme { ApkBrokenScreen() }
