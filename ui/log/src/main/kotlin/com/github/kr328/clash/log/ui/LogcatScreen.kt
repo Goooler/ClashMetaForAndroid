@@ -33,7 +33,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.toClipEntry
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.PreviewWrapper
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -50,7 +49,7 @@ import com.github.kr328.clash.ui.icon.BaselineSave
 import com.github.kr328.clash.ui.icon.BaselineStop
 import com.github.kr328.clash.ui.icon.TabbyIcons
 import com.github.kr328.clash.ui.theme.PreviewTabby
-import com.github.kr328.clash.ui.theme.TabbyThemeWrapper
+import com.github.kr328.clash.ui.theme.TabbyTheme
 import com.github.kr328.clash.ui.theme.tabbyDimens
 import java.util.Date
 import kotlinx.coroutines.launch
@@ -229,10 +228,9 @@ private val LazyListState.isBottom: Boolean
       lastVisibleItem.offset + lastVisibleItem.size <= layoutInfo.viewportEndOffset
   }
 
-@PreviewWrapper(TabbyThemeWrapper::class)
 @PreviewTabby
 @Composable
-private fun LogcatContentPreview() {
+private fun LogcatContentPreview() = TabbyTheme {
   LogcatContent(
     streaming = false,
     messages =

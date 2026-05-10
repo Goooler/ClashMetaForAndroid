@@ -41,7 +41,6 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.PreviewWrapper
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -64,7 +63,7 @@ import com.github.kr328.clash.ui.theme.PreviewTabby
 import com.github.kr328.clash.ui.theme.TabbyDarkSurface
 import com.github.kr328.clash.ui.theme.TabbyLightStopped
 import com.github.kr328.clash.ui.theme.TabbyOnPrimary
-import com.github.kr328.clash.ui.theme.TabbyThemeWrapper
+import com.github.kr328.clash.ui.theme.TabbyTheme
 
 @Composable
 internal fun HomeScreen(
@@ -366,10 +365,9 @@ private val actionItemPaddingHorizontal = 20.dp
 private val actionItemPaddingVertical = 15.dp
 private val actionIconSize = 30.dp
 
-@PreviewWrapper(TabbyThemeWrapper::class)
 @PreviewTabby
 @Composable
-private fun HomeContentRunningPreview() {
+private fun HomeContentRunningPreview() = TabbyTheme {
   HomeContent(
     snackbarHostState = SnackbarHostState(),
     clashRunning = true,
@@ -390,10 +388,9 @@ private fun HomeContentRunningPreview() {
   )
 }
 
-@PreviewWrapper(TabbyThemeWrapper::class)
 @PreviewTabby
 @Composable
-private fun HomeContentStoppedPreview() {
+private fun HomeContentStoppedPreview() = TabbyTheme {
   HomeContent(
     snackbarHostState = SnackbarHostState(),
     clashRunning = false,
