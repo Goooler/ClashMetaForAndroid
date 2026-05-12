@@ -1,6 +1,8 @@
 <resources>
 
   <string name="external_control_activity">外部控制</string>
+  <string name="external_control_already_started">Tabby 服务正在运行中</string>
+  <string name="external_control_already_stopped">Tabby 服务已处于停止状态</string>
   <string name="external_control_started">Tabby 服务已启动</string>
   <string name="external_control_stopped">Tabby 服务已停止</string>
   <string name="shortcut_start_long">启动 Tabby 服务</string>

@@ -155,12 +155,12 @@ class MainActivity : ComponentActivity() {
       }
       Intents.ACTION_START_CLASH -> {
         if (!Remote.broadcasts.clashRunning) startClash()
-        else toast(R.string.external_control_started)
+        else toast(R.string.external_control_already_started)
         true
       }
       Intents.ACTION_STOP_CLASH -> {
         if (Remote.broadcasts.clashRunning) stopClash()
-        else toast(R.string.external_control_stopped)
+        else toast(R.string.external_control_already_stopped)
         true
       }
       else -> false

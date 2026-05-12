@@ -1,6 +1,8 @@
 <resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="PluralsCandidate">
 
   <string name="external_control_activity">Внешнее управление</string>
+  <string name="external_control_already_started">Сервис Tabby уже запущен</string>
+  <string name="external_control_already_stopped">Сервис Tabby уже остановлен</string>
   <string name="external_control_started">Сервис Tabby запущен</string>
   <string name="external_control_stopped">Сервис Tabby остановлен</string>
   <string name="shortcut_start_long">Запустить сервис Tabby</string>

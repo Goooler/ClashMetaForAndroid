@@ -1,6 +1,8 @@
 <resources>
 
   <string name="external_control_activity">外部制御</string>
+  <string name="external_control_already_started">Tabby サービスはすでに実行中です</string>
+  <string name="external_control_already_stopped">Tabby サービスはすでに停止しています</string>
   <string name="external_control_started">Tabby サービスが開始されました</string>
   <string name="external_control_stopped">Tabby サービスが停止されました</string>
   <string name="shortcut_start_long">Tabby サービスを開始</string>
