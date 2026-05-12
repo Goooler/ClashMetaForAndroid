@@ -162,13 +162,15 @@ private fun FilesContent(
 ) {
   var menuConfigFile by remember { mutableStateOf<ConfigFile?>(null) }
   var renameConfigFile by remember { mutableStateOf<ConfigFile?>(null) }
-  val sheetState = rememberModalBottomSheetState()
   val currentInBaseDir = uiState.currentInBaseDir
   val configurationEditable = uiState.configurationEditable
   val files = uiState.configFiles
 
   if (menuConfigFile != null) {
-    ModalBottomSheet(onDismissRequest = { menuConfigFile = null }, sheetState = sheetState) {
+    ModalBottomSheet(
+      sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
+      onDismissRequest = { menuConfigFile = null },
+    ) {
       val file = menuConfigFile!!
       if (!file.isDirectory && (!currentInBaseDir || configurationEditable)) {
         FilesMenuAction(

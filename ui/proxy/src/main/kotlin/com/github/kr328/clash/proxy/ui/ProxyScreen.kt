@@ -32,6 +32,7 @@ import androidx.compose.material3.RadioButton
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -127,7 +128,10 @@ private fun ProxyContent(
   val showUrlTestAction = uiState.groupNames.isNotEmpty()
 
   if (menuVisible) {
-    ModalBottomSheet(onDismissRequest = { menuVisible = false }) {
+    ModalBottomSheet(
+      sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
+      onDismissRequest = { menuVisible = false },
+    ) {
       ProxyMenuSheetContent(
         overrideMode = uiState.overrideMode,
         excludeNotSelectable = uiState.excludeNotSelectable,

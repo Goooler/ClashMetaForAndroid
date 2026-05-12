@@ -140,10 +140,12 @@ private fun ProfilesContent(
   onDelete: (Profile) -> Unit,
 ) {
   var menuProfile by remember { mutableStateOf<Profile?>(null) }
-  val sheetState = rememberModalBottomSheetState()
 
   menuProfile?.let { profile ->
-    ModalBottomSheet(onDismissRequest = { menuProfile = null }, sheetState = sheetState) {
+    ModalBottomSheet(
+      sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
+      onDismissRequest = { menuProfile = null },
+    ) {
       if (profile.imported && profile.type != File) {
         ProfilesMenuAction(
           icon = TabbyIcons.BaselineUpdate,
