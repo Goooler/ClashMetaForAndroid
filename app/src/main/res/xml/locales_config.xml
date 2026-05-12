@@ -5,7 +5,7 @@
   <locale android:name="ko-KR" />
   <locale android:name="ru" />
   <locale android:name="vi" />
-  <locale android:name="zh-CN" />
+  <locale android:name="zh" />
   <locale android:name="zh-HK" />
   <locale android:name="zh-TW" />
 </locale-config>
