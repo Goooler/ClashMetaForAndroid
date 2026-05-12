@@ -50,6 +50,7 @@ import androidx.compose.ui.tooling.preview.PreviewWrapper
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.graphics.drawable.toDrawable
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.github.kr328.clash.common.R as CommonR
@@ -77,9 +78,13 @@ internal fun AccessControlScreen(
   modifier: Modifier = Modifier,
   viewModel: AccessControlViewModel = viewModel(),
 ) {
+  val lifecycleOwner = LocalLifecycleOwner.current
   val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-  DisposableEffect(viewModel) { onDispose { viewModel.persistSelection() } }
+  DisposableEffect(lifecycleOwner, viewModel) {
+    lifecycleOwner.lifecycle.addObserver(viewModel)
+    onDispose { lifecycleOwner.lifecycle.removeObserver(viewModel) }
+  }
 
   AccessControlContent(
     apps = uiState.apps,

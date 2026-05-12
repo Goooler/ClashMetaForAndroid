@@ -32,6 +32,7 @@ import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.PreviewWrapper
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation3.runtime.NavKey
@@ -67,6 +68,7 @@ internal fun OverrideSettingsScreen(
   viewModel: OverrideSettingsViewModel = viewModel(),
   onResetCompleted: () -> Unit,
 ) {
+  val lifecycleOwner = LocalLifecycleOwner.current
   val backStack = rememberNavBackStackBuilder { add(OverrideSettingsRoute.Main) }
   var currentEditableTextMapOnApply by remember {
     mutableStateOf<((Map<String, String>?) -> Unit)?>(null)
@@ -75,7 +77,10 @@ internal fun OverrideSettingsScreen(
     mutableStateOf<((List<String>?) -> Unit)?>(null)
   }
 
-  DisposableEffect(viewModel) { onDispose { viewModel.persistOverride() } }
+  DisposableEffect(lifecycleOwner, viewModel) {
+    lifecycleOwner.lifecycle.addObserver(viewModel)
+    onDispose { lifecycleOwner.lifecycle.removeObserver(viewModel) }
+  }
 
   TabbyNavDisplay(
     backStack = backStack,

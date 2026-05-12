@@ -12,8 +12,9 @@ import android.graphics.drawable.Drawable
 import android.os.Process
 import androidx.core.content.getSystemService
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.DefaultLifecycleObserver
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.viewModelScope
-import com.github.kr328.clash.common.Global
 import com.github.kr328.clash.glue.model.AppInfo
 import com.github.kr328.clash.glue.remote.Remote
 import com.github.kr328.clash.glue.store.UiStore
@@ -33,7 +34,7 @@ import kotlinx.coroutines.withContext
 import kotlinx.coroutines.withTimeoutOrNull
 
 internal class AccessControlViewModel(app: Application) :
-  AndroidViewModel(app), AccessControlActions {
+  AndroidViewModel(app), AccessControlActions, DefaultLifecycleObserver {
   private val appContext = app
   private val uiStore = UiStore(app)
   private val serviceStore = ServiceStore(app)
@@ -61,9 +62,8 @@ internal class AccessControlViewModel(app: Application) :
     }
   }
 
-  fun persistSelection() {
-    // Intended to use non-viewModel scope as we need the action to be called on disposed.
-    Global.launch {
+  override fun onStop(owner: LifecycleOwner) {
+    viewModelScope.launch {
       val selected = uiState.value.selected
       val persistedSelection = serviceStore.accessControlPackages
       val changed = selected != persistedSelection
