@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.selection.selectable
@@ -269,7 +268,6 @@ private fun ProxyGroupPage(
 
   LazyVerticalGrid(
     columns = GridCells.Fixed(columnsForProxyLine(proxyLine)),
-    state = rememberLazyGridState(),
     modifier = Modifier.fillMaxSize(),
     contentPadding = PaddingValues(gridContentPadding),
     horizontalArrangement = Arrangement.spacedBy(12.dp),
