@@ -226,10 +226,7 @@ private fun LazyListScope.metaBasicPreferenceItems(
   configuration: ConfigurationOverride,
   actions: MetaFeatureSettingsActions,
 ) {
-  preferenceCategory(
-    key = "cat_settings",
-    title = { Text(stringResource(CommonR.string.settings)) },
-  )
+  preferenceCategory(key = "cat_general", title = { Text(stringResource(R.string.general)) })
 
   listPreference(
     key = "unifiedDelay",
