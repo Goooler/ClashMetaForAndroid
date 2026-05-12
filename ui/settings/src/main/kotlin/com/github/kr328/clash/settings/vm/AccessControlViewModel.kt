@@ -15,6 +15,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.viewModelScope
+import com.github.kr328.clash.common.Global
 import com.github.kr328.clash.glue.model.AppInfo
 import com.github.kr328.clash.glue.remote.Remote
 import com.github.kr328.clash.glue.store.UiStore
