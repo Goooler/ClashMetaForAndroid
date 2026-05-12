@@ -5,6 +5,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.application
 import androidx.lifecycle.viewModelScope
 import com.github.kr328.clash.common.log.Log
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -25,6 +26,7 @@ internal class AppCrashedViewModel(app: Application) : AndroidViewModel(app) {
               dumpCrash()
             }
             .getOrElse { e ->
+              if (e is CancellationException) throw e
               Log.e("Failed to load crash logs", e)
               "Failed to load crash logs: ${e.stackTraceToString()}"
             }

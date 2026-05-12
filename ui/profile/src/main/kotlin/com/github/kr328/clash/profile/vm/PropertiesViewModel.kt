@@ -14,6 +14,7 @@ import com.github.kr328.clash.glue.util.withProfile
 import com.github.kr328.clash.profile.R
 import com.github.kr328.clash.service.model.Profile
 import kotlin.uuid.Uuid
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -55,15 +56,15 @@ internal class PropertiesViewModel(app: Application) :
     if (!canceled && uiState.value.hasUnsavedChanges) {
       val profile = uiState.value.profile ?: return
       viewModelScope.launch {
-        runCatching {
-            withProfile { patch(profile.uuid, profile.name, profile.source, profile.interval) }
+        try {
+          withProfile { patch(profile.uuid, profile.name, profile.source, profile.interval) }
+          uiState.update { state ->
+            state.copy(originalProfile = profile.copy(), hasUnsavedChanges = false)
           }
-          .onFailure { e -> Log.e("Auto save profile failed: ${e.message}", e) }
-          .onSuccess {
-            uiState.update { state ->
-              state.copy(originalProfile = profile.copy(), hasUnsavedChanges = false)
-            }
-          }
+        } catch (e: Exception) {
+          if (e is CancellationException) throw e
+          Log.e("Auto save profile failed: ${e.message}", e)
+        }
       }
     }
   }
@@ -74,6 +75,7 @@ internal class PropertiesViewModel(app: Application) :
         try {
           withProfile { release(uuid) }
         } catch (e: Exception) {
+          if (e is CancellationException) throw e
           Log.e("Release profile failed: ${e.message}", e)
         }
       }
@@ -144,6 +146,7 @@ internal class PropertiesViewModel(app: Application) :
         canceled = true
         eventState.value = EventState.Finish(true)
       } catch (e: Exception) {
+        if (e is CancellationException) throw e
         Log.e("Commit profile failed: ${e.message}", e)
         eventState.value =
           EventState.ShowMessage(e.message ?: application.getString(CommonR.string.unknown))

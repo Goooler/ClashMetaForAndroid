@@ -25,6 +25,7 @@ import java.io.OutputStreamWriter
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 import kotlin.time.Duration.Companion.milliseconds
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -109,6 +110,7 @@ internal class LogcatViewModel(app: Application) : AndroidViewModel(app), Defaul
           writeLogTo(messages, file, uri)
           EventState.ShowMessage(application.getString(R.string.file_exported))
         } catch (e: Exception) {
+          if (e is CancellationException) throw e
           Log.e("Export log file failed: ${e.message}", e)
           EventState.ShowMessage(e.message ?: application.getString(CommonR.string.unknown))
         }
@@ -155,6 +157,7 @@ internal class LogcatViewModel(app: Application) : AndroidViewModel(app), Defaul
         logcat = bindLogcatService()
         startPolling()
       } catch (e: Exception) {
+        if (e is CancellationException) throw e
         Log.e("Bind logcat service failed: ${e.message}", e)
         runCatching { application.stopService(LogcatService::class.intent) }
           .onFailure { ex -> Log.e("Stop logcat service failed: ${ex.message}", ex) }

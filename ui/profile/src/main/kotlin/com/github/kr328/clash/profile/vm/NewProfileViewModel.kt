@@ -16,6 +16,7 @@ import com.github.kr328.clash.profile.model.ProfileProvider
 import com.github.kr328.clash.service.model.Profile
 import io.github.g00fy2.quickie.QRResult
 import kotlin.uuid.Uuid
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -64,6 +65,7 @@ internal class NewProfileViewModel(app: Application) : AndroidViewModel(app) {
         val uuid = withProfile { create(External, name ?: profileName, uri.toString()) }
         eventState.value = EventState.LaunchProperties(uuid)
       } catch (e: Exception) {
+        if (e is CancellationException) throw e
         Log.e("Create external profile failed: ${e.message}", e)
         eventState.value =
           EventState.ShowMessage(e.message ?: application.getString(CommonR.string.unknown))
@@ -82,6 +84,7 @@ internal class NewProfileViewModel(app: Application) : AndroidViewModel(app) {
             }
             eventState.value = EventState.LaunchProperties(uuid)
           } catch (e: Exception) {
+            if (e is CancellationException) throw e
             Log.e("Create QR profile failed: ${e.message}", e)
             eventState.value =
               EventState.ShowMessage(e.message ?: application.getString(CommonR.string.unknown))
@@ -105,6 +108,7 @@ internal class NewProfileViewModel(app: Application) : AndroidViewModel(app) {
         val uuid = withProfile { create(type, name) }
         eventState.value = EventState.LaunchProperties(uuid)
       } catch (e: Exception) {
+        if (e is CancellationException) throw e
         Log.e("Create profile failed: ${e.message}", e)
         eventState.value =
           EventState.ShowMessage(e.message ?: application.getString(CommonR.string.unknown))

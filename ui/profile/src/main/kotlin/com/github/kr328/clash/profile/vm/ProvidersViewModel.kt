@@ -12,6 +12,7 @@ import com.github.kr328.clash.glue.remote.Remote
 import com.github.kr328.clash.glue.util.withClash
 import com.github.kr328.clash.profile.R
 import kotlin.time.Duration.Companion.minutes
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -81,6 +82,7 @@ internal class ProvidersViewModel(app: Application) :
           it.copy(updating = false, updatedAt = System.currentTimeMillis())
         }
       } catch (e: Exception) {
+        if (e is CancellationException) throw e
         Log.e("Update provider ${provider.name} failed: ${e.message}", e)
         updateProviderState(provider) { it.copy(updating = false) }
         val errorMessage = e.localizedMessage ?: e.message ?: e.toString()
