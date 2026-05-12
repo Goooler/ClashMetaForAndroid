@@ -25,6 +25,7 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.tooling.preview.PreviewWrapper
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation3.runtime.NavKey
@@ -58,12 +59,16 @@ internal fun MetaFeatureSettingsScreen(
   viewModel: MetaFeatureSettingsViewModel = viewModel(),
   onResetCompleted: () -> Unit,
 ) {
+  val lifecycleOwner = LocalLifecycleOwner.current
   val backStack = rememberNavBackStackBuilder { add(MetaFeatureSettingsRoute.Main) }
   var currentEditableTextListOnApply by remember {
     mutableStateOf<((List<String>?) -> Unit)?>(null)
   }
 
-  DisposableEffect(viewModel) { onDispose { viewModel.persistOverride() } }
+  DisposableEffect(lifecycleOwner, viewModel) {
+    lifecycleOwner.lifecycle.addObserver(viewModel)
+    onDispose { lifecycleOwner.lifecycle.removeObserver(viewModel) }
+  }
 
   TabbyNavDisplay(
     backStack = backStack,

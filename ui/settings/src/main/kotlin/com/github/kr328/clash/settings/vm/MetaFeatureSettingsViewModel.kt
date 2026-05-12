@@ -5,6 +5,8 @@ import android.database.Cursor
 import android.net.Uri
 import android.provider.OpenableColumns
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.DefaultLifecycleObserver
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.viewModelScope
 import com.github.kr328.clash.common.Global
 import com.github.kr328.clash.common.log.Log
@@ -20,7 +22,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 internal class MetaFeatureSettingsViewModel(app: Application) :
-  AndroidViewModel(app), MetaFeatureSettingsActions {
+  AndroidViewModel(app), MetaFeatureSettingsActions, DefaultLifecycleObserver {
   private val appContext = app
   private val validDatabaseExtensions = listOf(".metadb", ".db", ".dat", ".mmdb")
   @Volatile private var skipPersist = false
@@ -37,18 +39,18 @@ internal class MetaFeatureSettingsViewModel(app: Application) :
     }
   }
 
-  fun persistOverride() {
+  override fun onStop(owner: LifecycleOwner) {
     // Intended to use non-viewModel scope as we need the action to be called on disposed.
     Global.launch {
-      if (skipPersist) return@launch
-      withClash { patchOverride(Clash.OverrideSlot.Persist, configuration.value) }
+      withClash {
+        if (skipPersist) clearOverride(Clash.OverrideSlot.Persist)
+        else patchOverride(Clash.OverrideSlot.Persist, configuration.value)
+      }
     }
   }
 
   fun resetOverride() {
     skipPersist = true
-    // Intended to use non-viewModel scope as the action might be called on disposed.
-    Global.launch { withClash { clearOverride(Clash.OverrideSlot.Persist) } }
   }
 
   fun importGeoFile(uri: Uri?, importType: ImportType) {

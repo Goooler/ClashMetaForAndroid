@@ -2,6 +2,8 @@ package com.github.kr328.clash.settings.vm
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.DefaultLifecycleObserver
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.viewModelScope
 import com.github.kr328.clash.common.Global
 import com.github.kr328.clash.core.Clash
@@ -16,7 +18,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 internal class OverrideSettingsViewModel(app: Application) :
-  AndroidViewModel(app), OverrideSettingsActions {
+  AndroidViewModel(app), OverrideSettingsActions, DefaultLifecycleObserver {
   @Volatile private var skipPersist = false
 
   val configuration: StateFlow<ConfigurationOverride>
@@ -28,18 +30,18 @@ internal class OverrideSettingsViewModel(app: Application) :
     }
   }
 
-  fun persistOverride() {
+  override fun onStop(owner: LifecycleOwner) {
     // Intended to use non-viewModel scope as we need the action to be called on disposed.
     Global.launch {
-      if (skipPersist) return@launch
-      withClash { patchOverride(Clash.OverrideSlot.Persist, configuration.value) }
+      withClash {
+        if (skipPersist) clearOverride(Clash.OverrideSlot.Persist)
+        else patchOverride(Clash.OverrideSlot.Persist, configuration.value)
+      }
     }
   }
 
   fun resetOverride() {
     skipPersist = true
-    // Intended to use non-viewModel scope as the action might be called on disposed.
-    Global.launch { withClash { clearOverride(Clash.OverrideSlot.Persist) } }
   }
 
   override fun updateHttpPort(value: Int?) = configuration.update { it.copy(httpPort = value) }
