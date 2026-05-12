@@ -212,7 +212,7 @@ class MainActivity : ComponentActivity() {
   }
 
   private fun setupShortcuts() {
-    // Prevent launcher activity not found.
+    // Skip dynamic shortcut setup when the app icon is hidden.
     if (uiStore.hideAppIcon) return
 
     val flags =
