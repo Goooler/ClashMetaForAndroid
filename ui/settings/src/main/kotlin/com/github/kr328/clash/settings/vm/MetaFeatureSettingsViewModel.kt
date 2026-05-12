@@ -45,7 +45,8 @@ internal class MetaFeatureSettingsViewModel(app: Application) :
   override fun onStop(owner: LifecycleOwner) {
     if (!initialized) return
 
-    viewModelScope.launch {
+    // Intended to use non-viewModel scope as we need the action to be called on disposed.
+    Global.launch {
       withClash {
         if (skipPersist) clearOverride(Clash.OverrideSlot.Persist)
         else patchOverride(Clash.OverrideSlot.Persist, configuration.value)

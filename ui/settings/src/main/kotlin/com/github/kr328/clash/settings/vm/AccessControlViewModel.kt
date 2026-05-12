@@ -69,7 +69,8 @@ internal class AccessControlViewModel(app: Application) :
   override fun onStop(owner: LifecycleOwner) {
     if (!initialized) return
 
-    viewModelScope.launch {
+    // Intended to use non-viewModel scope as we need the action to be called on disposed.
+    Global.launch {
       val selected = uiState.value.selected
       val persistedSelection = serviceStore.accessControlPackages
       val changed = selected != persistedSelection
