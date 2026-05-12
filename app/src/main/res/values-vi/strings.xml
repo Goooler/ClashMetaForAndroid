@@ -1,6 +1,8 @@
 <resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="PluralsCandidate">
 
   <string name="external_control_activity">Điều khiển bên ngoài</string>
+  <string name="external_control_already_started">Dịch vụ Tabby đang chạy</string>
+  <string name="external_control_already_stopped">Dịch vụ Tabby đã dừng rồi</string>
   <string name="external_control_started">Dịch vụ Tabby đã bắt đầu</string>
   <string name="external_control_stopped">Dịch vụ Tabby đã dừng</string>
   <string name="shortcut_start_long">Bắt đầu dịch vụ Tabby</string>

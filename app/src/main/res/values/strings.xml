@@ -1,6 +1,8 @@
 <resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="PluralsCandidate">
 
   <string name="external_control_activity">External Control</string>
+  <string name="external_control_already_started">Tabby service is already running</string>
+  <string name="external_control_already_stopped">Tabby service is already stopped</string>
   <string name="external_control_started">Tabby service started</string>
   <string name="external_control_stopped">Tabby service stopped</string>
   <string name="shortcut_start_long">Start Tabby service</string>
