@@ -24,13 +24,17 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 internal class NewProfileViewModel(app: Application) : AndroidViewModel(app) {
+  private var initialized = false
+
   val uiState: StateFlow<UiState>
     field = MutableStateFlow(UiState())
 
   val eventState: StateFlow<EventState>
     field = MutableStateFlow<EventState>(EventState.Idle)
 
-  init {
+  fun initialize() {
+    if (initialized) return
+    initialized = true
     loadProviders()
   }
 

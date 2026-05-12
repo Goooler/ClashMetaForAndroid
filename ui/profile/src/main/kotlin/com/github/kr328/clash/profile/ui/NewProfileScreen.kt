@@ -64,6 +64,8 @@ internal fun NewProfileScreen(
   val eventState by viewModel.eventState.collectAsStateWithLifecycle()
   val snackbarHostState = remember { SnackbarHostState() }
 
+  LaunchedEffect(viewModel) { viewModel.initialize() }
+
   val qrLauncher =
     rememberLauncherForActivityResult(ScanQRCode()) { result -> viewModel.onQRResult(result) }
 

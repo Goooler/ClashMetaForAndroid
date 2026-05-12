@@ -13,10 +13,15 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 internal class LogsViewModel(app: Application) : AndroidViewModel(app) {
+  private var initialized = false
+
   val logFiles: StateFlow<List<LogFile>>
     field = MutableStateFlow(emptyList<LogFile>())
 
-  init {
+  fun initialize() {
+    if (initialized) return
+    initialized = true
+
     viewModelScope.launch { logFiles.value = loadAllLogs() }
   }
 

@@ -79,6 +79,7 @@ internal fun AccessControlScreen(
 ) {
   val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
+  LaunchedEffect(viewModel) { viewModel.initialize() }
   DisposableEffect(viewModel) { onDispose { viewModel.persistSelection() } }
 
   AccessControlContent(

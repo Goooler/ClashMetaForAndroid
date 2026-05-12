@@ -23,6 +23,7 @@ internal class MetaFeatureSettingsViewModel(app: Application) :
   AndroidViewModel(app), MetaFeatureSettingsActions {
   private val appContext = app
   private val validDatabaseExtensions = listOf(".metadb", ".db", ".dat", ".mmdb")
+  private var initialized = false
   @Volatile private var skipPersist = false
 
   val configuration: StateFlow<ConfigurationOverride>
@@ -31,7 +32,10 @@ internal class MetaFeatureSettingsViewModel(app: Application) :
   val importResult: StateFlow<ImportResult>
     field = MutableStateFlow<ImportResult>(ImportResult.Idle)
 
-  init {
+  fun initialize() {
+    if (initialized) return
+    initialized = true
+
     viewModelScope.launch {
       configuration.value = withClash { queryOverride(Clash.OverrideSlot.Persist) }
     }

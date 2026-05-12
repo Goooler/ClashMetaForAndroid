@@ -37,6 +37,7 @@ internal class AccessControlViewModel(app: Application) :
   private val appContext = app
   private val uiStore = UiStore(app)
   private val serviceStore = ServiceStore(app)
+  private var initialized = false
   private var reloadAppsJob: Job? = null
 
   val uiState: StateFlow<UiState>
@@ -53,7 +54,10 @@ internal class AccessControlViewModel(app: Application) :
 
   val clashRunning: StateFlow<Boolean> = Remote.broadcasts.clashRunningFlow
 
-  init {
+  fun initialize() {
+    if (initialized) return
+    initialized = true
+
     viewModelScope.launch {
       val selected = withContext(Dispatchers.IO) { serviceStore.accessControlPackages }
       uiState.update { it.copy(selected = selected) }

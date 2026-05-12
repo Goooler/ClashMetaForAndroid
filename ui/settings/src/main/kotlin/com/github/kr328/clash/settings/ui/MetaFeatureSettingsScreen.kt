@@ -63,6 +63,7 @@ internal fun MetaFeatureSettingsScreen(
     mutableStateOf<((List<String>?) -> Unit)?>(null)
   }
 
+  LaunchedEffect(viewModel) { viewModel.initialize() }
   DisposableEffect(viewModel) { onDispose { viewModel.persistOverride() } }
 
   TabbyNavDisplay(

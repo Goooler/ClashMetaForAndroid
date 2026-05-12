@@ -17,12 +17,16 @@ import kotlinx.coroutines.launch
 
 internal class OverrideSettingsViewModel(app: Application) :
   AndroidViewModel(app), OverrideSettingsActions {
+  private var initialized = false
   @Volatile private var skipPersist = false
 
   val configuration: StateFlow<ConfigurationOverride>
     field = MutableStateFlow(ConfigurationOverride())
 
-  init {
+  fun initialize() {
+    if (initialized) return
+    initialized = true
+
     viewModelScope.launch {
       configuration.value = withClash { queryOverride(Clash.OverrideSlot.Persist) }
     }
