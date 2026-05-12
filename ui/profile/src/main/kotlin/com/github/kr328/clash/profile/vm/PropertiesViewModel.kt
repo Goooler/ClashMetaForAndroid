@@ -6,7 +6,6 @@ import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.application
 import androidx.lifecycle.viewModelScope
-import com.github.kr328.clash.common.Global
 import com.github.kr328.clash.common.R as CommonR
 import com.github.kr328.clash.common.log.Log
 import com.github.kr328.clash.core.model.FetchStatus
@@ -41,6 +40,7 @@ internal class PropertiesViewModel(app: Application) :
     viewModelScope.launch {
       val profile = withProfile { queryByUUID(uuid) }
       if (profile == null) {
+        releaseProfile(uuid)
         eventState.value = EventState.Finish(false)
         return@launch
       }
@@ -64,19 +64,6 @@ internal class PropertiesViewModel(app: Application) :
         } catch (e: Exception) {
           if (e is CancellationException) throw e
           Log.e("Auto save profile failed: ${e.message}", e)
-        }
-      }
-    }
-  }
-
-  override fun onCleared() {
-    rootUuid?.let { uuid ->
-      Global.launch {
-        try {
-          withProfile { release(uuid) }
-        } catch (e: Exception) {
-          if (e is CancellationException) throw e
-          Log.e("Release profile failed: ${e.message}", e)
         }
       }
     }
@@ -118,8 +105,13 @@ internal class PropertiesViewModel(app: Application) :
   }
 
   fun onRequestClose() {
+    val uuid = rootUuid
     canceled = true
-    eventState.value = EventState.Finish(false)
+
+    viewModelScope.launch {
+      uuid?.let { releaseProfile(it) }
+      eventState.value = EventState.Finish(false)
+    }
   }
 
   fun onCommit() {
@@ -144,6 +136,7 @@ internal class PropertiesViewModel(app: Application) :
           }
         }
         canceled = true
+        releaseProfile(profile.uuid)
         eventState.value = EventState.Finish(true)
       } catch (e: Exception) {
         if (e is CancellationException) throw e
@@ -151,6 +144,15 @@ internal class PropertiesViewModel(app: Application) :
         eventState.value =
           EventState.ShowMessage(e.message ?: application.getString(CommonR.string.unknown))
       }
+    }
+  }
+
+  private suspend fun releaseProfile(uuid: Uuid) {
+    try {
+      withProfile { release(uuid) }
+    } catch (e: Exception) {
+      if (e is CancellationException) throw e
+      Log.e("Release profile failed: ${e.message}", e)
     }
   }
 
