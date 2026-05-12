@@ -87,7 +87,7 @@ class MainActivity : ComponentActivity() {
 
       LaunchedEffect(darkMode) { edgeToEdge(darkMode) }
 
-      TabbyTheme(darkModeInSettings = darkMode) {
+      TabbyTheme(darkMode = darkMode) {
         TabbyNavDisplay(
           backStack = backStack,
           entryProvider =

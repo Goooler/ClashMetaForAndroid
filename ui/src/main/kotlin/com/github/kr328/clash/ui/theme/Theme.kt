@@ -99,9 +99,9 @@ val tabbyDimens: TabbyDimens
 
 @Composable
 fun TabbyTheme(
-  darkModeInSettings: DarkMode = DarkMode.Auto,
+  darkMode: DarkMode = DarkMode.Auto,
   darkTheme: Boolean =
-    when (darkModeInSettings) {
+    when (darkMode) {
       ForceDark -> true
       ForceLight -> false
       Auto -> isSystemInDarkTheme()
