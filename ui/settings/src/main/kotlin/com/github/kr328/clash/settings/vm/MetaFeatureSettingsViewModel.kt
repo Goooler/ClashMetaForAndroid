@@ -8,6 +8,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.viewModelScope
+import com.github.kr328.clash.common.Global
 import com.github.kr328.clash.common.log.Log
 import com.github.kr328.clash.core.Clash
 import com.github.kr328.clash.core.model.ConfigurationOverride
@@ -39,7 +40,8 @@ internal class MetaFeatureSettingsViewModel(app: Application) :
   }
 
   override fun onStop(owner: LifecycleOwner) {
-    viewModelScope.launch {
+    // Intended to use non-viewModel scope as we need the action to be called on disposed.
+    Global.launch {
       withClash {
         if (skipPersist) clearOverride(Clash.OverrideSlot.Persist)
         else patchOverride(Clash.OverrideSlot.Persist, configuration.value)
