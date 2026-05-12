@@ -30,7 +30,6 @@ import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -43,9 +42,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.PreviewWrapper
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.github.kr328.clash.common.R as CommonR
 import com.github.kr328.clash.home.R
 import com.github.kr328.clash.home.vm.HomeViewModel
@@ -60,6 +57,7 @@ import com.github.kr328.clash.ui.icon.BaselineViewList
 import com.github.kr328.clash.ui.icon.OutlineCheckCircle
 import com.github.kr328.clash.ui.icon.OutlineNotInterested
 import com.github.kr328.clash.ui.icon.TabbyIcons
+import com.github.kr328.clash.ui.lifecycle.viewModelWithLifecycle
 import com.github.kr328.clash.ui.theme.PreviewTabby
 import com.github.kr328.clash.ui.theme.TabbyDarkSurface
 import com.github.kr328.clash.ui.theme.TabbyLightStopped
@@ -69,7 +67,7 @@ import com.github.kr328.clash.ui.theme.TabbyThemeWrapper
 @Composable
 internal fun HomeScreen(
   modifier: Modifier = Modifier,
-  viewModel: HomeViewModel = viewModel(),
+  viewModel: HomeViewModel = viewModelWithLifecycle(),
   onOpenProxy: () -> Unit,
   onOpenProfiles: () -> Unit,
   onOpenProviders: () -> Unit,
@@ -77,7 +75,6 @@ internal fun HomeScreen(
   onOpenSettings: () -> Unit,
   onOpenHelp: () -> Unit,
 ) {
-  val lifecycleOwner = LocalLifecycleOwner.current
   val clashRunning by viewModel.clashRunning.collectAsStateWithLifecycle()
   val uiState by viewModel.uiState.collectAsStateWithLifecycle()
   val eventState by viewModel.eventState.collectAsStateWithLifecycle()
@@ -85,11 +82,6 @@ internal fun HomeScreen(
 
   val noProfileText = stringResource(R.string.no_profile_selected)
   val profilesActionText = stringResource(CommonR.string.profiles)
-
-  DisposableEffect(lifecycleOwner, viewModel) {
-    lifecycleOwner.lifecycle.addObserver(viewModel)
-    onDispose { lifecycleOwner.lifecycle.removeObserver(viewModel) }
-  }
 
   val vpnLauncher =
     rememberLauncherForActivityResult(StartActivityForResult()) { result ->

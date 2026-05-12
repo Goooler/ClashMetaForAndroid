@@ -20,7 +20,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -35,9 +34,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.PreviewWrapper
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.github.kr328.clash.common.R as CommonR
 import com.github.kr328.clash.core.model.LogMessage
 import com.github.kr328.clash.glue.util.format
@@ -49,6 +46,7 @@ import com.github.kr328.clash.ui.icon.BaselineDelete
 import com.github.kr328.clash.ui.icon.BaselineSave
 import com.github.kr328.clash.ui.icon.BaselineStop
 import com.github.kr328.clash.ui.icon.TabbyIcons
+import com.github.kr328.clash.ui.lifecycle.viewModelWithLifecycle
 import com.github.kr328.clash.ui.theme.PreviewTabby
 import com.github.kr328.clash.ui.theme.TabbyThemeWrapper
 import com.github.kr328.clash.ui.theme.tabbyDimens
@@ -59,12 +57,11 @@ import kotlinx.coroutines.launch
 internal fun LogcatScreen(
   fileName: String?,
   modifier: Modifier = Modifier,
-  viewModel: LogcatViewModel = viewModel(),
+  viewModel: LogcatViewModel = viewModelWithLifecycle(),
   onOpenLogs: () -> Unit,
   onInvalidFile: () -> Unit,
   onClose: () -> Unit,
 ) {
-  val lifecycleOwner = LocalLifecycleOwner.current
   val clipboard = LocalClipboard.current
   val uiState by viewModel.uiState.collectAsStateWithLifecycle()
   val evenState by viewModel.eventState.collectAsStateWithLifecycle()
@@ -75,11 +72,6 @@ internal fun LogcatScreen(
   val invalidFileTip = stringResource(R.string.invalid_log_file)
 
   LaunchedEffect(fileName, viewModel) { viewModel.init(fileName) }
-
-  DisposableEffect(lifecycleOwner, viewModel) {
-    lifecycleOwner.lifecycle.addObserver(viewModel)
-    onDispose { lifecycleOwner.lifecycle.removeObserver(viewModel) }
-  }
 
   val exportLauncher =
     rememberLauncherForActivityResult(CreateDocument("text/plain")) { uri ->

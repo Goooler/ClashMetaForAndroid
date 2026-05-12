@@ -36,7 +36,6 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -54,9 +53,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.PreviewWrapper
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.github.kr328.clash.common.R as CommonR
 import com.github.kr328.clash.core.model.Proxy
 import com.github.kr328.clash.core.model.ProxySort
@@ -68,6 +65,7 @@ import com.github.kr328.clash.ui.component.TabbyScaffold
 import com.github.kr328.clash.ui.icon.BaselineFlashOn
 import com.github.kr328.clash.ui.icon.BaselineMoreVert
 import com.github.kr328.clash.ui.icon.TabbyIcons
+import com.github.kr328.clash.ui.lifecycle.viewModelWithLifecycle
 import com.github.kr328.clash.ui.theme.PreviewTabby
 import com.github.kr328.clash.ui.theme.TabbyThemeWrapper
 import kotlinx.coroutines.launch
@@ -75,20 +73,14 @@ import kotlinx.coroutines.launch
 @Composable
 internal fun ProxyScreen(
   modifier: Modifier = Modifier,
-  viewModel: ProxyViewModel = viewModel(),
+  viewModel: ProxyViewModel = viewModelWithLifecycle(),
   onReLaunch: () -> Unit,
 ) {
-  val lifecycleOwner = LocalLifecycleOwner.current
   val uiState by viewModel.uiState.collectAsStateWithLifecycle()
   val selectedProxies by viewModel.selectedProxies.collectAsStateWithLifecycle()
   val eventState by viewModel.eventState.collectAsStateWithLifecycle()
   val snackbarHostState = remember { SnackbarHostState() }
   val modeSwitchTips = stringResource(R.string.mode_switch_tips)
-
-  DisposableEffect(lifecycleOwner, viewModel) {
-    lifecycleOwner.lifecycle.addObserver(viewModel)
-    onDispose { lifecycleOwner.lifecycle.removeObserver(viewModel) }
-  }
 
   LaunchedEffect(eventState) {
     when (eventState) {

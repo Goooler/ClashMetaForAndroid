@@ -14,7 +14,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -25,9 +24,7 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.tooling.preview.PreviewWrapper
-import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entryProvider
 import com.github.kr328.clash.common.R as CommonR
@@ -38,6 +35,7 @@ import com.github.kr328.clash.settings.vm.MetaFeatureSettingsViewModel.ImportTyp
 import com.github.kr328.clash.ui.component.TabbyScaffold
 import com.github.kr328.clash.ui.icon.BaselineReplay
 import com.github.kr328.clash.ui.icon.TabbyIcons
+import com.github.kr328.clash.ui.lifecycle.viewModelWithLifecycle
 import com.github.kr328.clash.ui.nav.TabbyNavDisplay
 import com.github.kr328.clash.ui.nav.addIfNotLast
 import com.github.kr328.clash.ui.nav.rememberNavBackStackBuilder
@@ -56,18 +54,12 @@ private sealed interface MetaFeatureSettingsRoute : NavKey {
 @Composable
 internal fun MetaFeatureSettingsScreen(
   modifier: Modifier = Modifier,
-  viewModel: MetaFeatureSettingsViewModel = viewModel(),
+  viewModel: MetaFeatureSettingsViewModel = viewModelWithLifecycle(),
   onResetCompleted: () -> Unit,
 ) {
-  val lifecycleOwner = LocalLifecycleOwner.current
   val backStack = rememberNavBackStackBuilder { add(MetaFeatureSettingsRoute.Main) }
   var currentEditableTextListOnApply by remember {
     mutableStateOf<((List<String>?) -> Unit)?>(null)
-  }
-
-  DisposableEffect(lifecycleOwner, viewModel) {
-    lifecycleOwner.lifecycle.addObserver(viewModel)
-    onDispose { lifecycleOwner.lifecycle.removeObserver(viewModel) }
   }
 
   TabbyNavDisplay(

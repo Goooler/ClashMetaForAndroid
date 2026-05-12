@@ -15,7 +15,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -32,9 +31,7 @@ import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.PreviewWrapper
-import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entryProvider
 import com.github.kr328.clash.common.R as CommonR
@@ -46,6 +43,7 @@ import com.github.kr328.clash.settings.vm.OverrideSettingsViewModel
 import com.github.kr328.clash.ui.component.TabbyScaffold
 import com.github.kr328.clash.ui.icon.BaselineReplay
 import com.github.kr328.clash.ui.icon.TabbyIcons
+import com.github.kr328.clash.ui.lifecycle.viewModelWithLifecycle
 import com.github.kr328.clash.ui.nav.TabbyNavDisplay
 import com.github.kr328.clash.ui.nav.addIfNotLast
 import com.github.kr328.clash.ui.nav.rememberNavBackStackBuilder
@@ -65,21 +63,15 @@ private sealed interface OverrideSettingsRoute : NavKey {
 @Composable
 internal fun OverrideSettingsScreen(
   modifier: Modifier = Modifier,
-  viewModel: OverrideSettingsViewModel = viewModel(),
+  viewModel: OverrideSettingsViewModel = viewModelWithLifecycle(),
   onResetCompleted: () -> Unit,
 ) {
-  val lifecycleOwner = LocalLifecycleOwner.current
   val backStack = rememberNavBackStackBuilder { add(OverrideSettingsRoute.Main) }
   var currentEditableTextMapOnApply by remember {
     mutableStateOf<((Map<String, String>?) -> Unit)?>(null)
   }
   var currentEditableTextListOnApply by remember {
     mutableStateOf<((List<String>?) -> Unit)?>(null)
-  }
-
-  DisposableEffect(lifecycleOwner, viewModel) {
-    lifecycleOwner.lifecycle.addObserver(viewModel)
-    onDispose { lifecycleOwner.lifecycle.removeObserver(viewModel) }
   }
 
   TabbyNavDisplay(
