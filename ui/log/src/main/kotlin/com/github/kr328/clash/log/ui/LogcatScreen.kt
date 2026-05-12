@@ -74,7 +74,7 @@ internal fun LogcatScreen(
   val messageCopied = stringResource(R.string.copied)
   val invalidFileTip = stringResource(R.string.invalid_log_file)
 
-  LaunchedEffect(fileName, viewModel) { viewModel.init(fileName) }
+  LaunchedEffect(fileName) { viewModel.init(fileName) }
 
   DisposableEffect(lifecycleOwner, viewModel) {
     lifecycleOwner.lifecycle.addObserver(viewModel)

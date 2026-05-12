@@ -56,7 +56,7 @@ internal fun LogsScreen(
   onOpenFile: (LogFile) -> Unit,
 ) {
   var showDeleteAllDialog by remember { mutableStateOf(false) }
-  LaunchedEffect(viewModel) { viewModel.initialize() }
+  LaunchedEffect(Unit) { viewModel.initialize() }
   if (showDeleteAllDialog) {
     AlertDialog(
       onDismissRequest = { showDeleteAllDialog = false },

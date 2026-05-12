@@ -81,7 +81,7 @@ internal fun AccessControlScreen(
   val lifecycleOwner = LocalLifecycleOwner.current
   val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-  LaunchedEffect(viewModel) { viewModel.initialize() }
+  LaunchedEffect(Unit) { viewModel.initialize() }
   DisposableEffect(lifecycleOwner, viewModel) {
     lifecycleOwner.lifecycle.addObserver(viewModel)
     onDispose { lifecycleOwner.lifecycle.removeObserver(viewModel) }

@@ -77,7 +77,7 @@ internal fun OverrideSettingsScreen(
     mutableStateOf<((List<String>?) -> Unit)?>(null)
   }
 
-  LaunchedEffect(viewModel) { viewModel.initialize() }
+  LaunchedEffect(Unit) { viewModel.initialize() }
   DisposableEffect(lifecycleOwner, viewModel) {
     lifecycleOwner.lifecycle.addObserver(viewModel)
     onDispose { lifecycleOwner.lifecycle.removeObserver(viewModel) }
