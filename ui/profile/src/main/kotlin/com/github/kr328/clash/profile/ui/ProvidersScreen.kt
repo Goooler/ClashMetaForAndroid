@@ -4,7 +4,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -38,6 +37,7 @@ import com.github.kr328.clash.glue.util.type
 import com.github.kr328.clash.profile.R
 import com.github.kr328.clash.profile.vm.ProvidersViewModel
 import com.github.kr328.clash.profile.vm.ProvidersViewModel.UiState.ProviderItemState
+import com.github.kr328.clash.ui.component.Spacer
 import com.github.kr328.clash.ui.component.TabbyScaffold
 import com.github.kr328.clash.ui.icon.BaselineSwapVert
 import com.github.kr328.clash.ui.icon.BaselineSync
@@ -130,7 +130,7 @@ private fun ProviderItem(state: ProviderItemState, currentTime: Long, onUpdate: 
   ) {
     Column(modifier = Modifier.weight(1f)) {
       Text(text = state.provider.name, maxLines = 1, overflow = TextOverflow.Ellipsis)
-      Spacer(modifier = Modifier.height(itemTextMargin))
+      Spacer(itemTextMargin)
       Text(text = state.provider.type(context), style = MaterialTheme.typography.bodyMedium)
     }
 

@@ -11,7 +11,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
@@ -59,6 +58,7 @@ import com.github.kr328.clash.glue.util.ValidatorFileName
 import com.github.kr328.clash.glue.util.elapsedIntervalString
 import com.github.kr328.clash.profile.R
 import com.github.kr328.clash.profile.vm.FilesViewModel
+import com.github.kr328.clash.ui.component.SizeSpacer
 import com.github.kr328.clash.ui.component.TabbyScaffold
 import com.github.kr328.clash.ui.icon.BaselineAdd
 import com.github.kr328.clash.ui.icon.BaselineEdit
@@ -209,7 +209,7 @@ private fun FilesContent(
           },
         )
       }
-      Spacer(modifier = Modifier.size(16.dp))
+      SizeSpacer(16.dp)
     }
   }
 
@@ -363,7 +363,7 @@ private fun FileItem(
     Column(modifier = Modifier.weight(1f).padding(vertical = 8.dp)) {
       Text(text = configFile.name)
       if (!configFile.isDirectory) {
-        Spacer(modifier = Modifier.size(3.dp))
+        SizeSpacer(3.dp)
         Text(
           text = configFile.size.binaryBytes.toString(),
           style = MaterialTheme.typography.bodyMedium,
@@ -410,7 +410,7 @@ private fun FilesMenuAction(
       tint = tint,
       modifier = Modifier.size(24.dp),
     )
-    Spacer(modifier = Modifier.size(16.dp))
+    SizeSpacer(16.dp)
     Text(text = text, color = tint)
   }
 }

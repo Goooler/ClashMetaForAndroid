@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -53,6 +52,7 @@ import com.github.kr328.clash.glue.util.toString
 import com.github.kr328.clash.profile.R
 import com.github.kr328.clash.profile.vm.ProfilesViewModel
 import com.github.kr328.clash.service.model.Profile
+import com.github.kr328.clash.ui.component.Spacer
 import com.github.kr328.clash.ui.component.TabbyScaffold
 import com.github.kr328.clash.ui.icon.BaselineAdd
 import com.github.kr328.clash.ui.icon.BaselineContentCopy
@@ -181,7 +181,7 @@ private fun ProfilesContent(
           onDelete(profile)
         },
       )
-      Spacer(modifier = Modifier.height(16.dp))
+      Spacer(16.dp)
     }
   }
 
@@ -279,18 +279,18 @@ private fun ProfileItem(
 
       Column(modifier = Modifier.weight(1f).padding(vertical = dimens.itemPaddingVertical)) {
         Text(text = profile.name, maxLines = 1, overflow = TextOverflow.Ellipsis)
-        Spacer(modifier = Modifier.height(itemTextMargin))
+        Spacer(itemTextMargin)
         Text(text = profileTypeText, style = MaterialTheme.typography.bodyMedium)
         usageText?.let {
-          Spacer(modifier = Modifier.height(4.dp))
+          Spacer(4.dp)
           Text(text = it, style = MaterialTheme.typography.labelMedium)
         }
         if (profile.expire != 0L) {
-          Spacer(modifier = Modifier.height(4.dp))
+          Spacer(4.dp)
           Text(text = profile.expire.toDateStr(), style = MaterialTheme.typography.labelMedium)
         }
         if (showTraffic) {
-          Spacer(modifier = Modifier.height(6.dp))
+          Spacer(6.dp)
           LinearProgressIndicator(
             progress = { progress / 1000f },
             modifier = Modifier.fillMaxWidth(),
@@ -341,7 +341,7 @@ private fun ProfilesMenuAction(
       tint = tint,
       modifier = Modifier.size(24.dp),
     )
-    Spacer(modifier = Modifier.width(16.dp))
+    Spacer(16.dp)
     Text(text = text, color = tint)
   }
 }

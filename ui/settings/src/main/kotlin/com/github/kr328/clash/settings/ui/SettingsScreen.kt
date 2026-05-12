@@ -4,13 +4,11 @@ import androidx.annotation.StringRes
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Icon
@@ -24,6 +22,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.PreviewWrapper
 import com.github.kr328.clash.common.R as CommonR
 import com.github.kr328.clash.settings.R
+import com.github.kr328.clash.ui.component.Spacer
 import com.github.kr328.clash.ui.component.TabbyScaffold
 import com.github.kr328.clash.ui.icon.BaselineDns
 import com.github.kr328.clash.ui.icon.BaselineExtension
@@ -97,13 +96,13 @@ private fun SettingsEntryItem(
         ),
     verticalAlignment = Alignment.CenterVertically,
   ) {
-    Spacer(modifier = Modifier.width(dimens.itemHeaderMargin))
+    Spacer(dimens.itemHeaderMargin)
     Icon(
       imageVector = icon,
       contentDescription = null,
       modifier = Modifier.size(dimens.itemHeaderComponentSize),
     )
-    Spacer(modifier = Modifier.width(dimens.itemHeaderMargin))
+    Spacer(dimens.itemHeaderMargin)
     Text(text = stringResource(titleRes), style = MaterialTheme.typography.bodyLarge)
   }
 }
