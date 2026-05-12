@@ -485,6 +485,24 @@ private fun columnsForProxyLine(proxyLine: Int): Int =
 @PreviewWrapper(TabbyThemeWrapper::class)
 @PreviewTabby
 @Composable
+private fun ProxyMenuSheetContentPreview() {
+  Column {
+    ProxyMenuSheetContent(
+      overrideMode = TunnelState.Mode.Rule,
+      excludeNotSelectable = true,
+      proxyLine = 2,
+      proxySort = ProxySort.Delay,
+      onExcludeNotSelectableChanged = {},
+      onProxyLineChanged = {},
+      onProxySortChanged = {},
+      onOverrideModeSelected = {},
+    )
+  }
+}
+
+@PreviewWrapper(TabbyThemeWrapper::class)
+@PreviewTabby
+@Composable
 private fun ProxyContentPreview() {
   val groups = remember {
     listOf(
