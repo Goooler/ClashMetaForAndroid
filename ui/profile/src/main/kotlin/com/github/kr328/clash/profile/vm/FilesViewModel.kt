@@ -12,6 +12,7 @@ import com.github.kr328.clash.glue.remote.FilesClient
 import com.github.kr328.clash.glue.util.fileName
 import com.github.kr328.clash.glue.util.withProfile
 import kotlin.uuid.Uuid
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -79,6 +80,7 @@ internal class FilesViewModel(app: Application) : AndroidViewModel(app), Default
       try {
         client.deleteDocument(configFile.id)
       } catch (e: Exception) {
+        if (e is CancellationException) throw e
         Log.e("Delete file failed: ${e.message}", e)
         eventState.value = EventState.ShowMessage(e.message ?: "Unknown error")
       }
@@ -91,6 +93,7 @@ internal class FilesViewModel(app: Application) : AndroidViewModel(app), Default
       try {
         client.renameDocument(configFile.id, newName)
       } catch (e: Exception) {
+        if (e is CancellationException) throw e
         Log.e("Rename file failed: ${e.message}", e)
         eventState.value = EventState.ShowMessage(e.message ?: "Unknown error")
       }
@@ -113,6 +116,7 @@ internal class FilesViewModel(app: Application) : AndroidViewModel(app), Default
           client.copyDocument(targetConfigFile.id, uri)
         }
       } catch (e: Exception) {
+        if (e is CancellationException) throw e
         Log.e("Import file failed: ${e.message}", e)
         eventState.value = EventState.ShowMessage(e.message ?: "Unknown error")
       }
@@ -130,6 +134,7 @@ internal class FilesViewModel(app: Application) : AndroidViewModel(app), Default
       try {
         client.copyDocument(uri, sourceConfigFile.id)
       } catch (e: Exception) {
+        if (e is CancellationException) throw e
         Log.e("Export file failed: ${e.message}", e)
         eventState.value = EventState.ShowMessage(e.message ?: "Unknown error")
       }
@@ -155,6 +160,7 @@ internal class FilesViewModel(app: Application) : AndroidViewModel(app), Default
 
         uiState.update { it.copy(configFiles = files, currentInBaseDir = inBaseDir) }
       } catch (e: Exception) {
+        if (e is CancellationException) throw e
         Log.e("List files failed: ${e.message}", e)
         eventState.value = EventState.ShowMessage(e.message ?: "Unknown error")
       }
