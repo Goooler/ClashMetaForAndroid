@@ -88,7 +88,7 @@ private fun NetworkSettingsContent(
 
   TabbyScaffold(
     title = stringResource(R.string.network),
-    modifier = modifier.fillMaxSize(),
+    modifier = modifier,
     snackbarHostState = snackbarHostState,
   ) { innerPadding ->
     ProvidePreferenceLocals {

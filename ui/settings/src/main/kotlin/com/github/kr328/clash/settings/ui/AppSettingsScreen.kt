@@ -60,8 +60,7 @@ private fun AppSettingsContent(
   onDynamicNotificationChange: (Boolean) -> Unit,
   modifier: Modifier = Modifier,
 ) {
-  TabbyScaffold(title = stringResource(R.string.app), modifier = modifier.fillMaxSize()) {
-    innerPadding ->
+  TabbyScaffold(title = stringResource(R.string.app), modifier = modifier) { innerPadding ->
     ProvidePreferenceLocals {
       LazyColumn(modifier = Modifier.fillMaxSize(), contentPadding = innerPadding) {
         preferenceCategory(
