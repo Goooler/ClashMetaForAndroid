@@ -13,6 +13,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.PreviewWrapper
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.github.kr328.clash.service.model.AccessControlMode
@@ -22,7 +23,7 @@ import com.github.kr328.clash.ui.component.TabbyScaffold
 import com.github.kr328.clash.ui.icon.BaselineVpnLock
 import com.github.kr328.clash.ui.icon.TabbyIcons
 import com.github.kr328.clash.ui.theme.PreviewTabby
-import com.github.kr328.clash.ui.theme.TabbyTheme
+import com.github.kr328.clash.ui.theme.TabbyThemeWrapper
 import me.zhanghai.compose.preference.ProvidePreferenceLocals
 import me.zhanghai.compose.preference.listPreference
 import me.zhanghai.compose.preference.preference
@@ -210,9 +211,10 @@ private val AccessControlMode.summaryRes: Int
       DenySelected -> R.string.deny_selected_apps
     }
 
+@PreviewWrapper(TabbyThemeWrapper::class)
 @PreviewTabby
 @Composable
-private fun NetworkSettingsScreenPreview() = TabbyTheme {
+private fun NetworkSettingsScreenPreview() {
   NetworkSettingsContent(
     clashRunning = false,
     uiState =
@@ -239,9 +241,10 @@ private fun NetworkSettingsScreenPreview() = TabbyTheme {
   )
 }
 
+@PreviewWrapper(TabbyThemeWrapper::class)
 @PreviewTabby
 @Composable
-private fun NetworkSettingsScreenRunningPreview() = TabbyTheme {
+private fun NetworkSettingsScreenRunningPreview() {
   NetworkSettingsContent(
     clashRunning = true,
     uiState =

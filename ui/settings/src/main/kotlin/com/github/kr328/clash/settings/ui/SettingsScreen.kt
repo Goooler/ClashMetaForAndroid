@@ -21,6 +21,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.PreviewWrapper
 import com.github.kr328.clash.common.R as CommonR
 import com.github.kr328.clash.settings.R
 import com.github.kr328.clash.ui.component.TabbyScaffold
@@ -30,7 +31,7 @@ import com.github.kr328.clash.ui.icon.BaselineMihomo
 import com.github.kr328.clash.ui.icon.BaselineSettings
 import com.github.kr328.clash.ui.icon.TabbyIcons
 import com.github.kr328.clash.ui.theme.PreviewTabby
-import com.github.kr328.clash.ui.theme.TabbyTheme
+import com.github.kr328.clash.ui.theme.TabbyThemeWrapper
 import com.github.kr328.clash.ui.theme.tabbyDimens
 
 @Composable
@@ -107,9 +108,10 @@ private fun SettingsEntryItem(
   }
 }
 
+@PreviewWrapper(TabbyThemeWrapper::class)
 @PreviewTabby
 @Composable
-private fun SettingsScreenPreview() = TabbyTheme {
+private fun SettingsScreenPreview() {
   SettingsScreen(
     onOpenAppSettings = {},
     onOpenNetworkSettings = {},

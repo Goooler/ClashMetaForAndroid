@@ -11,6 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.PreviewWrapper
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -18,7 +19,7 @@ import com.github.kr328.clash.crash.R
 import com.github.kr328.clash.crash.vm.AppCrashedViewModel
 import com.github.kr328.clash.ui.component.TabbyScaffold
 import com.github.kr328.clash.ui.theme.PreviewTabby
-import com.github.kr328.clash.ui.theme.TabbyTheme
+import com.github.kr328.clash.ui.theme.TabbyThemeWrapper
 
 @Composable
 internal fun AppCrashedScreen(
@@ -52,9 +53,10 @@ private fun AppCrashedContent(modifier: Modifier = Modifier, logs: String) {
   }
 }
 
+@PreviewWrapper(TabbyThemeWrapper::class)
 @PreviewTabby
 @Composable
-private fun AppCrashedScreenPreview() = TabbyTheme {
+private fun AppCrashedScreenPreview() {
   AppCrashedContent(
     logs =
       "04-20 10:10:10.000 I/App( 1234): App version: 2.0.0\n" +
