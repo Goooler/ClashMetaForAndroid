@@ -66,12 +66,6 @@ internal class ProfilesViewModel(app: Application) :
     elapsedJob = null
   }
 
-  override fun onCleared() {
-    broadcastEventsJob?.cancel()
-    elapsedJob?.cancel()
-    fetchJob?.cancel()
-  }
-
   fun consumeEvent() {
     eventState.value = EventState.Idle
   }

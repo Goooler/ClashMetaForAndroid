@@ -78,13 +78,6 @@ internal class ProxyViewModel(app: Application) : AndroidViewModel(app), Default
     fetchInitialStateJob = null
   }
 
-  override fun onCleared() {
-    broadcastEventsJob?.cancel()
-    broadcastEventsJob = null
-    fetchInitialStateJob?.cancel()
-    fetchInitialStateJob = null
-  }
-
   fun consumeEvent() {
     eventState.value = EventState.Idle
   }

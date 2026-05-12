@@ -69,11 +69,6 @@ internal class HomeViewModel(app: Application) : AndroidViewModel(app), DefaultL
     trafficPollingJob = null
   }
 
-  override fun onCleared() {
-    broadcastEventsJob?.cancel()
-    trafficPollingJob?.cancel()
-  }
-
   fun toggleStatus() {
     if (clashRunning.value) {
       application.stopClashService()
