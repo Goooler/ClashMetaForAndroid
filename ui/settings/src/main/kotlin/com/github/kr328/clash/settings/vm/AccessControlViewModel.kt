@@ -9,6 +9,7 @@ import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
 import android.graphics.drawable.AdaptiveIconDrawable
 import android.graphics.drawable.Drawable
+import android.os.Build
 import android.os.Process
 import androidx.core.content.getSystemService
 import androidx.lifecycle.AndroidViewModel
@@ -196,7 +197,14 @@ internal class AccessControlViewModel(app: Application) :
       val comparator = if (reverse) base.thenDescending(sort) else base.then(sort)
 
       val pm = appContext.packageManager
-      val packages = pm.getInstalledPackages(PackageManager.GET_PERMISSIONS)
+      val packages =
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+          pm.getInstalledPackages(
+            PackageManager.PackageInfoFlags.of(PackageManager.GET_PERMISSIONS.toLong())
+          )
+        } else {
+          pm.getInstalledPackages(PackageManager.GET_PERMISSIONS)
+        }
 
       packages
         .asSequence()

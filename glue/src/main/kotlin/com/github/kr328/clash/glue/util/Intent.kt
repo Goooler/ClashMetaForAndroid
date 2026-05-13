@@ -4,6 +4,7 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.os.Build
 import com.github.kr328.clash.glue.di.AppInfoProvider.Companion.instance as appInfoProvider
 
 fun Context.mainIntent(action: String? = null): Intent {
@@ -17,8 +18,17 @@ val Context.mainActivityAlias: ComponentName
     val launcherIntent = Intent(Intent.ACTION_MAIN).addCategory(Intent.CATEGORY_LAUNCHER)
     val resolveFlags = PackageManager.MATCH_DISABLED_COMPONENTS
 
-    return packageManager
-      .queryIntentActivities(launcherIntent, resolveFlags)
+    val activities =
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+        packageManager.queryIntentActivities(
+          launcherIntent,
+          PackageManager.ResolveInfoFlags.of(resolveFlags.toLong()),
+        )
+      } else {
+        packageManager.queryIntentActivities(launcherIntent, resolveFlags)
+      }
+
+    return activities
       .firstNotNullOfOrNull { resolveInfo ->
         val activityInfo = resolveInfo.activityInfo
         if (activityInfo.targetActivity == mainActivityName) {
