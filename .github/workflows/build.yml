@@ -65,7 +65,7 @@ jobs:
       - uses: gradle/actions/setup-gradle@v6
       - run: ./gradlew app:assembleRelease
       - name: Delete release if exist then create release
-        if: github.repository == 'Goooler/Tabby' && github.event_name == 'push'
+        if: github.repository_owner == 'Goooler' && github.event_name == 'push'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
