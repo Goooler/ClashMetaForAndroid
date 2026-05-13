@@ -53,7 +53,7 @@ android-library = { id = "com.android.library", version.ref = "agp" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 kotlin-parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize", version.ref = "kotlin" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
-ksp = "com.google.devtools.ksp:2.3.7"
+ksp = "com.google.devtools.ksp:2.3.8"
 golang = "io.github.goooler.golang:0.2.2"
 download = "de.undercouch.download:5.7.0"
 spotless = "com.diffplug.spotless:8.4.0"
