@@ -361,8 +361,8 @@ private fun LazyListScope.dnsPreferenceItems(
     onValueChange = actions::updateDnsEnable,
     values = booleanOptions,
     title = { Text(stringResource(R.string.strategy)) },
-    summary = { Text(stringResource(enabled.dnsStrategyTextRes)) },
-    valueToText = { AnnotatedString(stringResource(it.dnsStrategyTextRes)) },
+    summary = { Text(stringResource(configuration.dns.enable.dnsStrategyTextRes)) },
+    valueToText = { AnnotatedString(stringResource(configuration.dns.enable.dnsStrategyTextRes)) },
   )
   listPreference(
     key = "dnsPreferH3",
