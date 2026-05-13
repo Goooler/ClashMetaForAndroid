@@ -9,14 +9,12 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
@@ -46,6 +44,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.github.kr328.clash.common.R as CommonR
 import com.github.kr328.clash.home.R
 import com.github.kr328.clash.home.vm.HomeViewModel
+import com.github.kr328.clash.ui.component.Spacer
 import com.github.kr328.clash.ui.component.TabbyScaffold
 import com.github.kr328.clash.ui.icon.BaselineApps
 import com.github.kr328.clash.ui.icon.BaselineAssignment
@@ -172,13 +171,13 @@ private fun HomeContent(
         modifier = Modifier.fillMaxWidth().height(90.dp),
         verticalAlignment = Alignment.CenterVertically,
       ) {
-        Spacer(modifier = Modifier.width(10.dp))
+        Spacer(10.dp)
         Image(
           painter = painterResource(CommonR.drawable.ic_tabby_foreground),
           contentDescription = null,
           modifier = Modifier.size(logoSize),
         )
-        Spacer(modifier = Modifier.width(10.dp))
+        Spacer(10.dp)
         Text(
           text = stringResource(CommonR.string.tabby),
           style = MaterialTheme.typography.titleLarge,
@@ -289,11 +288,11 @@ private fun HomeActionCard(
         modifier = Modifier.size(actionIconSize),
         tint = contentColor,
       )
-      Spacer(modifier = Modifier.width(actionItemPaddingHorizontal))
+      Spacer(actionItemPaddingHorizontal)
       Column {
         Text(text = text, style = MaterialTheme.typography.bodyLarge, color = contentColor)
         if (subtext != null) {
-          Spacer(modifier = Modifier.height(5.dp))
+          Spacer(5.dp)
           Text(text = subtext, style = MaterialTheme.typography.bodyMedium, color = contentColor)
         }
       }
@@ -317,9 +316,9 @@ private fun HomeActionLabel(
         .padding(vertical = actionItemPaddingVertical),
     verticalAlignment = Alignment.CenterVertically,
   ) {
-    Spacer(modifier = Modifier.width(actionItemPaddingHorizontal))
+    Spacer(actionItemPaddingHorizontal)
     Icon(imageVector = icon, contentDescription = null, modifier = Modifier.size(actionIconSize))
-    Spacer(modifier = Modifier.width(actionItemPaddingHorizontal))
+    Spacer(actionItemPaddingHorizontal)
     Text(text = text, style = MaterialTheme.typography.bodyLarge)
   }
 }

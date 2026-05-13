@@ -7,10 +7,8 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -54,6 +52,7 @@ import com.github.kr328.clash.common.R as CommonR
 import com.github.kr328.clash.glue.model.AppInfo
 import com.github.kr328.clash.settings.R
 import com.github.kr328.clash.settings.vm.AccessControlViewModel
+import com.github.kr328.clash.ui.component.Spacer
 import com.github.kr328.clash.ui.component.TabbyScaffold
 import com.github.kr328.clash.ui.icon.BaselineMoreVert
 import com.github.kr328.clash.ui.icon.BaselineSearch
@@ -144,7 +143,7 @@ private fun AccessControlContent(
           actions.updateShowSystemApps(it)
         },
       )
-      Spacer(modifier = Modifier.height(16.dp))
+      Spacer(16.dp)
     }
   }
 
@@ -226,7 +225,7 @@ private fun ColumnScope.AccessControlSearchContent(
     colors = TextFieldDefaults.colors(),
   )
 
-  Spacer(modifier = Modifier.height(8.dp))
+  Spacer(8.dp)
 
   LazyColumn(modifier = Modifier.fillMaxWidth().heightIn(max = 520.dp)) {
     items(items = filtered, key = AppInfo::packageName) { app ->
@@ -239,7 +238,7 @@ private fun ColumnScope.AccessControlSearchContent(
     }
   }
 
-  Spacer(modifier = Modifier.height(16.dp))
+  Spacer(16.dp)
 }
 
 @Composable
@@ -387,7 +386,7 @@ private fun AccessControlAppItem(app: AppInfo, selected: Boolean, onClick: () ->
       verticalArrangement = Arrangement.Center,
     ) {
       Text(text = app.label, maxLines = 1, overflow = TextOverflow.Ellipsis)
-      Spacer(modifier = Modifier.height(itemTextMargin))
+      Spacer(itemTextMargin)
       Text(
         text = app.packageName,
         style = MaterialTheme.typography.bodyMedium,

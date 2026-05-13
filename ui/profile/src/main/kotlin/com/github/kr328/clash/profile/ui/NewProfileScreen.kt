@@ -9,12 +9,10 @@ import androidx.activity.result.contract.ActivityResultContracts.StartActivityFo
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Icon
@@ -42,6 +40,8 @@ import com.github.kr328.clash.common.R as CommonR
 import com.github.kr328.clash.common.constants.Intents
 import com.github.kr328.clash.profile.model.ProfileProvider
 import com.github.kr328.clash.profile.vm.NewProfileViewModel
+import com.github.kr328.clash.ui.component.SizeSpacer
+import com.github.kr328.clash.ui.component.Spacer
 import com.github.kr328.clash.ui.component.TabbyScaffold
 import com.github.kr328.clash.ui.icon.BaselineExtension
 import com.github.kr328.clash.ui.icon.TabbyIcons
@@ -160,13 +160,13 @@ private fun ProfileProviderItem(
         .padding(vertical = itemPaddingVertical),
     verticalAlignment = Alignment.CenterVertically,
   ) {
-    Spacer(modifier = Modifier.width(headerMargin))
+    Spacer(headerMargin)
     if (iconPainter != null) {
       Icon(painter = iconPainter, contentDescription = null, modifier = Modifier.size(headerSize))
     } else {
-      Spacer(modifier = Modifier.size(headerSize))
+      SizeSpacer(headerSize)
     }
-    Spacer(modifier = Modifier.width(headerMargin))
+    Spacer(headerMargin)
     Column {
       Text(text = provider.name, style = MaterialTheme.typography.bodyLarge)
       Text(

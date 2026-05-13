@@ -8,13 +8,10 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
@@ -61,6 +58,7 @@ import com.github.kr328.clash.core.model.TunnelState
 import com.github.kr328.clash.proxy.R
 import com.github.kr328.clash.proxy.vm.ProxyViewModel
 import com.github.kr328.clash.proxy.vm.ProxyViewModel.SelectedProxy
+import com.github.kr328.clash.ui.component.Spacer
 import com.github.kr328.clash.ui.component.TabbyScaffold
 import com.github.kr328.clash.ui.icon.BaselineFlashOn
 import com.github.kr328.clash.ui.icon.BaselineMoreVert
@@ -428,7 +426,7 @@ private fun ColumnScope.ProxyMenuSheetContent(
     )
   }
 
-  Spacer(modifier = Modifier.height(24.dp))
+  Spacer(24.dp)
 }
 
 @Composable
@@ -441,7 +439,7 @@ private fun ProxyMenuSection(title: String, content: @Composable () -> Unit) {
       modifier = Modifier.padding(top = 8.dp, bottom = 8.dp),
     )
     content()
-    Spacer(modifier = Modifier.height(8.dp))
+    Spacer(8.dp)
   }
 }
 
@@ -455,7 +453,7 @@ private fun ProxyMenuCheckboxRow(title: String, checked: Boolean, onClick: () ->
     verticalAlignment = Alignment.CenterVertically,
   ) {
     Checkbox(checked = checked, onCheckedChange = null)
-    Spacer(modifier = Modifier.width(12.dp))
+    Spacer(12.dp)
     Text(text = title, style = MaterialTheme.typography.bodyLarge)
   }
 }
@@ -470,7 +468,7 @@ private fun ProxyMenuRadioRow(title: String, selected: Boolean, onClick: () -> U
     verticalAlignment = Alignment.CenterVertically,
   ) {
     RadioButton(selected = selected, onClick = null)
-    Spacer(modifier = Modifier.width(12.dp))
+    Spacer(12.dp)
     Text(text = title, style = MaterialTheme.typography.bodyLarge)
   }
 }

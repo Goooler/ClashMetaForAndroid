@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
@@ -38,6 +37,7 @@ import com.github.kr328.clash.glue.util.format
 import com.github.kr328.clash.log.R
 import com.github.kr328.clash.log.model.LogFile
 import com.github.kr328.clash.log.vm.LogsViewModel
+import com.github.kr328.clash.ui.component.SizeSpacer
 import com.github.kr328.clash.ui.component.TabbyScaffold
 import com.github.kr328.clash.ui.icon.BaselineAdb
 import com.github.kr328.clash.ui.icon.BaselineClearAll
@@ -183,7 +183,7 @@ private fun LogsActionItem(
       verticalArrangement = Arrangement.Center,
     ) {
       Text(text = title)
-      Spacer(modifier = Modifier.size(dimens.itemTextMargin))
+      SizeSpacer(dimens.itemTextMargin)
       Text(text = summary, style = MaterialTheme.typography.bodyMedium)
     }
   }
