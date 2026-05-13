@@ -197,9 +197,8 @@ internal class AccessControlViewModel(app: Application) :
       val comparator = if (reverse) base.thenDescending(sort) else base.then(sort)
 
       val pm = appContext.packageManager
-      val packages = pm.getInstalledPackagesCompat(PackageManager.GET_PERMISSIONS)
-
-      packages
+      pm
+        .getInstalledPackagesCompat(PackageManager.GET_PERMISSIONS)
         .asSequence()
         .filter { it.packageName != appContext.packageName }
         .filter { it.applicationInfo != null }
