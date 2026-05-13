@@ -227,7 +227,6 @@ private fun LazyListScope.metaBasicPreferenceItems(
   actions: MetaFeatureSettingsActions,
 ) {
   preferenceCategory(key = "cat_general", title = { Text(stringResource(R.string.general)) })
-
   listPreference(
     key = "unifiedDelay",
     value = configuration.unifiedDelay,
@@ -449,7 +448,6 @@ private fun LazyListScope.metaGeoFileItems(
   onImportASN: () -> Unit,
 ) {
   preferenceCategory(key = "cat_geox", title = { Text(stringResource(R.string.geox_files)) })
-
   preference(
     key = "importGeoIp",
     title = { Text(stringResource(R.string.import_geoip_file)) },
