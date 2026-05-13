@@ -274,6 +274,7 @@ private fun LazyListScope.metaSnifferPreferenceItems(
   actions: MetaFeatureSettingsActions,
   onOpenEditableTextList: (Int, List<String>?, (List<String>?) -> Unit) -> Unit,
 ) {
+  val enabled = configuration.sniffer.enable != false
   preferenceCategory(
     key = "cat_sniffer",
     title = { Text(stringResource(R.string.sniffer_setting)) },
@@ -291,7 +292,7 @@ private fun LazyListScope.metaSnifferPreferenceItems(
     key = "sniffHttpPorts",
     title = { Text(stringResource(R.string.sniff_http_ports)) },
     summary = { Text(configuration.sniffer.sniff.http.ports.listSummary(R.string.dont_modify)) },
-    enabled = configuration.sniffer.enable != false,
+    enabled = enabled,
     onClick = {
       onOpenEditableTextList(
         R.string.sniff_http_ports,
@@ -305,7 +306,7 @@ private fun LazyListScope.metaSnifferPreferenceItems(
     value = configuration.sniffer.sniff.http.overrideDestination,
     onValueChange = actions::updateSniffHttpOverrideDestination,
     values = booleanOptions,
-    enabled = configuration.sniffer.enable != false,
+    enabled = enabled,
     title = { Text(stringResource(R.string.sniff_http_override_destination)) },
     summary = {
       Text(stringResource(configuration.sniffer.sniff.http.overrideDestination.textRes))
@@ -316,7 +317,7 @@ private fun LazyListScope.metaSnifferPreferenceItems(
     key = "sniffTlsPorts",
     title = { Text(stringResource(R.string.sniff_tls_ports)) },
     summary = { Text(configuration.sniffer.sniff.tls.ports.listSummary(R.string.dont_modify)) },
-    enabled = configuration.sniffer.enable != false,
+    enabled = enabled,
     onClick = {
       onOpenEditableTextList(
         R.string.sniff_tls_ports,
@@ -330,7 +331,7 @@ private fun LazyListScope.metaSnifferPreferenceItems(
     value = configuration.sniffer.sniff.tls.overrideDestination,
     onValueChange = actions::updateSniffTlsOverrideDestination,
     values = booleanOptions,
-    enabled = configuration.sniffer.enable != false,
+    enabled = enabled,
     title = { Text(stringResource(R.string.sniff_tls_override_destination)) },
     summary = { Text(stringResource(configuration.sniffer.sniff.tls.overrideDestination.textRes)) },
     valueToText = { AnnotatedString(stringResource(it.textRes)) },
@@ -339,7 +340,7 @@ private fun LazyListScope.metaSnifferPreferenceItems(
     key = "sniffQuicPorts",
     title = { Text(stringResource(R.string.sniff_quic_ports)) },
     summary = { Text(configuration.sniffer.sniff.quic.ports.listSummary(R.string.dont_modify)) },
-    enabled = configuration.sniffer.enable != false,
+    enabled = enabled,
     onClick = {
       onOpenEditableTextList(
         R.string.sniff_quic_ports,
@@ -353,7 +354,7 @@ private fun LazyListScope.metaSnifferPreferenceItems(
     value = configuration.sniffer.sniff.quic.overrideDestination,
     onValueChange = actions::updateSniffQuicOverrideDestination,
     values = booleanOptions,
-    enabled = configuration.sniffer.enable != false,
+    enabled = enabled,
     title = { Text(stringResource(R.string.sniff_quic_override_destination)) },
     summary = {
       Text(stringResource(configuration.sniffer.sniff.quic.overrideDestination.textRes))
@@ -365,7 +366,7 @@ private fun LazyListScope.metaSnifferPreferenceItems(
     value = configuration.sniffer.forceDnsMapping,
     onValueChange = actions::updateForceDnsMapping,
     values = booleanOptions,
-    enabled = configuration.sniffer.enable != false,
+    enabled = enabled,
     title = { Text(stringResource(R.string.force_dns_mapping)) },
     summary = { Text(stringResource(configuration.sniffer.forceDnsMapping.textRes)) },
     valueToText = { AnnotatedString(stringResource(it.textRes)) },
@@ -375,7 +376,7 @@ private fun LazyListScope.metaSnifferPreferenceItems(
     value = configuration.sniffer.parsePureIp,
     onValueChange = actions::updateParsePureIp,
     values = booleanOptions,
-    enabled = configuration.sniffer.enable != false,
+    enabled = enabled,
     title = { Text(stringResource(R.string.parse_pure_ip)) },
     summary = { Text(stringResource(configuration.sniffer.parsePureIp.textRes)) },
     valueToText = { AnnotatedString(stringResource(it.textRes)) },
@@ -385,7 +386,7 @@ private fun LazyListScope.metaSnifferPreferenceItems(
     value = configuration.sniffer.overrideDestination,
     onValueChange = actions::updateOverrideDestination,
     values = booleanOptions,
-    enabled = configuration.sniffer.enable != false,
+    enabled = enabled,
     title = { Text(stringResource(R.string.override_destination)) },
     summary = { Text(stringResource(configuration.sniffer.overrideDestination.textRes)) },
     valueToText = { AnnotatedString(stringResource(it.textRes)) },
@@ -394,7 +395,7 @@ private fun LazyListScope.metaSnifferPreferenceItems(
     key = "forceDomain",
     title = { Text(stringResource(R.string.force_domain)) },
     summary = { Text(configuration.sniffer.forceDomain.listSummary(R.string.dont_modify)) },
-    enabled = configuration.sniffer.enable != false,
+    enabled = enabled,
     onClick = {
       onOpenEditableTextList(
         R.string.force_domain,
@@ -407,7 +408,7 @@ private fun LazyListScope.metaSnifferPreferenceItems(
     key = "skipDomain",
     title = { Text(stringResource(R.string.skip_domain)) },
     summary = { Text(configuration.sniffer.skipDomain.listSummary(R.string.dont_modify)) },
-    enabled = configuration.sniffer.enable != false,
+    enabled = enabled,
     onClick = {
       onOpenEditableTextList(
         R.string.skip_domain,
@@ -420,7 +421,7 @@ private fun LazyListScope.metaSnifferPreferenceItems(
     key = "skipSrcAddress",
     title = { Text(stringResource(R.string.skip_src_address)) },
     summary = { Text(configuration.sniffer.skipSrcAddress.listSummary(R.string.dont_modify)) },
-    enabled = configuration.sniffer.enable != false,
+    enabled = enabled,
     onClick = {
       onOpenEditableTextList(
         R.string.skip_src_address,
@@ -433,7 +434,7 @@ private fun LazyListScope.metaSnifferPreferenceItems(
     key = "skipDstAddress",
     title = { Text(stringResource(R.string.skip_dst_address)) },
     summary = { Text(configuration.sniffer.skipDstAddress.listSummary(R.string.dont_modify)) },
-    enabled = configuration.sniffer.enable != false,
+    enabled = enabled,
     onClick = {
       onOpenEditableTextList(
         R.string.skip_dst_address,
