@@ -56,8 +56,8 @@ androidComponents {
         val abiName =
           filters.find { it.filterType == FilterConfiguration.FilterType.ABI }?.identifier
             ?: "universal"
-        val newApkName = "Tabby-${versionName.get()}-$abiName-${variant.buildType}.apk"
-        outputFileName = newApkName
+        outputFileName =
+          "Tabby-${versionName.get()}-${versionCode.get()}-$abiName-${variant.buildType}.apk"
       }
     }
   }
