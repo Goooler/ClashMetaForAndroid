@@ -149,11 +149,10 @@ private fun PropertiesContent(
     ProvidePreferenceLocals {
       LazyColumn(modifier = Modifier.fillMaxSize(), contentPadding = innerPadding) {
         preference(
-          key = "tip",
+          key = "tips",
           title = { Text(stringResource(R.string.properties)) },
           summary = { Text(AnnotatedString.fromHtml(stringResource(R.string.tips_properties))) },
           icon = { Icon(imageVector = TabbyIcons.OutlineInfo, contentDescription = null) },
-          enabled = false,
         )
         textFieldPreference(
           key = "name",

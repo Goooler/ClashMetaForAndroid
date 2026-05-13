@@ -88,7 +88,7 @@ private fun NetworkSettingsContent(
 
   TabbyScaffold(
     title = stringResource(R.string.network),
-    modifier = modifier.fillMaxSize(),
+    modifier = modifier,
     snackbarHostState = snackbarHostState,
   ) { innerPadding ->
     ProvidePreferenceLocals {
@@ -102,12 +102,10 @@ private fun NetworkSettingsContent(
           title = { Text(stringResource(R.string.route_system_traffic)) },
           summary = { Text(stringResource(R.string.routing_via_vpn_service)) },
         )
-
         preferenceCategory(
           key = "cat_vpn_service_options",
           title = { Text(stringResource(R.string.vpn_service_options)) },
         )
-
         switchPreference(
           key = "bypass_private_network",
           value = uiState.bypassPrivateNetwork,

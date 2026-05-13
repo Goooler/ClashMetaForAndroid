@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.selection.selectable
@@ -32,6 +31,7 @@ import androidx.compose.material3.RadioButton
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -127,7 +127,10 @@ private fun ProxyContent(
   val showUrlTestAction = uiState.groupNames.isNotEmpty()
 
   if (menuVisible) {
-    ModalBottomSheet(onDismissRequest = { menuVisible = false }) {
+    ModalBottomSheet(
+      sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
+      onDismissRequest = { menuVisible = false },
+    ) {
       ProxyMenuSheetContent(
         overrideMode = uiState.overrideMode,
         excludeNotSelectable = uiState.excludeNotSelectable,
@@ -265,7 +268,6 @@ private fun ProxyGroupPage(
 
   LazyVerticalGrid(
     columns = GridCells.Fixed(columnsForProxyLine(proxyLine)),
-    state = rememberLazyGridState(),
     modifier = Modifier.fillMaxSize(),
     contentPadding = PaddingValues(gridContentPadding),
     horizontalArrangement = Arrangement.spacedBy(12.dp),
@@ -481,6 +483,24 @@ private fun columnsForProxyLine(proxyLine: Int): Int =
     2 -> 2
     else -> 3
   }
+
+@PreviewWrapper(TabbyThemeWrapper::class)
+@PreviewTabby
+@Composable
+private fun ProxyMenuSheetContentPreview() {
+  Column {
+    ProxyMenuSheetContent(
+      overrideMode = TunnelState.Mode.Rule,
+      excludeNotSelectable = true,
+      proxyLine = 2,
+      proxySort = ProxySort.Delay,
+      onExcludeNotSelectableChanged = {},
+      onProxyLineChanged = {},
+      onProxySortChanged = {},
+      onOverrideModeSelected = {},
+    )
+  }
+}
 
 @PreviewWrapper(TabbyThemeWrapper::class)
 @PreviewTabby

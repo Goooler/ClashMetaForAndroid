@@ -60,8 +60,7 @@ private fun AppSettingsContent(
   onDynamicNotificationChange: (Boolean) -> Unit,
   modifier: Modifier = Modifier,
 ) {
-  TabbyScaffold(title = stringResource(R.string.app), modifier = modifier.fillMaxSize()) {
-    innerPadding ->
+  TabbyScaffold(title = stringResource(R.string.app), modifier = modifier) { innerPadding ->
     ProvidePreferenceLocals {
       LazyColumn(modifier = Modifier.fillMaxSize(), contentPadding = innerPadding) {
         preferenceCategory(
@@ -76,7 +75,6 @@ private fun AppSettingsContent(
           title = { Text(stringResource(R.string.auto_restart)) },
           summary = { Text(stringResource(R.string.allow_tabby_auto_restart)) },
         )
-
         preferenceCategory(
           key = "cat_interface",
           title = { Text(stringResource(R.string.interface_)) },
@@ -107,7 +105,6 @@ private fun AppSettingsContent(
           title = { Text(stringResource(R.string.hide_from_recents_title)) },
           summary = { Text(stringResource(R.string.hide_from_recents_desc)) },
         )
-
         preferenceCategory(key = "cat_service", title = { Text(stringResource(R.string.service)) })
         switchPreference(
           key = "show_traffic",

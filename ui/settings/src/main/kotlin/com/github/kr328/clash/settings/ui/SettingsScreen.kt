@@ -41,10 +41,8 @@ internal fun SettingsScreen(
   onOpenOverrideSettings: () -> Unit,
   onOpenMetaFeatureSettings: () -> Unit,
 ) {
-  TabbyScaffold(
-    title = stringResource(CommonR.string.settings),
-    modifier = modifier.fillMaxSize(),
-  ) { innerPadding ->
+  TabbyScaffold(title = stringResource(CommonR.string.settings), modifier = modifier) { innerPadding
+    ->
     Column(
       modifier = Modifier.fillMaxSize().padding(innerPadding).verticalScroll(rememberScrollState())
     ) {

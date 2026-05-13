@@ -17,6 +17,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Semaphore
@@ -85,6 +86,8 @@ internal class ProxyViewModel(app: Application) : AndroidViewModel(app), Default
   private suspend fun fetchInitialState() {
     val mode = withClash { queryOverride(Clash.OverrideSlot.Session).mode }
     val names = withClash { queryProxyGroupNames(uiStore.proxyExcludeNotSelectable) }
+    val preservedGroups =
+      with(uiState.value) { groups.takeIf { groupNames == names && groups.size == names.size } }
 
     selectedProxies.value = List(names.size) { SelectedProxy("?") }
 
@@ -95,7 +98,7 @@ internal class ProxyViewModel(app: Application) : AndroidViewModel(app), Default
       it.copy(
         overrideMode = mode,
         groupNames = names,
-        groups = List(names.size) { UiState.ProxyGroupUiState() },
+        groups = preservedGroups ?: List(names.size) { UiState.ProxyGroupUiState() },
         initialPage = initialPage,
         currentPage = currentPage,
       )

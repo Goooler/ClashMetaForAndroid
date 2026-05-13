@@ -104,7 +104,7 @@ private fun AccessControlContent(
   if (showMenu) {
     ModalBottomSheet(
       onDismissRequest = { showMenu = false },
-      sheetState = rememberModalBottomSheetState(),
+      sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
     ) {
       AccessControlMenuContent(
         sort = sort,
