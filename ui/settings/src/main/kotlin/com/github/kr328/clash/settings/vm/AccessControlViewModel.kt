@@ -9,7 +9,6 @@ import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
 import android.graphics.drawable.AdaptiveIconDrawable
 import android.graphics.drawable.Drawable
-import android.os.Build
 import android.os.Process
 import androidx.core.content.getSystemService
 import androidx.lifecycle.AndroidViewModel
@@ -17,6 +16,7 @@ import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.viewModelScope
 import com.github.kr328.clash.common.Global
+import com.github.kr328.clash.common.compat.getInstalledPackagesCompat
 import com.github.kr328.clash.glue.model.AppInfo
 import com.github.kr328.clash.glue.remote.Remote
 import com.github.kr328.clash.glue.store.UiStore
@@ -197,13 +197,7 @@ internal class AccessControlViewModel(app: Application) :
       val comparator = if (reverse) base.thenDescending(sort) else base.then(sort)
 
       val pm = appContext.packageManager
-      val resolveFlags = PackageManager.GET_PERMISSIONS
-      val packages =
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-          pm.getInstalledPackages(PackageManager.PackageInfoFlags.of(resolveFlags.toLong()))
-        } else {
-          pm.getInstalledPackages(resolveFlags)
-        }
+      val packages = pm.getInstalledPackagesCompat(PackageManager.GET_PERMISSIONS)
 
       packages
         .asSequence()
