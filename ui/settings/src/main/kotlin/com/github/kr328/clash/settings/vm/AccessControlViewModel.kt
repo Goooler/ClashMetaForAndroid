@@ -16,6 +16,7 @@ import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.viewModelScope
 import com.github.kr328.clash.common.Global
+import com.github.kr328.clash.common.compat.getInstalledPackagesCompat
 import com.github.kr328.clash.glue.model.AppInfo
 import com.github.kr328.clash.glue.remote.Remote
 import com.github.kr328.clash.glue.store.UiStore
@@ -196,7 +197,7 @@ internal class AccessControlViewModel(app: Application) :
       val comparator = if (reverse) base.thenDescending(sort) else base.then(sort)
 
       val pm = appContext.packageManager
-      val packages = pm.getInstalledPackages(PackageManager.GET_PERMISSIONS)
+      val packages = pm.getInstalledPackagesCompat(PackageManager.GET_PERMISSIONS)
 
       packages
         .asSequence()

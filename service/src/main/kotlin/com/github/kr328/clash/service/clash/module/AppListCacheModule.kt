@@ -3,6 +3,7 @@ package com.github.kr328.clash.service.clash.module
 import android.app.Service
 import android.content.Intent
 import android.content.pm.PackageInfo
+import com.github.kr328.clash.common.compat.getInstalledPackagesCompat
 import com.github.kr328.clash.common.log.Log
 import com.github.kr328.clash.core.Clash
 import kotlin.time.Duration.Companion.seconds
@@ -16,7 +17,7 @@ class AppListCacheModule(service: Service) : Module<Unit>(service) {
   private fun reload() {
     val packages =
       service.packageManager
-        .getInstalledPackages(0)
+        .getInstalledPackagesCompat(0)
         .filter { it.applicationInfo != null }
         .groupBy { it.uniqueUidName() }
         .map { (_, v) ->
