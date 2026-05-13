@@ -139,8 +139,6 @@ private fun OverrideSettingsContent(
   onOpenEditableTextMap: (Int, Map<String, String>?, (Map<String, String>?) -> Unit) -> Unit,
   onOpenEditableTextList: (Int, List<String>?, (List<String>?) -> Unit) -> Unit,
 ) {
-  val dnsEnabled = configuration.dns.enable
-
   val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
   TabbyScaffold(
     title = stringResource(R.string.override),
@@ -164,11 +162,10 @@ private fun OverrideSettingsContent(
           onOpenEditableTextList,
         )
         dnsPreferenceItems(
-          configuration,
-          actions,
-          dnsEnabled,
-          onOpenEditableTextMap,
-          onOpenEditableTextList,
+          configuration = configuration,
+          actions = actions,
+          onOpenEditableTextMap = onOpenEditableTextMap,
+          onOpenEditableTextList = onOpenEditableTextList,
         )
       }
     }
@@ -353,18 +350,18 @@ private fun LazyListScope.generalPreferenceItems(
 private fun LazyListScope.dnsPreferenceItems(
   configuration: ConfigurationOverride,
   actions: OverrideSettingsActions,
-  dnsEnabled: Boolean?,
   onOpenEditableTextMap: (Int, Map<String, String>?, (Map<String, String>?) -> Unit) -> Unit,
   onOpenEditableTextList: (Int, List<String>?, (List<String>?) -> Unit) -> Unit,
 ) {
+  val enabled = configuration.dns.enable != false
   preferenceCategory(key = "cat_dns", title = { Text(stringResource(R.string.dns)) })
   listPreference(
     key = "dnsStrategy",
-    value = dnsEnabled,
+    value = enabled,
     onValueChange = actions::updateDnsEnable,
     values = booleanOptions,
     title = { Text(stringResource(R.string.strategy)) },
-    summary = { Text(stringResource(dnsEnabled.dnsStrategyTextRes)) },
+    summary = { Text(stringResource(enabled.dnsStrategyTextRes)) },
     valueToText = { AnnotatedString(stringResource(it.dnsStrategyTextRes)) },
   )
   listPreference(
@@ -372,7 +369,7 @@ private fun LazyListScope.dnsPreferenceItems(
     value = configuration.dns.preferH3,
     onValueChange = actions::updateDnsPreferH3,
     values = booleanOptions,
-    enabled = dnsEnabled != false,
+    enabled = enabled,
     title = { Text(stringResource(R.string.prefer_h3)) },
     summary = { Text(stringResource(configuration.dns.preferH3.textRes)) },
     valueToText = { AnnotatedString(stringResource(it.textRes)) },
@@ -384,14 +381,14 @@ private fun LazyListScope.dnsPreferenceItems(
     emptyLabel = CommonR.string.disabled,
     value = configuration.dns.listen,
     onValueChange = actions::updateDnsListen,
-    enabled = dnsEnabled != false,
+    enabled = enabled,
   )
   listPreference(
     key = "appendSystemDns",
     value = configuration.app.appendSystemDns,
     onValueChange = actions::updateAppendSystemDns,
     values = booleanOptions,
-    enabled = dnsEnabled != false,
+    enabled = enabled,
     title = { Text(stringResource(R.string.append_system_dns)) },
     summary = { Text(stringResource(configuration.app.appendSystemDns.textRes)) },
     valueToText = { AnnotatedString(stringResource(it.textRes)) },
@@ -401,7 +398,7 @@ private fun LazyListScope.dnsPreferenceItems(
     value = configuration.dns.ipv6,
     onValueChange = actions::updateDnsIpv6,
     values = booleanOptions,
-    enabled = dnsEnabled != false,
+    enabled = enabled,
     title = { Text(stringResource(R.string.ipv6)) },
     summary = { Text(stringResource(configuration.dns.ipv6.textRes)) },
     valueToText = { AnnotatedString(stringResource(it.textRes)) },
@@ -411,7 +408,7 @@ private fun LazyListScope.dnsPreferenceItems(
     value = configuration.dns.useHosts,
     onValueChange = actions::updateDnsUseHosts,
     values = booleanOptions,
-    enabled = dnsEnabled != false,
+    enabled = enabled,
     title = { Text(stringResource(R.string.use_hosts)) },
     summary = { Text(stringResource(configuration.dns.useHosts.textRes)) },
     valueToText = { AnnotatedString(stringResource(it.textRes)) },
@@ -421,7 +418,7 @@ private fun LazyListScope.dnsPreferenceItems(
     value = configuration.dns.enhancedMode,
     onValueChange = actions::updateDnsEnhancedMode,
     values = ConfigurationOverride.DnsEnhancedMode.entries,
-    enabled = dnsEnabled != false,
+    enabled = enabled,
     title = { Text(stringResource(R.string.enhanced_mode)) },
     summary = { Text(stringResource(configuration.dns.enhancedMode.textRes)) },
     valueToText = { AnnotatedString(stringResource(it.textRes)) },
@@ -430,7 +427,7 @@ private fun LazyListScope.dnsPreferenceItems(
     key = "dnsNameServer",
     title = { Text(stringResource(R.string.name_server)) },
     summary = { Text(configuration.dns.nameServer.listSummary(R.string.dont_modify)) },
-    enabled = dnsEnabled != false,
+    enabled = enabled,
     onClick = {
       onOpenEditableTextList(
         R.string.name_server,
@@ -443,7 +440,7 @@ private fun LazyListScope.dnsPreferenceItems(
     key = "dnsFallback",
     title = { Text(stringResource(R.string.fallback)) },
     summary = { Text(configuration.dns.fallback.listSummary(R.string.dont_modify)) },
-    enabled = dnsEnabled != false,
+    enabled = enabled,
     onClick = {
       onOpenEditableTextList(
         R.string.fallback,
@@ -456,7 +453,7 @@ private fun LazyListScope.dnsPreferenceItems(
     key = "dnsDefaultServer",
     title = { Text(stringResource(R.string.default_name_server)) },
     summary = { Text(configuration.dns.defaultServer.listSummary(R.string.dont_modify)) },
-    enabled = dnsEnabled != false,
+    enabled = enabled,
     onClick = {
       onOpenEditableTextList(
         R.string.default_name_server,
@@ -469,7 +466,7 @@ private fun LazyListScope.dnsPreferenceItems(
     key = "dnsFakeIpFilter",
     title = { Text(stringResource(R.string.fakeip_filter)) },
     summary = { Text(configuration.dns.fakeIpFilter.listSummary(R.string.dont_modify)) },
-    enabled = dnsEnabled != false,
+    enabled = enabled,
     onClick = {
       onOpenEditableTextList(
         R.string.fakeip_filter,
@@ -483,7 +480,7 @@ private fun LazyListScope.dnsPreferenceItems(
     value = configuration.dns.fakeIPFilterMode,
     onValueChange = actions::updateDnsFakeIpFilterMode,
     values = ConfigurationOverride.FilterMode.entries,
-    enabled = dnsEnabled != false,
+    enabled = enabled,
     title = { Text(stringResource(R.string.fakeip_filter_mode)) },
     summary = { Text(stringResource(configuration.dns.fakeIPFilterMode.textRes)) },
     valueToText = { AnnotatedString(stringResource(it.textRes)) },
@@ -493,7 +490,7 @@ private fun LazyListScope.dnsPreferenceItems(
     value = configuration.dns.fallbackFilter.geoIp,
     onValueChange = actions::updateDnsGeoIpFallback,
     values = booleanOptions,
-    enabled = dnsEnabled != false,
+    enabled = enabled,
     title = { Text(stringResource(R.string.geoip_fallback)) },
     summary = { Text(stringResource(configuration.dns.fallbackFilter.geoIp.textRes)) },
     valueToText = { AnnotatedString(stringResource(it.textRes)) },
@@ -505,13 +502,13 @@ private fun LazyListScope.dnsPreferenceItems(
     emptyLabel = R.string.raw_cn,
     value = configuration.dns.fallbackFilter.geoIpCode,
     onValueChange = actions::updateDnsGeoIpCode,
-    enabled = dnsEnabled != false,
+    enabled = enabled,
   )
   preference(
     key = "dnsDomainFallback",
     title = { Text(stringResource(R.string.domain_fallback)) },
     summary = { Text(configuration.dns.fallbackFilter.domain.listSummary(R.string.dont_modify)) },
-    enabled = dnsEnabled != false,
+    enabled = enabled,
     onClick = {
       onOpenEditableTextList(
         R.string.domain_fallback,
@@ -524,7 +521,7 @@ private fun LazyListScope.dnsPreferenceItems(
     key = "dnsIpcidrFallback",
     title = { Text(stringResource(R.string.ipcidr_fallback)) },
     summary = { Text(configuration.dns.fallbackFilter.ipcidr.listSummary(R.string.dont_modify)) },
-    enabled = dnsEnabled != false,
+    enabled = enabled,
     onClick = {
       onOpenEditableTextList(
         R.string.ipcidr_fallback,
@@ -537,7 +534,7 @@ private fun LazyListScope.dnsPreferenceItems(
     key = "dnsNameserverPolicy",
     title = { Text(stringResource(R.string.name_server_policy)) },
     summary = { Text(configuration.dns.nameserverPolicy.summary(R.string.dont_modify)) },
-    enabled = dnsEnabled != false,
+    enabled = enabled,
     onClick = {
       onOpenEditableTextMap(
         R.string.name_server_policy,
