@@ -28,14 +28,12 @@ val Context.mainActivityAlias: ComponentName
         packageManager.queryIntentActivities(launcherIntent, resolveFlags)
       }
 
-    return activities
-      .firstNotNullOfOrNull { resolveInfo ->
-        val activityInfo = resolveInfo.activityInfo
-        if (activityInfo.targetActivity == mainActivityName) {
-          ComponentName(activityInfo.packageName, activityInfo.name)
-        } else {
-          null
-        }
+    return activities.firstNotNullOfOrNull { resolveInfo ->
+      val activityInfo = resolveInfo.activityInfo
+      if (activityInfo.targetActivity == mainActivityName) {
+        ComponentName(activityInfo.packageName, activityInfo.name)
+      } else {
+        null
       }
-      ?: error("Launcher alias targeting $mainActivityName is not declared in AndroidManifest.xml")
+    } ?: error("Launcher alias targeting $mainActivityName is not declared in AndroidManifest.xml")
   }

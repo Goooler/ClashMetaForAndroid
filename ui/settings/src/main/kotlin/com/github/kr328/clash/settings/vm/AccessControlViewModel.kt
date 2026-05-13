@@ -197,13 +197,12 @@ internal class AccessControlViewModel(app: Application) :
       val comparator = if (reverse) base.thenDescending(sort) else base.then(sort)
 
       val pm = appContext.packageManager
+      val resolveFlags = PackageManager.GET_PERMISSIONS
       val packages =
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-          pm.getInstalledPackages(
-            PackageManager.PackageInfoFlags.of(PackageManager.GET_PERMISSIONS.toLong())
-          )
+          pm.getInstalledPackages(PackageManager.PackageInfoFlags.of(resolveFlags.toLong()))
         } else {
-          pm.getInstalledPackages(PackageManager.GET_PERMISSIONS)
+          pm.getInstalledPackages(resolveFlags)
         }
 
       packages
