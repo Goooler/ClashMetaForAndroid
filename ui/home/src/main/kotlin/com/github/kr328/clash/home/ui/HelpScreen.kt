@@ -2,6 +2,7 @@ package com.github.kr328.clash.home.ui
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -18,6 +19,8 @@ import com.github.kr328.clash.glue.util.TABBY_GITHUB
 import com.github.kr328.clash.glue.util.openLink
 import com.github.kr328.clash.home.R
 import com.github.kr328.clash.ui.component.TabbyScaffold
+import com.github.kr328.clash.ui.icon.OutlineInfo
+import com.github.kr328.clash.ui.icon.TabbyIcons
 import com.github.kr328.clash.ui.theme.PreviewTabby
 import com.github.kr328.clash.ui.theme.TabbyThemeWrapper
 import me.zhanghai.compose.preference.ProvidePreferenceLocals
@@ -31,10 +34,10 @@ internal fun HelpScreen(modifier: Modifier = Modifier) {
     ProvidePreferenceLocals {
       LazyColumn(modifier = Modifier.fillMaxSize(), contentPadding = innerPadding) {
         preference(
-          key = "tips_help",
-          title = { Text(stringResource(R.string.help)) },
+          key = "tips",
+          title = {},
           summary = { Text(AnnotatedString.fromHtml(stringResource(R.string.tips_help))) },
-          enabled = false,
+          icon = { Icon(imageVector = TabbyIcons.OutlineInfo, contentDescription = null) },
         )
         preferenceCategory(
           key = "cat_document",

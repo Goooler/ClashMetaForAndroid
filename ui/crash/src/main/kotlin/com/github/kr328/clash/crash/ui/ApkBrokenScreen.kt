@@ -2,6 +2,7 @@ package com.github.kr328.clash.crash.ui
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -12,6 +13,8 @@ import com.github.kr328.clash.crash.R
 import com.github.kr328.clash.glue.util.TABBY_GITHUB
 import com.github.kr328.clash.glue.util.openLink
 import com.github.kr328.clash.ui.component.TabbyScaffold
+import com.github.kr328.clash.ui.icon.OutlineInfo
+import com.github.kr328.clash.ui.icon.TabbyIcons
 import com.github.kr328.clash.ui.theme.PreviewTabby
 import com.github.kr328.clash.ui.theme.TabbyThemeWrapper
 import me.zhanghai.compose.preference.ProvidePreferenceLocals
@@ -25,10 +28,10 @@ internal fun ApkBrokenScreen() {
     ProvidePreferenceLocals {
       LazyColumn(modifier = Modifier.fillMaxSize(), contentPadding = innerPadding) {
         preference(
-          key = "tips_application_broken",
-          title = { Text(stringResource(R.string.application_broken)) },
+          key = "tips",
+          title = {},
           summary = { Text(stringResource(R.string.application_broken_tips)) },
-          enabled = false,
+          icon = { Icon(imageVector = TabbyIcons.OutlineInfo, contentDescription = null) },
         )
         preferenceCategory(
           key = "cat_reinstall",
