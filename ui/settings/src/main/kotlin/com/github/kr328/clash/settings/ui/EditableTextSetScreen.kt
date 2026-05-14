@@ -96,10 +96,10 @@ private fun EditableTextSetScreen(
         EmptyEditorContent(Modifier.weight(1f))
       } else {
         LazyColumn(state = lazyListState, modifier = Modifier.weight(1f)) {
-          items(values, key = { it }) { item ->
-            ReorderableItem(reorderableLazyListState, key = item) { _ ->
+          items(items = values, key = { it }) { value ->
+            ReorderableItem(reorderableLazyListState, key = value) { _ ->
               ListItem(
-                headlineContent = { Text(item) },
+                headlineContent = { Text(value) },
                 leadingContent = {
                   Icon(
                     imageVector = TabbyIcons.BaselineDragHandle,
@@ -108,7 +108,7 @@ private fun EditableTextSetScreen(
                   )
                 },
                 trailingContent = {
-                  IconButton(onClick = { values.remove(item) }) {
+                  IconButton(onClick = { values.remove(value) }) {
                     Icon(
                       imageVector = TabbyIcons.OutlineDelete,
                       contentDescription = stringResource(CommonR.string.delete),
