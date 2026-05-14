@@ -131,7 +131,7 @@ internal fun MetaFeatureSettingsScreen(
             },
             onOpenEditableTextList = { title, initialValues, onApply ->
               currentEditableTextListOnApply = onApply
-              backStack.addIfNotLast(EditableTextList(title, initialValues))
+              backStack.addIfNotLast(EditableTextList(title, initialValues?.toSet()))
             },
           )
 
@@ -152,13 +152,13 @@ internal fun MetaFeatureSettingsScreen(
             )
           }
         }
-        editableTextListScreenEntry(
+        editableTextSetScreenEntry(
           onDismiss = {
             currentEditableTextListOnApply = null
             backStack.removeLastOrNull()
           },
           onApply = { newValues ->
-            currentEditableTextListOnApply?.invoke(newValues)
+            currentEditableTextListOnApply?.invoke(newValues?.toList())
             currentEditableTextListOnApply = null
             backStack.removeLastOrNull()
           },
