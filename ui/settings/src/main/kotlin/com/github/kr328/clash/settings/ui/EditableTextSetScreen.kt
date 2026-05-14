@@ -8,7 +8,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -87,11 +87,11 @@ private fun EditableTextSetScreen(
         EmptyEditorContent(Modifier.weight(1f))
       } else {
         LazyColumn(modifier = Modifier.weight(1f)) {
-          itemsIndexed(values) { index, value ->
+          items(items = values, key = { it }) { value ->
             ListItem(
               headlineContent = { Text(value) },
               trailingContent = {
-                IconButton(onClick = { values.removeAt(index) }) {
+                IconButton(onClick = { values.remove(value) }) {
                   Icon(
                     imageVector = TabbyIcons.OutlineDelete,
                     contentDescription = stringResource(CommonR.string.delete),
