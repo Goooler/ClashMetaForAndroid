@@ -71,14 +71,7 @@ private fun EditableTextListScreen(
   onDismiss: () -> Unit,
   onApply: (List<String>?) -> Unit,
 ) {
-  val nextId = remember { longArrayOf(initialValues?.size?.toLong() ?: 0L) }
-  val values =
-    remember(initialValues) {
-      initialValues
-        .orEmpty()
-        .mapIndexed { index, value -> index.toLong() to value }
-        .toMutableStateList()
-    }
+  val values = remember(initialValues) { initialValues.orEmpty().distinct().toMutableStateList() }
   var showAddDialog by remember { mutableStateOf(false) }
   val lazyListState = rememberLazyListState()
   val reorderableLazyListState =
@@ -103,10 +96,10 @@ private fun EditableTextListScreen(
         EmptyEditorContent(Modifier.weight(1f))
       } else {
         LazyColumn(state = lazyListState, modifier = Modifier.weight(1f)) {
-          items(values, key = { it.first }) { item ->
-            ReorderableItem(reorderableLazyListState, key = item.first) { _ ->
+          items(values, key = { it }) { item ->
+            ReorderableItem(reorderableLazyListState, key = item) { _ ->
               ListItem(
-                headlineContent = { Text(item.second) },
+                headlineContent = { Text(item) },
                 leadingContent = {
                   Icon(
                     imageVector = TabbyIcons.BaselineDragHandle,
@@ -135,7 +128,7 @@ private fun EditableTextListScreen(
       ) {
         TextButton(onClick = { onApply(null) }) { Text(stringResource(CommonR.string.reset)) }
         TextButton(onClick = onDismiss) { Text(stringResource(CommonR.string.cancel)) }
-        TextButton(onClick = { onApply(values.map { it.second }) }) {
+        TextButton(onClick = { onApply(values.toList()) }) {
           Text(stringResource(CommonR.string.ok))
         }
       }
@@ -147,8 +140,8 @@ private fun EditableTextListScreen(
       title = title,
       onDismiss = { showAddDialog = false },
       onConfirm = { newValue ->
-        if (newValue.isNotBlank()) {
-          values.add(nextId[0]++ to newValue)
+        if (newValue.isNotBlank() && newValue !in values) {
+          values.add(newValue)
         }
         showAddDialog = false
       },
