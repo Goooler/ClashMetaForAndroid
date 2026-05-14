@@ -19,9 +19,8 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateMapOf
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -71,9 +70,10 @@ private fun EditableTextMapScreen(
 ) {
   val values =
     remember(initialValues) {
-      mutableStateMapOf<String, String>().apply { putAll(initialValues.orEmpty()) }
+      mutableStateListOf<Pair<String, String>>().apply {
+        addAll(initialValues.orEmpty().entries.map { it.toPair() })
+      }
     }
-  val items by remember { derivedStateOf { values.entries.toList() } }
   var showAddDialog by remember { mutableStateOf(false) }
 
   TabbyScaffold(
@@ -93,12 +93,12 @@ private fun EditableTextMapScreen(
         EmptyEditorContent(Modifier.weight(1f))
       } else {
         LazyColumn(modifier = Modifier.weight(1f)) {
-          items(items = items) { (key, value) ->
+          items(items = values) { (key, value) ->
             ListItem(
               headlineContent = { Text(key) },
               supportingContent = { Text(value) },
               trailingContent = {
-                IconButton(onClick = { values.remove(key) }) {
+                IconButton(onClick = { values.removeAll { it.first == key } }) {
                   Icon(
                     imageVector = TabbyIcons.OutlineDelete,
                     contentDescription = stringResource(CommonR.string.delete),
@@ -129,7 +129,8 @@ private fun EditableTextMapScreen(
       title = title,
       onDismiss = { showAddDialog = false },
       onConfirm = { key, valueText ->
-        values[key] = valueText
+        val index = values.indexOfFirst { it.first == key }
+        if (index >= 0) values[index] = key to valueText else values.add(key to valueText)
         showAddDialog = false
       },
     )
