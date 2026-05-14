@@ -279,6 +279,7 @@ internal class ProxyViewModel(app: Application) : AndroidViewModel(app), Default
           title = title,
           subtitle = subtitle,
           delayText = if (proxy.delay in 0..Short.MAX_VALUE) proxy.delay.toString() else "",
+          selected = selected,
           background = background,
           controls = controls,
         )
@@ -290,6 +291,7 @@ internal class ProxyViewModel(app: Application) : AndroidViewModel(app), Default
       val title: String,
       val subtitle: String,
       val delayText: String,
+      val selected: Boolean,
       val background: Color,
       val controls: Color,
     )

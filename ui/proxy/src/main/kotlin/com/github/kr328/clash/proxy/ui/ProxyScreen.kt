@@ -1,6 +1,7 @@
 package com.github.kr328.clash.proxy.ui
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.basicMarquee
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -323,19 +324,21 @@ private fun ProxyItemCard(
   ) {
     Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(4.dp)) {
       Text(
+        modifier = if (item.selected) Modifier.basicMarquee() else Modifier,
         text = item.title,
         color = item.controls,
         style = MaterialTheme.typography.bodyMedium,
         fontWeight = FontWeight.Medium,
         maxLines = 1,
-        overflow = TextOverflow.Ellipsis,
+        overflow = if (item.selected) TextOverflow.Clip else TextOverflow.Ellipsis,
       )
       Text(
+        modifier = if (item.selected) Modifier.basicMarquee() else Modifier,
         text = item.subtitle,
         color = item.controls,
         style = MaterialTheme.typography.bodySmall,
         maxLines = 1,
-        overflow = TextOverflow.Ellipsis,
+        overflow = if (item.selected) TextOverflow.Clip else TextOverflow.Ellipsis,
       )
     }
 
