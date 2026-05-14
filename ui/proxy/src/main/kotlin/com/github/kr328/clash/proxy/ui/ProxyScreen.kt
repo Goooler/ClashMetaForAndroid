@@ -352,20 +352,18 @@ private fun ProxyItemCard(
       )
     }
 
-    if (item.delayText.isNotEmpty()) {
-      val badgeText = if (item.delayTesting) delayTestingPlaceholder else item.delayText
-      Text(
-        modifier =
-          Modifier.clip(CircleShape)
-            .clickable(onClick = onDelayClick)
-            .background(item.controls.copy(alpha = if (item.delayTesting) 0.33f else 0.14f))
-            .padding(horizontal = 8.dp, vertical = 2.dp),
-        text = badgeText,
-        color = item.controls,
-        style = MaterialTheme.typography.bodyMedium,
-        maxLines = 1,
-      )
-    }
+    val badgeText = if (item.delayTesting) delayTestingPlaceholder else item.delayText
+    Text(
+      modifier =
+        Modifier.clip(CircleShape)
+          .clickable(onClick = onDelayClick)
+          .background(item.controls.copy(alpha = if (item.delayTesting) 0.33f else 0.14f))
+          .padding(horizontal = 8.dp, vertical = 2.dp),
+      text = badgeText,
+      color = item.controls,
+      style = MaterialTheme.typography.bodyMedium,
+      maxLines = 1,
+    )
   }
 }
 

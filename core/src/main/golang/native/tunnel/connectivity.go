@@ -13,9 +13,10 @@ import (
 )
 
 const healthCheckTimeout = 5 * time.Second
+const defaultHealthCheckURL = "https://www.gstatic.com/generate_204"
 
-func probeURL(proxy C.Proxy) {
-	testURL := "https://www.gstatic.com/generate_204"
+func probeURL(proxy C.Proxy, proxyName string) {
+	testURL := defaultHealthCheckURL
 	for k := range proxy.ExtraDelayHistories() {
 		if len(k) > 0 {
 			testURL = k
@@ -27,7 +28,12 @@ func probeURL(proxy C.Proxy) {
 	defer cancel()
 
 	if _, _, err := proxy.URLTest(ctx, testURL, nil); err != nil && ctx.Err() == nil {
-		log.Warnln("Request health check failed", err.Error())
+		log.Warnln(
+			"Request health check for `%s` with url `%s` failed: %s",
+			proxyName,
+			testURL,
+			err.Error(),
+		)
 	}
 }
 
@@ -42,7 +48,7 @@ func HealthCheck(name string) {
 
 	g, ok := p.Adapter().(outboundgroup.ProxyGroup)
 	if !ok {
-		probeURL(p)
+		probeURL(p, name)
 
 		return
 	}
@@ -94,7 +100,7 @@ func HealthCheckProxy(groupName string, proxyName string) {
 
 	for _, proxy := range g.Proxies() {
 		if proxy.Name() == proxyName {
-			probeURL(proxy)
+			probeURL(proxy, proxyName)
 			return
 		}
 	}
