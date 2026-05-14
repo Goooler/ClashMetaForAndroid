@@ -1,6 +1,7 @@
 <resources>
 
   <string name="delay">지연 수치</string>
+  <string name="center_selected">선택 항목 가운데로 이동</string>
   <string name="delay_test">지연 수치 테스트</string>
   <string name="doubles">더블</string>
   <string name="layout">레이아웃</string>

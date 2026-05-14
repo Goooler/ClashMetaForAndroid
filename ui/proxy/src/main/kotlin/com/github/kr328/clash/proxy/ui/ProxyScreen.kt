@@ -3,6 +3,7 @@ package com.github.kr328.clash.proxy.ui
 import androidx.compose.foundation.background
 import androidx.compose.foundation.basicMarquee
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.animateScrollBy
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -14,7 +15,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.selection.selectable
@@ -61,6 +64,7 @@ import com.github.kr328.clash.proxy.vm.ProxyViewModel
 import com.github.kr328.clash.proxy.vm.ProxyViewModel.SelectedProxy
 import com.github.kr328.clash.ui.component.Spacer
 import com.github.kr328.clash.ui.component.TabbyScaffold
+import com.github.kr328.clash.ui.icon.BaselineCircleCenter
 import com.github.kr328.clash.ui.icon.BaselineFlashOn
 import com.github.kr328.clash.ui.icon.BaselineMoreVert
 import com.github.kr328.clash.ui.icon.TabbyIcons
@@ -124,6 +128,7 @@ private fun ProxyContent(
   onProxySelected: (Int, String) -> Unit,
 ) {
   var menuVisible by remember { mutableStateOf(false) }
+  var centerSelectedRequestVersion by remember { mutableStateOf(0) }
   val currentGroup = uiState.groups.getOrNull(uiState.currentPage)
   val showUrlTestAction = uiState.groupNames.isNotEmpty()
 
@@ -178,6 +183,13 @@ private fun ProxyContent(
         }
       }
 
+      IconButton(onClick = { centerSelectedRequestVersion += 1 }) {
+        Icon(
+          imageVector = TabbyIcons.BaselineCircleCenter,
+          contentDescription = stringResource(R.string.center_selected),
+        )
+      }
+
       IconButton(onClick = { menuVisible = true }) {
         Icon(
           imageVector = TabbyIcons.BaselineMoreVert,
@@ -198,6 +210,7 @@ private fun ProxyContent(
         ProxyPagerContent(
           uiState = uiState,
           selectedProxies = selectedProxies,
+          centerSelectedRequestVersion = centerSelectedRequestVersion,
           onPageChanged = onPageChanged,
           onProxySelected = onProxySelected,
         )
@@ -210,6 +223,7 @@ private fun ProxyContent(
 private fun ProxyPagerContent(
   uiState: ProxyViewModel.UiState,
   selectedProxies: List<SelectedProxy>,
+  centerSelectedRequestVersion: Int,
   onPageChanged: (Int) -> Unit,
   onProxySelected: (Int, String) -> Unit,
 ) {
@@ -245,6 +259,9 @@ private fun ProxyPagerContent(
         index = page,
         proxyLine = uiState.proxyLine,
         group = uiState.groups.getOrNull(page) ?: ProxyViewModel.UiState.ProxyGroupUiState(),
+        selectedProxyName = selectedProxies.getOrNull(page)?.name,
+        isCurrentPage = page == pagerState.currentPage,
+        centerSelectedRequestVersion = centerSelectedRequestVersion,
         selectedProxies = selectedProxies,
         onProxySelected = onProxySelected,
       )
@@ -257,17 +274,31 @@ private fun ProxyGroupPage(
   index: Int,
   proxyLine: Int,
   group: ProxyViewModel.UiState.ProxyGroupUiState,
+  selectedProxyName: String?,
+  isCurrentPage: Boolean,
+  centerSelectedRequestVersion: Int,
   selectedProxies: List<SelectedProxy>,
   onProxySelected: (Int, String) -> Unit,
 ) {
   val sources = group.sources
   val refreshVersion = group.refreshVersion
+  val gridState = rememberLazyGridState()
   val selectedControl = MaterialTheme.colorScheme.onPrimary
   val selectedBackground = MaterialTheme.colorScheme.primary
   val unselectedControl = MaterialTheme.colorScheme.onSurface
   val unselectedBackground = MaterialTheme.colorScheme.surface
 
+  LaunchedEffect(centerSelectedRequestVersion, isCurrentPage, selectedProxyName, sources) {
+    if (!isCurrentPage || centerSelectedRequestVersion == 0) return@LaunchedEffect
+
+    val selectedIndex = sources.indexOfFirst { it.proxy.name == selectedProxyName }
+    if (selectedIndex < 0) return@LaunchedEffect
+
+    gridState.animateScrollItemToCenter(selectedIndex)
+  }
+
   LazyVerticalGrid(
+    state = gridState,
     columns = GridCells.Fixed(columnsForProxyLine(proxyLine)),
     modifier = Modifier.fillMaxSize(),
     contentPadding = PaddingValues(gridContentPadding),
@@ -486,6 +517,19 @@ private fun columnsForProxyLine(proxyLine: Int): Int =
     2 -> 2
     else -> 3
   }
+
+private suspend fun LazyGridState.animateScrollItemToCenter(index: Int) {
+  animateScrollToItem(index)
+
+  val selectedItem = layoutInfo.visibleItemsInfo.firstOrNull { it.index == index } ?: return
+  val viewportCenter = (layoutInfo.viewportStartOffset + layoutInfo.viewportEndOffset) / 2
+  val itemCenter = selectedItem.offset.y + selectedItem.size.height / 2
+  val delta = itemCenter - viewportCenter
+
+  if (delta != 0) {
+    animateScrollBy(delta.toFloat())
+  }
+}
 
 @PreviewWrapper(TabbyThemeWrapper::class)
 @PreviewTabby

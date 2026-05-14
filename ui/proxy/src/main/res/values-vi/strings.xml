@@ -1,6 +1,7 @@
 <resources>
 
   <string name="delay">Độ trễ</string>
+  <string name="center_selected">Đưa mục đã chọn vào giữa</string>
   <string name="delay_test">Kiểm tra độ trễ</string>
   <string name="doubles">Hai cột</string>
   <string name="layout">Bố cục</string>

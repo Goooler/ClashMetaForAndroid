@@ -1,6 +1,7 @@
 <resources>
 
   <string name="delay">レイテンシ</string>
+  <string name="center_selected">選択項目を中央に表示</string>
   <string name="delay_test">接続テスト</string>
   <string name="doubles">ダブルカラム</string>
   <string name="layout">レイアウト</string>
