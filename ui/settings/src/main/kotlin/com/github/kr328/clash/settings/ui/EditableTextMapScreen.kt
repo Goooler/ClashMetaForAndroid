@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -37,11 +38,14 @@ import com.github.kr328.clash.common.R as CommonR
 import com.github.kr328.clash.settings.R
 import com.github.kr328.clash.ui.component.TabbyScaffold
 import com.github.kr328.clash.ui.icon.BaselineAdd
+import com.github.kr328.clash.ui.icon.BaselineDragHandle
 import com.github.kr328.clash.ui.icon.OutlineDelete
 import com.github.kr328.clash.ui.icon.TabbyIcons
 import com.github.kr328.clash.ui.theme.PreviewTabby
 import com.github.kr328.clash.ui.theme.TabbyThemeWrapper
 import kotlinx.serialization.Serializable
+import sh.calvin.reorderable.ReorderableItem
+import sh.calvin.reorderable.rememberReorderableLazyListState
 
 @Serializable
 internal data class EditableTextMap(val title: Int, val initialValues: Map<String, String>?) :
@@ -73,6 +77,11 @@ private fun EditableTextMapScreen(
       initialValues?.entries.orEmpty().map { it.toPair() }.toMutableStateList()
     }
   var showAddDialog by remember { mutableStateOf(false) }
+  val lazyListState = rememberLazyListState()
+  val reorderableLazyListState =
+    rememberReorderableLazyListState(lazyListState) { from, to ->
+      values.apply { add(to.index, removeAt(from.index)) }
+    }
 
   TabbyScaffold(
     title = stringResource(title),
@@ -90,22 +99,31 @@ private fun EditableTextMapScreen(
       if (values.isEmpty()) {
         EmptyEditorContent(Modifier.weight(1f))
       } else {
-        LazyColumn(modifier = Modifier.weight(1f)) {
+        LazyColumn(state = lazyListState, modifier = Modifier.weight(1f)) {
           items(items = values, key = { it.first }) { entry ->
             val (key, value) = entry
-            ListItem(
-              headlineContent = { Text(key) },
-              supportingContent = { Text(value) },
-              trailingContent = {
-                IconButton(onClick = { values.remove(entry) }) {
+            ReorderableItem(reorderableLazyListState, key = key) { _ ->
+              ListItem(
+                headlineContent = { Text(key) },
+                supportingContent = { Text(value) },
+                leadingContent = {
                   Icon(
-                    imageVector = TabbyIcons.OutlineDelete,
-                    contentDescription = stringResource(CommonR.string.delete),
+                    imageVector = TabbyIcons.BaselineDragHandle,
+                    contentDescription = stringResource(CommonR.string.reorder),
+                    modifier = Modifier.draggableHandle(),
                   )
-                }
-              },
-            )
-            HorizontalDivider()
+                },
+                trailingContent = {
+                  IconButton(onClick = { values.remove(entry) }) {
+                    Icon(
+                      imageVector = TabbyIcons.OutlineDelete,
+                      contentDescription = stringResource(CommonR.string.delete),
+                    )
+                  }
+                },
+              )
+              HorizontalDivider()
+            }
           }
         }
       }

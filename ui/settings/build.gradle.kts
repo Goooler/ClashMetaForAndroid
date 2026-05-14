@@ -9,6 +9,7 @@ dependencies {
   implementation(projects.ui)
 
   implementation(libs.composePreference)
+  implementation(libs.reorderable)
 
   implementation(platform(libs.koin.bom))
   implementation(libs.koin.core)

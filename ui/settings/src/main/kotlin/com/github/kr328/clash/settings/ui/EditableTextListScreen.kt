@@ -8,7 +8,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -37,11 +38,14 @@ import com.github.kr328.clash.common.R as CommonR
 import com.github.kr328.clash.settings.R
 import com.github.kr328.clash.ui.component.TabbyScaffold
 import com.github.kr328.clash.ui.icon.BaselineAdd
+import com.github.kr328.clash.ui.icon.BaselineDragHandle
 import com.github.kr328.clash.ui.icon.OutlineDelete
 import com.github.kr328.clash.ui.icon.TabbyIcons
 import com.github.kr328.clash.ui.theme.PreviewTabby
 import com.github.kr328.clash.ui.theme.TabbyThemeWrapper
 import kotlinx.serialization.Serializable
+import sh.calvin.reorderable.ReorderableItem
+import sh.calvin.reorderable.rememberReorderableLazyListState
 
 @Serializable
 internal data class EditableTextList(val title: Int, val initialValues: List<String>?) : NavKey
@@ -67,8 +71,20 @@ private fun EditableTextListScreen(
   onDismiss: () -> Unit,
   onApply: (List<String>?) -> Unit,
 ) {
-  val values = remember(initialValues) { initialValues.orEmpty().toMutableStateList() }
+  val nextId = remember { longArrayOf(initialValues?.size?.toLong() ?: 0L) }
+  val values =
+    remember(initialValues) {
+      initialValues
+        .orEmpty()
+        .mapIndexed { index, value -> index.toLong() to value }
+        .toMutableStateList()
+    }
   var showAddDialog by remember { mutableStateOf(false) }
+  val lazyListState = rememberLazyListState()
+  val reorderableLazyListState =
+    rememberReorderableLazyListState(lazyListState) { from, to ->
+      values.apply { add(to.index, removeAt(from.index)) }
+    }
 
   TabbyScaffold(
     title = stringResource(title),
@@ -86,20 +102,29 @@ private fun EditableTextListScreen(
       if (values.isEmpty()) {
         EmptyEditorContent(Modifier.weight(1f))
       } else {
-        LazyColumn(modifier = Modifier.weight(1f)) {
-          itemsIndexed(values) { index, value ->
-            ListItem(
-              headlineContent = { Text(value) },
-              trailingContent = {
-                IconButton(onClick = { values.removeAt(index) }) {
+        LazyColumn(state = lazyListState, modifier = Modifier.weight(1f)) {
+          items(values, key = { it.first }) { item ->
+            ReorderableItem(reorderableLazyListState, key = item.first) { _ ->
+              ListItem(
+                headlineContent = { Text(item.second) },
+                leadingContent = {
                   Icon(
-                    imageVector = TabbyIcons.OutlineDelete,
-                    contentDescription = stringResource(CommonR.string.delete),
+                    imageVector = TabbyIcons.BaselineDragHandle,
+                    contentDescription = stringResource(CommonR.string.reorder),
+                    modifier = Modifier.draggableHandle(),
                   )
-                }
-              },
-            )
-            HorizontalDivider()
+                },
+                trailingContent = {
+                  IconButton(onClick = { values.remove(item) }) {
+                    Icon(
+                      imageVector = TabbyIcons.OutlineDelete,
+                      contentDescription = stringResource(CommonR.string.delete),
+                    )
+                  }
+                },
+              )
+              HorizontalDivider()
+            }
           }
         }
       }
@@ -110,7 +135,7 @@ private fun EditableTextListScreen(
       ) {
         TextButton(onClick = { onApply(null) }) { Text(stringResource(CommonR.string.reset)) }
         TextButton(onClick = onDismiss) { Text(stringResource(CommonR.string.cancel)) }
-        TextButton(onClick = { onApply(values.toList()) }) {
+        TextButton(onClick = { onApply(values.map { it.second }) }) {
           Text(stringResource(CommonR.string.ok))
         }
       }
@@ -123,7 +148,7 @@ private fun EditableTextListScreen(
       onDismiss = { showAddDialog = false },
       onConfirm = { newValue ->
         if (newValue.isNotBlank()) {
-          values.add(newValue)
+          values.add(nextId[0]++ to newValue)
         }
         showAddDialog = false
       },

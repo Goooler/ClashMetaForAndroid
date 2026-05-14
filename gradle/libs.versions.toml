@@ -43,6 +43,7 @@ koin-core = { module = "io.insert-koin:koin-core" }
 koin-android = { module = "io.insert-koin:koin-android" }
 
 composePreference = "me.zhanghai.compose.preference:preference:2.2.0"
+reorderable = "sh.calvin.reorderable:reorderable:2.4.3"
 
 # Dummy to get renovate updates, the version is used in rootProject build.gradle with spotless.
 ktfmt = "com.facebook:ktfmt:0.62"
