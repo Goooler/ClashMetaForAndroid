@@ -34,8 +34,11 @@ Thank you for contributing to this project.
 Run checks before submitting a pull request:
 
 ```bash
-./gradlew spotlessCheck # for checking code style.
-./gradlew app:assembleRelease # for checking build.
+# For checking code style.
+./gradlew spotlessCheck
+
+# For checking build.
+./gradlew app:assembleRelease
 ```
 
 ### Pull request guidelines
