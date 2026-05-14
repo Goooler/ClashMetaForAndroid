@@ -20,10 +20,10 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.toMutableStateList
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
@@ -70,9 +70,7 @@ private fun EditableTextMapScreen(
 ) {
   val values =
     remember(initialValues) {
-      mutableStateListOf<Pair<String, String>>().apply {
-        addAll(initialValues.orEmpty().entries.map { it.toPair() })
-      }
+      initialValues?.entries.orEmpty().map { it.toPair() }.toMutableStateList()
     }
   var showAddDialog by remember { mutableStateOf(false) }
 
@@ -93,12 +91,13 @@ private fun EditableTextMapScreen(
         EmptyEditorContent(Modifier.weight(1f))
       } else {
         LazyColumn(modifier = Modifier.weight(1f)) {
-          items(items = values) { (key, value) ->
+          items(items = values) { entry ->
+            val (key, value) = entry
             ListItem(
               headlineContent = { Text(key) },
               supportingContent = { Text(value) },
               trailingContent = {
-                IconButton(onClick = { values.removeAll { it.first == key } }) {
+                IconButton(onClick = { values.remove(entry) }) {
                   Icon(
                     imageVector = TabbyIcons.OutlineDelete,
                     contentDescription = stringResource(CommonR.string.delete),
