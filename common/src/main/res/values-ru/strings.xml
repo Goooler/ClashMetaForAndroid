@@ -37,6 +37,7 @@
   <string name="receive_broadcasts_of_tabby">Получать уведомления от сервисов Tabby</string>
   <string name="receive_tabby_broadcasts">Получать уведомления Tabby</string>
   <string name="recently">Недавно</string>
+  <string name="reorder">Изменить порядок</string>
   <string name="reset">Сброс</string>
   <string name="rule">Правило</string>
   <string name="rule_mode">Режим правил</string>
