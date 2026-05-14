@@ -1,9 +1,11 @@
 package com.github.kr328.clash.core.model
 
 import android.os.Parcelable
+import kotlinx.parcelize.IgnoredOnParcel
 import kotlinx.parcelize.Parcelize
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.Transient
 
 @Parcelize
 @Serializable
@@ -33,6 +35,7 @@ data class ConfigurationOverride(
   @SerialName("clash-for-android") val app: App = App(),
   val sniffer: Sniffer = Sniffer(),
   @SerialName("geox-url") val geoxurl: GeoXUrl = GeoXUrl(),
+  @IgnoredOnParcel @Transient val revision: Int = 0,
 ) : Parcelable {
   @Serializable
   @Parcelize

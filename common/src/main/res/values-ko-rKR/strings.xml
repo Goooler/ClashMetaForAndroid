@@ -37,6 +37,7 @@
   <string name="receive_broadcasts_of_tabby">Tabby 서비스 브로드캐스트 수신</string>
   <string name="receive_tabby_broadcasts">Tabby 브로드캐스트 수신</string>
   <string name="recently">최근</string>
+  <string name="reorder">순서 변경</string>
   <string name="reset">재설정</string>
   <string name="rule">규칙</string>
   <string name="rule_mode">규칙</string>

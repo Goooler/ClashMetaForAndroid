@@ -37,6 +37,7 @@
   <string name="receive_broadcasts_of_tabby">Receive broadcasts of Tabby services</string>
   <string name="receive_tabby_broadcasts">Receive Tabby Broadcasts</string>
   <string name="recently">Recently</string>
+  <string name="reorder">Reorder</string>
   <string name="reset">Reset</string>
   <string name="rule">Rule</string>
   <string name="rule_mode">Rule Mode</string>

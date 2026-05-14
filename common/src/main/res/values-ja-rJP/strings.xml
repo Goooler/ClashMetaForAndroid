@@ -37,6 +37,7 @@
   <string name="receive_broadcasts_of_tabby">Tabby サービスのブロードキャストを受信</string>
   <string name="receive_tabby_broadcasts">Tabby ブロードキャストを受信</string>
   <string name="recently">直近</string>
+  <string name="reorder">並び替え</string>
   <string name="reset">リセット</string>
   <string name="rule">ルール</string>
   <string name="rule_mode">ルールモード</string>

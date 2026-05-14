@@ -37,6 +37,7 @@
   <string name="receive_broadcasts_of_tabby">接收 Tabby 服务的广播</string>
   <string name="receive_tabby_broadcasts">接收 Tabby 广播</string>
   <string name="recently">近期</string>
+  <string name="reorder">重新排序</string>
   <string name="reset">重置</string>
   <string name="rule">规则</string>
   <string name="rule_mode">规则模式</string>
