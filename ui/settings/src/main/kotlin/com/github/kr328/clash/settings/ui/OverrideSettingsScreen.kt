@@ -113,7 +113,7 @@ internal fun OverrideSettingsScreen(
             backStack.removeLastOrNull()
           },
         )
-        editableTextListScreenEntry(
+        editableTextSetScreenEntry(
           onDismiss = {
             currentEditableTextListOnApply = null
             backStack.removeLastOrNull()

@@ -152,7 +152,7 @@ internal fun MetaFeatureSettingsScreen(
             )
           }
         }
-        editableTextListScreenEntry(
+        editableTextSetScreenEntry(
           onDismiss = {
             currentEditableTextListOnApply = null
             backStack.removeLastOrNull()

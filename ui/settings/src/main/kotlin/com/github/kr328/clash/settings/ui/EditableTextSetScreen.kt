@@ -46,12 +46,12 @@ import kotlinx.serialization.Serializable
 @Serializable
 internal data class EditableTextList(val title: Int, val initialValues: Set<String>?) : NavKey
 
-internal fun EntryProviderScope<NavKey>.editableTextListScreenEntry(
+internal fun EntryProviderScope<NavKey>.editableTextSetScreenEntry(
   onDismiss: () -> Unit,
   onApply: (Set<String>?) -> Unit,
 ) {
   entry<EditableTextList> { key ->
-    EditableTextListScreen(
+    EditableTextSetScreen(
       title = key.title,
       initialValues = key.initialValues,
       onDismiss = onDismiss,
@@ -61,13 +61,13 @@ internal fun EntryProviderScope<NavKey>.editableTextListScreenEntry(
 }
 
 @Composable
-private fun EditableTextListScreen(
+private fun EditableTextSetScreen(
   @StringRes title: Int,
   initialValues: Set<String>?,
   onDismiss: () -> Unit,
   onApply: (Set<String>?) -> Unit,
 ) {
-  val setValues = remember(initialValues) { initialValues.orEmpty().toMutableStateList() }
+  val values = remember(initialValues) { initialValues.orEmpty().toMutableStateList() }
   var showAddDialog by remember { mutableStateOf(false) }
 
   TabbyScaffold(
@@ -83,15 +83,15 @@ private fun EditableTextListScreen(
     },
   ) { innerPadding ->
     Column(modifier = Modifier.fillMaxSize().padding(innerPadding)) {
-      if (setValues.isEmpty()) {
+      if (values.isEmpty()) {
         EmptyEditorContent(Modifier.weight(1f))
       } else {
         LazyColumn(modifier = Modifier.weight(1f)) {
-          itemsIndexed(setValues) { index, setValue ->
+          itemsIndexed(values) { index, value ->
             ListItem(
-              headlineContent = { Text(setValue) },
+              headlineContent = { Text(value) },
               trailingContent = {
-                IconButton(onClick = { setValues.removeAt(index) }) {
+                IconButton(onClick = { values.removeAt(index) }) {
                   Icon(
                     imageVector = TabbyIcons.OutlineDelete,
                     contentDescription = stringResource(CommonR.string.delete),
@@ -110,7 +110,7 @@ private fun EditableTextListScreen(
       ) {
         TextButton(onClick = { onApply(null) }) { Text(stringResource(CommonR.string.reset)) }
         TextButton(onClick = onDismiss) { Text(stringResource(CommonR.string.cancel)) }
-        TextButton(onClick = { onApply(setValues.toSet()) }) {
+        TextButton(onClick = { onApply(values.toSet()) }) {
           Text(stringResource(CommonR.string.ok))
         }
       }
@@ -122,8 +122,8 @@ private fun EditableTextListScreen(
       title = title,
       onDismiss = { showAddDialog = false },
       onConfirm = { newValue ->
-        if (newValue.isNotBlank() && !setValues.contains(newValue)) {
-          setValues.add(newValue)
+        if (newValue.isNotBlank() && !values.contains(newValue)) {
+          values.add(newValue)
         }
         showAddDialog = false
       },
@@ -171,8 +171,8 @@ private fun SingleTextInputDialog(
 @PreviewWrapper(TabbyThemeWrapper::class)
 @PreviewTabby
 @Composable
-private fun EditableTextListScreenPreview() {
-  EditableTextListScreen(
+private fun EditableTextSetScreenPreview() {
+  EditableTextSetScreen(
     title = R.string.sniff_http_ports,
     initialValues = setOf("80", "8080"),
     onDismiss = {},
