@@ -14,14 +14,18 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.selection.toggleable
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -35,6 +39,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -61,6 +66,7 @@ import com.github.kr328.clash.proxy.vm.ProxyViewModel
 import com.github.kr328.clash.proxy.vm.ProxyViewModel.SelectedProxy
 import com.github.kr328.clash.ui.component.Spacer
 import com.github.kr328.clash.ui.component.TabbyScaffold
+import com.github.kr328.clash.ui.icon.BaselineArrowUp
 import com.github.kr328.clash.ui.icon.BaselineFlashOn
 import com.github.kr328.clash.ui.icon.BaselineMoreVert
 import com.github.kr328.clash.ui.icon.TabbyIcons
@@ -126,6 +132,45 @@ private fun ProxyContent(
   var menuVisible by remember { mutableStateOf(false) }
   val currentGroup = uiState.groups.getOrNull(uiState.currentPage)
   val showUrlTestAction = uiState.groupNames.isNotEmpty()
+  val groupNames = uiState.groupNames
+  val pagerState =
+    if (groupNames.isNotEmpty()) {
+      val initialPage = uiState.initialPage.coerceIn(groupNames.indices)
+      rememberPagerState(initialPage = initialPage, pageCount = { groupNames.size })
+    } else {
+      null
+    }
+  val scope = rememberCoroutineScope()
+  val gridStates =
+    if (groupNames.isNotEmpty()) {
+      List(groupNames.size) { rememberLazyGridState() }
+    } else {
+      emptyList()
+    }
+
+  pagerState?.let { validPagerState ->
+    LaunchedEffect(validPagerState) {
+      snapshotFlow { validPagerState.currentPage }.collect(onPageChanged)
+    }
+
+    val currentPage = uiState.currentPage.coerceIn(groupNames.indices)
+    LaunchedEffect(currentPage) {
+      if (currentPage != validPagerState.currentPage) validPagerState.scrollToPage(currentPage)
+    }
+  }
+
+  val firstRowSize = columnsForProxyLine(uiState.proxyLine)
+  val showScrollToTopFab by
+    remember(pagerState, gridStates, firstRowSize) {
+      derivedStateOf {
+        val validPagerState = pagerState ?: return@derivedStateOf false
+        val currentGridState =
+          gridStates.getOrNull(validPagerState.currentPage) ?: return@derivedStateOf false
+
+        !currentGridState.isScrollInProgress &&
+          currentGridState.firstVisibleItemIndex >= firstRowSize
+      }
+    }
 
   if (menuVisible) {
     ModalBottomSheet(
@@ -185,6 +230,20 @@ private fun ProxyContent(
         )
       }
     },
+    floatingActionButton = {
+      if (showScrollToTopFab) {
+        FloatingActionButton(
+          onClick = {
+            val validPagerState = pagerState ?: return@FloatingActionButton
+            val currentGridState =
+              gridStates.getOrNull(validPagerState.currentPage) ?: return@FloatingActionButton
+            scope.launch { currentGridState.animateScrollToItem(0) }
+          }
+        ) {
+          Icon(imageVector = TabbyIcons.BaselineArrowUp, contentDescription = null)
+        }
+      }
+    },
   ) { innerPadding ->
     Box(modifier = Modifier.fillMaxSize().padding(innerPadding)) {
       if (uiState.groupNames.isEmpty()) {
@@ -198,7 +257,8 @@ private fun ProxyContent(
         ProxyPagerContent(
           uiState = uiState,
           selectedProxies = selectedProxies,
-          onPageChanged = onPageChanged,
+          pagerState = pagerState ?: return@Box,
+          gridStates = gridStates,
           onProxySelected = onProxySelected,
         )
       }
@@ -210,22 +270,14 @@ private fun ProxyContent(
 private fun ProxyPagerContent(
   uiState: ProxyViewModel.UiState,
   selectedProxies: List<SelectedProxy>,
-  onPageChanged: (Int) -> Unit,
+  pagerState: PagerState,
+  gridStates: List<LazyGridState>,
   onProxySelected: (Int, String) -> Unit,
 ) {
   val groupNames = uiState.groupNames
   if (groupNames.isEmpty()) return
 
-  val initialPage = uiState.initialPage.coerceIn(groupNames.indices)
-  val pagerState = rememberPagerState(initialPage = initialPage, pageCount = { groupNames.size })
   val scope = rememberCoroutineScope()
-
-  LaunchedEffect(pagerState) { snapshotFlow { pagerState.currentPage }.collect(onPageChanged) }
-
-  val currentPage = uiState.currentPage.coerceIn(groupNames.indices)
-  LaunchedEffect(currentPage) {
-    if (currentPage != pagerState.currentPage) pagerState.scrollToPage(currentPage)
-  }
 
   Column(modifier = Modifier.fillMaxSize()) {
     PrimaryScrollableTabRow(selectedTabIndex = pagerState.currentPage, edgePadding = 0.dp) {
@@ -245,6 +297,7 @@ private fun ProxyPagerContent(
         index = page,
         proxyLine = uiState.proxyLine,
         group = uiState.groups.getOrNull(page) ?: ProxyViewModel.UiState.ProxyGroupUiState(),
+        gridState = gridStates.getOrElse(page) { rememberLazyGridState() },
         selectedProxies = selectedProxies,
         onProxySelected = onProxySelected,
       )
@@ -257,6 +310,7 @@ private fun ProxyGroupPage(
   index: Int,
   proxyLine: Int,
   group: ProxyViewModel.UiState.ProxyGroupUiState,
+  gridState: LazyGridState,
   selectedProxies: List<SelectedProxy>,
   onProxySelected: (Int, String) -> Unit,
 ) {
@@ -268,6 +322,7 @@ private fun ProxyGroupPage(
   val unselectedBackground = MaterialTheme.colorScheme.surface
 
   LazyVerticalGrid(
+    state = gridState,
     columns = GridCells.Fixed(columnsForProxyLine(proxyLine)),
     modifier = Modifier.fillMaxSize(),
     contentPadding = PaddingValues(gridContentPadding),
