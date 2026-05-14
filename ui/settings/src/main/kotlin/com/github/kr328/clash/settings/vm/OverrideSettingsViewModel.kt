@@ -167,7 +167,10 @@ internal class OverrideSettingsViewModel(app: Application) :
   }
 
   override fun updateDnsNameserverPolicy(value: Map<String, String>?) = configuration.update {
-    // Force a new state emission when only map iteration order changes after reordering.
-    it.copy(dns = it.dns.copy(nameserverPolicy = value), revision = it.revision + 1)
+    it.copy(
+      dns = it.dns.copy(nameserverPolicy = value),
+      // Force a new state emission when only map iteration order changes after reordering.
+      revision = it.revision + 1,
+    )
   }
 }
