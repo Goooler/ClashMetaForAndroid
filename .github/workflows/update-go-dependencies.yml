@@ -25,13 +25,13 @@ jobs:
           go install github.com/metacubex/update-go-mod-replace@latest
       - name: Update Foss Gomod
         run: |
-          cd core/src/foss/golang/
-          update-go-mod-replace core/src/foss/golang/clash/go.mod $(pwd)/go.mod
+          cd ${{ github.workspace }}/core/src/foss/golang/
+          update-go-mod-replace ${{ github.workspace }}/core/src/foss/golang/clash/go.mod $(pwd)/go.mod
           go mod tidy
       - name: Update Main Gomod
         run: |
-          cd core/src/main/golang/
-          update-go-mod-replace core/src/foss/golang/clash/go.mod $(pwd)/go.mod
+          cd ${{ github.workspace }}/core/src/main/golang/
+          update-go-mod-replace ${{ github.workspace }}/core/src/foss/golang/clash/go.mod $(pwd)/go.mod
           go mod tidy
       - uses: actions/create-github-app-token@v3
         id: app-token
