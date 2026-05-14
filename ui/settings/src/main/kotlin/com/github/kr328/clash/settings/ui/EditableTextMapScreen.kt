@@ -91,7 +91,7 @@ private fun EditableTextMapScreen(
         EmptyEditorContent(Modifier.weight(1f))
       } else {
         LazyColumn(modifier = Modifier.weight(1f)) {
-          items(items = values) { entry ->
+          items(items = values, key = { it.first }) { entry ->
             val (key, value) = entry
             ListItem(
               headlineContent = { Text(key) },
