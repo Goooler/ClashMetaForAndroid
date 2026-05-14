@@ -19,6 +19,7 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.selection.toggleable
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CircularProgressIndicator
@@ -106,6 +107,7 @@ internal fun ProxyScreen(
     onProxySortChanged = viewModel::onProxySortChanged,
     onOverrideModeSelected = viewModel::onOverrideModeSelected,
     onProxySelected = viewModel::onProxySelected,
+    onProxyDelayTest = viewModel::onProxyDelayTest,
   )
 }
 
@@ -122,6 +124,7 @@ private fun ProxyContent(
   onProxySortChanged: (ProxySort) -> Unit,
   onOverrideModeSelected: (TunnelState.Mode?) -> Unit,
   onProxySelected: (Int, String) -> Unit,
+  onProxyDelayTest: (Int, String) -> Unit,
 ) {
   var menuVisible by remember { mutableStateOf(false) }
   val currentGroup = uiState.groups.getOrNull(uiState.currentPage)
@@ -200,6 +203,7 @@ private fun ProxyContent(
           selectedProxies = selectedProxies,
           onPageChanged = onPageChanged,
           onProxySelected = onProxySelected,
+          onProxyDelayTest = onProxyDelayTest,
         )
       }
     }
@@ -212,6 +216,7 @@ private fun ProxyPagerContent(
   selectedProxies: List<SelectedProxy>,
   onPageChanged: (Int) -> Unit,
   onProxySelected: (Int, String) -> Unit,
+  onProxyDelayTest: (Int, String) -> Unit,
 ) {
   val groupNames = uiState.groupNames
   if (groupNames.isEmpty()) return
@@ -247,6 +252,7 @@ private fun ProxyPagerContent(
         group = uiState.groups.getOrNull(page) ?: ProxyViewModel.UiState.ProxyGroupUiState(),
         selectedProxies = selectedProxies,
         onProxySelected = onProxySelected,
+        onProxyDelayTest = onProxyDelayTest,
       )
     }
   }
@@ -259,6 +265,7 @@ private fun ProxyGroupPage(
   group: ProxyViewModel.UiState.ProxyGroupUiState,
   selectedProxies: List<SelectedProxy>,
   onProxySelected: (Int, String) -> Unit,
+  onProxyDelayTest: (Int, String) -> Unit,
 ) {
   val sources = group.sources
   val refreshVersion = group.refreshVersion
@@ -285,10 +292,11 @@ private fun ProxyGroupPage(
             linkNow = linkNow,
             proxyLine = proxyLine,
             selectedControl = selectedControl,
-            selectedBackground = selectedBackground,
-            unselectedControl = unselectedControl,
-            unselectedBackground = unselectedBackground,
-          )
+              selectedBackground = selectedBackground,
+              unselectedControl = unselectedControl,
+              unselectedBackground = unselectedBackground,
+              delayTesting = source.proxy.name in group.delayTestingKeys,
+            )
         }
 
       ProxyItemCard(
@@ -296,6 +304,7 @@ private fun ProxyGroupPage(
         proxyLine = proxyLine,
         selectable = group.selectable,
         onClick = { onProxySelected(index, item.key) },
+        onDelayClick = { onProxyDelayTest(index, item.key) },
       )
     }
   }
@@ -307,6 +316,7 @@ private fun ProxyItemCard(
   proxyLine: Int,
   selectable: Boolean,
   onClick: () -> Unit,
+  onDelayClick: () -> Unit,
 ) {
   val shape = RoundedCornerShape(if (proxyLine == 1) 0.dp else 5.dp)
   val modifier =
@@ -343,8 +353,14 @@ private fun ProxyItemCard(
     }
 
     if (item.delayText.isNotEmpty()) {
+      val badgeText = if (item.delayTesting) "···" else item.delayText
       Text(
-        text = item.delayText,
+        modifier =
+          Modifier.clip(CircleShape)
+            .clickable(onClick = onDelayClick)
+            .background(item.controls.copy(alpha = if (item.delayTesting) 0.33f else 0.14f))
+            .padding(horizontal = 8.dp, vertical = 2.dp),
+        text = badgeText,
         color = item.controls,
         style = MaterialTheme.typography.bodyMedium,
         maxLines = 1,
@@ -563,5 +579,6 @@ private fun ProxyContentPreview() {
     onProxySortChanged = {},
     onOverrideModeSelected = {},
     onProxySelected = { _, _ -> },
+    onProxyDelayTest = { _, _ -> },
   )
 }

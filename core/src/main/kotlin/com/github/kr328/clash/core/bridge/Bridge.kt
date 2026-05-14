@@ -48,6 +48,11 @@ object Bridge {
   external fun nativeQueryGroup(name: String, sort: String): String?
 
   external fun nativeHealthCheck(completable: CompletableDeferred<Unit>, name: String)
+  external fun nativeHealthCheckProxy(
+    completable: CompletableDeferred<Unit>,
+    groupName: String,
+    proxyName: String,
+  )
 
   external fun nativeHealthCheckAll()
 

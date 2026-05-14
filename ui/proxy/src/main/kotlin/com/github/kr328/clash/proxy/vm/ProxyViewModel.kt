@@ -173,6 +173,29 @@ internal class ProxyViewModel(app: Application) : AndroidViewModel(app), Default
     }
   }
 
+  fun onProxyDelayTest(index: Int, name: String) {
+    val names = uiState.value.groupNames
+    if (index !in names.indices) return
+
+    updateGroupState(index) {
+      it.copy(delayTestingKeys = it.delayTestingKeys + name, refreshVersion = it.refreshVersion + 1)
+    }
+
+    viewModelScope.launch {
+      try {
+        withClash { healthCheckProxy(names[index], name) }
+        reload(index)
+      } finally {
+        updateGroupState(index) {
+          it.copy(
+            delayTestingKeys = it.delayTestingKeys - name,
+            refreshVersion = it.refreshVersion + 1,
+          )
+        }
+      }
+    }
+  }
+
   fun reloadAll() {
     val names = uiState.value.groupNames
     names.indices.forEach { idx -> reload(idx) }
@@ -207,6 +230,7 @@ internal class ProxyViewModel(app: Application) : AndroidViewModel(app), Default
           selectable = group.type == Proxy.Type.Selector,
           urlTesting = false,
           sources = sources,
+          delayTestingKeys = it.delayTestingKeys.intersect(sources.mapTo(mutableSetOf()) { s -> s.proxy.name }),
           refreshVersion = it.refreshVersion + 1,
         )
       }
@@ -239,6 +263,7 @@ internal class ProxyViewModel(app: Application) : AndroidViewModel(app), Default
       val selectable: Boolean = false,
       val urlTesting: Boolean = false,
       val sources: List<ProxyItemSource> = emptyList(),
+      val delayTestingKeys: Set<String> = emptySet(),
       val refreshVersion: Int = 0,
     )
 
@@ -251,6 +276,7 @@ internal class ProxyViewModel(app: Application) : AndroidViewModel(app), Default
         selectedBackground: Color,
         unselectedControl: Color,
         unselectedBackground: Color,
+        delayTesting: Boolean,
       ): ProxyItemUiState {
         val selected = proxy.name == parentNow?.name
         val background =
@@ -278,7 +304,8 @@ internal class ProxyViewModel(app: Application) : AndroidViewModel(app), Default
           key = proxy.name,
           title = title,
           subtitle = subtitle,
-          delayText = if (proxy.delay in 0..Short.MAX_VALUE) proxy.delay.toString() else "",
+          delayText = if (proxy.delay in 1..Short.MAX_VALUE) proxy.delay.toString() else "--",
+          delayTesting = delayTesting,
           selected = selected,
           background = background,
           controls = controls,
@@ -291,6 +318,7 @@ internal class ProxyViewModel(app: Application) : AndroidViewModel(app), Default
       val title: String,
       val subtitle: String,
       val delayText: String,
+      val delayTesting: Boolean,
       val selected: Boolean,
       val background: Color,
       val controls: Color,
