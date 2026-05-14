@@ -71,7 +71,7 @@ private fun EditableTextSetScreen(
   onDismiss: () -> Unit,
   onApply: (Set<String>?) -> Unit,
 ) {
-  val values = remember(initialValues) { initialValues.orEmpty().distinct().toMutableStateList() }
+  val values = remember(initialValues) { initialValues.orEmpty().toMutableStateList() }
   var showAddDialog by remember { mutableStateOf(false) }
   val lazyListState = rememberLazyListState()
   val reorderableLazyListState =
