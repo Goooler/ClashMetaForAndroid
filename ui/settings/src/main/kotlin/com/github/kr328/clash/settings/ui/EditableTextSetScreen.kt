@@ -1,6 +1,7 @@
 package com.github.kr328.clash.settings.ui
 
 import androidx.annotation.StringRes
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -8,7 +9,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.HorizontalDivider
@@ -73,6 +74,7 @@ private fun EditableTextSetScreen(
 ) {
   val values = remember(initialValues) { initialValues.orEmpty().toMutableStateList() }
   var showAddDialog by remember { mutableStateOf(false) }
+  var editingIndex by remember { mutableStateOf<Int?>(null) }
   val lazyListState = rememberLazyListState()
   val reorderableLazyListState =
     rememberReorderableLazyListState(lazyListState) { from, to ->
@@ -96,10 +98,15 @@ private fun EditableTextSetScreen(
         EmptyEditorContent(Modifier.weight(1f))
       } else {
         LazyColumn(state = lazyListState, modifier = Modifier.weight(1f)) {
-          items(items = values, key = { it }) { value ->
+          itemsIndexed(items = values, key = { _, value -> value }) { index, value ->
             ReorderableItem(reorderableLazyListState, key = value) { _ ->
               ListItem(
                 headlineContent = { Text(value) },
+                modifier =
+                  Modifier.clickable {
+                    editingIndex = index
+                    showAddDialog = true
+                  },
                 leadingContent = {
                   Icon(
                     imageVector = TabbyIcons.BaselineDragHandle,
@@ -138,12 +145,29 @@ private fun EditableTextSetScreen(
   if (showAddDialog) {
     SingleTextInputDialog(
       title = title,
-      onDismiss = { showAddDialog = false },
-      onConfirm = { newValue ->
-        if (newValue.isNotBlank() && !values.contains(newValue)) {
-          values.add(newValue)
-        }
+      initialText = editingIndex?.let(values::get).orEmpty(),
+      onDismiss = {
         showAddDialog = false
+        editingIndex = null
+      },
+      onConfirm = { newValue ->
+        val normalizedValue = newValue.trim()
+        val currentEditingIndex = editingIndex
+
+        if (normalizedValue.isNotBlank()) {
+          if (currentEditingIndex == null) {
+            if (!values.contains(normalizedValue)) {
+              values.add(normalizedValue)
+            }
+          } else if (
+            !values.contains(normalizedValue) || values[currentEditingIndex] == normalizedValue
+          ) {
+            values[currentEditingIndex] = normalizedValue
+          }
+        }
+
+        showAddDialog = false
+        editingIndex = null
       },
     )
   }
@@ -152,10 +176,11 @@ private fun EditableTextSetScreen(
 @Composable
 private fun SingleTextInputDialog(
   @StringRes title: Int,
+  initialText: String,
   onDismiss: () -> Unit,
   onConfirm: (String) -> Unit,
 ) {
-  var inputText by remember { mutableStateOf(initialTextFieldValue("")) }
+  var inputText by remember(initialText) { mutableStateOf(initialTextFieldValue(initialText)) }
   val focusRequester = remember { FocusRequester() }
   val keyboardController = LocalSoftwareKeyboardController.current
 

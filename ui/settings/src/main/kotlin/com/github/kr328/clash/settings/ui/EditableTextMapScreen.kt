@@ -1,6 +1,7 @@
 package com.github.kr328.clash.settings.ui
 
 import androidx.annotation.StringRes
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -8,7 +9,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.HorizontalDivider
@@ -77,6 +78,7 @@ private fun EditableTextMapScreen(
       initialValues?.entries.orEmpty().map { it.toPair() }.toMutableStateList()
     }
   var showAddDialog by remember { mutableStateOf(false) }
+  var editingIndex by remember { mutableStateOf<Int?>(null) }
   val lazyListState = rememberLazyListState()
   val reorderableLazyListState =
     rememberReorderableLazyListState(lazyListState) { from, to ->
@@ -100,12 +102,17 @@ private fun EditableTextMapScreen(
         EmptyEditorContent(Modifier.weight(1f))
       } else {
         LazyColumn(state = lazyListState, modifier = Modifier.weight(1f)) {
-          items(items = values, key = { it.first }) { entry ->
+          itemsIndexed(items = values, key = { _, entry -> entry.first }) { index, entry ->
             val (key, value) = entry
             ReorderableItem(reorderableLazyListState, key = key) { _ ->
               ListItem(
                 headlineContent = { Text(key) },
                 supportingContent = { Text(value) },
+                modifier =
+                  Modifier.clickable {
+                    editingIndex = index
+                    showAddDialog = true
+                  },
                 leadingContent = {
                   Icon(
                     imageVector = TabbyIcons.BaselineDragHandle,
@@ -142,13 +149,36 @@ private fun EditableTextMapScreen(
   }
 
   if (showAddDialog) {
+    val editingEntry = editingIndex?.let(values::get)
     MapEntryInputDialog(
       title = title,
-      onDismiss = { showAddDialog = false },
-      onConfirm = { key, valueText ->
-        val index = values.indexOfFirst { it.first == key }
-        if (index >= 0) values[index] = key to valueText else values.add(key to valueText)
+      initialKey = editingEntry?.first.orEmpty(),
+      initialValue = editingEntry?.second.orEmpty(),
+      onDismiss = {
         showAddDialog = false
+        editingIndex = null
+      },
+      onConfirm = { key, valueText ->
+        val currentEditingIndex = editingIndex
+
+        if (currentEditingIndex == null) {
+          val index = values.indexOfFirst { it.first == key }
+          if (index >= 0) values[index] = key to valueText else values.add(key to valueText)
+        } else {
+          val existingIndex = values.indexOfFirst { it.first == key }
+          when {
+            existingIndex < 0 || existingIndex == currentEditingIndex -> {
+              values[currentEditingIndex] = key to valueText
+            }
+            else -> {
+              values[existingIndex] = key to valueText
+              values.removeAt(currentEditingIndex)
+            }
+          }
+        }
+
+        showAddDialog = false
+        editingIndex = null
       },
     )
   }
@@ -157,11 +187,13 @@ private fun EditableTextMapScreen(
 @Composable
 private fun MapEntryInputDialog(
   @StringRes title: Int,
+  initialKey: String,
+  initialValue: String,
   onDismiss: () -> Unit,
   onConfirm: (String, String) -> Unit,
 ) {
-  var keyText by remember { mutableStateOf(initialTextFieldValue("")) }
-  var valueText by remember { mutableStateOf(initialTextFieldValue("")) }
+  var keyText by remember(initialKey) { mutableStateOf(initialTextFieldValue(initialKey)) }
+  var valueText by remember(initialValue) { mutableStateOf(initialTextFieldValue(initialValue)) }
   val focusRequester = remember { FocusRequester() }
   val keyboardController = LocalSoftwareKeyboardController.current
   val confirmEnabled = keyText.text.isNotBlank() && valueText.text.isNotBlank()
