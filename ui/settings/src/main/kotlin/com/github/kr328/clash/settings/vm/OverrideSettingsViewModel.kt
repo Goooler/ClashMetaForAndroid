@@ -93,7 +93,11 @@ internal class OverrideSettingsViewModel(app: Application) :
   }
 
   override fun updateHosts(value: Map<String, String>?) = configuration.update {
-    it.copy(hosts = value)
+    it.copy(
+      hosts = value,
+      // Force a new state emission when only map iteration order changes after reordering.
+      revision = it.revision + 1,
+    )
   }
 
   override fun updateDnsEnable(value: Boolean?) = configuration.update {
@@ -163,6 +167,7 @@ internal class OverrideSettingsViewModel(app: Application) :
   }
 
   override fun updateDnsNameserverPolicy(value: Map<String, String>?) = configuration.update {
-    it.copy(dns = it.dns.copy(nameserverPolicy = value))
+    // Force a new state emission when only map iteration order changes after reordering.
+    it.copy(dns = it.dns.copy(nameserverPolicy = value), revision = it.revision + 1)
   }
 }
