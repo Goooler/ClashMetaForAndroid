@@ -304,7 +304,7 @@ internal class ProxyViewModel(app: Application) : AndroidViewModel(app), Default
           key = proxy.name,
           title = title,
           subtitle = subtitle,
-          delayText = if (proxy.delay in 1..Short.MAX_VALUE) proxy.delay.toString() else "--",
+          delayText = if (proxy.delay in 0..Short.MAX_VALUE) proxy.delay.toString() else "--",
           delayTesting = delayTesting,
           selected = selected,
           background = background,

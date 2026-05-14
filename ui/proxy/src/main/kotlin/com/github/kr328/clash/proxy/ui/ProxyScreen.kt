@@ -353,7 +353,7 @@ private fun ProxyItemCard(
     }
 
     if (item.delayText.isNotEmpty()) {
-      val badgeText = if (item.delayTesting) "···" else item.delayText
+      val badgeText = if (item.delayTesting) delayTestingPlaceholder else item.delayText
       Text(
         modifier =
           Modifier.clip(CircleShape)
@@ -495,6 +495,7 @@ private fun ProxyMenuRadioRow(title: String, selected: Boolean, onClick: () -> U
 }
 
 private val gridContentPadding = 12.dp
+private const val delayTestingPlaceholder = "···"
 
 private fun columnsForProxyLine(proxyLine: Int): Int =
   when (proxyLine) {
