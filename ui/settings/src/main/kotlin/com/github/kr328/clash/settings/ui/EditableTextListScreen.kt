@@ -44,11 +44,11 @@ import com.github.kr328.clash.ui.theme.TabbyThemeWrapper
 import kotlinx.serialization.Serializable
 
 @Serializable
-internal data class EditableTextList(val title: Int, val initialValues: List<String>?) : NavKey
+internal data class EditableTextList(val title: Int, val initialValues: Set<String>?) : NavKey
 
 internal fun EntryProviderScope<NavKey>.editableTextListScreenEntry(
   onDismiss: () -> Unit,
-  onApply: (List<String>?) -> Unit,
+  onApply: (Set<String>?) -> Unit,
 ) {
   entry<EditableTextList> { key ->
     EditableTextListScreen(
@@ -63,11 +63,11 @@ internal fun EntryProviderScope<NavKey>.editableTextListScreenEntry(
 @Composable
 private fun EditableTextListScreen(
   @StringRes title: Int,
-  initialValues: List<String>?,
+  initialValues: Set<String>?,
   onDismiss: () -> Unit,
-  onApply: (List<String>?) -> Unit,
+  onApply: (Set<String>?) -> Unit,
 ) {
-  val values = remember(initialValues) { initialValues.orEmpty().toMutableStateList() }
+  val setValues = remember(initialValues) { initialValues.orEmpty().toMutableStateList() }
   var showAddDialog by remember { mutableStateOf(false) }
 
   TabbyScaffold(
@@ -83,15 +83,15 @@ private fun EditableTextListScreen(
     },
   ) { innerPadding ->
     Column(modifier = Modifier.fillMaxSize().padding(innerPadding)) {
-      if (values.isEmpty()) {
+      if (setValues.isEmpty()) {
         EmptyEditorContent(Modifier.weight(1f))
       } else {
         LazyColumn(modifier = Modifier.weight(1f)) {
-          itemsIndexed(values) { index, value ->
+          itemsIndexed(setValues) { index, setValue ->
             ListItem(
-              headlineContent = { Text(value) },
+              headlineContent = { Text(setValue) },
               trailingContent = {
-                IconButton(onClick = { values.removeAt(index) }) {
+                IconButton(onClick = { setValues.removeAt(index) }) {
                   Icon(
                     imageVector = TabbyIcons.OutlineDelete,
                     contentDescription = stringResource(CommonR.string.delete),
@@ -110,7 +110,7 @@ private fun EditableTextListScreen(
       ) {
         TextButton(onClick = { onApply(null) }) { Text(stringResource(CommonR.string.reset)) }
         TextButton(onClick = onDismiss) { Text(stringResource(CommonR.string.cancel)) }
-        TextButton(onClick = { onApply(values.toList()) }) {
+        TextButton(onClick = { onApply(setValues.toSet()) }) {
           Text(stringResource(CommonR.string.ok))
         }
       }
@@ -122,8 +122,8 @@ private fun EditableTextListScreen(
       title = title,
       onDismiss = { showAddDialog = false },
       onConfirm = { newValue ->
-        if (newValue.isNotBlank()) {
-          values.add(newValue)
+        if (newValue.isNotBlank() && !setValues.contains(newValue)) {
+          setValues.add(newValue)
         }
         showAddDialog = false
       },
@@ -174,7 +174,7 @@ private fun SingleTextInputDialog(
 private fun EditableTextListScreenPreview() {
   EditableTextListScreen(
     title = R.string.sniff_http_ports,
-    initialValues = listOf("80", "8080"),
+    initialValues = setOf("80", "8080"),
     onDismiss = {},
     onApply = {},
   )
