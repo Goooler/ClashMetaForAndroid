@@ -14,7 +14,7 @@ data class SubscriptionUserInfo(
 fun Context.fetchSubscriptionUserInfo(source: String): SubscriptionUserInfo? {
   val versionName = packageManager.getPackageInfo(packageName, 0).versionName
   val request =
-    Request.Builder().url(source).header("User-Agent", "ClashMetaForAndroid/$versionName").build()
+    Request.Builder().url(source).header("User-Agent", "Tabby/$versionName").build()
 
   OkHttpClient().newCall(request).execute().use { response ->
     if (!response.isSuccessful) return null
