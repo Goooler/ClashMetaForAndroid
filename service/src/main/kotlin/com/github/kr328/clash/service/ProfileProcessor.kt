@@ -11,11 +11,11 @@ import com.github.kr328.clash.service.data.PendingDao
 import com.github.kr328.clash.service.model.Profile
 import com.github.kr328.clash.service.remote.IFetchObserver
 import com.github.kr328.clash.service.store.ServiceStore
+import com.github.kr328.clash.service.util.fetchSubscriptionUserInfo
 import com.github.kr328.clash.service.util.importedDir
 import com.github.kr328.clash.service.util.pendingDir
 import com.github.kr328.clash.service.util.processingDir
 import com.github.kr328.clash.service.util.sendProfileChanged
-import java.math.BigDecimal
 import java.util.Locale
 import kotlin.time.Duration.Companion.milliseconds
 import kotlin.uuid.Uuid
@@ -23,8 +23,6 @@ import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
-import okhttp3.OkHttpClient
-import okhttp3.Request
 
 object ProfileProcessor {
   private val profileLock = Mutex()
@@ -72,44 +70,13 @@ object ProfileProcessor {
             )
 
             val old = ImportedDao().queryByUUID(snapshot.uuid)
-            var upload: Long = 0
-            var download: Long = 0
-            var total: Long = 0
-            var expire: Long = 0
             if (snapshot.type == Profile.Type.Url) {
-              if (snapshot.source.startsWith("https://", true)) {
-                val client = OkHttpClient()
-                val versionName =
-                  context.packageManager.getPackageInfo(context.packageName, 0).versionName
-                val request =
-                  Request.Builder()
-                    .url(snapshot.source)
-                    .header("User-Agent", "ClashMetaForAndroid/$versionName")
-                    .build()
-
-                client.newCall(request).execute().use { response ->
-                  val userinfo = response.headers["subscription-userinfo"]
-                  if (response.isSuccessful && userinfo != null) {
-                    val flags = userinfo.split(";")
-                    for (flag in flags) {
-                      val info = flag.split("=")
-                      when {
-                        info[0].contains("upload") && info[1].isNotEmpty() ->
-                          upload = BigDecimal(info[1].split('.').first()).longValueExact()
-
-                        info[0].contains("download") && info[1].isNotEmpty() ->
-                          download = BigDecimal(info[1].split('.').first()).longValueExact()
-
-                        info[0].contains("total") && info[1].isNotEmpty() ->
-                          total = BigDecimal(info[1].split('.').first()).longValueExact()
-
-                        info[0].contains("expire") && info[1].isNotEmpty() ->
-                          expire = (info[1].toDouble() * 1000).toLong()
-                      }
-                    }
-                  }
+              val userInfo =
+                if (snapshot.source.startsWith("https://", true)) {
+                  context.fetchSubscriptionUserInfo(snapshot.source)
+                } else {
+                  null
                 }
-              }
               val new =
                 Imported(
                   snapshot.uuid,
@@ -117,10 +84,10 @@ object ProfileProcessor {
                   snapshot.type,
                   snapshot.source,
                   snapshot.interval,
-                  upload,
-                  download,
-                  total,
-                  expire,
+                  userInfo?.upload ?: 0,
+                  userInfo?.download ?: 0,
+                  userInfo?.total ?: 0,
+                  userInfo?.expire ?: 0,
                   old?.createdAt ?: System.currentTimeMillis(),
                 )
               if (old != null) {
@@ -142,10 +109,10 @@ object ProfileProcessor {
                   snapshot.type,
                   snapshot.source,
                   snapshot.interval,
-                  upload,
-                  download,
-                  total,
-                  expire,
+                  0,
+                  0,
+                  0,
+                  0,
                   old?.createdAt ?: System.currentTimeMillis(),
                 )
               if (old != null) {
