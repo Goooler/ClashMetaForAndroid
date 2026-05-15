@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - trunk
+    paths:
+      - .github/workflows/update-go-dependencies.yml
   schedule:
     - cron: '0 */12 * * *'
   workflow_dispatch:
