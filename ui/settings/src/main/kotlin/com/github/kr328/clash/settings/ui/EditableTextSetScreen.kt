@@ -1,6 +1,7 @@
 package com.github.kr328.clash.settings.ui
 
 import androidx.annotation.StringRes
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -73,6 +74,7 @@ private fun EditableTextSetScreen(
 ) {
   val values = remember(initialValues) { initialValues.orEmpty().toMutableStateList() }
   var showAddDialog by remember { mutableStateOf(false) }
+  var editingValue by remember { mutableStateOf<String?>(null) }
   val lazyListState = rememberLazyListState()
   val reorderableLazyListState =
     rememberReorderableLazyListState(lazyListState) { from, to ->
@@ -100,6 +102,11 @@ private fun EditableTextSetScreen(
             ReorderableItem(reorderableLazyListState, key = value) { _ ->
               ListItem(
                 headlineContent = { Text(value) },
+                modifier =
+                  Modifier.clickable {
+                    editingValue = value
+                    showAddDialog = true
+                  },
                 leadingContent = {
                   Icon(
                     imageVector = TabbyIcons.BaselineDragHandle,
@@ -138,12 +145,27 @@ private fun EditableTextSetScreen(
   if (showAddDialog) {
     SingleTextInputDialog(
       title = title,
-      onDismiss = { showAddDialog = false },
-      onConfirm = { newValue ->
-        if (newValue.isNotBlank() && !values.contains(newValue)) {
-          values.add(newValue)
-        }
+      initialText = editingValue.orEmpty(),
+      onDismiss = {
         showAddDialog = false
+        editingValue = null
+      },
+      onConfirm = { newValue ->
+        val normalizedValue = newValue.trim()
+
+        if (normalizedValue.isNotBlank()) {
+          if (editingValue == null) {
+            if (!values.contains(normalizedValue)) {
+              values.add(normalizedValue)
+            }
+          } else if (!values.contains(normalizedValue) || editingValue == normalizedValue) {
+            val idx = values.indexOf(editingValue)
+            if (idx >= 0) values[idx] = normalizedValue
+          }
+        }
+
+        showAddDialog = false
+        editingValue = null
       },
     )
   }
@@ -152,10 +174,11 @@ private fun EditableTextSetScreen(
 @Composable
 private fun SingleTextInputDialog(
   @StringRes title: Int,
+  initialText: String,
   onDismiss: () -> Unit,
   onConfirm: (String) -> Unit,
 ) {
-  var inputText by remember { mutableStateOf(initialTextFieldValue("")) }
+  var inputText by remember(initialText) { mutableStateOf(initialTextFieldValue(initialText)) }
   val focusRequester = remember { FocusRequester() }
   val keyboardController = LocalSoftwareKeyboardController.current
 
