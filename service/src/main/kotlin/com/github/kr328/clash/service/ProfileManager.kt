@@ -12,19 +12,17 @@ import com.github.kr328.clash.service.remote.IFetchObserver
 import com.github.kr328.clash.service.remote.IProfileManager
 import com.github.kr328.clash.service.store.ServiceStore
 import com.github.kr328.clash.service.util.directoryLastModified
+import com.github.kr328.clash.service.util.fetchSubscriptionUserInfo
 import com.github.kr328.clash.service.util.generateProfileUUID
 import com.github.kr328.clash.service.util.importedDir
 import com.github.kr328.clash.service.util.pendingDir
 import com.github.kr328.clash.service.util.sendProfileChanged
 import java.io.FileNotFoundException
-import java.math.BigDecimal
 import kotlin.uuid.Uuid
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import okhttp3.OkHttpClient
-import okhttp3.Request
 
 class ProfileManager(private val context: Context) :
   IProfileManager, CoroutineScope by CoroutineScope(Dispatchers.IO) {
@@ -141,69 +139,26 @@ class ProfileManager(private val context: Context) :
   }
 
   suspend fun updateFlow(old: Imported) {
-    val client = OkHttpClient()
     try {
-      val versionName = context.packageManager.getPackageInfo(context.packageName, 0).versionName
-      val request =
-        Request.Builder()
-          .url(old.source)
-          .header("User-Agent", "ClashMetaForAndroid/$versionName")
-          .build()
+      val userInfo = context.fetchSubscriptionUserInfo(old.source) ?: return
+      val new =
+        Imported(
+          old.uuid,
+          old.name,
+          old.type,
+          old.source,
+          old.interval,
+          userInfo.upload,
+          userInfo.download,
+          userInfo.total,
+          userInfo.expire,
+          old.createdAt,
+        )
 
-      client.newCall(request).execute().use { response ->
-        if (!response.isSuccessful || response.headers["subscription-userinfo"] == null) return
+      ImportedDao().update(new)
 
-        var upload: Long = 0
-        var download: Long = 0
-        var total: Long = 0
-        var expire: Long = 0
-
-        val userinfo = response.headers["subscription-userinfo"]
-        @Suppress("KotlinConstantConditions")
-        if (response.isSuccessful && userinfo != null) {
-
-          val flags = userinfo.split(";")
-          for (flag in flags) {
-            val info = flag.split("=")
-            when {
-              info[0].contains("upload") && info[1].isNotEmpty() ->
-                upload = BigDecimal(info[1].split('.').first()).longValueExact()
-
-              info[0].contains("download") && info[1].isNotEmpty() ->
-                download = BigDecimal(info[1].split('.').first()).longValueExact()
-
-              info[0].contains("total") && info[1].isNotEmpty() ->
-                total = BigDecimal(info[1].split('.').first()).longValueExact()
-
-              info[0].contains("expire") && info[1].isNotEmpty() -> {
-                if (info[1].isNotEmpty()) {
-                  expire = (info[1].toDouble() * 1000).toLong()
-                }
-              }
-            }
-          }
-        }
-
-        val new =
-          Imported(
-            old.uuid,
-            old.name,
-            old.type,
-            old.source,
-            old.interval,
-            upload,
-            download,
-            total,
-            expire,
-            old.createdAt,
-          )
-
-        ImportedDao().update(new)
-
-        PendingDao().remove(new.uuid)
-        context.sendProfileChanged(new.uuid)
-        // println(response.body!!.string())
-      }
+      PendingDao().remove(new.uuid)
+      context.sendProfileChanged(new.uuid)
     } catch (e: Exception) {
       Log.e("Update profile flow failed: ${e.message}", e)
     }
