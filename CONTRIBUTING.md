@@ -58,7 +58,8 @@ app → ui/*
 ## Before You Start
 
 - Search existing issues and pull requests before opening a new one.
-- For bug reports, include steps to reproduce, expected behavior, and logs/screenshots when possible.
+- For bug reports, include steps to reproduce, expected behavior, and logs/screenshots when
+  possible.
 - For feature requests, explain the use case and scope clearly.
 
 ## Development Setup
@@ -71,11 +72,11 @@ app → ui/*
    git submodule update --init --recursive
    ```
 3. Install required tools:
-   - JDK 21
-   - Android SDK (set `sdk.dir` in `local.properties`)
-   - NDK `29.0.14206865` (installed automatically by AGP)
-   - CMake 4.x
-   - Go 1.26+
+  - JDK 21
+  - Android SDK (set `sdk.dir` in `local.properties`)
+  - NDK `29.0.14206865` (installed automatically by AGP)
+  - CMake 4.x
+  - Go 1.26+
 4. Create `local.properties` in the project root:
    ```properties
    sdk.dir=/path/to/android-sdk
@@ -86,16 +87,13 @@ app → ui/*
 ## Build Commands
 
 ```bash
-# Check code style (required before every PR)
-./gradlew spotlessCheck
-
-# Auto-fix style violations
+# Check and fix code style (required before every commit)
 ./gradlew spotlessApply
 
-# Build a debug APK (skips geo file download by default if present)
+# Build a debug APK (required before every commit)
 ./gradlew app:assembleDebug
 
-# Build a release APK (full validation; requires signing config)
+# Build a release APK (don't have to run this in general developments)
 ./gradlew app:assembleRelease
 
 # Run all checks
@@ -183,9 +181,8 @@ A nightly pre-release is published automatically on pushes to `trunk`.
 - Branch from `trunk`.
 - Keep changes focused and small.
 - Include a clear description of what changed and why.
-- Run `./gradlew spotlessCheck` and `./gradlew app:assembleRelease` locally
+- Run `./gradlew spotlessApply` and `./gradlew app:assembleDebug` locally
   before opening a PR.
 - Link related issues when applicable.
 - Update docs when behavior or developer workflow changes.
-- Do **not** commit `local.properties`, `signing.properties`, or
-  `release.keystore`.
+- Do **not** commit `local.properties`, `signing.properties`, or `release.keystore`.
