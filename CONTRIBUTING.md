@@ -72,7 +72,7 @@ app → ui/*
    git submodule update --init --recursive
    ```
 3. Install required tools:
-   - JDK 21
+   - JDK 21 or above
    - Android SDK (set `sdk.dir` in `local.properties`)
    - NDK `29.0.14206865` (installed automatically by AGP)
    - CMake 4.x
@@ -155,25 +155,23 @@ This is enforced automatically in the root `build.gradle.kts` via
 
 ## Signing
 
-- Debug builds use the default debug keystore.
-- Release builds read from `signing.properties` (not committed). Create it
-  locally if you need signed release APKs:
-  ```properties
-  keystore.password=<password>
-  key.alias=<alias>
-  key.password=<key-password>
-  ```
+- The repository ships `app/release.keystore` with its credentials already
+  configured in `app/build.gradle.kts`.
+- **Both debug and release builds** are signed automatically with this keystore;
+  no extra files or manual configuration are required.
+- Do **not** replace or remove `app/release.keystore`, and do not commit any
+  personal keystores or override signing credentials.
 
 ## CI / Automated Checks
 
 GitHub Actions runs on every push to `trunk` and on every pull request:
 
-| Job            | Command                         | Description                                                |
-|----------------|---------------------------------|------------------------------------------------------------|
-| `check-style`  | `./gradlew spotlessCheck`       | Fails if formatting issues exist                           |
-| `lint`         | `./gradlew lintDebug`           | Runs Android lint checks for the debug variant             |
-| `build`        | `./gradlew app:assembleRelease` | Full release build including Go cross-compilation          |
-| `final-status` | —                               | Required branch-protection status combining all CI checks  |
+| Job            | Command                         | Description                                               |
+|----------------|---------------------------------|-----------------------------------------------------------|
+| `check-style`  | `./gradlew spotlessCheck`       | Fails if formatting issues exist                          |
+| `lint`         | `./gradlew lintDebug`           | Runs Android lint checks for the debug variant            |
+| `build`        | `./gradlew app:assembleRelease` | Full release build including Go cross-compilation         |
+| `final-status` | —                               | Required branch-protection status combining all CI checks |
 
 A nightly pre-release is published automatically on pushes to `trunk`.
 
@@ -186,5 +184,3 @@ A nightly pre-release is published automatically on pushes to `trunk`.
   before opening a PR.
 - Link related issues when applicable.
 - Update docs when behavior or developer workflow changes.
-- Do **not** commit `local.properties` or `signing.properties`, and do not add
-  personal/local signing keys or extra keystore files to the repository.
