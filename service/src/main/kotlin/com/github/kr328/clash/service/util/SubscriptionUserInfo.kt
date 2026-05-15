@@ -1,7 +1,6 @@
 package com.github.kr328.clash.service.util
 
 import android.content.Context
-import java.math.BigDecimal
 import okhttp3.OkHttpClient
 import okhttp3.Request
 
@@ -19,9 +18,7 @@ fun Context.fetchSubscriptionUserInfo(source: String): SubscriptionUserInfo? {
 
   OkHttpClient().newCall(request).execute().use { response ->
     if (!response.isSuccessful) return null
-
     val userinfo = response.headers["subscription-userinfo"] ?: return null
-
     return parseSubscriptionUserInfo(userinfo)
   }
 }
@@ -34,19 +31,18 @@ private fun parseSubscriptionUserInfo(userinfo: String): SubscriptionUserInfo {
 
   val flags = userinfo.split(";")
   for (flag in flags) {
-    val info = flag.split("=")
+    val (key, value) = flag.split("=")
     when {
-      info[0].contains("upload") && info[1].isNotEmpty() ->
-        upload = BigDecimal(info[1].split('.').first()).longValueExact()
+      key.contains("upload") && value.isNotEmpty() ->
+        upload = value.split('.').first().toBigDecimal().longValueExact()
 
-      info[0].contains("download") && info[1].isNotEmpty() ->
-        download = BigDecimal(info[1].split('.').first()).longValueExact()
+      key.contains("download") && value.isNotEmpty() ->
+        download = value.split('.').first().toBigDecimal().longValueExact()
 
-      info[0].contains("total") && info[1].isNotEmpty() ->
-        total = BigDecimal(info[1].split('.').first()).longValueExact()
+      key.contains("total") && value.isNotEmpty() ->
+        total = value.split('.').first().toBigDecimal().longValueExact()
 
-      info[0].contains("expire") && info[1].isNotEmpty() ->
-        expire = (info[1].toDouble() * 1000).toLong()
+      key.contains("expire") && value.isNotEmpty() -> expire = (value.toDouble() * 1000L).toLong()
     }
   }
 
