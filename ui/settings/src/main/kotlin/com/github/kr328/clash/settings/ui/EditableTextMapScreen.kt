@@ -22,7 +22,6 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -79,7 +78,7 @@ private fun EditableTextMapScreen(
       initialValues?.entries.orEmpty().map { it.toPair() }.toMutableStateList()
     }
   var showAddDialog by remember { mutableStateOf(false) }
-  var editingIndex by remember { mutableIntStateOf(-1) }
+  var editingIndex by remember { mutableStateOf<Int?>(null) }
   val lazyListState = rememberLazyListState()
   val reorderableLazyListState =
     rememberReorderableLazyListState(lazyListState) { from, to ->
@@ -157,7 +156,7 @@ private fun EditableTextMapScreen(
       initialValue = editingEntry?.second.orEmpty(),
       onDismiss = {
         showAddDialog = false
-        editingIndex = -1
+        editingIndex = null
       },
       onConfirm = { key, valueText ->
         val currentEditingIndex = editingIndex
@@ -179,7 +178,7 @@ private fun EditableTextMapScreen(
         }
 
         showAddDialog = false
-        editingIndex = -1
+        editingIndex = null
       },
     )
   }
