@@ -23,7 +23,7 @@ Tabby/
 ├── service/      # Background VPN service, Room database, IPC via kaidl, OkHttp profile fetching
 ├── common/       # Shared constants, store providers, and utility extensions; includes Android-specific helpers
 ├── glue/         # Dependency-injection wiring via Koin; exposes api() of core, service, common
-└── ui/           # Compose screens (multi-module)
+└── ui/           # Shared UI components, theme, icons (also a library module)
     ├── crash/    # Crash reporting screen
     ├── home/     # Dashboard / tunnel toggle
     ├── log/      # Real-time logcat viewer
@@ -53,7 +53,7 @@ app → ui/*
 | Network    | OkHttp 5                                                                 |
 | Core proxy | Mihomo (Go submodule via golang-gradle-plugin)                           |
 | Code style | ktfmt (Google style) via Spotless                                        |
-| Build      | Gradle 8+ with Kotlin DSL, Version Catalog (`gradle/libs.versions.toml`) |
+| Build      | Gradle 9+ with Kotlin DSL, Version Catalog (`gradle/libs.versions.toml`) |
 
 ## Before You Start
 
