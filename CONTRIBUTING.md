@@ -2,6 +2,9 @@
 
 Thank you for contributing to this project.
 
+> **AI agents**: See [AGENTS.md](AGENTS.md) for guidance on working in this
+> repository with automated coding tools.
+
 ### Before you start
 
 - Search existing issues and pull requests before opening a new one.
