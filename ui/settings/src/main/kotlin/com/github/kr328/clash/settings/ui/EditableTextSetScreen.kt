@@ -9,7 +9,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.HorizontalDivider
@@ -74,7 +74,7 @@ private fun EditableTextSetScreen(
 ) {
   val values = remember(initialValues) { initialValues.orEmpty().toMutableStateList() }
   var showAddDialog by remember { mutableStateOf(false) }
-  var editingIndex by remember { mutableStateOf<Int?>(null) }
+  var editingValue by remember { mutableStateOf<String?>(null) }
   val lazyListState = rememberLazyListState()
   val reorderableLazyListState =
     rememberReorderableLazyListState(lazyListState) { from, to ->
@@ -98,13 +98,13 @@ private fun EditableTextSetScreen(
         EmptyEditorContent(Modifier.weight(1f))
       } else {
         LazyColumn(state = lazyListState, modifier = Modifier.weight(1f)) {
-          itemsIndexed(items = values, key = { _, value -> value }) { index, value ->
+          items(items = values, key = { it }) { value ->
             ReorderableItem(reorderableLazyListState, key = value) { _ ->
               ListItem(
                 headlineContent = { Text(value) },
                 modifier =
                   Modifier.clickable {
-                    editingIndex = index
+                    editingValue = value
                     showAddDialog = true
                   },
                 leadingContent = {
@@ -145,29 +145,27 @@ private fun EditableTextSetScreen(
   if (showAddDialog) {
     SingleTextInputDialog(
       title = title,
-      initialText = editingIndex?.let(values::get).orEmpty(),
+      initialText = editingValue.orEmpty(),
       onDismiss = {
         showAddDialog = false
-        editingIndex = null
+        editingValue = null
       },
       onConfirm = { newValue ->
         val normalizedValue = newValue.trim()
-        val currentEditingIndex = editingIndex
 
         if (normalizedValue.isNotBlank()) {
-          if (currentEditingIndex == null) {
+          if (editingValue == null) {
             if (!values.contains(normalizedValue)) {
               values.add(normalizedValue)
             }
-          } else if (
-            !values.contains(normalizedValue) || values[currentEditingIndex] == normalizedValue
-          ) {
-            values[currentEditingIndex] = normalizedValue
+          } else if (!values.contains(normalizedValue) || editingValue == normalizedValue) {
+            val idx = values.indexOf(editingValue)
+            if (idx >= 0) values[idx] = normalizedValue
           }
         }
 
         showAddDialog = false
-        editingIndex = null
+        editingValue = null
       },
     )
   }

@@ -9,7 +9,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.HorizontalDivider
@@ -78,7 +78,7 @@ private fun EditableTextMapScreen(
       initialValues?.entries.orEmpty().map { it.toPair() }.toMutableStateList()
     }
   var showAddDialog by remember { mutableStateOf(false) }
-  var editingIndex by remember { mutableStateOf<Int?>(null) }
+  var editingKey by remember { mutableStateOf<String?>(null) }
   val lazyListState = rememberLazyListState()
   val reorderableLazyListState =
     rememberReorderableLazyListState(lazyListState) { from, to ->
@@ -102,7 +102,7 @@ private fun EditableTextMapScreen(
         EmptyEditorContent(Modifier.weight(1f))
       } else {
         LazyColumn(state = lazyListState, modifier = Modifier.weight(1f)) {
-          itemsIndexed(items = values, key = { _, entry -> entry.first }) { index, entry ->
+          items(items = values, key = { it.first }) { entry ->
             val (key, value) = entry
             ReorderableItem(reorderableLazyListState, key = key) { _ ->
               ListItem(
@@ -110,7 +110,7 @@ private fun EditableTextMapScreen(
                 supportingContent = { Text(value) },
                 modifier =
                   Modifier.clickable {
-                    editingIndex = index
+                    editingKey = key
                     showAddDialog = true
                   },
                 leadingContent = {
@@ -149,36 +149,35 @@ private fun EditableTextMapScreen(
   }
 
   if (showAddDialog) {
-    val editingEntry = editingIndex?.let(values::get)
+    val editingEntry = editingKey?.let { k -> values.firstOrNull { it.first == k } }
     MapEntryInputDialog(
       title = title,
       initialKey = editingEntry?.first.orEmpty(),
       initialValue = editingEntry?.second.orEmpty(),
       onDismiss = {
         showAddDialog = false
-        editingIndex = null
+        editingKey = null
       },
       onConfirm = { key, valueText ->
-        val currentEditingIndex = editingIndex
-
-        if (currentEditingIndex == null) {
+        if (editingKey == null) {
           val index = values.indexOfFirst { it.first == key }
           if (index >= 0) values[index] = key to valueText else values.add(key to valueText)
         } else {
+          val currentIdx = values.indexOfFirst { it.first == editingKey }
           val existingIndex = values.indexOfFirst { it.first == key }
           when {
-            existingIndex < 0 || existingIndex == currentEditingIndex -> {
-              values[currentEditingIndex] = key to valueText
+            existingIndex < 0 || existingIndex == currentIdx -> {
+              if (currentIdx >= 0) values[currentIdx] = key to valueText
             }
             else -> {
               values[existingIndex] = key to valueText
-              values.removeAt(currentEditingIndex)
+              if (currentIdx >= 0) values.removeAt(currentIdx)
             }
           }
         }
 
         showAddDialog = false
-        editingIndex = null
+        editingKey = null
       },
     )
   }
