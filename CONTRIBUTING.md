@@ -21,7 +21,7 @@ Tabby/
 ├── core/         # Mihomo bridge: Go/JNI bindings, data models, C++ CMake layer
 │                 #   └── src/foss/golang/clash/  (git submodule → MetaCubeX/mihomo)
 ├── service/      # Background VPN service, Room database, IPC via kaidl, OkHttp profile fetching
-├── common/       # Shared constants, store providers, utility extensions (no Android framework dependencies)
+├── common/       # Shared constants, store providers, and utility extensions; includes Android-specific helpers
 ├── glue/         # Dependency-injection wiring via Koin; exposes api() of core, service, common
 └── ui/           # Compose screens (multi-module)
     ├── crash/    # Crash reporting screen
@@ -72,11 +72,11 @@ app → ui/*
    git submodule update --init --recursive
    ```
 3. Install required tools:
-  - JDK 21
-  - Android SDK (set `sdk.dir` in `local.properties`)
-  - NDK `29.0.14206865` (installed automatically by AGP)
-  - CMake 4.x
-  - Go 1.26+
+   - JDK 21
+   - Android SDK (set `sdk.dir` in `local.properties`)
+   - NDK `29.0.14206865` (installed automatically by AGP)
+   - CMake 4.x
+   - Go 1.26+
 4. Create `local.properties` in the project root:
    ```properties
    sdk.dir=/path/to/android-sdk
@@ -141,9 +141,9 @@ This is enforced automatically in the root `build.gradle.kts` via
 
 ## Dependency Injection (Koin)
 
-- All DI modules are defined in the `glue` module.
-- `app/AppModule.kt` provides app-level bindings and is started in
-  `MainApplication`.
+- The current Koin module definition lives in `app/AppModule.kt`.
+- `MainApplication` starts Koin with `appModule`, so add or update DI
+  bindings there unless the application startup is changed.
 - UI modules should consume injected dependencies via `koinInject()` /
   `getKoin()` in Compose; avoid constructor injection in `Activity`.
 
@@ -168,11 +168,12 @@ This is enforced automatically in the root `build.gradle.kts` via
 
 GitHub Actions runs on every push to `trunk` and on every pull request:
 
-| Job            | Command                         | Description                                           |
-|----------------|---------------------------------|-------------------------------------------------------|
-| `check-style`  | `./gradlew spotlessCheck`       | Fails if formatting issues exist                      |
-| `build`        | `./gradlew app:assembleRelease` | Full release build including Go cross-compilation     |
-| `final-status` | —                               | Required branch-protection status combining both jobs |
+| Job            | Command                         | Description                                                |
+|----------------|---------------------------------|------------------------------------------------------------|
+| `check-style`  | `./gradlew spotlessCheck`       | Fails if formatting issues exist                           |
+| `lint`         | `./gradlew lintDebug`           | Runs Android lint checks for the debug variant             |
+| `build`        | `./gradlew app:assembleRelease` | Full release build including Go cross-compilation          |
+| `final-status` | —                               | Required branch-protection status combining all CI checks  |
 
 A nightly pre-release is published automatically on pushes to `trunk`.
 
@@ -185,4 +186,5 @@ A nightly pre-release is published automatically on pushes to `trunk`.
   before opening a PR.
 - Link related issues when applicable.
 - Update docs when behavior or developer workflow changes.
-- Do **not** commit `local.properties`, `signing.properties`, or `release.keystore`.
+- Do **not** commit `local.properties` or `signing.properties`, and do not add
+  personal/local signing keys or extra keystore files to the repository.
