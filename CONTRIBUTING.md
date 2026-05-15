@@ -2,8 +2,8 @@
 
 Thank you for contributing to this project.
 
-> **AI agents**: See [AGENTS.md](AGENTS.md) for guidance on working in this
-> repository with automated coding tools.
+> **AI agents**: See [AGENTS.md](https://github.com/Goooler/Tabby/blob/trunk/AGENTS.md)
+> for guidance on working in this repository with automated coding tools.
 
 ### Before you start
 
