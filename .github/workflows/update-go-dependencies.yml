@@ -59,4 +59,4 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
         run: |
-          gh pr merge ${{ steps.create-pull-request.outputs.pull-request-number }} --auto
+          gh pr merge ${{ steps.create-pull-request.outputs.pull-request-number }} --squash --auto
