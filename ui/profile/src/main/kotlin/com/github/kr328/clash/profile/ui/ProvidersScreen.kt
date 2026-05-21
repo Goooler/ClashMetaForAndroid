@@ -26,7 +26,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.PreviewWrapper
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.github.kr328.clash.common.R as CommonR
@@ -43,7 +42,7 @@ import com.github.kr328.clash.ui.icon.BaselineSync
 import com.github.kr328.clash.ui.icon.TabbyIcons
 import com.github.kr328.clash.ui.lifecycle.viewModelWithLifecycle
 import com.github.kr328.clash.ui.theme.PreviewTabby
-import com.github.kr328.clash.ui.theme.TabbyThemeWrapper
+import com.github.kr328.clash.ui.theme.TabbyTheme
 import com.github.kr328.clash.ui.theme.tabbyDimens
 
 @Composable
@@ -161,10 +160,9 @@ private fun ProviderItem(state: ProviderItemState, currentTime: Long, onUpdate: 
   }
 }
 
-@PreviewWrapper(TabbyThemeWrapper::class)
 @PreviewTabby
 @Composable
-private fun ProvidersContentPreview() {
+private fun ProvidersContentPreview() = TabbyTheme {
   ProvidersContent(
     snackbarHostState = SnackbarHostState(),
     providers =

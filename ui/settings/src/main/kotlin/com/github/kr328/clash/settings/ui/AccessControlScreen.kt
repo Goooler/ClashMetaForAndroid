@@ -43,7 +43,6 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.PreviewWrapper
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.graphics.drawable.toDrawable
@@ -59,7 +58,7 @@ import com.github.kr328.clash.ui.icon.BaselineSearch
 import com.github.kr328.clash.ui.icon.TabbyIcons
 import com.github.kr328.clash.ui.lifecycle.viewModelWithLifecycle
 import com.github.kr328.clash.ui.theme.PreviewTabby
-import com.github.kr328.clash.ui.theme.TabbyThemeWrapper
+import com.github.kr328.clash.ui.theme.TabbyTheme
 import com.github.kr328.clash.ui.theme.tabbyDimens
 import kotlin.time.Duration.Companion.milliseconds
 import kotlinx.coroutines.Dispatchers
@@ -419,10 +418,9 @@ interface AccessControlActions {
   fun updateShowSystemApps(show: Boolean) = Unit
 }
 
-@PreviewWrapper(TabbyThemeWrapper::class)
 @PreviewTabby
 @Composable
-private fun AccessControlContentPreview() {
+private fun AccessControlContentPreview() = TabbyTheme {
   AccessControlContent(
     apps =
       listOf(
@@ -449,10 +447,9 @@ private fun AccessControlContentPreview() {
   )
 }
 
-@PreviewWrapper(TabbyThemeWrapper::class)
 @PreviewTabby
 @Composable
-private fun AccessControlMenuSheetPreview() {
+private fun AccessControlMenuSheetPreview() = TabbyTheme {
   Surface {
     Column {
       AccessControlMenuContent(
@@ -472,10 +469,9 @@ private fun AccessControlMenuSheetPreview() {
   }
 }
 
-@PreviewWrapper(TabbyThemeWrapper::class)
 @PreviewTabby
 @Composable
-private fun AccessControlSearchSheetPreview() {
+private fun AccessControlSearchSheetPreview() = TabbyTheme {
   Surface {
     Column {
       AccessControlSearchContent(

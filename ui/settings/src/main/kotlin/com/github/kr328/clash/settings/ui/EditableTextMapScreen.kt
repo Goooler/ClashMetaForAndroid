@@ -31,7 +31,6 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.PreviewWrapper
 import androidx.compose.ui.unit.dp
 import androidx.navigation3.runtime.EntryProviderScope
 import androidx.navigation3.runtime.NavKey
@@ -43,7 +42,7 @@ import com.github.kr328.clash.ui.icon.BaselineDragHandle
 import com.github.kr328.clash.ui.icon.OutlineDelete
 import com.github.kr328.clash.ui.icon.TabbyIcons
 import com.github.kr328.clash.ui.theme.PreviewTabby
-import com.github.kr328.clash.ui.theme.TabbyThemeWrapper
+import com.github.kr328.clash.ui.theme.TabbyTheme
 import kotlinx.serialization.Serializable
 import sh.calvin.reorderable.ReorderableItem
 import sh.calvin.reorderable.rememberReorderableLazyListState
@@ -239,10 +238,9 @@ private fun MapEntryInputDialog(
   )
 }
 
-@PreviewWrapper(TabbyThemeWrapper::class)
 @PreviewTabby
 @Composable
-private fun EditableTextMapScreenPreview() {
+private fun EditableTextMapScreenPreview() = TabbyTheme {
   EditableTextMapScreen(
     title = R.string.hosts,
     initialValues = mapOf("example.com" to "127.0.0.1", "test.com" to "192.168.1.1"),
