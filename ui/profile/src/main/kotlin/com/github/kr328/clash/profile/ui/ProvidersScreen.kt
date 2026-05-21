@@ -162,7 +162,7 @@ private fun ProviderItem(state: ProviderItemState, currentTime: Long, onUpdate: 
 
 @PreviewTabby
 @Composable
-private fun ProvidersContentPreview() = TabbyTheme {
+internal fun ProvidersContentPreview() = TabbyTheme {
   ProvidersContent(
     snackbarHostState = SnackbarHostState(),
     providers =

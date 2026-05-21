@@ -488,7 +488,7 @@ private fun columnsForProxyLine(proxyLine: Int): Int =
 
 @PreviewTabby
 @Composable
-private fun ProxyMenuSheetContentPreview() = TabbyTheme {
+internal fun ProxyMenuSheetContentPreview() = TabbyTheme {
   Column {
     ProxyMenuSheetContent(
       overrideMode = TunnelState.Mode.Rule,
@@ -505,7 +505,7 @@ private fun ProxyMenuSheetContentPreview() = TabbyTheme {
 
 @PreviewTabby
 @Composable
-private fun ProxyContentPreview() = TabbyTheme {
+internal fun ProxyContentPreview() = TabbyTheme {
   val groups = remember {
     listOf(
       ProxyViewModel.UiState.ProxyGroupUiState(

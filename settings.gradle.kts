@@ -59,4 +59,5 @@ include(
   ":ui:proxy",
   ":ui:profile",
   ":ui:settings",
+  ":ui:testkit",
 )

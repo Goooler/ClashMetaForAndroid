@@ -179,7 +179,7 @@ private fun ProfileProviderItem(
 
 @PreviewTabby
 @Composable
-private fun NewProfileContentPreview() = TabbyTheme {
+internal fun NewProfileContentPreview() = TabbyTheme {
   val context = LocalContext.current
   val providers =
     listOf(

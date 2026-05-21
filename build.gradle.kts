@@ -1,6 +1,7 @@
 import com.android.build.api.dsl.CommonExtension
 import com.android.build.gradle.api.AndroidBasePlugin
 import com.diffplug.gradle.spotless.SpotlessExtension
+import io.github.takahirom.roborazzi.RoborazziExtension
 import org.jetbrains.kotlin.compose.compiler.gradle.ComposeCompilerGradlePluginExtension
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.dsl.KotlinAndroidProjectExtension
@@ -15,6 +16,7 @@ plugins {
   alias(libs.plugins.ksp) apply false
   alias(libs.plugins.golang) apply false
   alias(libs.plugins.spotless) apply false
+  alias(libs.plugins.roborazzi) apply false
 }
 
 allprojects {
@@ -31,6 +33,10 @@ allprojects {
       compileOptions.apply {
         sourceCompatibility(libs.versions.jvmTarget.get())
         targetCompatibility(libs.versions.jvmTarget.get())
+      }
+      testOptions.unitTests {
+        isIncludeAndroidResources = true
+        all { it.systemProperties["robolectric.pixelCopyRenderMode"] = "hardware" }
       }
     }
   }
@@ -70,6 +76,13 @@ allprojects {
     extensions.configure<ComposeCompilerGradlePluginExtension> {
       stabilityConfigurationFiles.add(rootProject.layout.projectDirectory.file("stability.conf"))
     }
+
+    plugins.apply(rootProject.libs.plugins.roborazzi.get().pluginId)
+    extensions.configure<RoborazziExtension> {
+      outputDir = project.layout.projectDirectory.dir("src/test/screenshot")
+    }
+    project.ext["roborazzi.cleanupOldScreenshots"] = true
+
     dependencies {
       "implementation"(platform(libs.androidx.compose.bom))
       "implementation"(libs.androidx.compose.ui)
@@ -82,6 +95,14 @@ allprojects {
       "implementation"(libs.androidx.lifecycle.viewmodel.navigation3)
       "implementation"(libs.androidx.navigation3.runtime)
       "implementation"(libs.androidx.navigation3.ui)
+
+      "testImplementation"(libs.androidx.espressoCore)
+      "testImplementation"(libs.androidx.junit)
+      "testImplementation"(libs.androidx.compose.junit4)
+      "testImplementation"(libs.robolectric)
+      "testImplementation"(libs.roborazzi.core)
+      "testImplementation"(libs.roborazzi.compose)
+      "testImplementation"(projects.ui.testkit)
     }
   }
 }

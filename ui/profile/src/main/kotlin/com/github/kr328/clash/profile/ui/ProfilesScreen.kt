@@ -349,7 +349,8 @@ private fun ProfilesMenuAction(
 
 @PreviewTabby
 @Composable
-private fun ProfilesContentPreview() = TabbyTheme {
+internal fun ProfilesContentPreview() = TabbyTheme {
+  val currentTime = 1778510703649L
   ProfilesContent(
     snackbarHostState = SnackbarHostState(),
     profiles =
@@ -364,8 +365,8 @@ private fun ProfilesContentPreview() = TabbyTheme {
           upload = 512L * 1024 * 1024,
           download = 1024L * 1024 * 1024,
           total = 5L * 1024 * 1024 * 1024,
-          expire = System.currentTimeMillis() + 3 * 24 * 60 * 60 * 1000,
-          updatedAt = System.currentTimeMillis() - 30.minutes.inWholeMilliseconds,
+          expire = currentTime + 3 * 24 * 60 * 60 * 1000,
+          updatedAt = currentTime - 30.minutes.inWholeMilliseconds,
           imported = true,
           pending = false,
         ),
@@ -380,14 +381,14 @@ private fun ProfilesContentPreview() = TabbyTheme {
           download = 0,
           total = 0,
           expire = 0,
-          updatedAt = System.currentTimeMillis() - 5.minutes.inWholeMilliseconds,
+          updatedAt = currentTime - 5.minutes.inWholeMilliseconds,
           imported = false,
           pending = true,
         ),
       ),
     allUpdating = false,
     hasUpdatableProfile = true,
-    currentTime = System.currentTimeMillis(),
+    currentTime = currentTime,
     onUpdateAll = {},
     onCreate = {},
     onActivate = {},

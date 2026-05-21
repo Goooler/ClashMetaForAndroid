@@ -797,7 +797,7 @@ interface OverrideSettingsActions {
 
 @PreviewTabby
 @Composable
-private fun OverrideSettingsContentPreview() = TabbyTheme {
+internal fun OverrideSettingsContentPreview() = TabbyTheme {
   OverrideSettingsContent(
     configuration = ConfigurationOverride(),
     actions = object : OverrideSettingsActions {},

@@ -523,7 +523,7 @@ interface MetaFeatureSettingsActions {
 
 @PreviewTabby
 @Composable
-private fun MetaFeatureSettingsContentPreview() = TabbyTheme {
+internal fun MetaFeatureSettingsContentPreview() = TabbyTheme {
   MetaFeatureSettingsContent(
     configuration = ConfigurationOverride(),
     actions = object : MetaFeatureSettingsActions {},

@@ -240,7 +240,7 @@ private fun MapEntryInputDialog(
 
 @PreviewTabby
 @Composable
-private fun EditableTextMapScreenPreview() = TabbyTheme {
+internal fun EditableTextMapScreenPreview() = TabbyTheme {
   EditableTextMapScreen(
     title = R.string.hosts,
     initialValues = mapOf("example.com" to "127.0.0.1", "test.com" to "192.168.1.1"),

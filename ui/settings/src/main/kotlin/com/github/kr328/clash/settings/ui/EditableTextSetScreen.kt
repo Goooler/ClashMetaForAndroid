@@ -210,7 +210,7 @@ private fun SingleTextInputDialog(
 
 @PreviewTabby
 @Composable
-private fun EditableTextSetScreenPreview() = TabbyTheme {
+internal fun EditableTextSetScreenPreview() = TabbyTheme {
   EditableTextSetScreen(
     title = R.string.sniff_http_ports,
     initialValues = setOf("80", "8080"),

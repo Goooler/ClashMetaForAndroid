@@ -418,7 +418,7 @@ private fun FilesMenuAction(
 
 @PreviewTabby
 @Composable
-private fun FilesContentPreview() = TabbyTheme {
+internal fun FilesContentPreview() = TabbyTheme {
   FilesContent(
     snackbarHostState = SnackbarHostState(),
     uiState =

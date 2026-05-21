@@ -7,6 +7,7 @@ room = "2.8.4"
 okhttp = "5.3.2"
 jvmTarget = "21"
 navigation3 = "1.1.2"
+roborazzi = "1.60.0"
 
 [libraries]
 kotlin-coroutine = "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.11.0"
@@ -45,6 +46,13 @@ koin-android = { module = "io.insert-koin:koin-android" }
 composePreference = "me.zhanghai.compose.preference:preference:2.2.0"
 reorderable = "sh.calvin.reorderable:reorderable:3.1.0"
 
+androidx-junit = "androidx.test.ext:junit:1.3.0"
+androidx-espressoCore = "androidx.test.espresso:espresso-core:3.7.0"
+androidx-compose-junit4 = "androidx.compose.ui:ui-test-junit4:1.11.1"
+robolectric = "org.robolectric:robolectric:4.16.1"
+roborazzi-core = { module = "io.github.takahirom.roborazzi:roborazzi", version.ref = "roborazzi" }
+roborazzi-compose = { module = "io.github.takahirom.roborazzi:roborazzi-compose", version.ref = "roborazzi" }
+
 # Dummy to get renovate updates, the version is used in rootProject build.gradle with spotless.
 ktfmt = "com.facebook:ktfmt:0.62"
 
@@ -58,3 +66,4 @@ ksp = "com.google.devtools.ksp:2.3.8"
 golang = "io.github.goooler.golang:0.2.2"
 download = "de.undercouch.download:5.7.0"
 spotless = "com.diffplug.spotless:8.5.1"
+roborazzi = { id = "io.github.takahirom.roborazzi", version.ref = "roborazzi" }
