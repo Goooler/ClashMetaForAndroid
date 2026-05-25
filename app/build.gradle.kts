@@ -50,7 +50,7 @@ android {
 }
 
 androidComponents {
-  onVariants(selector().withBuildType("release")) { variant ->
+  onVariants { variant ->
     variant.outputs.forEach { output ->
       with(output) {
         val abiName =
