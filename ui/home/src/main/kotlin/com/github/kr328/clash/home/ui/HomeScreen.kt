@@ -20,6 +20,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarDuration
@@ -35,6 +36,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -42,6 +44,7 @@ import androidx.compose.ui.tooling.preview.PreviewWrapper
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.github.kr328.clash.common.R as CommonR
+import com.github.kr328.clash.glue.util.openLink
 import com.github.kr328.clash.home.R
 import com.github.kr328.clash.home.vm.HomeViewModel
 import com.github.kr328.clash.ui.component.Spacer
@@ -52,6 +55,7 @@ import com.github.kr328.clash.ui.icon.BaselineHelpCenter
 import com.github.kr328.clash.ui.icon.BaselineInfo
 import com.github.kr328.clash.ui.icon.BaselineSettings
 import com.github.kr328.clash.ui.icon.BaselineSwapVerticalCircle
+import com.github.kr328.clash.ui.icon.BaselineUpdate
 import com.github.kr328.clash.ui.icon.BaselineViewList
 import com.github.kr328.clash.ui.icon.OutlineCheckCircle
 import com.github.kr328.clash.ui.icon.OutlineNotInterested
@@ -79,8 +83,11 @@ internal fun HomeScreen(
   val eventState by viewModel.eventState.collectAsStateWithLifecycle()
   val snackbarHostState = remember { SnackbarHostState() }
 
+  val context = LocalContext.current
   val noProfileText = stringResource(R.string.no_profile_selected)
   val profilesActionText = stringResource(CommonR.string.profiles)
+  val updateAvailableText = stringResource(R.string.update_available)
+  val openActionText = stringResource(R.string.open)
 
   val vpnLauncher =
     rememberLauncherForActivityResult(StartActivityForResult()) { result ->
@@ -106,6 +113,17 @@ internal fun HomeScreen(
       is ShowMessage -> {
         snackbarHostState.showSnackbar(message = event.message)
       }
+      is UpdateAvailable -> {
+        val result =
+          snackbarHostState.showSnackbar(
+            message = updateAvailableText,
+            actionLabel = openActionText,
+            duration = SnackbarDuration.Long,
+          )
+        if (result == SnackbarResult.ActionPerformed) {
+          context.openLink(event.releasesUrl)
+        }
+      }
     }
     viewModel.consumeEvent()
   }
@@ -119,6 +137,7 @@ internal fun HomeScreen(
     profileName = uiState.profileName,
     hasProviders = uiState.hasProviders,
     aboutVersionName = uiState.aboutVersionName,
+    checkingForUpdates = uiState.checkingForUpdates,
     onDismissAbout = viewModel::dismissAbout,
     onToggleStatus = viewModel::toggleStatus,
     onOpenProxy = onOpenProxy,
@@ -128,6 +147,7 @@ internal fun HomeScreen(
     onOpenSettings = onOpenSettings,
     onOpenHelp = onOpenHelp,
     onOpenAbout = viewModel::showAbout,
+    onCheckForUpdates = viewModel::checkForUpdates,
   )
 }
 
@@ -141,6 +161,7 @@ private fun HomeContent(
   profileName: String?,
   hasProviders: Boolean,
   aboutVersionName: String?,
+  checkingForUpdates: Boolean,
   onDismissAbout: () -> Unit,
   onToggleStatus: () -> Unit,
   onOpenProxy: () -> Unit,
@@ -150,6 +171,7 @@ private fun HomeContent(
   onOpenSettings: () -> Unit,
   onOpenHelp: () -> Unit,
   onOpenAbout: () -> Unit,
+  onCheckForUpdates: () -> Unit,
 ) {
   val darkTheme = isSystemInDarkTheme()
   val stoppedColor = if (darkTheme) TabbyDarkSurface else TabbyLightStopped
@@ -250,6 +272,19 @@ private fun HomeContent(
       )
       HomeActionLabel(
         modifier = Modifier.padding(vertical = labelMarginVertical),
+        icon = TabbyIcons.BaselineUpdate,
+        text = stringResource(R.string.check_for_updates),
+        enabled = !checkingForUpdates,
+        trailingContent =
+          if (checkingForUpdates) {
+            { CircularProgressIndicator(modifier = Modifier.size(actionIconSize)) }
+          } else {
+            null
+          },
+        onClick = onCheckForUpdates,
+      )
+      HomeActionLabel(
+        modifier = Modifier.padding(vertical = labelMarginVertical),
         icon = TabbyIcons.BaselineInfo,
         text = stringResource(R.string.about),
         onClick = onOpenAbout,
@@ -306,20 +341,31 @@ private fun HomeActionLabel(
   text: String,
   onClick: () -> Unit,
   modifier: Modifier = Modifier,
+  enabled: Boolean = true,
+  trailingContent: (@Composable () -> Unit)? = null,
 ) {
   Row(
     modifier =
       modifier
         .fillMaxWidth()
         .heightIn(min = 60.dp)
-        .clickable(onClick = onClick)
+        .clickable(enabled = enabled, onClick = onClick)
         .padding(vertical = actionItemPaddingVertical),
     verticalAlignment = Alignment.CenterVertically,
   ) {
     Spacer(actionItemPaddingHorizontal)
     Icon(imageVector = icon, contentDescription = null, modifier = Modifier.size(actionIconSize))
     Spacer(actionItemPaddingHorizontal)
-    Text(text = text, style = MaterialTheme.typography.bodyLarge)
+    Text(
+      text = text,
+      style = MaterialTheme.typography.bodyLarge,
+      modifier = Modifier.weight(1f),
+    )
+    if (trailingContent != null) {
+      Spacer(actionItemPaddingHorizontal)
+      trailingContent()
+      Spacer(actionItemPaddingHorizontal)
+    }
   }
 }
 
@@ -369,6 +415,7 @@ private fun HomeContentRunningPreview() {
     profileName = "My Profile",
     hasProviders = true,
     aboutVersionName = null,
+    checkingForUpdates = false,
     onDismissAbout = {},
     onToggleStatus = {},
     onOpenProxy = {},
@@ -378,6 +425,7 @@ private fun HomeContentRunningPreview() {
     onOpenSettings = {},
     onOpenHelp = {},
     onOpenAbout = {},
+    onCheckForUpdates = {},
   )
 }
 
@@ -393,6 +441,7 @@ private fun HomeContentStoppedPreview() {
     profileName = null,
     hasProviders = false,
     aboutVersionName = null,
+    checkingForUpdates = false,
     onDismissAbout = {},
     onToggleStatus = {},
     onOpenProxy = {},
@@ -402,5 +451,6 @@ private fun HomeContentStoppedPreview() {
     onOpenSettings = {},
     onOpenHelp = {},
     onOpenAbout = {},
+    onCheckForUpdates = {},
   )
 }
