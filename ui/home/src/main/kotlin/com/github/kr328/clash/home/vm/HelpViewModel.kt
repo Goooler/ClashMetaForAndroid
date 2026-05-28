@@ -4,14 +4,18 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.application
 import androidx.lifecycle.viewModelScope
+import com.github.kr328.clash.common.R as CommonR
 import com.github.kr328.clash.common.log.Log
+import com.github.kr328.clash.core.bridge.Bridge
 import com.github.kr328.clash.glue.util.TABBY_RELEASES_LATEST
 import com.github.kr328.clash.home.R
 import com.github.kr328.clash.home.api.HelpApi
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import net.swiftzer.semver.SemVer
 
 internal class HelpViewModel(app: Application) : AndroidViewModel(app) {
@@ -22,6 +26,10 @@ internal class HelpViewModel(app: Application) : AndroidViewModel(app) {
 
   val eventState: StateFlow<EventState>
     field = MutableStateFlow<EventState>(EventState.Idle)
+
+  init {
+    loadVersionInfo()
+  }
 
   fun checkForUpdates() {
     if (uiState.value.checkingForUpdates) return
@@ -62,7 +70,26 @@ internal class HelpViewModel(app: Application) : AndroidViewModel(app) {
     eventState.value = EventState.Idle
   }
 
-  data class UiState(val checkingForUpdates: Boolean = false)
+  private fun loadVersionInfo() {
+    viewModelScope.launch {
+      val (appVersion, coreVersion) =
+        withContext(Dispatchers.IO) {
+          val appVersion =
+            application.packageManager.getPackageInfo(application.packageName, 0).versionName
+              ?: application.getString(CommonR.string.unknown)
+          val coreVersion = Bridge.nativeCoreVersion().replace("_", "-")
+          appVersion to coreVersion
+        }
+
+      uiState.update { it.copy(appVersion = appVersion, coreVersion = coreVersion) }
+    }
+  }
+
+  data class UiState(
+    val checkingForUpdates: Boolean = false,
+    val appVersion: String = "",
+    val coreVersion: String = "",
+  )
 
   sealed interface EventState {
     data object Idle : EventState

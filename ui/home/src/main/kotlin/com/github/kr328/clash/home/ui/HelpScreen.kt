@@ -15,6 +15,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.fromHtml
@@ -31,6 +32,7 @@ import com.github.kr328.clash.glue.util.openLink
 import com.github.kr328.clash.home.R
 import com.github.kr328.clash.home.vm.HelpViewModel
 import com.github.kr328.clash.ui.component.TabbyScaffold
+import com.github.kr328.clash.ui.icon.BaselineInfo
 import com.github.kr328.clash.ui.icon.BaselineUpdate
 import com.github.kr328.clash.ui.icon.OutlineInfo
 import com.github.kr328.clash.ui.icon.TabbyIcons
@@ -130,6 +132,23 @@ private fun HelpContent(
           onClick = { onOpenLink(TABBY_GITHUB) },
         )
         preferenceCategory(key = "cat_update", title = { Text(stringResource(R.string.about)) })
+        preference(
+          key = "app_version",
+          title = { Text(stringResource(R.string.app_version)) },
+          summary = { Text(uiState.appVersion) },
+          icon = { Icon(imageVector = TabbyIcons.BaselineInfo, contentDescription = null) },
+        )
+        preference(
+          key = "kernel_version",
+          title = { Text(stringResource(R.string.kernel_version)) },
+          summary = { Text(uiState.coreVersion) },
+          icon = {
+            Icon(
+              painter = painterResource(CommonR.drawable.ic_tabby_small),
+              contentDescription = null,
+            )
+          },
+        )
         preference(
           key = "check_for_updates",
           title = { Text(stringResource(R.string.check_for_updates)) },

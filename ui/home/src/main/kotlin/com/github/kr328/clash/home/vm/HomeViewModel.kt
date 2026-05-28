@@ -9,7 +9,6 @@ import androidx.lifecycle.application
 import androidx.lifecycle.viewModelScope
 import com.github.kr328.clash.common.R as CommonR
 import com.github.kr328.clash.common.log.Log
-import com.github.kr328.clash.core.bridge.Bridge
 import com.github.kr328.clash.core.util.trafficTotal
 import com.github.kr328.clash.glue.remote.Remote
 import com.github.kr328.clash.glue.util.startClashService
@@ -17,7 +16,6 @@ import com.github.kr328.clash.glue.util.stopClashService
 import com.github.kr328.clash.glue.util.withClash
 import com.github.kr328.clash.glue.util.withProfile
 import kotlin.time.Duration.Companion.seconds
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -25,7 +23,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 internal class HomeViewModel(app: Application) : AndroidViewModel(app), DefaultLifecycleObserver {
   private var broadcastEventsJob: Job? = null
@@ -75,22 +72,6 @@ internal class HomeViewModel(app: Application) : AndroidViewModel(app), DefaultL
     } else {
       startClash()
     }
-  }
-
-  fun showAbout() {
-    viewModelScope.launch {
-      val versionName =
-        withContext(Dispatchers.IO) {
-          application.packageManager.getPackageInfo(application.packageName, 0).versionName +
-            "\n" +
-            Bridge.nativeCoreVersion().replace("_", "-")
-        }
-      uiState.update { it.copy(aboutVersionName = versionName) }
-    }
-  }
-
-  fun dismissAbout() {
-    uiState.update { it.copy(aboutVersionName = null) }
   }
 
   fun onVpnPermissionGranted() {
@@ -164,7 +145,6 @@ internal class HomeViewModel(app: Application) : AndroidViewModel(app), DefaultL
     val mode: String? = null,
     val profileName: String? = null,
     val hasProviders: Boolean = false,
-    val aboutVersionName: String? = null,
   )
 
   sealed interface EventState {

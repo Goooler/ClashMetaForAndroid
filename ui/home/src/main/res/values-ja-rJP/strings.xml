@@ -2,6 +2,7 @@
 
   <string name="about">アプリについて</string>
   <string name="already_up_to_date">最新バージョンです</string>
+  <string name="app_version">アプリバージョン</string>
   <string name="check_for_updates">アップデートを確認</string>
   <string name="check_update_failed">アップデートの確認に失敗しました</string>
   <string name="clash_meta_core">Clash Meta Core</string>
@@ -15,6 +16,7 @@
   <string name="github_issues">GitHub Issues</string>
   <string name="google_play">Google Play</string>
   <string name="help">ヘルプ</string>
+  <string name="kernel_version">コアバージョン</string>
   <string name="no_profile_selected">プロファイルが選択されていません</string>
   <string name="open">開く</string>
   <string name="profile">プロファイル</string>

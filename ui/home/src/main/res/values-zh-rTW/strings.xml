@@ -2,6 +2,7 @@
 
   <string name="about">關於</string>
   <string name="already_up_to_date">已是最新版本</string>
+  <string name="app_version">應用程式版本</string>
   <string name="check_for_updates">檢查更新</string>
   <string name="check_update_failed">檢查更新失敗</string>
   <string name="clash_meta_core">Clash Meta 核心</string>
@@ -15,6 +16,7 @@
   <string name="github_issues">GitHub Issues</string>
   <string name="google_play">Google Play</string>
   <string name="help">協助</string>
+  <string name="kernel_version">核心版本</string>
   <string name="no_profile_selected">未選擇設定檔</string>
   <string name="open">開啟</string>
   <string name="profile">設定檔</string>

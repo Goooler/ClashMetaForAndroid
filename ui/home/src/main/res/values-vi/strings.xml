@@ -2,6 +2,7 @@
 
   <string name="about">Thông tin</string>
   <string name="already_up_to_date">Đã là phiên bản mới nhất</string>
+  <string name="app_version">Phiên bản ứng dụng</string>
   <string name="check_for_updates">Kiểm tra cập nhật</string>
   <string name="check_update_failed">Không thể kiểm tra cập nhật</string>
   <string name="clash_meta_core">Clash Meta Core</string>
@@ -15,6 +16,7 @@
   <string name="github_issues">Sự cố trên GitHub</string>
   <string name="google_play">Google Play</string>
   <string name="help">Trợ giúp</string>
+  <string name="kernel_version">Phiên bản Core</string>
   <string name="no_profile_selected">Không có cấu hình</string>
   <string name="open">Mở</string>
   <string name="profile">Cấu hình</string>
