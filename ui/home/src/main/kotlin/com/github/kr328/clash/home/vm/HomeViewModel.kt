@@ -12,12 +12,10 @@ import com.github.kr328.clash.common.log.Log
 import com.github.kr328.clash.core.bridge.Bridge
 import com.github.kr328.clash.core.util.trafficTotal
 import com.github.kr328.clash.glue.remote.Remote
-import com.github.kr328.clash.glue.util.TABBY_RELEASES_LATEST
 import com.github.kr328.clash.glue.util.startClashService
 import com.github.kr328.clash.glue.util.stopClashService
 import com.github.kr328.clash.glue.util.withClash
 import com.github.kr328.clash.glue.util.withProfile
-import com.github.kr328.clash.home.R
 import kotlin.time.Duration.Companion.seconds
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -28,11 +26,6 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import kotlinx.serialization.SerialName
-import kotlinx.serialization.Serializable
-import kotlinx.serialization.json.Json
-import okhttp3.OkHttpClient
-import okhttp3.Request
 
 internal class HomeViewModel(app: Application) : AndroidViewModel(app), DefaultLifecycleObserver {
   private var broadcastEventsJob: Job? = null
@@ -98,49 +91,6 @@ internal class HomeViewModel(app: Application) : AndroidViewModel(app), DefaultL
 
   fun dismissAbout() {
     uiState.update { it.copy(aboutVersionName = null) }
-  }
-
-  fun checkForUpdates() {
-    viewModelScope.launch {
-      uiState.update { it.copy(checkingForUpdates = true) }
-      try {
-        val latestTag =
-          withContext(Dispatchers.IO) {
-            val request =
-              Request.Builder()
-                .url("https://api.github.com/repos/Goooler/Tabby/releases/latest")
-                .header("Accept", "application/json")
-                .build()
-            OkHttpClient().newCall(request).execute().use { response ->
-              if (!response.isSuccessful) return@withContext null
-              releaseJson.decodeFromString<GithubRelease>(response.body.string()).tagName
-            }
-          }
-        if (latestTag == null) {
-          eventState.update {
-            EventState.ShowMessage(application.getString(R.string.check_update_failed))
-          }
-        } else {
-          val localVersion =
-            application.packageManager.getPackageInfo(application.packageName, 0).versionName ?: ""
-          val remoteVersion = latestTag.trimStart('v')
-          if (isNewerVersion(remoteVersion, localVersion)) {
-            eventState.update { EventState.UpdateAvailable(TABBY_RELEASES_LATEST) }
-          } else {
-            eventState.update {
-              EventState.ShowMessage(application.getString(R.string.already_up_to_date))
-            }
-          }
-        }
-      } catch (e: Exception) {
-        Log.e("Check for updates failed: ${e.message}", e)
-        eventState.update {
-          EventState.ShowMessage(application.getString(R.string.check_update_failed))
-        }
-      } finally {
-        uiState.update { it.copy(checkingForUpdates = false) }
-      }
-    }
   }
 
   fun onVpnPermissionGranted() {
@@ -215,7 +165,6 @@ internal class HomeViewModel(app: Application) : AndroidViewModel(app), DefaultL
     val profileName: String? = null,
     val hasProviders: Boolean = false,
     val aboutVersionName: String? = null,
-    val checkingForUpdates: Boolean = false,
   )
 
   sealed interface EventState {
@@ -226,26 +175,5 @@ internal class HomeViewModel(app: Application) : AndroidViewModel(app), DefaultL
     data object ShowNoProfileMessage : EventState
 
     data class ShowMessage(val message: String) : EventState
-
-    data class UpdateAvailable(val releasesUrl: String) : EventState
-  }
-
-  @Serializable private data class GithubRelease(@SerialName("tag_name") val tagName: String)
-
-  private companion object {
-    val releaseJson = Json { ignoreUnknownKeys = true }
-
-    fun isNewerVersion(remote: String, local: String): Boolean {
-      val remoteParts = remote.split('.').mapNotNull { it.toIntOrNull() }
-      val localParts = local.split('.').mapNotNull { it.toIntOrNull() }
-      val maxLen = maxOf(remoteParts.size, localParts.size)
-      for (i in 0 until maxLen) {
-        val r = remoteParts.getOrElse(i) { 0 }
-        val l = localParts.getOrElse(i) { 0 }
-        if (r > l) return true
-        if (r < l) return false
-      }
-      return false
-    }
   }
 }
