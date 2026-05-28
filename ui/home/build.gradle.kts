@@ -9,6 +9,7 @@ dependencies {
   implementation(projects.ui)
 
   implementation(libs.composePreference)
-  implementation(libs.kotlin.serialization.json)
   implementation(libs.okhttp.client)
+  implementation(libs.kotlin.serialization.json)
+  implementation(libs.semver)
 }

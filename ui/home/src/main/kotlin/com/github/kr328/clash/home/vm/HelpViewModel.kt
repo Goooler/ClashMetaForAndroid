@@ -16,6 +16,7 @@ import kotlinx.coroutines.withContext
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
+import net.swiftzer.semver.SemVer
 import okhttp3.OkHttpClient
 import okhttp3.Request
 
@@ -41,7 +42,7 @@ internal class HelpViewModel(app: Application) : AndroidViewModel(app) {
                 .build()
             OkHttpClient().newCall(request).execute().use { response ->
               if (!response.isSuccessful) return@withContext null
-              releaseJson.decodeFromString<GithubRelease>(response.body.string()).tagName
+              json.decodeFromString<GithubRelease>(response.body.string()).tagName
             }
           }
 
@@ -54,8 +55,7 @@ internal class HelpViewModel(app: Application) : AndroidViewModel(app) {
 
         val localVersion =
           application.packageManager.getPackageInfo(application.packageName, 0).versionName ?: ""
-        val remoteVersion = latestTag.trimStart('v')
-        if (isNewerVersion(remoteVersion, localVersion)) {
+        if (SemVer.parse(latestTag) > SemVer.parse(localVersion)) {
           eventState.update { EventState.UpdateAvailable(TABBY_RELEASES_LATEST) }
         } else {
           eventState.update {
@@ -88,21 +88,6 @@ internal class HelpViewModel(app: Application) : AndroidViewModel(app) {
   }
 
   @Serializable private data class GithubRelease(@SerialName("tag_name") val tagName: String)
-
-  private companion object {
-    val releaseJson = Json { ignoreUnknownKeys = true }
-
-    fun isNewerVersion(remote: String, local: String): Boolean {
-      val remoteParts = remote.split('.').mapNotNull { it.toIntOrNull() }
-      val localParts = local.split('.').mapNotNull { it.toIntOrNull() }
-      val maxLen = maxOf(remoteParts.size, localParts.size)
-      for (i in 0 until maxLen) {
-        val r = remoteParts.getOrElse(i) { 0 }
-        val l = localParts.getOrElse(i) { 0 }
-        if (r > l) return true
-        if (r < l) return false
-      }
-      return false
-    }
-  }
 }
+
+val json = Json { ignoreUnknownKeys = true }
