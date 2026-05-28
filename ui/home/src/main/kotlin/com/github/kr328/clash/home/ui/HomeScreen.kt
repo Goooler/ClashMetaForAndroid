@@ -17,7 +17,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -26,7 +25,6 @@ import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -37,7 +35,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.PreviewWrapper
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -49,7 +46,6 @@ import com.github.kr328.clash.ui.component.TabbyScaffold
 import com.github.kr328.clash.ui.icon.BaselineApps
 import com.github.kr328.clash.ui.icon.BaselineAssignment
 import com.github.kr328.clash.ui.icon.BaselineHelpCenter
-import com.github.kr328.clash.ui.icon.BaselineInfo
 import com.github.kr328.clash.ui.icon.BaselineSettings
 import com.github.kr328.clash.ui.icon.BaselineSwapVerticalCircle
 import com.github.kr328.clash.ui.icon.BaselineViewList
@@ -118,8 +114,6 @@ internal fun HomeScreen(
     mode = uiState.mode,
     profileName = uiState.profileName,
     hasProviders = uiState.hasProviders,
-    aboutVersionName = uiState.aboutVersionName,
-    onDismissAbout = viewModel::dismissAbout,
     onToggleStatus = viewModel::toggleStatus,
     onOpenProxy = onOpenProxy,
     onOpenProfiles = onOpenProfiles,
@@ -127,7 +121,6 @@ internal fun HomeScreen(
     onOpenLogs = onOpenLogs,
     onOpenSettings = onOpenSettings,
     onOpenHelp = onOpenHelp,
-    onOpenAbout = viewModel::showAbout,
   )
 }
 
@@ -140,8 +133,6 @@ private fun HomeContent(
   mode: String?,
   profileName: String?,
   hasProviders: Boolean,
-  aboutVersionName: String?,
-  onDismissAbout: () -> Unit,
   onToggleStatus: () -> Unit,
   onOpenProxy: () -> Unit,
   onOpenProfiles: () -> Unit,
@@ -149,7 +140,6 @@ private fun HomeContent(
   onOpenLogs: () -> Unit,
   onOpenSettings: () -> Unit,
   onOpenHelp: () -> Unit,
-  onOpenAbout: () -> Unit,
 ) {
   val darkTheme = isSystemInDarkTheme()
   val stoppedColor = if (darkTheme) TabbyDarkSurface else TabbyLightStopped
@@ -248,15 +238,7 @@ private fun HomeContent(
         text = stringResource(R.string.help),
         onClick = onOpenHelp,
       )
-      HomeActionLabel(
-        modifier = Modifier.padding(vertical = labelMarginVertical),
-        icon = TabbyIcons.BaselineInfo,
-        text = stringResource(R.string.about),
-        onClick = onOpenAbout,
-      )
     }
-
-    aboutVersionName?.let { AboutDialog(versionName = it, onDismiss = onDismissAbout) }
   }
 }
 
@@ -323,33 +305,6 @@ private fun HomeActionLabel(
   }
 }
 
-@Composable
-private fun AboutDialog(versionName: String, onDismiss: () -> Unit) {
-  AlertDialog(
-    onDismissRequest = onDismiss,
-    confirmButton = {
-      TextButton(onClick = onDismiss) { Text(text = stringResource(CommonR.string.ok)) }
-    },
-    icon = {
-      Image(
-        painter = painterResource(CommonR.drawable.ic_tabby_foreground),
-        contentDescription = null,
-        modifier = Modifier.size(logoSize),
-      )
-    },
-    title = {
-      Text(
-        text = stringResource(CommonR.string.tabby),
-        modifier = Modifier.fillMaxWidth(),
-        textAlign = TextAlign.Center,
-      )
-    },
-    text = {
-      Text(text = versionName, modifier = Modifier.fillMaxWidth(), textAlign = TextAlign.Center)
-    },
-  )
-}
-
 private val logoSize = 55.dp
 private val cardMarginVertical = 5.dp
 private val labelMarginVertical = 2.dp
@@ -368,8 +323,6 @@ private fun HomeContentRunningPreview() {
     mode = "Rule",
     profileName = "My Profile",
     hasProviders = true,
-    aboutVersionName = null,
-    onDismissAbout = {},
     onToggleStatus = {},
     onOpenProxy = {},
     onOpenProfiles = {},
@@ -377,7 +330,6 @@ private fun HomeContentRunningPreview() {
     onOpenLogs = {},
     onOpenSettings = {},
     onOpenHelp = {},
-    onOpenAbout = {},
   )
 }
 
@@ -392,8 +344,6 @@ private fun HomeContentStoppedPreview() {
     mode = null,
     profileName = null,
     hasProviders = false,
-    aboutVersionName = null,
-    onDismissAbout = {},
     onToggleStatus = {},
     onOpenProxy = {},
     onOpenProfiles = {},
@@ -401,6 +351,5 @@ private fun HomeContentStoppedPreview() {
     onOpenLogs = {},
     onOpenSettings = {},
     onOpenHelp = {},
-    onOpenAbout = {},
   )
 }

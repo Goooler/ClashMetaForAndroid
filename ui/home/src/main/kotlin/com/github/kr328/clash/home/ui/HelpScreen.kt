@@ -131,6 +131,16 @@ private fun HelpContent(
         )
         preferenceCategory(key = "cat_update", title = { Text(stringResource(R.string.about)) })
         preference(
+          key = "app_version",
+          title = { Text(stringResource(R.string.app_version)) },
+          summary = { Text(uiState.appVersion) },
+        )
+        preference(
+          key = "kernel_version",
+          title = { Text(stringResource(R.string.kernel_version)) },
+          summary = { Text(uiState.coreVersion) },
+        )
+        preference(
           key = "check_for_updates",
           title = { Text(stringResource(R.string.check_for_updates)) },
           icon = {
