@@ -306,27 +306,20 @@ private fun HomeActionLabel(
   text: String,
   onClick: () -> Unit,
   modifier: Modifier = Modifier,
-  enabled: Boolean = true,
-  trailingContent: (@Composable () -> Unit)? = null,
 ) {
   Row(
     modifier =
       modifier
         .fillMaxWidth()
         .heightIn(min = 60.dp)
-        .clickable(enabled = enabled, onClick = onClick)
+        .clickable(onClick = onClick)
         .padding(vertical = actionItemPaddingVertical),
     verticalAlignment = Alignment.CenterVertically,
   ) {
     Spacer(actionItemPaddingHorizontal)
     Icon(imageVector = icon, contentDescription = null, modifier = Modifier.size(actionIconSize))
     Spacer(actionItemPaddingHorizontal)
-    Text(text = text, style = MaterialTheme.typography.bodyLarge, modifier = Modifier.weight(1f))
-    if (trailingContent != null) {
-      Spacer(actionItemPaddingHorizontal)
-      trailingContent()
-      Spacer(actionItemPaddingHorizontal)
-    }
+    Text(text = text, style = MaterialTheme.typography.bodyLarge)
   }
 }
 
