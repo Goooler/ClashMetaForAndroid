@@ -2,6 +2,7 @@
 
   <string name="about">정보</string>
   <string name="already_up_to_date">이미 최신 버전입니다</string>
+  <string name="app_version">앱 버전</string>
   <string name="check_for_updates">업데이트 확인</string>
   <string name="check_update_failed">업데이트 확인 실패</string>
   <string name="clash_meta_core">Clash Meta 코어</string>
@@ -15,7 +16,6 @@
   <string name="github_issues">GitHub Issues</string>
   <string name="google_play">Google Play</string>
   <string name="help">도움</string>
-  <string name="app_version">앱 버전</string>
   <string name="kernel_version">코어 버전</string>
   <string name="no_profile_selected">구성 파일이 선택되지 않았습니다.</string>
   <string name="open">열기</string>
