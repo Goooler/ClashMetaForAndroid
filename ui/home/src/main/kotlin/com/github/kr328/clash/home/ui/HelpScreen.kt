@@ -70,6 +70,23 @@ internal fun HelpScreen(modifier: Modifier = Modifier, viewModel: HelpViewModel 
     viewModel.consumeEvent()
   }
 
+  HelpContent(
+    modifier = modifier,
+    uiState = uiState,
+    snackbarHostState = snackbarHostState,
+    onOpenLink = { url -> context.openLink(url) },
+    onCheckForUpdates = viewModel::checkForUpdates,
+  )
+}
+
+@Composable
+private fun HelpContent(
+  uiState: HelpViewModel.UiState,
+  onOpenLink: (String) -> Unit,
+  onCheckForUpdates: () -> Unit,
+  modifier: Modifier = Modifier,
+  snackbarHostState: SnackbarHostState? = null,
+) {
   TabbyScaffold(
     title = stringResource(R.string.help),
     modifier = modifier,
@@ -91,26 +108,26 @@ internal fun HelpScreen(modifier: Modifier = Modifier, viewModel: HelpViewModel 
           key = "clash_wiki",
           title = { Text(stringResource(R.string.clash_wiki)) },
           summary = { Text(CLASH_WIKI) },
-          onClick = { context.openLink(CLASH_WIKI) },
+          onClick = { onOpenLink(CLASH_WIKI) },
         )
         preference(
           key = "clash_meta_wiki",
           title = { Text(stringResource(R.string.clash_meta_wiki)) },
           summary = { Text(CLASH_META_WIKI) },
-          onClick = { context.openLink(CLASH_META_WIKI) },
+          onClick = { onOpenLink(CLASH_META_WIKI) },
         )
         preferenceCategory(key = "cat_sources", title = { Text(stringResource(R.string.sources)) })
         preference(
           key = "clash_meta_core",
           title = { Text(stringResource(R.string.clash_meta_core)) },
           summary = { Text(CLASH_META_CORE) },
-          onClick = { context.openLink(CLASH_META_CORE) },
+          onClick = { onOpenLink(CLASH_META_CORE) },
         )
         preference(
           key = "clash_meta_for_android",
           title = { Text(stringResource(CommonR.string.tabby)) },
           summary = { Text(TABBY_GITHUB) },
-          onClick = { context.openLink(TABBY_GITHUB) },
+          onClick = { onOpenLink(TABBY_GITHUB) },
         )
         preferenceCategory(key = "cat_update", title = { Text(stringResource(R.string.about)) })
         preference(
@@ -123,7 +140,7 @@ internal fun HelpScreen(modifier: Modifier = Modifier, viewModel: HelpViewModel 
               Icon(imageVector = TabbyIcons.BaselineUpdate, contentDescription = null)
             }
           },
-          onClick = viewModel::checkForUpdates,
+          onClick = onCheckForUpdates,
         )
       }
     }
@@ -133,6 +150,6 @@ internal fun HelpScreen(modifier: Modifier = Modifier, viewModel: HelpViewModel 
 @PreviewWrapper(TabbyThemeWrapper::class)
 @PreviewTabby
 @Composable
-private fun HelpScreenPreview() {
-  HelpScreen()
+private fun HelpContentPreview() {
+  HelpContent(uiState = HelpViewModel.UiState(), onOpenLink = {}, onCheckForUpdates = {})
 }
