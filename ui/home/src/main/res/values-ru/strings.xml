@@ -15,6 +15,8 @@
   <string name="github_issues">Сообщения об ошибках на GitHub</string>
   <string name="google_play">Google Play</string>
   <string name="help">Помощь</string>
+  <string name="app_version">Версия приложения</string>
+  <string name="kernel_version">Версия Core</string>
   <string name="no_profile_selected">Профиль не выбран</string>
   <string name="open">Открыть</string>
   <string name="profile">Профиль</string>
@@ -23,5 +25,6 @@
   <string name="tips_help"><![CDATA[Tabby для Android — <strong>бесплатен</strong> и мы <strong>НЕ</strong> предоставляем по нему поддержку]]></string>
   <string name="update_available">Доступна новая версия</string>
   <string name="version_updated">Приложение обновлено</string>
-  <string name="version_updated_tips">Настройки были сброшены, старые профили необходимо сохранить повторно</string>
+  <string name="version_updated_tips">Настройки были сброшены, старые профили необходимо сохранить
+    повторно</string>
 </resources>
