@@ -48,7 +48,7 @@ composePreference = "me.zhanghai.compose.preference:preference:2.2.0"
 reorderable = "sh.calvin.reorderable:reorderable:3.1.0"
 
 # Dummy to get renovate updates, the version is used in rootProject build.gradle with spotless.
-ktfmt = "com.facebook:ktfmt:0.62"
+ktfmt = "com.facebook:ktfmt:0.63"
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
