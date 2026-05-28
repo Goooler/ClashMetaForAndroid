@@ -22,10 +22,8 @@
   <string name="profile">Cấu hình</string>
   <string name="sources">Nguồn</string>
   <string name="stopped">Đã ngắt kết nối</string>
-  <string name="tips_help">Tabby là một phần mềm miễn phí và chúng tôi KHÔNG cung cấp bất kỳ dịch vụ
-    trả phí nào cho nó</string>
+  <string name="tips_help">Tabby là một phần mềm miễn phí và chúng tôi KHÔNG cung cấp bất kỳ dịch vụ trả phí nào cho nó</string>
   <string name="update_available">Có phiên bản mới</string>
   <string name="version_updated">Đã cập nhật ứng dụng</string>
-  <string name="version_updated_tips">Các cài đặt đã được đặt lại và các cấu hình cũ cần được lưu
-    lại.</string>
+  <string name="version_updated_tips">Các cài đặt đã được đặt lại và các cấu hình cũ cần được lưu lại.</string>
 </resources>
