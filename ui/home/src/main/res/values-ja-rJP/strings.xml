@@ -1,6 +1,9 @@
 <resources>
 
   <string name="about">アプリについて</string>
+  <string name="already_up_to_date">最新バージョンです</string>
+  <string name="check_for_updates">アップデートを確認</string>
+  <string name="check_update_failed">アップデートの確認に失敗しました</string>
   <string name="clash_meta_core">Clash Meta Core</string>
   <string name="clash_meta_wiki">Clash Meta Wiki</string>
   <string name="clash_wiki">Clash Wiki</string>
@@ -13,10 +16,12 @@
   <string name="google_play">Google Play</string>
   <string name="help">ヘルプ</string>
   <string name="no_profile_selected">プロファイルが選択されていません</string>
+  <string name="open">開く</string>
   <string name="profile">プロファイル</string>
   <string name="sources">ソース</string>
   <string name="stopped">停止中</string>
   <string name="tips_help"><![CDATA[Tabby は<strong>無料アプリ</strong>です。当開発者は<strong>一切のプロキシサービスを提供していません。</strong> <strong>サービスに関する問い合わせはご遠慮ください。</strong>]]></string>
+  <string name="update_available">新しいバージョンが利用可能です</string>
   <string name="version_updated">アプリを更新しました</string>
   <string name="version_updated_tips">未設定のプロファイルは、再度保存する必要があります。</string>
 </resources>
