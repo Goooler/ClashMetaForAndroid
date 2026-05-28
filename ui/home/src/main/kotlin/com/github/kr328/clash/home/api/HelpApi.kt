@@ -1,5 +1,6 @@
 package com.github.kr328.clash.home.api
 
+import com.github.kr328.clash.glue.util.TABBY_REPO
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.SerialName
@@ -16,7 +17,7 @@ class HelpApi(
     withContext(Dispatchers.IO) {
       val request =
         Request.Builder()
-          .url("https://api.github.com/repos/Goooler/Tabby/releases/latest")
+          .url("https://api.github.com/repos/$TABBY_REPO/releases/latest")
           .header("Accept", "application/json")
           .build()
       client.newCall(request).execute().use { response ->
