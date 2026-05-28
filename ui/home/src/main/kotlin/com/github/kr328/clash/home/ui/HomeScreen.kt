@@ -356,11 +356,7 @@ private fun HomeActionLabel(
     Spacer(actionItemPaddingHorizontal)
     Icon(imageVector = icon, contentDescription = null, modifier = Modifier.size(actionIconSize))
     Spacer(actionItemPaddingHorizontal)
-    Text(
-      text = text,
-      style = MaterialTheme.typography.bodyLarge,
-      modifier = Modifier.weight(1f),
-    )
+    Text(text = text, style = MaterialTheme.typography.bodyLarge, modifier = Modifier.weight(1f))
     if (trailingContent != null) {
       Spacer(actionItemPaddingHorizontal)
       trailingContent()

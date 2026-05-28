@@ -109,28 +109,34 @@ internal class HomeViewModel(app: Application) : AndroidViewModel(app), DefaultL
             val request =
               Request.Builder()
                 .url("https://api.github.com/repos/Goooler/Tabby/releases/latest")
-                .header("Accept", "application/vnd.github+json")
+                .header("Accept", "application/json")
                 .build()
             OkHttpClient().newCall(request).execute().use { response ->
               if (!response.isSuccessful) return@withContext null
-              val body = response.body?.string() ?: return@withContext null
-              releaseJson.decodeFromString<GithubRelease>(body).tagName
+              releaseJson.decodeFromString<GithubRelease>(response.body.string()).tagName
             }
           }
         if (latestTag == null) {
-          eventState.update { EventState.ShowMessage(application.getString(R.string.check_update_failed)) }
+          eventState.update {
+            EventState.ShowMessage(application.getString(R.string.check_update_failed))
+          }
         } else {
-          val localVersion = application.packageManager.getPackageInfo(application.packageName, 0).versionName ?: ""
+          val localVersion =
+            application.packageManager.getPackageInfo(application.packageName, 0).versionName ?: ""
           val remoteVersion = latestTag.trimStart('v')
           if (isNewerVersion(remoteVersion, localVersion)) {
             eventState.update { EventState.UpdateAvailable(TABBY_RELEASES_LATEST) }
           } else {
-            eventState.update { EventState.ShowMessage(application.getString(R.string.already_up_to_date)) }
+            eventState.update {
+              EventState.ShowMessage(application.getString(R.string.already_up_to_date))
+            }
           }
         }
       } catch (e: Exception) {
         Log.e("Check for updates failed: ${e.message}", e)
-        eventState.update { EventState.ShowMessage(application.getString(R.string.check_update_failed)) }
+        eventState.update {
+          EventState.ShowMessage(application.getString(R.string.check_update_failed))
+        }
       } finally {
         uiState.update { it.copy(checkingForUpdates = false) }
       }
@@ -224,8 +230,7 @@ internal class HomeViewModel(app: Application) : AndroidViewModel(app), DefaultL
     data class UpdateAvailable(val releasesUrl: String) : EventState
   }
 
-  @Serializable
-  private data class GithubRelease(@SerialName("tag_name") val tagName: String)
+  @Serializable private data class GithubRelease(@SerialName("tag_name") val tagName: String)
 
   private companion object {
     val releaseJson = Json { ignoreUnknownKeys = true }
