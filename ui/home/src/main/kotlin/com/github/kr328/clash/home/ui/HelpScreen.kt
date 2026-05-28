@@ -83,18 +83,6 @@ internal fun HelpScreen(modifier: Modifier = Modifier, viewModel: HelpViewModel 
           summary = { Text(AnnotatedString.fromHtml(stringResource(R.string.tips_help))) },
           icon = { Icon(imageVector = TabbyIcons.OutlineInfo, contentDescription = null) },
         )
-        preference(
-          key = "check_for_updates",
-          title = { Text(stringResource(R.string.check_for_updates)) },
-          icon = {
-            if (uiState.checkingForUpdates) {
-              CircularProgressIndicator(modifier = Modifier.size(24.dp))
-            } else {
-              Icon(imageVector = TabbyIcons.BaselineUpdate, contentDescription = null)
-            }
-          },
-          onClick = viewModel::checkForUpdates,
-        )
         preferenceCategory(
           key = "cat_document",
           title = { Text(stringResource(R.string.document)) },
@@ -123,6 +111,19 @@ internal fun HelpScreen(modifier: Modifier = Modifier, viewModel: HelpViewModel 
           title = { Text(stringResource(CommonR.string.tabby)) },
           summary = { Text(TABBY_GITHUB) },
           onClick = { context.openLink(TABBY_GITHUB) },
+        )
+        preferenceCategory(key = "cat_update", title = { Text(stringResource(R.string.about)) })
+        preference(
+          key = "check_for_updates",
+          title = { Text(stringResource(R.string.check_for_updates)) },
+          icon = {
+            if (uiState.checkingForUpdates) {
+              CircularProgressIndicator(modifier = Modifier.size(24.dp))
+            } else {
+              Icon(imageVector = TabbyIcons.BaselineUpdate, contentDescription = null)
+            }
+          },
+          onClick = viewModel::checkForUpdates,
         )
       }
     }
