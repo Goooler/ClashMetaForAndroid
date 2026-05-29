@@ -9,7 +9,7 @@ import androidx.compose.ui.unit.sp
 
 private val DefaultFontFamily = FontFamily.Default
 
-private val Headline6TextStyle =
+private val Title1TextStyle =
   TextStyle(
     fontFamily = DefaultFontFamily,
     fontWeight = FontWeight.Medium,
@@ -18,7 +18,7 @@ private val Headline6TextStyle =
     letterSpacing = 0.15.sp,
   )
 
-private val Headline5TextStyle =
+private val Headline1TextStyle =
   TextStyle(
     fontFamily = DefaultFontFamily,
     fontWeight = FontWeight.Medium,
@@ -65,9 +65,8 @@ private val TooltipTextStyle =
 
 val Typography =
   Typography(
-    headlineLarge = Headline5TextStyle,
-    headlineSmall = Headline6TextStyle,
-    titleLarge = Headline6TextStyle,
+    headlineLarge = Headline1TextStyle,
+    titleLarge = Title1TextStyle,
     bodyLarge = Body1TextStyle,
     bodyMedium = Body2TextStyle,
     labelLarge = Body2TextStyle.copy(fontWeight = FontWeight.Medium),
@@ -89,8 +88,8 @@ data class TabbyTextStyles(
 
 internal val DefaultTabbyTextStyles =
   TabbyTextStyles(
-    toolbarTitle = Headline6TextStyle,
-    title = Headline6TextStyle,
+    toolbarTitle = Title1TextStyle,
+    title = Title1TextStyle,
     body = Body1TextStyle,
     bodySecondary = Body2TextStyle,
     caption = CaptionTextStyle,
