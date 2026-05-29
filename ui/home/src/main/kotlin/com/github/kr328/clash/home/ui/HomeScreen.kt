@@ -165,12 +165,12 @@ private fun HomeContent(
         Image(
           painter = painterResource(CommonR.drawable.ic_tabby_foreground),
           contentDescription = null,
-          modifier = Modifier.size(logoSize),
+          modifier = Modifier.size(75.dp),
         )
         Spacer(10.dp)
         Text(
           text = stringResource(CommonR.string.tabby),
-          style = MaterialTheme.typography.titleLarge,
+          style = MaterialTheme.typography.headlineLarge,
         )
       }
 
@@ -305,7 +305,6 @@ private fun HomeActionLabel(
   }
 }
 
-private val logoSize = 55.dp
 private val cardMarginVertical = 5.dp
 private val labelMarginVertical = 2.dp
 private val actionItemPaddingHorizontal = 20.dp

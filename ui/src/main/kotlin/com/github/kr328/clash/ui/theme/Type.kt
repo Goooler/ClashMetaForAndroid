@@ -18,6 +18,15 @@ private val Headline6TextStyle =
     letterSpacing = 0.15.sp,
   )
 
+private val Headline5TextStyle =
+  TextStyle(
+    fontFamily = DefaultFontFamily,
+    fontWeight = FontWeight.Medium,
+    fontSize = 24.sp,
+    lineHeight = 32.sp,
+    letterSpacing = 0.sp,
+  )
+
 private val Body1TextStyle =
   TextStyle(
     fontFamily = DefaultFontFamily,
@@ -56,6 +65,7 @@ private val TooltipTextStyle =
 
 val Typography =
   Typography(
+    headlineLarge = Headline5TextStyle,
     headlineSmall = Headline6TextStyle,
     titleLarge = Headline6TextStyle,
     bodyLarge = Body1TextStyle,
