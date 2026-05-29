@@ -32,7 +32,7 @@ import com.github.kr328.clash.glue.util.openLink
 import com.github.kr328.clash.home.R
 import com.github.kr328.clash.home.vm.HelpViewModel
 import com.github.kr328.clash.ui.component.TabbyScaffold
-import com.github.kr328.clash.ui.icon.BaselineInfo
+import com.github.kr328.clash.ui.icon.BaselineMihomo
 import com.github.kr328.clash.ui.icon.BaselineUpdate
 import com.github.kr328.clash.ui.icon.OutlineInfo
 import com.github.kr328.clash.ui.icon.TabbyIcons
@@ -136,7 +136,12 @@ private fun HelpContent(
           key = "app_version",
           title = { Text(stringResource(R.string.app_version)) },
           summary = { Text(uiState.appVersion) },
-          icon = { Icon(imageVector = TabbyIcons.BaselineInfo, contentDescription = null) },
+          icon = {
+            Icon(
+              painter = painterResource(CommonR.drawable.ic_tabby_small),
+              contentDescription = null,
+            )
+          },
         )
         preference(
           key = "kernel_version",
@@ -144,7 +149,7 @@ private fun HelpContent(
           summary = { Text(uiState.coreVersion) },
           icon = {
             Icon(
-              painter = painterResource(CommonR.drawable.ic_tabby_small),
+              imageVector = TabbyIcons.BaselineMihomo,
               contentDescription = null,
             )
           },
