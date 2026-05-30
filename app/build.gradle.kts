@@ -13,7 +13,7 @@ android {
   defaultConfig {
     applicationId = "io.github.goooler.tabby"
     targetSdk = 35
-    versionName = "3.1.0"
+    versionName = "3.1.1"
     versionCode = checkNotNull(versionName).toVersionCode()
   }
 
