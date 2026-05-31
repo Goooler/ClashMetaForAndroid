@@ -25,7 +25,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.github.kr328.clash.common.R as CommonR
 import com.github.kr328.clash.glue.util.CLASH_META_CORE
-import com.github.kr328.clash.glue.util.CLASH_META_WIKI
+import com.github.kr328.clash.glue.util.MIHOMO_WIKI
 import com.github.kr328.clash.glue.util.TABBY_GITHUB
 import com.github.kr328.clash.glue.util.openLink
 import com.github.kr328.clash.home.R
@@ -106,10 +106,10 @@ private fun HelpContent(
           title = { Text(stringResource(R.string.document)) },
         )
         preference(
-          key = "clash_meta_wiki",
-          title = { Text(stringResource(R.string.clash_meta_wiki)) },
-          summary = { Text(CLASH_META_WIKI) },
-          onClick = { onOpenLink(CLASH_META_WIKI) },
+          key = "mihomo_wiki",
+          title = { Text(stringResource(R.string.mihomo_wiki)) },
+          summary = { Text(MIHOMO_WIKI) },
+          onClick = { onOpenLink(MIHOMO_WIKI) },
         )
         preferenceCategory(key = "cat_sources", title = { Text(stringResource(R.string.sources)) })
         preference(

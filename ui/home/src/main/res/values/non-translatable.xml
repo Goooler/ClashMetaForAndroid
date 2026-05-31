@@ -1,0 +1,5 @@
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="PluralsCandidate">
+
+  <string name="mihomo_wiki" translatable="false">Mihomo Wiki</string>
+
+</resources>
