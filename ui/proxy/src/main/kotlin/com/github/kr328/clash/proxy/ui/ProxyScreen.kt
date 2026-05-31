@@ -132,6 +132,7 @@ private fun ProxyContent(
 ) {
   var menuVisible by remember { mutableStateOf(false) }
   var scrollSelectedToTopRequestVersion by remember { mutableStateOf(0) }
+  var scrollSelectedToTopRequestPage by remember { mutableStateOf(0) }
   val currentGroup = uiState.groups.getOrNull(uiState.currentPage)
   val showUrlTestAction = uiState.groupNames.isNotEmpty()
   val groupNames = uiState.groupNames
@@ -220,7 +221,12 @@ private fun ProxyContent(
         }
       }
 
-      IconButton(onClick = { scrollSelectedToTopRequestVersion += 1 }) {
+      IconButton(
+        onClick = {
+          scrollSelectedToTopRequestPage = pagerState?.currentPage ?: uiState.currentPage
+          scrollSelectedToTopRequestVersion += 1
+        }
+      ) {
         Icon(
           imageVector = TabbyIcons.BaselineCircleCenter,
           contentDescription = stringResource(R.string.center_selected),
@@ -265,6 +271,7 @@ private fun ProxyContent(
           uiState = uiState,
           selectedProxies = selectedProxies,
           scrollSelectedToTopRequestVersion = scrollSelectedToTopRequestVersion,
+          scrollSelectedToTopRequestPage = scrollSelectedToTopRequestPage,
           pagerState = pagerState ?: return@Box,
           gridStates = gridStates,
           onProxySelected = onProxySelected,
@@ -279,6 +286,7 @@ private fun ProxyPagerContent(
   uiState: ProxyViewModel.UiState,
   selectedProxies: List<SelectedProxy>,
   scrollSelectedToTopRequestVersion: Int,
+  scrollSelectedToTopRequestPage: Int,
   pagerState: PagerState,
   gridStates: List<LazyGridState>,
   onProxySelected: (Int, String) -> Unit,
@@ -309,6 +317,7 @@ private fun ProxyPagerContent(
         selectedProxyName = selectedProxies.getOrNull(page)?.name,
         isCurrentPage = page == pagerState.currentPage,
         scrollSelectedToTopRequestVersion = scrollSelectedToTopRequestVersion,
+        scrollSelectedToTopRequestPage = scrollSelectedToTopRequestPage,
         gridState = gridStates[page],
         selectedProxies = selectedProxies,
         onProxySelected = onProxySelected,
@@ -325,6 +334,7 @@ private fun ProxyGroupPage(
   selectedProxyName: String?,
   isCurrentPage: Boolean,
   scrollSelectedToTopRequestVersion: Int,
+  scrollSelectedToTopRequestPage: Int,
   gridState: LazyGridState,
   selectedProxies: List<SelectedProxy>,
   onProxySelected: (Int, String) -> Unit,
@@ -336,8 +346,14 @@ private fun ProxyGroupPage(
   val unselectedControl = MaterialTheme.colorScheme.onSurface
   val unselectedBackground = MaterialTheme.colorScheme.surface
 
-  LaunchedEffect(scrollSelectedToTopRequestVersion, isCurrentPage) {
-    if (!isCurrentPage || scrollSelectedToTopRequestVersion == 0) return@LaunchedEffect
+  LaunchedEffect(scrollSelectedToTopRequestVersion) {
+    if (
+      scrollSelectedToTopRequestVersion == 0 ||
+        index != scrollSelectedToTopRequestPage ||
+        !isCurrentPage
+    ) {
+      return@LaunchedEffect
+    }
 
     val selectedIndex = sources.indexOfFirst { it.proxy.name == selectedProxyName }
     if (selectedIndex < 0) return@LaunchedEffect
