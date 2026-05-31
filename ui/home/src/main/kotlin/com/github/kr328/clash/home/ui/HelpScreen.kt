@@ -24,9 +24,8 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.github.kr328.clash.common.R as CommonR
-import com.github.kr328.clash.glue.util.CLASH_META_CORE
-import com.github.kr328.clash.glue.util.CLASH_META_WIKI
-import com.github.kr328.clash.glue.util.CLASH_WIKI
+import com.github.kr328.clash.glue.util.MIHOMO_CORE
+import com.github.kr328.clash.glue.util.MIHOMO_WIKI
 import com.github.kr328.clash.glue.util.TABBY_GITHUB
 import com.github.kr328.clash.glue.util.openLink
 import com.github.kr328.clash.home.R
@@ -107,26 +106,20 @@ private fun HelpContent(
           title = { Text(stringResource(R.string.document)) },
         )
         preference(
-          key = "clash_wiki",
-          title = { Text(stringResource(R.string.clash_wiki)) },
-          summary = { Text(CLASH_WIKI) },
-          onClick = { onOpenLink(CLASH_WIKI) },
-        )
-        preference(
-          key = "clash_meta_wiki",
-          title = { Text(stringResource(R.string.clash_meta_wiki)) },
-          summary = { Text(CLASH_META_WIKI) },
-          onClick = { onOpenLink(CLASH_META_WIKI) },
+          key = "mihomo_wiki",
+          title = { Text(stringResource(R.string.mihomo_wiki)) },
+          summary = { Text(MIHOMO_WIKI) },
+          onClick = { onOpenLink(MIHOMO_WIKI) },
         )
         preferenceCategory(key = "cat_sources", title = { Text(stringResource(R.string.sources)) })
         preference(
-          key = "clash_meta_core",
-          title = { Text(stringResource(R.string.clash_meta_core)) },
-          summary = { Text(CLASH_META_CORE) },
-          onClick = { onOpenLink(CLASH_META_CORE) },
+          key = "mihomo_core",
+          title = { Text(stringResource(R.string.mihomo_core)) },
+          summary = { Text(MIHOMO_CORE) },
+          onClick = { onOpenLink(MIHOMO_CORE) },
         )
         preference(
-          key = "clash_meta_for_android",
+          key = "tabby",
           title = { Text(stringResource(CommonR.string.tabby)) },
           summary = { Text(TABBY_GITHUB) },
           onClick = { onOpenLink(TABBY_GITHUB) },
@@ -144,8 +137,8 @@ private fun HelpContent(
           },
         )
         preference(
-          key = "kernel_version",
-          title = { Text(stringResource(R.string.kernel_version)) },
+          key = "core_version",
+          title = { Text(stringResource(R.string.core_version)) },
           summary = { Text(uiState.coreVersion) },
           icon = {
             Icon(
