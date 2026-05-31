@@ -156,7 +156,7 @@ private fun ProxyContent(
 
   val firstRowSize = columnsForProxyLine(uiState.proxyLine)
   val showScrollToTopFab by
-    remember(pagerState, gridStates, firstRowSize) {
+    remember(pagerState, firstRowSize, groupNames.size) {
       derivedStateOf {
         val validPagerState = pagerState ?: return@derivedStateOf false
         val currentGridState =
@@ -165,6 +165,7 @@ private fun ProxyContent(
         !currentGridState.isScrollInProgress &&
           currentGridState.firstVisibleItemIndex >= firstRowSize
       }
+    }
     }
 
   if (menuVisible) {
