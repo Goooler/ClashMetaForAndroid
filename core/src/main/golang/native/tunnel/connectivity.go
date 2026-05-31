@@ -13,7 +13,7 @@ import (
 
 const healthCheckTimeout = 5 * time.Second
 const defaultHealthCheckURL = "https://www.gstatic.com/generate_204"
-const maxHealthCheckConcurrency = 16
+const maxHealthCheckConcurrency = 32
 
 func probeURL(proxy C.Proxy, proxyName string) {
 	testURL := defaultHealthCheckURL
