@@ -26,7 +26,6 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.github.kr328.clash.common.R as CommonR
 import com.github.kr328.clash.glue.util.CLASH_META_CORE
 import com.github.kr328.clash.glue.util.CLASH_META_WIKI
-import com.github.kr328.clash.glue.util.CLASH_WIKI
 import com.github.kr328.clash.glue.util.TABBY_GITHUB
 import com.github.kr328.clash.glue.util.openLink
 import com.github.kr328.clash.home.R
@@ -105,12 +104,6 @@ private fun HelpContent(
         preferenceCategory(
           key = "cat_document",
           title = { Text(stringResource(R.string.document)) },
-        )
-        preference(
-          key = "clash_wiki",
-          title = { Text(stringResource(R.string.clash_wiki)) },
-          summary = { Text(CLASH_WIKI) },
-          onClick = { onOpenLink(CLASH_WIKI) },
         )
         preference(
           key = "clash_meta_wiki",
