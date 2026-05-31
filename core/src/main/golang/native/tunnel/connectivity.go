@@ -7,13 +7,13 @@ import (
 
 	"github.com/metacubex/mihomo/adapter/outboundgroup"
 	C "github.com/metacubex/mihomo/constant"
-	"github.com/metacubex/mihomo/constant/provider"
 	"github.com/metacubex/mihomo/log"
 	"github.com/metacubex/mihomo/tunnel"
 )
 
 const healthCheckTimeout = 5 * time.Second
 const defaultHealthCheckURL = "https://www.gstatic.com/generate_204"
+const maxHealthCheckConcurrency = 32
 
 func probeURL(proxy C.Proxy, proxyName string) {
 	testURL := defaultHealthCheckURL
@@ -54,15 +54,28 @@ func HealthCheck(name string) {
 	}
 
 	wg := &sync.WaitGroup{}
+	semaphore := make(chan struct{}, maxHealthCheckConcurrency)
+	proxies := g.Proxies()
+	checked := make(map[string]struct{}, len(proxies))
 
-	for _, pr := range g.Providers() {
+	for _, proxy := range proxies {
+		proxyName := proxy.Name()
+		if _, ok := checked[proxyName]; ok {
+			continue
+		}
+		checked[proxyName] = struct{}{}
+
 		wg.Add(1)
 
-		go func(provider provider.ProxyProvider) {
-			provider.HealthCheck()
+		go func(proxy C.Proxy, proxyName string) {
+			semaphore <- struct{}{}
+			defer func() {
+				<-semaphore
+			}()
+			probeURL(proxy, proxyName)
 
 			wg.Done()
-		}(pr)
+		}(proxy, proxyName)
 	}
 
 	wg.Wait()
