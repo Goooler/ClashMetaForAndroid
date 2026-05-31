@@ -80,6 +80,8 @@ func healthCheckProxy(completable unsafe.Pointer, groupName C.c_string, proxyNam
 		tunnel.HealthCheckProxy(groupName, proxyName)
 
 		C.complete(completable, nil)
+
+		C.release_object(completable)
 	}(C.GoString(groupName), C.GoString(proxyName))
 }
 
