@@ -6,9 +6,9 @@ import com.github.kr328.clash.common.Global
 import com.github.kr328.clash.common.Global.application
 import com.github.kr328.clash.common.constants.Intents
 import com.github.kr328.clash.common.log.Log
+import com.github.kr328.clash.common.util.mainIntent
 import com.github.kr328.clash.glue.store.AppStore
 import com.github.kr328.clash.glue.util.ApplicationObserver
-import com.github.kr328.clash.glue.util.mainIntent
 import com.github.kr328.clash.glue.util.verifyApk
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
