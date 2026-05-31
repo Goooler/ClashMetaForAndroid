@@ -240,7 +240,10 @@ private fun ProxyContent(
             scope.launch { currentGridState.animateScrollToItem(0) }
           }
         ) {
-          Icon(imageVector = TabbyIcons.BaselineArrowUp, contentDescription = null)
+          Icon(
+            imageVector = TabbyIcons.BaselineArrowUp,
+            contentDescription = "Scroll to top",
+          )
         }
       }
     },
