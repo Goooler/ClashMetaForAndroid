@@ -27,7 +27,7 @@ func probeURL(proxy C.Proxy, proxyName string) {
 	ctx, cancel := context.WithTimeout(context.Background(), healthCheckTimeout)
 	defer cancel()
 
-	if _, _, err := proxy.URLTest(ctx, testURL, nil); err != nil && ctx.Err() == nil {
+	if _, err := proxy.URLTest(ctx, testURL, nil); err != nil && ctx.Err() == nil {
 		log.Warnln(
 			"Request health check for `%s` with url `%s` failed: %s",
 			proxyName,
