@@ -9,5 +9,6 @@
   <string name="not_selectable">不可选择</string>
   <string name="proxy_empty_tips">没有可以显示的组</string>
   <string name="proxy_scroll_to_top">滚动到顶部</string>
+  <string name="scroll_selected_to_top">将当前选择滚动至顶部</string>
   <string name="single">单列</string>
 </resources>

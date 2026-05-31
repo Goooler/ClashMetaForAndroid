@@ -41,6 +41,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -67,6 +68,7 @@ import com.github.kr328.clash.proxy.vm.ProxyViewModel.SelectedProxy
 import com.github.kr328.clash.ui.component.Spacer
 import com.github.kr328.clash.ui.component.TabbyScaffold
 import com.github.kr328.clash.ui.icon.BaselineArrowUp
+import com.github.kr328.clash.ui.icon.BaselineCircleCenter
 import com.github.kr328.clash.ui.icon.BaselineFlashOn
 import com.github.kr328.clash.ui.icon.BaselineMoreVert
 import com.github.kr328.clash.ui.icon.TabbyIcons
@@ -130,8 +132,10 @@ private fun ProxyContent(
   onProxySelected: (Int, String) -> Unit,
 ) {
   var menuVisible by remember { mutableStateOf(false) }
+  var scrollSelectedToTopRequestVersion by remember { mutableIntStateOf(0) }
+  var scrollSelectedToTopRequestPage by remember { mutableIntStateOf(0) }
   val currentGroup = uiState.groups.getOrNull(uiState.currentPage)
-  val showUrlTestAction = uiState.groupNames.isNotEmpty()
+  val hasGroups = uiState.groupNames.isNotEmpty()
   val groupNames = uiState.groupNames
   val pagerState =
     if (groupNames.isNotEmpty()) {
@@ -202,7 +206,7 @@ private fun ProxyContent(
     snackbarHostState = snackbarHostState,
     title = stringResource(CommonR.string.proxy),
     actions = {
-      if (showUrlTestAction) {
+      if (hasGroups) {
         if (currentGroup?.urlTesting == true) {
           CircularProgressIndicator(
             modifier = Modifier.padding(horizontal = 12.dp).size(24.dp),
@@ -215,6 +219,18 @@ private fun ProxyContent(
               contentDescription = stringResource(R.string.delay_test),
             )
           }
+        }
+
+        IconButton(
+          onClick = {
+            scrollSelectedToTopRequestPage = pagerState?.currentPage ?: uiState.currentPage
+            scrollSelectedToTopRequestVersion += 1
+          }
+        ) {
+          Icon(
+            imageVector = TabbyIcons.BaselineCircleCenter,
+            contentDescription = stringResource(R.string.scroll_selected_to_top),
+          )
         }
       }
 
@@ -255,6 +271,8 @@ private fun ProxyContent(
         ProxyPagerContent(
           uiState = uiState,
           selectedProxies = selectedProxies,
+          scrollSelectedToTopRequestVersion = scrollSelectedToTopRequestVersion,
+          scrollSelectedToTopRequestPage = scrollSelectedToTopRequestPage,
           pagerState = pagerState ?: return@Box,
           gridStates = gridStates,
           onProxySelected = onProxySelected,
@@ -268,6 +286,8 @@ private fun ProxyContent(
 private fun ProxyPagerContent(
   uiState: ProxyViewModel.UiState,
   selectedProxies: List<SelectedProxy>,
+  scrollSelectedToTopRequestVersion: Int,
+  scrollSelectedToTopRequestPage: Int,
   pagerState: PagerState,
   gridStates: List<LazyGridState>,
   onProxySelected: (Int, String) -> Unit,
@@ -295,6 +315,10 @@ private fun ProxyPagerContent(
         index = page,
         proxyLine = uiState.proxyLine,
         group = uiState.groups.getOrNull(page) ?: ProxyViewModel.UiState.ProxyGroupUiState(),
+        selectedProxyName = selectedProxies.getOrNull(page)?.name,
+        isCurrentPage = page == pagerState.currentPage,
+        scrollSelectedToTopRequestVersion = scrollSelectedToTopRequestVersion,
+        scrollSelectedToTopRequestPage = scrollSelectedToTopRequestPage,
         gridState = gridStates[page],
         selectedProxies = selectedProxies,
         onProxySelected = onProxySelected,
@@ -308,6 +332,10 @@ private fun ProxyGroupPage(
   index: Int,
   proxyLine: Int,
   group: ProxyViewModel.UiState.ProxyGroupUiState,
+  selectedProxyName: String?,
+  isCurrentPage: Boolean,
+  scrollSelectedToTopRequestVersion: Int,
+  scrollSelectedToTopRequestPage: Int,
   gridState: LazyGridState,
   selectedProxies: List<SelectedProxy>,
   onProxySelected: (Int, String) -> Unit,
@@ -318,6 +346,21 @@ private fun ProxyGroupPage(
   val selectedBackground = MaterialTheme.colorScheme.primary
   val unselectedControl = MaterialTheme.colorScheme.onSurface
   val unselectedBackground = MaterialTheme.colorScheme.surface
+
+  LaunchedEffect(scrollSelectedToTopRequestVersion) {
+    if (
+      scrollSelectedToTopRequestVersion == 0 ||
+        index != scrollSelectedToTopRequestPage ||
+        !isCurrentPage
+    ) {
+      return@LaunchedEffect
+    }
+
+    val selectedIndex = sources.indexOfFirst { it.proxy.name == selectedProxyName }
+    if (selectedIndex < 0) return@LaunchedEffect
+
+    gridState.animateScrollToItem(index = selectedIndex)
+  }
 
   LazyVerticalGrid(
     state = gridState,
