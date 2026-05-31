@@ -140,13 +140,8 @@ private fun ProxyContent(
     } else {
       null
     }
+  val gridStates = groupNames.map { rememberLazyGridState() }
   val scope = rememberCoroutineScope()
-  val gridStates =
-    if (groupNames.isNotEmpty()) {
-      List(groupNames.size) { rememberLazyGridState() }
-    } else {
-      emptyList()
-    }
 
   pagerState?.let { validPagerState ->
     LaunchedEffect(validPagerState) {
