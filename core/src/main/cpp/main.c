@@ -185,14 +185,28 @@ Java_com_github_kr328_clash_core_bridge_Bridge_nativeQueryGroup(JNIEnv *env, job
 
 JNIEXPORT void JNICALL
 Java_com_github_kr328_clash_core_bridge_Bridge_nativeHealthCheck(JNIEnv *env, jobject thiz,
-                                                                 jobject completable,
-                                                                 jstring name) {
+                                                                  jobject completable,
+                                                                  jstring name) {
     TRACE_METHOD();
 
     jobject _completable = new_global(completable);
     scoped_string _name = get_string(name);
 
     healthCheck(_completable, _name);
+}
+
+JNIEXPORT void JNICALL
+Java_com_github_kr328_clash_core_bridge_Bridge_nativeHealthCheckProxy(JNIEnv *env, jobject thiz,
+                                                                       jobject completable,
+                                                                       jstring groupName,
+                                                                       jstring proxyName) {
+    TRACE_METHOD();
+
+    jobject _completable = new_global(completable);
+    scoped_string _groupName = get_string(groupName);
+    scoped_string _proxyName = get_string(proxyName);
+
+    healthCheckProxy(_completable, _groupName, _proxyName);
 }
 
 JNIEXPORT void JNICALL

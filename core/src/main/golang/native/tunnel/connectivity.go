@@ -1,13 +1,41 @@
 package tunnel
 
 import (
+	"context"
 	"sync"
+	"time"
 
 	"github.com/metacubex/mihomo/adapter/outboundgroup"
+	C "github.com/metacubex/mihomo/constant"
 	"github.com/metacubex/mihomo/constant/provider"
 	"github.com/metacubex/mihomo/log"
 	"github.com/metacubex/mihomo/tunnel"
 )
+
+const healthCheckTimeout = 5 * time.Second
+const defaultHealthCheckURL = "https://www.gstatic.com/generate_204"
+
+func probeURL(proxy C.Proxy, proxyName string) {
+	testURL := defaultHealthCheckURL
+	for k := range proxy.ExtraDelayHistories() {
+		if len(k) > 0 {
+			testURL = k
+			break
+		}
+	}
+
+	ctx, cancel := context.WithTimeout(context.Background(), healthCheckTimeout)
+	defer cancel()
+
+	if _, err := proxy.URLTest(ctx, testURL, nil); err != nil && ctx.Err() == nil {
+		log.Warnln(
+			"Request health check for `%s` with url `%s` failed: %s",
+			proxyName,
+			testURL,
+			err.Error(),
+		)
+	}
+}
 
 func HealthCheck(name string) {
 	p := tunnel.Proxies()[name]
@@ -20,7 +48,7 @@ func HealthCheck(name string) {
 
 	g, ok := p.Adapter().(outboundgroup.ProxyGroup)
 	if !ok {
-		log.Warnln("Request health check for `%s`: invalid type %s", name, p.Type().String())
+		probeURL(p, name)
 
 		return
 	}
@@ -46,4 +74,40 @@ func HealthCheckAll() {
 			HealthCheck(group)
 		}(g)
 	}
+}
+
+func HealthCheckProxy(groupName string, proxyName string) {
+	p := tunnel.Proxies()[groupName]
+
+	if p == nil {
+		log.Warnln(
+			"Request health check for proxy `%s` in group `%s`: group not found",
+			proxyName,
+			groupName,
+		)
+		return
+	}
+
+	g, ok := p.Adapter().(outboundgroup.ProxyGroup)
+	if !ok {
+		log.Warnln(
+			"Request health check for proxy `%s` in group `%s`: not a proxy group",
+			proxyName,
+			groupName,
+		)
+		return
+	}
+
+	for _, proxy := range g.Proxies() {
+		if proxy.Name() == proxyName {
+			probeURL(proxy, proxyName)
+			return
+		}
+	}
+
+	log.Warnln(
+		"Request health check for proxy `%s` in group `%s`: proxy not found",
+		proxyName,
+		groupName,
+	)
 }
