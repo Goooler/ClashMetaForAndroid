@@ -5,6 +5,7 @@
   <string name="app_version">應用版本</string>
   <string name="check_for_updates">檢查更新</string>
   <string name="check_update_failed">檢查更新失敗</string>
+  <string name="core_version">核心版本</string>
   <string name="document">文檔</string>
   <string name="donate">捐贈</string>
   <string name="feedback">反饋</string>
@@ -13,7 +14,6 @@
   <string name="github_issues">GitHub Issues</string>
   <string name="google_play">Google Play</string>
   <string name="help">幫助</string>
-  <string name="kernel_version">核心版本</string>
   <string name="no_profile_selected">沒有選擇配置文件</string>
   <string name="open">開啟</string>
   <string name="profile">配置</string>

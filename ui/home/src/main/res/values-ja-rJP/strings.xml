@@ -5,6 +5,7 @@
   <string name="app_version">アプリバージョン</string>
   <string name="check_for_updates">アップデートを確認</string>
   <string name="check_update_failed">アップデートの確認に失敗しました</string>
+  <string name="core_version">コアバージョン</string>
   <string name="document">ドキュメント</string>
   <string name="donate">寄付</string>
   <string name="feedback">フィードバック</string>
@@ -13,7 +14,6 @@
   <string name="github_issues">GitHub Issues</string>
   <string name="google_play">Google Play</string>
   <string name="help">ヘルプ</string>
-  <string name="kernel_version">コアバージョン</string>
   <string name="no_profile_selected">プロファイルが選択されていません</string>
   <string name="open">開く</string>
   <string name="profile">プロファイル</string>

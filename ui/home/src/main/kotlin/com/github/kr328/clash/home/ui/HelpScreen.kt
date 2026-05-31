@@ -137,8 +137,8 @@ private fun HelpContent(
           },
         )
         preference(
-          key = "kernel_version",
-          title = { Text(stringResource(R.string.kernel_version)) },
+          key = "core_version",
+          title = { Text(stringResource(R.string.core_version)) },
           summary = { Text(uiState.coreVersion) },
           icon = {
             Icon(

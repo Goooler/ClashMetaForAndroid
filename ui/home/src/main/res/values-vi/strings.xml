@@ -5,6 +5,7 @@
   <string name="app_version">Phiên bản ứng dụng</string>
   <string name="check_for_updates">Kiểm tra cập nhật</string>
   <string name="check_update_failed">Không thể kiểm tra cập nhật</string>
+  <string name="core_version">Phiên bản Core</string>
   <string name="document">Tài liệu</string>
   <string name="donate">Quyên góp</string>
   <string name="feedback">Phản hồi</string>
@@ -13,7 +14,6 @@
   <string name="github_issues">Sự cố trên GitHub</string>
   <string name="google_play">Google Play</string>
   <string name="help">Trợ giúp</string>
-  <string name="kernel_version">Phiên bản Core</string>
   <string name="no_profile_selected">Không có cấu hình</string>
   <string name="open">Mở</string>
   <string name="profile">Cấu hình</string>
