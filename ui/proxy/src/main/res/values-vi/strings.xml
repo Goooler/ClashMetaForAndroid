@@ -8,5 +8,6 @@
   <string name="multiple">Nhiều</string>
   <string name="not_selectable">Không thể chọn</string>
   <string name="proxy_empty_tips">Không có nhóm nào được hiển thị</string>
+  <string name="proxy_scroll_to_top">Cuộn lên đầu</string>
   <string name="single">Đơn</string>
 </resources>

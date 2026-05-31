@@ -242,7 +242,7 @@ private fun ProxyContent(
         ) {
           Icon(
             imageVector = TabbyIcons.BaselineArrowUp,
-            contentDescription = "Scroll to top",
+            contentDescription = stringResource(R.string.proxy_scroll_to_top),
           )
         }
       }

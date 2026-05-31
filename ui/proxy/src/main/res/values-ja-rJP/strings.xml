@@ -8,5 +8,6 @@
   <string name="multiple">マルチカラム</string>
   <string name="not_selectable">選択不可</string>
   <string name="proxy_empty_tips">表示するグループがありません</string>
+  <string name="proxy_scroll_to_top">先頭にスクロール</string>
   <string name="single">シングルカラム</string>
 </resources>
