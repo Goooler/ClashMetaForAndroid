@@ -14,7 +14,7 @@ val TabbyIcons.BaselineArrowUp: ImageVector
     }
     _BaselineArrowUp =
       ImageVector.Builder(
-          name = "arrow-up",
+          name = "BaselineArrowUp",
           defaultWidth = 24.dp,
           defaultHeight = 24.dp,
           viewportWidth = 16f,
