@@ -454,10 +454,10 @@ private fun ProxyItemCard(
         Modifier.clip(CircleShape)
           .clickable(onClick = onDelayClick)
           .background(item.controls.copy(alpha = if (item.delayTesting) 0.33f else 0.14f))
-          .padding(horizontal = 8.dp, vertical = 2.dp),
+          .padding(horizontal = 4.dp, vertical = 2.dp),
       text = badgeText,
       color = item.controls,
-      style = MaterialTheme.typography.bodyMedium,
+      style = MaterialTheme.typography.labelSmall,
       maxLines = 1,
     )
   }
