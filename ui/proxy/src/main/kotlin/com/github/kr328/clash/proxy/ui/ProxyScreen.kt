@@ -41,6 +41,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -131,8 +132,8 @@ private fun ProxyContent(
   onProxySelected: (Int, String) -> Unit,
 ) {
   var menuVisible by remember { mutableStateOf(false) }
-  var scrollSelectedToTopRequestVersion by remember { mutableStateOf(0) }
-  var scrollSelectedToTopRequestPage by remember { mutableStateOf(0) }
+  var scrollSelectedToTopRequestVersion by remember { mutableIntStateOf(0) }
+  var scrollSelectedToTopRequestPage by remember { mutableIntStateOf(0) }
   val currentGroup = uiState.groups.getOrNull(uiState.currentPage)
   val showUrlTestAction = uiState.groupNames.isNotEmpty()
   val groupNames = uiState.groupNames
