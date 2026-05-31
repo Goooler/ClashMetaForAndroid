@@ -166,7 +166,6 @@ private fun ProxyContent(
           currentGridState.firstVisibleItemIndex >= firstRowSize
       }
     }
-    }
 
   if (menuVisible) {
     ModalBottomSheet(
