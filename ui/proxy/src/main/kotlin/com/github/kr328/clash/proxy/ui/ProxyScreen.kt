@@ -342,7 +342,7 @@ private fun ProxyGroupPage(
     val selectedIndex = sources.indexOfFirst { it.proxy.name == selectedProxyName }
     if (selectedIndex < 0) return@LaunchedEffect
 
-    gridState.animateScrollToItem(index = selectedIndex, scrollOffset = 0)
+    gridState.animateScrollToItem(index = selectedIndex)
   }
 
   LazyVerticalGrid(
