@@ -12,7 +12,7 @@ plugins {
 android {
   defaultConfig {
     applicationId = "io.github.goooler.tabby"
-    targetSdk = 35
+    targetSdk = 36
     versionName = "3.1.1"
     versionCode = checkNotNull(versionName).toVersionCode()
   }
