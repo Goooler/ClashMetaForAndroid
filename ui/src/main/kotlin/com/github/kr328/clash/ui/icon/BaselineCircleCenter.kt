@@ -17,22 +17,22 @@ val TabbyIcons.BaselineCircleCenter: ImageVector
           name = "record-circle",
           defaultWidth = 24.dp,
           defaultHeight = 24.dp,
-          viewportWidth = 16f,
-          viewportHeight = 16f,
+          viewportWidth = 24f,
+          viewportHeight = 24f,
         )
         .apply {
           path(fill = SolidColor(Color.White)) {
-            moveTo(8f, 14f)
-            arcTo(6f, 6f, 0f, true, true, 8f, 2f)
-            arcToRelative(6f, 6f, 0f, false, true, 0f, 12f)
-            moveToRelative(0f, 2f)
-            arcTo(8f, 8f, 0f, true, false, 8f, 0f)
-            arcToRelative(8f, 8f, 0f, false, false, 0f, 16f)
+            moveTo(12f, 19f)
+            arcTo(7f, 7f, 0f, true, true, 12f, 5f)
+            arcToRelative(7f, 7f, 0f, false, true, 0f, 14f)
+            moveToRelative(0f, 3f)
+            arcTo(10f, 10f, 0f, true, false, 12f, 2f)
+            arcToRelative(10f, 10f, 0f, false, false, 0f, 20f)
           }
           path(fill = SolidColor(Color.White)) {
-            moveTo(11f, 8f)
-            arcToRelative(3f, 3f, 0f, true, true, -6f, 0f)
-            arcToRelative(3f, 3f, 0f, false, true, 6f, 0f)
+            moveTo(16f, 12f)
+            arcToRelative(4f, 4f, 0f, true, true, -8f, 0f)
+            arcToRelative(4f, 4f, 0f, false, true, 8f, 0f)
           }
         }
         .build()
