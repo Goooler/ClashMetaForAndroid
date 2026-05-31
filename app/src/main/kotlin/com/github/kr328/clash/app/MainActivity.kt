@@ -225,7 +225,7 @@ class MainActivity : ComponentActivity() {
         .setShortLabel(getString(R.string.shortcut_toggle_short))
         .setLongLabel(getString(R.string.shortcut_toggle_long))
         .setIcon(IconCompat.createWithResource(this, R.drawable.ic_toggle_all))
-        .setIntent(mainIntent(action = Intents.ACTION_TOGGLE_CLASH).addFlags(flags))
+        .setIntent(mainIntent { action = Intents.ACTION_TOGGLE_CLASH }.addFlags(flags))
         .setRank(0)
         .build()
 
@@ -234,7 +234,7 @@ class MainActivity : ComponentActivity() {
         .setShortLabel(getString(R.string.shortcut_start_short))
         .setLongLabel(getString(R.string.shortcut_start_long))
         .setIcon(IconCompat.createWithResource(this, R.drawable.ic_toggle_on))
-        .setIntent(mainIntent(action = Intents.ACTION_START_CLASH).addFlags(flags))
+        .setIntent(mainIntent { action = Intents.ACTION_START_CLASH }.addFlags(flags))
         .setRank(1)
         .build()
 
@@ -243,7 +243,7 @@ class MainActivity : ComponentActivity() {
         .setShortLabel(getString(R.string.shortcut_stop_short))
         .setLongLabel(getString(R.string.shortcut_stop_long))
         .setIcon(IconCompat.createWithResource(this, R.drawable.ic_toggle_off))
-        .setIntent(mainIntent(action = Intents.ACTION_STOP_CLASH).addFlags(flags))
+        .setIntent(mainIntent { action = Intents.ACTION_STOP_CLASH }.addFlags(flags))
         .setRank(2)
         .build()
 

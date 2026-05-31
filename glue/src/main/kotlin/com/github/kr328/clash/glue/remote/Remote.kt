@@ -19,11 +19,10 @@ object Remote {
     Service(application) {
       ApplicationObserver.createdActivities.forEach { it.finish() }
 
-      val intent =
-        application
-          .mainIntent(action = Intents.ACTION_APP_CRASHED)
-          .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-
+      val intent = application.mainIntent {
+        action = Intents.ACTION_APP_CRASHED
+        addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+      }
       application.startActivity(intent)
     }
 
@@ -52,11 +51,10 @@ object Remote {
       if (!context.verifyApk()) {
         ApplicationObserver.createdActivities.forEach { it.finish() }
 
-        val intent =
-          application
-            .mainIntent(action = Intents.ACTION_APK_BROKEN)
-            .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-
+        val intent = application.mainIntent {
+          action = Intents.ACTION_APK_BROKEN
+          addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        }
         return context.startActivity(intent)
       } else {
         store.updatedAt = updatedAt

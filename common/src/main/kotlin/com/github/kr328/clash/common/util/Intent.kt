@@ -11,9 +11,9 @@ import com.github.kr328.clash.common.di.AppInfoProvider.Companion.instance as ap
 import java.io.Serializable
 import kotlin.uuid.Uuid
 
-fun Context.mainIntent(action: String? = null): Intent {
+inline fun Context.mainIntent(block: Intent.() -> Unit = {}): Intent {
   val mainActivityClass = appInfoProvider.mainActivityClass
-  return Intent(this, mainActivityClass).setAction(action)
+  return Intent(this, mainActivityClass).apply(block = block)
 }
 
 val Context.mainActivityAlias: ComponentName
