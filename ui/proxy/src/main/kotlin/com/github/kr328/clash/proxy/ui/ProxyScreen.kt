@@ -19,12 +19,14 @@ import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.selection.toggleable
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -38,6 +40,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -65,6 +68,7 @@ import com.github.kr328.clash.proxy.vm.ProxyViewModel.SelectedProxy
 import com.github.kr328.clash.ui.component.Spacer
 import com.github.kr328.clash.ui.component.TabbyScaffold
 import com.github.kr328.clash.ui.icon.BaselineCircleCenter
+import com.github.kr328.clash.ui.icon.BaselineArrowUp
 import com.github.kr328.clash.ui.icon.BaselineFlashOn
 import com.github.kr328.clash.ui.icon.BaselineMoreVert
 import com.github.kr328.clash.ui.icon.TabbyIcons
@@ -131,6 +135,40 @@ private fun ProxyContent(
   var centerSelectedRequestVersion by remember { mutableStateOf(0) }
   val currentGroup = uiState.groups.getOrNull(uiState.currentPage)
   val showUrlTestAction = uiState.groupNames.isNotEmpty()
+  val groupNames = uiState.groupNames
+  val pagerState =
+    if (groupNames.isNotEmpty()) {
+      val initialPage = uiState.initialPage.coerceIn(groupNames.indices)
+      rememberPagerState(initialPage = initialPage, pageCount = { groupNames.size })
+    } else {
+      null
+    }
+  val gridStates = groupNames.map { rememberLazyGridState() }
+  val scope = rememberCoroutineScope()
+
+  pagerState?.let { validPagerState ->
+    LaunchedEffect(validPagerState) {
+      snapshotFlow { validPagerState.currentPage }.collect(onPageChanged)
+    }
+
+    val currentPage = uiState.currentPage.coerceIn(groupNames.indices)
+    LaunchedEffect(currentPage) {
+      if (currentPage != validPagerState.currentPage) validPagerState.scrollToPage(currentPage)
+    }
+  }
+
+  val firstRowSize = columnsForProxyLine(uiState.proxyLine)
+  val showScrollToTopFab by
+    remember(pagerState, firstRowSize, groupNames.size) {
+      derivedStateOf {
+        val validPagerState = pagerState ?: return@derivedStateOf false
+        val currentGridState =
+          gridStates.getOrNull(validPagerState.currentPage) ?: return@derivedStateOf false
+
+        !currentGridState.isScrollInProgress &&
+          currentGridState.firstVisibleItemIndex >= firstRowSize
+      }
+    }
 
   if (menuVisible) {
     ModalBottomSheet(
@@ -197,6 +235,23 @@ private fun ProxyContent(
         )
       }
     },
+    floatingActionButton = {
+      if (showScrollToTopFab) {
+        FloatingActionButton(
+          onClick = {
+            val validPagerState = pagerState ?: return@FloatingActionButton
+            val currentGridState =
+              gridStates.getOrNull(validPagerState.currentPage) ?: return@FloatingActionButton
+            scope.launch { currentGridState.animateScrollToItem(0) }
+          }
+        ) {
+          Icon(
+            imageVector = TabbyIcons.BaselineArrowUp,
+            contentDescription = stringResource(R.string.proxy_scroll_to_top),
+          )
+        }
+      }
+    },
   ) { innerPadding ->
     Box(modifier = Modifier.fillMaxSize().padding(innerPadding)) {
       if (uiState.groupNames.isEmpty()) {
@@ -211,7 +266,8 @@ private fun ProxyContent(
           uiState = uiState,
           selectedProxies = selectedProxies,
           centerSelectedRequestVersion = centerSelectedRequestVersion,
-          onPageChanged = onPageChanged,
+          pagerState = pagerState ?: return@Box,
+          gridStates = gridStates,
           onProxySelected = onProxySelected,
         )
       }
@@ -224,22 +280,14 @@ private fun ProxyPagerContent(
   uiState: ProxyViewModel.UiState,
   selectedProxies: List<SelectedProxy>,
   centerSelectedRequestVersion: Int,
-  onPageChanged: (Int) -> Unit,
+  pagerState: PagerState,
+  gridStates: List<LazyGridState>,
   onProxySelected: (Int, String) -> Unit,
 ) {
   val groupNames = uiState.groupNames
   if (groupNames.isEmpty()) return
 
-  val initialPage = uiState.initialPage.coerceIn(groupNames.indices)
-  val pagerState = rememberPagerState(initialPage = initialPage, pageCount = { groupNames.size })
   val scope = rememberCoroutineScope()
-
-  LaunchedEffect(pagerState) { snapshotFlow { pagerState.currentPage }.collect(onPageChanged) }
-
-  val currentPage = uiState.currentPage.coerceIn(groupNames.indices)
-  LaunchedEffect(currentPage) {
-    if (currentPage != pagerState.currentPage) pagerState.scrollToPage(currentPage)
-  }
 
   Column(modifier = Modifier.fillMaxSize()) {
     PrimaryScrollableTabRow(selectedTabIndex = pagerState.currentPage, edgePadding = 0.dp) {
@@ -262,6 +310,7 @@ private fun ProxyPagerContent(
         selectedProxyName = selectedProxies.getOrNull(page)?.name,
         isCurrentPage = page == pagerState.currentPage,
         centerSelectedRequestVersion = centerSelectedRequestVersion,
+        gridState = gridStates[page],
         selectedProxies = selectedProxies,
         onProxySelected = onProxySelected,
       )
@@ -277,12 +326,12 @@ private fun ProxyGroupPage(
   selectedProxyName: String?,
   isCurrentPage: Boolean,
   centerSelectedRequestVersion: Int,
+  gridState: LazyGridState,
   selectedProxies: List<SelectedProxy>,
   onProxySelected: (Int, String) -> Unit,
 ) {
   val sources = group.sources
   val refreshVersion = group.refreshVersion
-  val gridState = rememberLazyGridState()
   val selectedControl = MaterialTheme.colorScheme.onPrimary
   val selectedBackground = MaterialTheme.colorScheme.primary
   val unselectedControl = MaterialTheme.colorScheme.onSurface

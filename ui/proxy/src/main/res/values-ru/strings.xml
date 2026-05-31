@@ -9,5 +9,6 @@
   <string name="multiple">Множественное</string>
   <string name="not_selectable">Not Selectable</string>
   <string name="proxy_empty_tips">Нет групп для отображения</string>
+  <string name="proxy_scroll_to_top">Прокрутить вверх</string>
   <string name="single">Одиночное</string>
 </resources>

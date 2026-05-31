@@ -6,11 +6,11 @@ import android.content.pm.PackageManager
 import com.github.kr328.clash.common.Global
 import com.github.kr328.clash.common.store.Store
 import com.github.kr328.clash.common.store.asStoreProvider
+import com.github.kr328.clash.common.util.mainActivityAlias
 import com.github.kr328.clash.common.util.unsafeLazy
 import com.github.kr328.clash.core.model.ProxySort
 import com.github.kr328.clash.glue.model.AppInfo
 import com.github.kr328.clash.glue.model.DarkMode
-import com.github.kr328.clash.glue.util.mainActivityAlias
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow

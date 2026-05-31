@@ -1,6 +1,7 @@
 package com.github.kr328.clash.settings.ui
 
 import androidx.annotation.StringRes
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -77,6 +78,7 @@ private fun EditableTextMapScreen(
       initialValues?.entries.orEmpty().map { it.toPair() }.toMutableStateList()
     }
   var showAddDialog by remember { mutableStateOf(false) }
+  var editingKey by remember { mutableStateOf<String?>(null) }
   val lazyListState = rememberLazyListState()
   val reorderableLazyListState =
     rememberReorderableLazyListState(lazyListState) { from, to ->
@@ -106,6 +108,11 @@ private fun EditableTextMapScreen(
               ListItem(
                 headlineContent = { Text(key) },
                 supportingContent = { Text(value) },
+                modifier =
+                  Modifier.clickable {
+                    editingKey = key
+                    showAddDialog = true
+                  },
                 leadingContent = {
                   Icon(
                     imageVector = TabbyIcons.BaselineDragHandle,
@@ -142,13 +149,35 @@ private fun EditableTextMapScreen(
   }
 
   if (showAddDialog) {
+    val editingEntry = editingKey?.let { k -> values.firstOrNull { it.first == k } }
     MapEntryInputDialog(
       title = title,
-      onDismiss = { showAddDialog = false },
-      onConfirm = { key, valueText ->
-        val index = values.indexOfFirst { it.first == key }
-        if (index >= 0) values[index] = key to valueText else values.add(key to valueText)
+      initialKey = editingEntry?.first.orEmpty(),
+      initialValue = editingEntry?.second.orEmpty(),
+      onDismiss = {
         showAddDialog = false
+        editingKey = null
+      },
+      onConfirm = { key, valueText ->
+        if (editingKey == null) {
+          val index = values.indexOfFirst { it.first == key }
+          if (index >= 0) values[index] = key to valueText else values.add(key to valueText)
+        } else {
+          val currentIdx = values.indexOfFirst { it.first == editingKey }
+          val existingIndex = values.indexOfFirst { it.first == key }
+          when {
+            existingIndex < 0 || existingIndex == currentIdx -> {
+              if (currentIdx >= 0) values[currentIdx] = key to valueText
+            }
+            else -> {
+              values[existingIndex] = key to valueText
+              if (currentIdx >= 0) values.removeAt(currentIdx)
+            }
+          }
+        }
+
+        showAddDialog = false
+        editingKey = null
       },
     )
   }
@@ -157,11 +186,13 @@ private fun EditableTextMapScreen(
 @Composable
 private fun MapEntryInputDialog(
   @StringRes title: Int,
+  initialKey: String,
+  initialValue: String,
   onDismiss: () -> Unit,
   onConfirm: (String, String) -> Unit,
 ) {
-  var keyText by remember { mutableStateOf(initialTextFieldValue("")) }
-  var valueText by remember { mutableStateOf(initialTextFieldValue("")) }
+  var keyText by remember(initialKey) { mutableStateOf(initialTextFieldValue(initialKey)) }
+  var valueText by remember(initialValue) { mutableStateOf(initialTextFieldValue(initialValue)) }
   val focusRequester = remember { FocusRequester() }
   val keyboardController = LocalSoftwareKeyboardController.current
   val confirmEnabled = keyText.text.isNotBlank() && valueText.text.isNotBlank()

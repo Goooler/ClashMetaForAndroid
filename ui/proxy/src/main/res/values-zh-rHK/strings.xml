@@ -9,5 +9,6 @@
   <string name="multiple">多列</string>
   <string name="not_selectable">不可選擇</string>
   <string name="proxy_empty_tips">沒有可以顯示的組</string>
+  <string name="proxy_scroll_to_top">滾動到頂部</string>
   <string name="single">單列</string>
 </resources>

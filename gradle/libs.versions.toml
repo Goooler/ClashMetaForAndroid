@@ -1,19 +1,20 @@
 [versions]
 agp = "9.2.1"
-kotlin = "2.3.21"
-androidx-lifecycle = "2.11.0-beta01"
+kotlin = "2.4.0-RC2"
+androidx-lifecycle = "2.11.0-beta02"
 kaidl = "0.2.0"
 room = "2.8.4"
 okhttp = "5.3.2"
 jvmTarget = "21"
-navigation3 = "1.1.1"
+navigation3 = "1.1.2"
 
 [libraries]
 kotlin-coroutine = "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.11.0"
 kotlin-serialization-json = "org.jetbrains.kotlinx:kotlinx-serialization-json:1.11.0"
 
 androidx-activity-compose = "androidx.activity:activity-compose:1.13.0"
-androidx-compose-bom = "androidx.compose:compose-bom:2026.05.00"
+androidx-browser = "androidx.browser:browser:1.10.0"
+androidx-compose-bom = "androidx.compose:compose-bom:2026.05.01"
 androidx-compose-ui = { module = "androidx.compose.ui:ui" }
 androidx-compose-ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview" }
 androidx-compose-ui-util = { module = "androidx.compose.ui:ui-util" }
@@ -25,7 +26,7 @@ androidx-lifecycle-viewmodel-navigation3 = { module = "androidx.lifecycle:lifecy
 androidx-navigation3-runtime = { module = "androidx.navigation3:navigation3-runtime", version.ref = "navigation3" }
 androidx-navigation3-ui = { module = "androidx.navigation3:navigation3-ui", version.ref = "navigation3" }
 
-androidx-core = "androidx.core:core:1.19.0-alpha02"
+androidx-core = "androidx.core:core:1.19.0-rc01"
 androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
 androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "room" }
 androidx-room-ktx = { module = "androidx.room:room-ktx", version.ref = "room" }
@@ -33,10 +34,11 @@ androidx-room-ktx = { module = "androidx.room:room-ktx", version.ref = "room" }
 kaidl-compiler = { module = "io.github.goooler.kaidl:kaidl-compiler", version.ref = "kaidl" }
 kaidl-runtime = { module = "io.github.goooler.kaidl:kaidl-runtime", version.ref = "kaidl" }
 rikkax-multiprocess = "dev.rikka.rikkax.preference:multiprocess:1.0.0"
-quickie-bundled = "io.github.g00fy2.quickie:quickie-bundled:1.11.0"
+quickie-bundled = "io.github.g00fy2.quickie:quickie-bundled:1.12.0"
 okhttp-client = { module = "com.squareup.okhttp3:okhttp", version.ref = "okhttp" }
 okhttp-interceptor = { module = "com.squareup.okhttp3:logging-interceptor", version.ref = "okhttp" }
 bytesize = "me.saket.bytesize:bytesize:2.2.1"
+semver = "net.swiftzer.semver:semver:2.1.0"
 
 koin-bom = "io.insert-koin:koin-bom:4.2.1"
 koin-core = { module = "io.insert-koin:koin-core" }
@@ -46,7 +48,7 @@ composePreference = "me.zhanghai.compose.preference:preference:2.2.0"
 reorderable = "sh.calvin.reorderable:reorderable:3.1.0"
 
 # Dummy to get renovate updates, the version is used in rootProject build.gradle with spotless.
-ktfmt = "com.facebook:ktfmt:0.62"
+ktfmt = "com.facebook:ktfmt:0.63"
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
@@ -54,7 +56,7 @@ android-library = { id = "com.android.library", version.ref = "agp" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 kotlin-parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize", version.ref = "kotlin" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
-ksp = "com.google.devtools.ksp:2.3.8"
+ksp = "com.google.devtools.ksp:2.3.9"
 golang = "io.github.goooler.golang:0.2.2"
 download = "de.undercouch.download:5.7.0"
-spotless = "com.diffplug.spotless:8.4.0"
+spotless = "com.diffplug.spotless:8.6.0"

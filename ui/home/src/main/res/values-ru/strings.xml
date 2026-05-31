@@ -1,6 +1,10 @@
 <resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="PluralsCandidate">
 
   <string name="about">О программе</string>
+  <string name="already_up_to_date">Уже актуально</string>
+  <string name="app_version">Версия приложения</string>
+  <string name="check_for_updates">Проверить обновления</string>
+  <string name="check_update_failed">Не удалось проверить обновления</string>
   <string name="clash_meta_core">Ядро Clash Meta</string>
   <string name="clash_meta_wiki">Clash Meta Wiki</string>
   <string name="clash_wiki">Clash Wiki</string>
@@ -12,11 +16,14 @@
   <string name="github_issues">Сообщения об ошибках на GitHub</string>
   <string name="google_play">Google Play</string>
   <string name="help">Помощь</string>
+  <string name="kernel_version">Версия Core</string>
   <string name="no_profile_selected">Профиль не выбран</string>
+  <string name="open">Открыть</string>
   <string name="profile">Профиль</string>
   <string name="sources">Исходный код</string>
   <string name="stopped">Остановлен</string>
   <string name="tips_help"><![CDATA[Tabby для Android — <strong>бесплатен</strong> и мы <strong>НЕ</strong> предоставляем по нему поддержку]]></string>
+  <string name="update_available">Доступна новая версия</string>
   <string name="version_updated">Приложение обновлено</string>
   <string name="version_updated_tips">Настройки были сброшены, старые профили необходимо сохранить повторно</string>
 </resources>
