@@ -14,8 +14,11 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.selection.toggleable
@@ -23,6 +26,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -36,7 +40,9 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -62,6 +68,8 @@ import com.github.kr328.clash.proxy.vm.ProxyViewModel
 import com.github.kr328.clash.proxy.vm.ProxyViewModel.SelectedProxy
 import com.github.kr328.clash.ui.component.Spacer
 import com.github.kr328.clash.ui.component.TabbyScaffold
+import com.github.kr328.clash.ui.icon.BaselineArrowUp
+import com.github.kr328.clash.ui.icon.BaselineCircleCenter
 import com.github.kr328.clash.ui.icon.BaselineFlashOn
 import com.github.kr328.clash.ui.icon.BaselineMoreVert
 import com.github.kr328.clash.ui.icon.TabbyIcons
@@ -127,8 +135,44 @@ private fun ProxyContent(
   onProxyDelayTest: (Int, String) -> Unit,
 ) {
   var menuVisible by remember { mutableStateOf(false) }
+  var scrollSelectedToTopRequestVersion by remember { mutableIntStateOf(0) }
+  var scrollSelectedToTopRequestPage by remember { mutableIntStateOf(0) }
   val currentGroup = uiState.groups.getOrNull(uiState.currentPage)
-  val showUrlTestAction = uiState.groupNames.isNotEmpty()
+  val hasGroups = uiState.groupNames.isNotEmpty()
+  val groupNames = uiState.groupNames
+  val pagerState =
+    if (groupNames.isNotEmpty()) {
+      val initialPage = uiState.initialPage.coerceIn(groupNames.indices)
+      rememberPagerState(initialPage = initialPage, pageCount = { groupNames.size })
+    } else {
+      null
+    }
+  val gridStates = groupNames.map { rememberLazyGridState() }
+  val scope = rememberCoroutineScope()
+
+  pagerState?.let { validPagerState ->
+    LaunchedEffect(validPagerState) {
+      snapshotFlow { validPagerState.currentPage }.collect(onPageChanged)
+    }
+
+    val currentPage = uiState.currentPage.coerceIn(groupNames.indices)
+    LaunchedEffect(currentPage) {
+      if (currentPage != validPagerState.currentPage) validPagerState.scrollToPage(currentPage)
+    }
+  }
+
+  val firstRowSize = columnsForProxyLine(uiState.proxyLine)
+  val showScrollToTopFab by
+    remember(pagerState, firstRowSize, groupNames.size) {
+      derivedStateOf {
+        val validPagerState = pagerState ?: return@derivedStateOf false
+        val currentGridState =
+          gridStates.getOrNull(validPagerState.currentPage) ?: return@derivedStateOf false
+
+        !currentGridState.isScrollInProgress &&
+          currentGridState.firstVisibleItemIndex >= firstRowSize
+      }
+    }
 
   if (menuVisible) {
     ModalBottomSheet(
@@ -165,7 +209,7 @@ private fun ProxyContent(
     snackbarHostState = snackbarHostState,
     title = stringResource(CommonR.string.proxy),
     actions = {
-      if (showUrlTestAction) {
+      if (hasGroups) {
         if (currentGroup?.urlTesting == true) {
           CircularProgressIndicator(
             modifier = Modifier.padding(horizontal = 12.dp).size(24.dp),
@@ -179,6 +223,18 @@ private fun ProxyContent(
             )
           }
         }
+
+        IconButton(
+          onClick = {
+            scrollSelectedToTopRequestPage = pagerState?.currentPage ?: uiState.currentPage
+            scrollSelectedToTopRequestVersion += 1
+          }
+        ) {
+          Icon(
+            imageVector = TabbyIcons.BaselineCircleCenter,
+            contentDescription = stringResource(R.string.scroll_selected_to_top),
+          )
+        }
       }
 
       IconButton(onClick = { menuVisible = true }) {
@@ -186,6 +242,23 @@ private fun ProxyContent(
           imageVector = TabbyIcons.BaselineMoreVert,
           contentDescription = stringResource(CommonR.string.more),
         )
+      }
+    },
+    floatingActionButton = {
+      if (showScrollToTopFab) {
+        FloatingActionButton(
+          onClick = {
+            val validPagerState = pagerState ?: return@FloatingActionButton
+            val currentGridState =
+              gridStates.getOrNull(validPagerState.currentPage) ?: return@FloatingActionButton
+            scope.launch { currentGridState.animateScrollToItem(0) }
+          }
+        ) {
+          Icon(
+            imageVector = TabbyIcons.BaselineArrowUp,
+            contentDescription = stringResource(R.string.proxy_scroll_to_top),
+          )
+        }
       }
     },
   ) { innerPadding ->
@@ -201,7 +274,10 @@ private fun ProxyContent(
         ProxyPagerContent(
           uiState = uiState,
           selectedProxies = selectedProxies,
-          onPageChanged = onPageChanged,
+          scrollSelectedToTopRequestVersion = scrollSelectedToTopRequestVersion,
+          scrollSelectedToTopRequestPage = scrollSelectedToTopRequestPage,
+          pagerState = pagerState ?: return@Box,
+          gridStates = gridStates,
           onProxySelected = onProxySelected,
           onProxyDelayTest = onProxyDelayTest,
         )
@@ -214,23 +290,17 @@ private fun ProxyContent(
 private fun ProxyPagerContent(
   uiState: ProxyViewModel.UiState,
   selectedProxies: List<SelectedProxy>,
-  onPageChanged: (Int) -> Unit,
+  scrollSelectedToTopRequestVersion: Int,
+  scrollSelectedToTopRequestPage: Int,
+  pagerState: PagerState,
+  gridStates: List<LazyGridState>,
   onProxySelected: (Int, String) -> Unit,
   onProxyDelayTest: (Int, String) -> Unit,
 ) {
   val groupNames = uiState.groupNames
   if (groupNames.isEmpty()) return
 
-  val initialPage = uiState.initialPage.coerceIn(groupNames.indices)
-  val pagerState = rememberPagerState(initialPage = initialPage, pageCount = { groupNames.size })
   val scope = rememberCoroutineScope()
-
-  LaunchedEffect(pagerState) { snapshotFlow { pagerState.currentPage }.collect(onPageChanged) }
-
-  val currentPage = uiState.currentPage.coerceIn(groupNames.indices)
-  LaunchedEffect(currentPage) {
-    if (currentPage != pagerState.currentPage) pagerState.scrollToPage(currentPage)
-  }
 
   Column(modifier = Modifier.fillMaxSize()) {
     PrimaryScrollableTabRow(selectedTabIndex = pagerState.currentPage, edgePadding = 0.dp) {
@@ -250,6 +320,11 @@ private fun ProxyPagerContent(
         index = page,
         proxyLine = uiState.proxyLine,
         group = uiState.groups.getOrNull(page) ?: ProxyViewModel.UiState.ProxyGroupUiState(),
+        selectedProxyName = selectedProxies.getOrNull(page)?.name,
+        isCurrentPage = page == pagerState.currentPage,
+        scrollSelectedToTopRequestVersion = scrollSelectedToTopRequestVersion,
+        scrollSelectedToTopRequestPage = scrollSelectedToTopRequestPage,
+        gridState = gridStates[page],
         selectedProxies = selectedProxies,
         onProxySelected = onProxySelected,
         onProxyDelayTest = onProxyDelayTest,
@@ -263,6 +338,11 @@ private fun ProxyGroupPage(
   index: Int,
   proxyLine: Int,
   group: ProxyViewModel.UiState.ProxyGroupUiState,
+  selectedProxyName: String?,
+  isCurrentPage: Boolean,
+  scrollSelectedToTopRequestVersion: Int,
+  scrollSelectedToTopRequestPage: Int,
+  gridState: LazyGridState,
   selectedProxies: List<SelectedProxy>,
   onProxySelected: (Int, String) -> Unit,
   onProxyDelayTest: (Int, String) -> Unit,
@@ -274,7 +354,23 @@ private fun ProxyGroupPage(
   val unselectedControl = MaterialTheme.colorScheme.onSurface
   val unselectedBackground = MaterialTheme.colorScheme.surface
 
+  LaunchedEffect(scrollSelectedToTopRequestVersion) {
+    if (
+      scrollSelectedToTopRequestVersion == 0 ||
+        index != scrollSelectedToTopRequestPage ||
+        !isCurrentPage
+    ) {
+      return@LaunchedEffect
+    }
+
+    val selectedIndex = sources.indexOfFirst { it.proxy.name == selectedProxyName }
+    if (selectedIndex < 0) return@LaunchedEffect
+
+    gridState.animateScrollToItem(index = selectedIndex)
+  }
+
   LazyVerticalGrid(
+    state = gridState,
     columns = GridCells.Fixed(columnsForProxyLine(proxyLine)),
     modifier = Modifier.fillMaxSize(),
     contentPadding = PaddingValues(gridContentPadding),

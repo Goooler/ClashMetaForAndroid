@@ -1,6 +1,10 @@
 <resources>
 
   <string name="about">Thông tin</string>
+  <string name="already_up_to_date">Đã là phiên bản mới nhất</string>
+  <string name="app_version">Phiên bản ứng dụng</string>
+  <string name="check_for_updates">Kiểm tra cập nhật</string>
+  <string name="check_update_failed">Không thể kiểm tra cập nhật</string>
   <string name="clash_meta_core">Clash Meta Core</string>
   <string name="clash_meta_wiki">Clash Meta Wiki</string>
   <string name="clash_wiki">Clash Wiki</string>
@@ -12,11 +16,14 @@
   <string name="github_issues">Sự cố trên GitHub</string>
   <string name="google_play">Google Play</string>
   <string name="help">Trợ giúp</string>
+  <string name="kernel_version">Phiên bản Core</string>
   <string name="no_profile_selected">Không có cấu hình</string>
+  <string name="open">Mở</string>
   <string name="profile">Cấu hình</string>
   <string name="sources">Nguồn</string>
   <string name="stopped">Đã ngắt kết nối</string>
   <string name="tips_help">Tabby là một phần mềm miễn phí và chúng tôi KHÔNG cung cấp bất kỳ dịch vụ trả phí nào cho nó</string>
+  <string name="update_available">Có phiên bản mới</string>
   <string name="version_updated">Đã cập nhật ứng dụng</string>
   <string name="version_updated_tips">Các cài đặt đã được đặt lại và các cấu hình cũ cần được lưu lại.</string>
 </resources>

@@ -6,9 +6,9 @@ import com.github.kr328.clash.common.Global
 import com.github.kr328.clash.common.Global.application
 import com.github.kr328.clash.common.constants.Intents
 import com.github.kr328.clash.common.log.Log
+import com.github.kr328.clash.common.util.mainIntent
 import com.github.kr328.clash.glue.store.AppStore
 import com.github.kr328.clash.glue.util.ApplicationObserver
-import com.github.kr328.clash.glue.util.mainIntent
 import com.github.kr328.clash.glue.util.verifyApk
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -19,11 +19,10 @@ object Remote {
     Service(application) {
       ApplicationObserver.createdActivities.forEach { it.finish() }
 
-      val intent =
-        application
-          .mainIntent(action = Intents.ACTION_APP_CRASHED)
-          .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-
+      val intent = application.mainIntent {
+        action = Intents.ACTION_APP_CRASHED
+        addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+      }
       application.startActivity(intent)
     }
 
@@ -52,11 +51,10 @@ object Remote {
       if (!context.verifyApk()) {
         ApplicationObserver.createdActivities.forEach { it.finish() }
 
-        val intent =
-          application
-            .mainIntent(action = Intents.ACTION_APK_BROKEN)
-            .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-
+        val intent = application.mainIntent {
+          action = Intents.ACTION_APK_BROKEN
+          addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        }
         return context.startActivity(intent)
       } else {
         store.updatedAt = updatedAt

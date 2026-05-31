@@ -6,8 +6,8 @@ import android.net.ProxyInfo
 import android.net.VpnService
 import android.os.Build
 import com.github.kr328.clash.common.compat.pendingIntentFlags
-import com.github.kr328.clash.common.constants.Components
 import com.github.kr328.clash.common.log.Log
+import com.github.kr328.clash.common.util.mainIntent
 import com.github.kr328.clash.service.clash.clashRuntime
 import com.github.kr328.clash.service.clash.module.AppListCacheModule
 import com.github.kr328.clash.service.clash.module.CloseModule
@@ -192,7 +192,9 @@ class TunService : VpnService(), CoroutineScope by CoroutineScope(Dispatchers.De
           PendingIntent.getActivity(
             self,
             R.id.nf_vpn_status,
-            Intent().setComponent(Components.MAIN_ACTIVITY),
+            service.mainIntent {
+              addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            },
             pendingIntentFlags(PendingIntent.FLAG_UPDATE_CURRENT),
           )
         )

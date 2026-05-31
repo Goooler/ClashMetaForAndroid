@@ -20,6 +20,8 @@ private val DarkColorScheme =
   darkColorScheme(
     primary = TabbyDarkPrimary,
     onPrimary = TabbyOnPrimary,
+    primaryContainer = TabbyDarkPrimary,
+    onPrimaryContainer = TabbyOnPrimary,
     secondary = TabbyDarkPrimary,
     onSecondary = TabbyOnPrimary,
     background = TabbyDarkBackground,
@@ -45,6 +47,8 @@ private val LightColorScheme =
   lightColorScheme(
     primary = TabbyLightPrimary,
     onPrimary = TabbyOnPrimary,
+    primaryContainer = TabbyLightPrimary,
+    onPrimaryContainer = TabbyOnPrimary,
     secondary = TabbyLightPrimary,
     onSecondary = TabbyOnPrimary,
     background = TabbyLightBackground,

@@ -46,8 +46,7 @@ allprojects {
     compilerOptions {
       allWarningsAsErrors = true
       jvmTarget = JvmTarget.fromTarget(libs.versions.jvmTarget.get())
-      optIn.addAll("kotlin.uuid.ExperimentalUuidApi")
-      freeCompilerArgs.addAll("-Xcontext-sensitive-resolution", "-Xexplicit-backing-fields")
+      freeCompilerArgs.addAll("-Xcontext-sensitive-resolution")
     }
   }
 

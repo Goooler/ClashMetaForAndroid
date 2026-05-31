@@ -18,9 +18,9 @@ import com.github.kr328.clash.common.compat.startForegroundCompat
 import com.github.kr328.clash.common.constants.Intents
 import com.github.kr328.clash.common.log.Log
 import com.github.kr328.clash.common.util.intent
+import com.github.kr328.clash.common.util.mainIntent
 import com.github.kr328.clash.core.model.LogMessage
 import com.github.kr328.clash.glue.util.logsDir
-import com.github.kr328.clash.glue.util.mainIntent
 import com.github.kr328.clash.log.util.LogcatCache
 import com.github.kr328.clash.log.util.LogcatWriter
 import com.github.kr328.clash.service.RemoteService
@@ -156,12 +156,14 @@ internal class LogcatService :
           PendingIntent.getActivity(
             this,
             R.id.nf_logcat_status,
-            mainIntent(action = Intents.ACTION_LOGCAT)
-              .setFlags(
+            mainIntent {
+              action = Intents.ACTION_LOGCAT
+              setFlags(
                 Intent.FLAG_ACTIVITY_NEW_TASK or
                   Intent.FLAG_ACTIVITY_SINGLE_TOP or
                   Intent.FLAG_ACTIVITY_CLEAR_TOP
-              ),
+              )
+            },
             pendingIntentFlags(PendingIntent.FLAG_UPDATE_CURRENT),
           )
         )

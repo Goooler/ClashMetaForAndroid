@@ -8,5 +8,7 @@
   <string name="multiple">Multiple</string>
   <string name="not_selectable">Not Selectable</string>
   <string name="proxy_empty_tips">No groups can be displayed</string>
+  <string name="proxy_scroll_to_top">Scroll to top</string>
+  <string name="scroll_selected_to_top">Scroll Selected to Top</string>
   <string name="single">Single</string>
 </resources>

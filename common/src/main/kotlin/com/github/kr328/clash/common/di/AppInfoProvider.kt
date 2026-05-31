@@ -1,4 +1,4 @@
-package com.github.kr328.clash.glue.di
+package com.github.kr328.clash.common.di
 
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject

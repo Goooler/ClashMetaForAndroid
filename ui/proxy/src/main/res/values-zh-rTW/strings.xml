@@ -8,5 +8,7 @@
   <string name="multiple">多欄</string>
   <string name="not_selectable">不可選擇</string>
   <string name="proxy_empty_tips">沒有可以顯示的分組</string>
+  <string name="proxy_scroll_to_top">滾動到頂部</string>
+  <string name="scroll_selected_to_top">將目前選擇捲動至頂部</string>
   <string name="single">單欄</string>
 </resources>

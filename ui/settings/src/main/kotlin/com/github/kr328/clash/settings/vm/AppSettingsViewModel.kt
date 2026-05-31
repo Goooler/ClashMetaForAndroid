@@ -4,13 +4,13 @@ import android.app.Application
 import android.content.pm.PackageManager
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.application
+import com.github.kr328.clash.common.di.AppInfoProvider.Companion.instance as appInfoProvider
 import com.github.kr328.clash.common.util.componentName
-import com.github.kr328.clash.glue.di.AppInfoProvider.Companion.instance as appInfoProvider
+import com.github.kr328.clash.common.util.mainActivityAlias
 import com.github.kr328.clash.glue.model.DarkMode
 import com.github.kr328.clash.glue.remote.Remote
 import com.github.kr328.clash.glue.store.UiStore
 import com.github.kr328.clash.glue.util.ApplicationObserver
-import com.github.kr328.clash.glue.util.mainActivityAlias
 import com.github.kr328.clash.service.store.ServiceStore
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

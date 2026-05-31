@@ -25,7 +25,8 @@ fun Context.registerReceiverCompat(
     filter,
     permission,
     scheduler,
-    if (permission == null) ContextCompat.RECEIVER_EXPORTED else ContextCompat.RECEIVER_NOT_EXPORTED,
+    if (permission == null) ContextCompat.RECEIVER_EXPORTED
+    else ContextCompat.RECEIVER_NOT_EXPORTED,
   )
 
 fun Service.startForegroundCompat(id: Int, notification: Notification) =

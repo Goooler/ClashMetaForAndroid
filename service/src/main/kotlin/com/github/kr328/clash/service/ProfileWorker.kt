@@ -11,10 +11,10 @@ import com.github.kr328.clash.common.R as CommonR
 import com.github.kr328.clash.common.compat.getColorCompat
 import com.github.kr328.clash.common.compat.pendingIntentFlags
 import com.github.kr328.clash.common.compat.startForegroundCompat
-import com.github.kr328.clash.common.constants.Components
 import com.github.kr328.clash.common.constants.Intents
 import com.github.kr328.clash.common.id.UndefinedIds
 import com.github.kr328.clash.common.log.Log
+import com.github.kr328.clash.common.util.mainIntent
 import com.github.kr328.clash.common.util.setUUID
 import com.github.kr328.clash.common.util.uuid
 import com.github.kr328.clash.service.data.ImportedDao
@@ -166,10 +166,10 @@ class ProfileWorker : BaseService() {
       PendingIntent.getActivity(
         this,
         id,
-        Intent()
-          .setComponent(Components.MAIN_ACTIVITY)
-          .setAction(Intents.ACTION_PROPERTIES)
-          .setUUID(uuid),
+        mainIntent {
+          action = Intents.ACTION_PROPERTIES
+          setUUID(uuid)
+        },
         pendingIntentFlags(PendingIntent.FLAG_UPDATE_CURRENT),
       )
 

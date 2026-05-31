@@ -13,7 +13,7 @@ android {
   defaultConfig {
     applicationId = "io.github.goooler.tabby"
     targetSdk = 35
-    versionName = "3.0.0"
+    versionName = "3.1.1"
     versionCode = checkNotNull(versionName).toVersionCode()
   }
 
@@ -50,7 +50,7 @@ android {
 }
 
 androidComponents {
-  onVariants(selector().withBuildType("release")) { variant ->
+  onVariants { variant ->
     variant.outputs.forEach { output ->
       with(output) {
         val abiName =

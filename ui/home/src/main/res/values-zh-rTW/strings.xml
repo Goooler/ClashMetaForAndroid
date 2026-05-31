@@ -1,6 +1,10 @@
 <resources>
 
   <string name="about">關於</string>
+  <string name="already_up_to_date">已是最新版本</string>
+  <string name="app_version">應用程式版本</string>
+  <string name="check_for_updates">檢查更新</string>
+  <string name="check_update_failed">檢查更新失敗</string>
   <string name="clash_meta_core">Clash Meta 核心</string>
   <string name="clash_meta_wiki">Clash Meta Wiki</string>
   <string name="clash_wiki">Clash Wiki</string>
@@ -12,11 +16,14 @@
   <string name="github_issues">GitHub Issues</string>
   <string name="google_play">Google Play</string>
   <string name="help">協助</string>
+  <string name="kernel_version">核心版本</string>
   <string name="no_profile_selected">未選擇設定檔</string>
+  <string name="open">開啟</string>
   <string name="profile">設定檔</string>
   <string name="sources">原始碼</string>
   <string name="stopped">已停止</string>
   <string name="tips_help"><![CDATA[Tabby 是一個<strong>免費應用程式</strong>並且我們<strong>不</strong>為其提供任何服務, <strong>請務必不要回報非應用程式自身引起的問題</strong>]]></string>
+  <string name="update_available">有新版本可用</string>
   <string name="version_updated">應用已更新</string>
   <string name="version_updated_tips">設定已被清除，舊版設定檔需要再次儲存。</string>
 </resources>

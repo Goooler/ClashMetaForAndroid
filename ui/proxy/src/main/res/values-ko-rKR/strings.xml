@@ -8,5 +8,7 @@
   <string name="multiple">복합</string>
   <string name="not_selectable">선택 불가</string>
   <string name="proxy_empty_tips">표시할 그룹이 없습니다.</string>
+  <string name="proxy_scroll_to_top">맨 위로 스크롤</string>
+  <string name="scroll_selected_to_top">선택 항목 맨 위로 스크롤</string>
   <string name="single">단일</string>
 </resources>
