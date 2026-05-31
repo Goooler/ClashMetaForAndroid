@@ -67,8 +67,8 @@ import com.github.kr328.clash.proxy.vm.ProxyViewModel
 import com.github.kr328.clash.proxy.vm.ProxyViewModel.SelectedProxy
 import com.github.kr328.clash.ui.component.Spacer
 import com.github.kr328.clash.ui.component.TabbyScaffold
-import com.github.kr328.clash.ui.icon.BaselineCircleCenter
 import com.github.kr328.clash.ui.icon.BaselineArrowUp
+import com.github.kr328.clash.ui.icon.BaselineCircleCenter
 import com.github.kr328.clash.ui.icon.BaselineFlashOn
 import com.github.kr328.clash.ui.icon.BaselineMoreVert
 import com.github.kr328.clash.ui.icon.TabbyIcons
@@ -132,7 +132,7 @@ private fun ProxyContent(
   onProxySelected: (Int, String) -> Unit,
 ) {
   var menuVisible by remember { mutableStateOf(false) }
-  var centerSelectedRequestVersion by remember { mutableStateOf(0) }
+  var scrollSelectedToTopRequestVersion by remember { mutableStateOf(0) }
   val currentGroup = uiState.groups.getOrNull(uiState.currentPage)
   val showUrlTestAction = uiState.groupNames.isNotEmpty()
   val groupNames = uiState.groupNames
@@ -221,7 +221,7 @@ private fun ProxyContent(
         }
       }
 
-      IconButton(onClick = { centerSelectedRequestVersion += 1 }) {
+      IconButton(onClick = { scrollSelectedToTopRequestVersion += 1 }) {
         Icon(
           imageVector = TabbyIcons.BaselineCircleCenter,
           contentDescription = stringResource(R.string.center_selected),
@@ -265,7 +265,7 @@ private fun ProxyContent(
         ProxyPagerContent(
           uiState = uiState,
           selectedProxies = selectedProxies,
-          centerSelectedRequestVersion = centerSelectedRequestVersion,
+          scrollSelectedToTopRequestVersion = scrollSelectedToTopRequestVersion,
           pagerState = pagerState ?: return@Box,
           gridStates = gridStates,
           onProxySelected = onProxySelected,
@@ -279,7 +279,7 @@ private fun ProxyContent(
 private fun ProxyPagerContent(
   uiState: ProxyViewModel.UiState,
   selectedProxies: List<SelectedProxy>,
-  centerSelectedRequestVersion: Int,
+  scrollSelectedToTopRequestVersion: Int,
   pagerState: PagerState,
   gridStates: List<LazyGridState>,
   onProxySelected: (Int, String) -> Unit,
@@ -309,7 +309,7 @@ private fun ProxyPagerContent(
         group = uiState.groups.getOrNull(page) ?: ProxyViewModel.UiState.ProxyGroupUiState(),
         selectedProxyName = selectedProxies.getOrNull(page)?.name,
         isCurrentPage = page == pagerState.currentPage,
-        centerSelectedRequestVersion = centerSelectedRequestVersion,
+        scrollSelectedToTopRequestVersion = scrollSelectedToTopRequestVersion,
         gridState = gridStates[page],
         selectedProxies = selectedProxies,
         onProxySelected = onProxySelected,
@@ -325,7 +325,7 @@ private fun ProxyGroupPage(
   group: ProxyViewModel.UiState.ProxyGroupUiState,
   selectedProxyName: String?,
   isCurrentPage: Boolean,
-  centerSelectedRequestVersion: Int,
+  scrollSelectedToTopRequestVersion: Int,
   gridState: LazyGridState,
   selectedProxies: List<SelectedProxy>,
   onProxySelected: (Int, String) -> Unit,
@@ -337,13 +337,13 @@ private fun ProxyGroupPage(
   val unselectedControl = MaterialTheme.colorScheme.onSurface
   val unselectedBackground = MaterialTheme.colorScheme.surface
 
-  LaunchedEffect(centerSelectedRequestVersion, isCurrentPage, selectedProxyName, sources) {
-    if (!isCurrentPage || centerSelectedRequestVersion == 0) return@LaunchedEffect
+  LaunchedEffect(scrollSelectedToTopRequestVersion, isCurrentPage, selectedProxyName, sources) {
+    if (!isCurrentPage || scrollSelectedToTopRequestVersion == 0) return@LaunchedEffect
 
     val selectedIndex = sources.indexOfFirst { it.proxy.name == selectedProxyName }
     if (selectedIndex < 0) return@LaunchedEffect
 
-    gridState.animateScrollItemToCenter(selectedIndex)
+    gridState.animateScrollToItem(index = selectedIndex, scrollOffset = 0)
   }
 
   LazyVerticalGrid(
@@ -566,19 +566,6 @@ private fun columnsForProxyLine(proxyLine: Int): Int =
     2 -> 2
     else -> 3
   }
-
-private suspend fun LazyGridState.animateScrollItemToCenter(index: Int) {
-  animateScrollToItem(index)
-
-  val selectedItem = layoutInfo.visibleItemsInfo.firstOrNull { it.index == index } ?: return
-  val viewportCenter = (layoutInfo.viewportStartOffset + layoutInfo.viewportEndOffset) / 2
-  val itemCenter = selectedItem.offset.y + selectedItem.size.height / 2
-  val delta = itemCenter - viewportCenter
-
-  if (delta != 0) {
-    animateScrollBy(delta.toFloat())
-  }
-}
 
 @PreviewWrapper(TabbyThemeWrapper::class)
 @PreviewTabby
