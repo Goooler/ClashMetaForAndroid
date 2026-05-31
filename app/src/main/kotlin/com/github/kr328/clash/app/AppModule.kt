@@ -1,6 +1,6 @@
 package com.github.kr328.clash.app
 
-import com.github.kr328.clash.glue.di.AppInfoProvider
+import com.github.kr328.clash.common.di.AppInfoProvider
 import org.koin.dsl.module
 
 val appModule = module { single<AppInfoProvider> { AppInfoProviderImpl } }
