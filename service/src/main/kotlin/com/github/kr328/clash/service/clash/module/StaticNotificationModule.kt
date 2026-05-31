@@ -10,8 +10,8 @@ import com.github.kr328.clash.common.R as CommonR
 import com.github.kr328.clash.common.compat.getColorCompat
 import com.github.kr328.clash.common.compat.pendingIntentFlags
 import com.github.kr328.clash.common.compat.startForegroundCompat
-import com.github.kr328.clash.common.constants.Components
 import com.github.kr328.clash.common.constants.Intents
+import com.github.kr328.clash.common.util.mainIntent
 import com.github.kr328.clash.service.R
 import com.github.kr328.clash.service.StatusProvider
 import kotlinx.coroutines.channels.Channel
@@ -29,13 +29,9 @@ class StaticNotificationModule(service: Service) : Module<Unit>(service) {
         PendingIntent.getActivity(
           service,
           R.id.nf_tabby_status,
-          Intent()
-            .setComponent(Components.MAIN_ACTIVITY)
-            .setFlags(
-              Intent.FLAG_ACTIVITY_NEW_TASK or
-                Intent.FLAG_ACTIVITY_SINGLE_TOP or
-                Intent.FLAG_ACTIVITY_CLEAR_TOP
-            ),
+          service.mainIntent {
+            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+          },
           pendingIntentFlags(PendingIntent.FLAG_UPDATE_CURRENT),
         )
       )
