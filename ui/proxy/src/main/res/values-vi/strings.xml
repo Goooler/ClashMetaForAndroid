@@ -1,7 +1,6 @@
 <resources>
 
   <string name="delay">Độ trễ</string>
-  <string name="scroll_selected_to_top">Cuộn mục đã chọn lên đầu</string>
   <string name="delay_test">Kiểm tra độ trễ</string>
   <string name="doubles">Hai cột</string>
   <string name="layout">Bố cục</string>
@@ -10,5 +9,6 @@
   <string name="not_selectable">Không thể chọn</string>
   <string name="proxy_empty_tips">Không có nhóm nào được hiển thị</string>
   <string name="proxy_scroll_to_top">Cuộn lên đầu</string>
+  <string name="scroll_selected_to_top">Cuộn mục đã chọn lên đầu</string>
   <string name="single">Đơn</string>
 </resources>

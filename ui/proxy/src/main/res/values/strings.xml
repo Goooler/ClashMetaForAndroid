@@ -1,7 +1,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="PluralsCandidate">
 
   <string name="delay">Delay</string>
-  <string name="scroll_selected_to_top">Scroll Selected to Top</string>
   <string name="delay_test">Delay Test</string>
   <string name="doubles">Double</string>
   <string name="layout">Layout</string>
@@ -10,5 +9,6 @@
   <string name="not_selectable">Not Selectable</string>
   <string name="proxy_empty_tips">No groups can be displayed</string>
   <string name="proxy_scroll_to_top">Scroll to top</string>
+  <string name="scroll_selected_to_top">Scroll Selected to Top</string>
   <string name="single">Single</string>
 </resources>

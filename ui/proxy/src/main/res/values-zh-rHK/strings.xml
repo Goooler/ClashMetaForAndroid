@@ -1,7 +1,6 @@
 <resources>
 
   <string name="delay">延遲</string>
-  <string name="scroll_selected_to_top">將目前選擇捲動至頂部</string>
   <string name="delay_test">延遲測試</string>
   <string name="doubles">雙列</string>
   <string name="layout">佈局</string>
@@ -10,5 +9,6 @@
   <string name="not_selectable">不可選擇</string>
   <string name="proxy_empty_tips">沒有可以顯示的組</string>
   <string name="proxy_scroll_to_top">滾動到頂部</string>
+  <string name="scroll_selected_to_top">將目前選擇捲動至頂部</string>
   <string name="single">單列</string>
 </resources>
