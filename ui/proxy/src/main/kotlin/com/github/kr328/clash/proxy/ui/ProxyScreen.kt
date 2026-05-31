@@ -67,7 +67,7 @@ import com.github.kr328.clash.proxy.vm.ProxyViewModel.SelectedProxy
 import com.github.kr328.clash.ui.component.Spacer
 import com.github.kr328.clash.ui.component.TabbyScaffold
 import com.github.kr328.clash.ui.icon.BaselineArrowUp
-import com.github.kr328.clash.ui.icon.BaselineScrollSelectedToTop
+import com.github.kr328.clash.ui.icon.BaselineCircleCenter
 import com.github.kr328.clash.ui.icon.BaselineFlashOn
 import com.github.kr328.clash.ui.icon.BaselineMoreVert
 import com.github.kr328.clash.ui.icon.TabbyIcons
@@ -228,7 +228,7 @@ private fun ProxyContent(
         }
       ) {
         Icon(
-          imageVector = TabbyIcons.BaselineScrollSelectedToTop,
+          imageVector = TabbyIcons.BaselineCircleCenter,
           contentDescription = stringResource(R.string.scroll_selected_to_top),
         )
       }
