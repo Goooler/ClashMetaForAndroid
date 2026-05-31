@@ -7,14 +7,14 @@ import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.unit.dp
 
 @Suppress("UnusedReceiverParameter")
-val TabbyIcons.BaselineCircleCenter: ImageVector
+val TabbyIcons.BaselineScrollSelectedToTop: ImageVector
   get() {
-    if (_BaselineCircleCenter != null) {
-      return _BaselineCircleCenter!!
+    if (_BaselineScrollSelectedToTop != null) {
+      return _BaselineScrollSelectedToTop!!
     }
-    _BaselineCircleCenter =
+    _BaselineScrollSelectedToTop =
       ImageVector.Builder(
-          name = "record-circle",
+          name = "scroll-selected-to-top",
           defaultWidth = 24.dp,
           defaultHeight = 24.dp,
           viewportWidth = 24f,
@@ -37,7 +37,7 @@ val TabbyIcons.BaselineCircleCenter: ImageVector
         }
         .build()
 
-    return _BaselineCircleCenter!!
+    return _BaselineScrollSelectedToTop!!
   }
 
-@Suppress("ObjectPropertyName") private var _BaselineCircleCenter: ImageVector? = null
+@Suppress("ObjectPropertyName") private var _BaselineScrollSelectedToTop: ImageVector? = null

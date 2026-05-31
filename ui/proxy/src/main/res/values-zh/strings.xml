@@ -1,7 +1,7 @@
 <resources>
 
   <string name="delay">延迟</string>
-  <string name="center_selected">居中当前选择</string>
+  <string name="scroll_selected_to_top">将当前选择滚动至顶部</string>
   <string name="delay_test">延迟测试</string>
   <string name="doubles">双列</string>
   <string name="layout">布局</string>
