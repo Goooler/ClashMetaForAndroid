@@ -222,16 +222,18 @@ private fun ProxyContent(
         }
       }
 
-      IconButton(
-        onClick = {
-          scrollSelectedToTopRequestPage = pagerState?.currentPage ?: uiState.currentPage
-          scrollSelectedToTopRequestVersion += 1
+      if (showUrlTestAction) {
+        IconButton(
+          onClick = {
+            scrollSelectedToTopRequestPage = pagerState?.currentPage ?: uiState.currentPage
+            scrollSelectedToTopRequestVersion += 1
+          }
+        ) {
+          Icon(
+            imageVector = TabbyIcons.BaselineCircleCenter,
+            contentDescription = stringResource(R.string.scroll_selected_to_top),
+          )
         }
-      ) {
-        Icon(
-          imageVector = TabbyIcons.BaselineCircleCenter,
-          contentDescription = stringResource(R.string.scroll_selected_to_top),
-        )
       }
 
       IconButton(onClick = { menuVisible = true }) {
