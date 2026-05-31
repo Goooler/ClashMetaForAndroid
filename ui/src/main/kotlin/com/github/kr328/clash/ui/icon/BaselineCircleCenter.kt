@@ -9,8 +9,9 @@ import androidx.compose.ui.unit.dp
 @Suppress("UnusedReceiverParameter")
 val TabbyIcons.BaselineCircleCenter: ImageVector
   get() {
-    if (_BaselineCircleCenter != null) return _BaselineCircleCenter!!
-
+    if (_BaselineCircleCenter != null) {
+      return _BaselineCircleCenter!!
+    }
     _BaselineCircleCenter =
       ImageVector.Builder(
           name = "record-circle",
@@ -21,10 +22,10 @@ val TabbyIcons.BaselineCircleCenter: ImageVector
         )
         .apply {
           path(fill = SolidColor(Color.White)) {
-            moveTo(8f, 15f)
-            arcTo(7f, 7f, 0f, true, true, 8f, 1f)
-            arcToRelative(7f, 7f, 0f, false, true, 0f, 14f)
-            moveToRelative(0f, 1f)
+            moveTo(8f, 14f)
+            arcTo(6f, 6f, 0f, true, true, 8f, 2f)
+            arcToRelative(6f, 6f, 0f, false, true, 0f, 12f)
+            moveToRelative(0f, 2f)
             arcTo(8f, 8f, 0f, true, false, 8f, 0f)
             arcToRelative(8f, 8f, 0f, false, false, 0f, 16f)
           }
