@@ -135,7 +135,7 @@ private fun ProxyContent(
   var scrollSelectedToTopRequestVersion by remember { mutableIntStateOf(0) }
   var scrollSelectedToTopRequestPage by remember { mutableIntStateOf(0) }
   val currentGroup = uiState.groups.getOrNull(uiState.currentPage)
-  val showUrlTestAction = uiState.groupNames.isNotEmpty()
+  val hasGroups = uiState.groupNames.isNotEmpty()
   val groupNames = uiState.groupNames
   val pagerState =
     if (groupNames.isNotEmpty()) {
@@ -206,7 +206,7 @@ private fun ProxyContent(
     snackbarHostState = snackbarHostState,
     title = stringResource(CommonR.string.proxy),
     actions = {
-      if (showUrlTestAction) {
+      if (hasGroups) {
         if (currentGroup?.urlTesting == true) {
           CircularProgressIndicator(
             modifier = Modifier.padding(horizontal = 12.dp).size(24.dp),
@@ -220,9 +220,7 @@ private fun ProxyContent(
             )
           }
         }
-      }
 
-      if (showUrlTestAction) {
         IconButton(
           onClick = {
             scrollSelectedToTopRequestPage = pagerState?.currentPage ?: uiState.currentPage
