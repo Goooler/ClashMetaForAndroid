@@ -24,7 +24,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.github.kr328.clash.common.R as CommonR
-import com.github.kr328.clash.glue.util.CLASH_META_CORE
+import com.github.kr328.clash.glue.util.MIHOMO_CORE
 import com.github.kr328.clash.glue.util.MIHOMO_WIKI
 import com.github.kr328.clash.glue.util.TABBY_GITHUB
 import com.github.kr328.clash.glue.util.openLink
@@ -113,13 +113,13 @@ private fun HelpContent(
         )
         preferenceCategory(key = "cat_sources", title = { Text(stringResource(R.string.sources)) })
         preference(
-          key = "clash_meta_core",
-          title = { Text(stringResource(R.string.clash_meta_core)) },
-          summary = { Text(CLASH_META_CORE) },
-          onClick = { onOpenLink(CLASH_META_CORE) },
+          key = "mihomo_core",
+          title = { Text(stringResource(R.string.mihomo_core)) },
+          summary = { Text(MIHOMO_CORE) },
+          onClick = { onOpenLink(MIHOMO_CORE) },
         )
         preference(
-          key = "clash_meta_for_android",
+          key = "tabby",
           title = { Text(stringResource(CommonR.string.tabby)) },
           summary = { Text(TABBY_GITHUB) },
           onClick = { onOpenLink(TABBY_GITHUB) },
