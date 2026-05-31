@@ -230,7 +230,8 @@ internal class ProxyViewModel(app: Application) : AndroidViewModel(app), Default
           selectable = group.type == Proxy.Type.Selector,
           urlTesting = false,
           sources = sources,
-          delayTestingKeys = it.delayTestingKeys.intersect(sources.mapTo(mutableSetOf()) { s -> s.proxy.name }),
+          delayTestingKeys =
+            it.delayTestingKeys.intersect(sources.mapTo(mutableSetOf()) { s -> s.proxy.name }),
           refreshVersion = it.refreshVersion + 1,
         )
       }

@@ -388,11 +388,11 @@ private fun ProxyGroupPage(
             linkNow = linkNow,
             proxyLine = proxyLine,
             selectedControl = selectedControl,
-              selectedBackground = selectedBackground,
-              unselectedControl = unselectedControl,
-              unselectedBackground = unselectedBackground,
-              delayTesting = source.proxy.name in group.delayTestingKeys,
-            )
+            selectedBackground = selectedBackground,
+            unselectedControl = unselectedControl,
+            unselectedBackground = unselectedBackground,
+            delayTesting = source.proxy.name in group.delayTestingKeys,
+          )
         }
 
       ProxyItemCard(
