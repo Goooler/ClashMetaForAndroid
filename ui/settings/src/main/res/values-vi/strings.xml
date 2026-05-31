@@ -16,6 +16,8 @@
   <string name="always">Luôn luôn</string>
   <string name="always_dark">Luôn tối</string>
   <string name="always_light">Luôn sáng</string>
+  <string name="always_on_vpn">VPN luôn bật</string>
+  <string name="always_on_vpn_summary">Yêu cầu quyền VPN hoặc mở cài đặt VPN</string>
   <string name="app">Ứng dụng</string>
   <string name="append_system_dns">Nối hệ thống DNS</string>
   <string name="authentication">Xác thực</string>
@@ -80,6 +82,8 @@
   <string name="info">Thông tin</string>
   <string name="install_time">Thời gian cài đặt</string>
   <string name="interface_">Giao diện</string>
+  <string name="ignore_battery_optimizations">Bỏ qua tối ưu hóa pin</string>
+  <string name="ignore_battery_optimizations_summary">Yêu cầu loại trừ khỏi tối ưu hóa pin</string>
   <string name="ipcidr_fallback">Dự phòng IPCIDR</string>
   <string name="ipv6">IPv6</string>
   <string name="key">Khoá</string>

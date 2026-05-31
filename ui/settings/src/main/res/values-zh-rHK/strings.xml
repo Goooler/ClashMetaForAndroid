@@ -16,6 +16,8 @@
   <string name="always">強制開啟</string>
   <string name="always_dark">總是暗黑模式</string>
   <string name="always_light">總是明亮模式</string>
+  <string name="always_on_vpn">始終開啟 VPN</string>
+  <string name="always_on_vpn_summary">請求 VPN 權限或打開 VPN 設置</string>
   <string name="app">應用</string>
   <string name="append_system_dns">追加系統 DNS</string>
   <string name="authentication">認證</string>
@@ -80,6 +82,8 @@
   <string name="info">消息</string>
   <string name="install_time">安裝時間</string>
   <string name="interface_">界面</string>
+  <string name="ignore_battery_optimizations">忽略電池優化</string>
+  <string name="ignore_battery_optimizations_summary">請求將此應用排除在電池優化之外</string>
   <string name="ipcidr_fallback">IPCIDR Fallback</string>
   <string name="ipv6">IPv6</string>
   <string name="key">鍵</string>

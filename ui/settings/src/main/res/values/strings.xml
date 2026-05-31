@@ -16,6 +16,8 @@
   <string name="always">Always</string>
   <string name="always_dark">Always Dark</string>
   <string name="always_light">Always Light</string>
+  <string name="always_on_vpn">Always-on VPN</string>
+  <string name="always_on_vpn_summary">Request VPN permission or open VPN settings</string>
   <string name="app">App</string>
   <string name="append_system_dns">Append System DNS</string>
   <string name="authentication">Authentication</string>
@@ -78,6 +80,8 @@
   <string name="import_geoip_file">Import GeoIP Database</string>
   <string name="import_geosite_file">Import GeoSite Database</string>
   <string name="info">Info</string>
+  <string name="ignore_battery_optimizations">Ignore Battery Optimizations</string>
+  <string name="ignore_battery_optimizations_summary">Request battery optimization exclusion</string>
   <string name="install_time">Install Time</string>
   <string name="interface_">Interface</string>
   <string name="ipcidr_fallback">IPCIDR Fallback</string>

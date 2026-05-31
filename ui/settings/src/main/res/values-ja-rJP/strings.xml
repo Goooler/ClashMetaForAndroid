@@ -16,6 +16,8 @@
   <string name="always">Always</string>
   <string name="always_dark">常にダークモード</string>
   <string name="always_light">常にライトモード</string>
+  <string name="always_on_vpn">常時 VPN 接続</string>
+  <string name="always_on_vpn_summary">VPN 権限をリクエストするか VPN 設定を開きます</string>
   <string name="app">アプリ</string>
   <string name="append_system_dns">システムDNSを追加</string>
   <string name="authentication">認証</string>
@@ -80,6 +82,8 @@
   <string name="info">情報</string>
   <string name="install_time">インストール日時</string>
   <string name="interface_">インターフェイス</string>
+  <string name="ignore_battery_optimizations">電池の最適化を無視</string>
+  <string name="ignore_battery_optimizations_summary">電池の最適化の対象外にリクエストします</string>
   <string name="ipcidr_fallback">IPCIDRフォールバック</string>
   <string name="ipv6">IPv6</string>
   <string name="key">キー</string>

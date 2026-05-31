@@ -16,6 +16,8 @@
   <string name="always">강제로 켜기</string>
   <string name="always_dark">다크</string>
   <string name="always_light">라이트</string>
+  <string name="always_on_vpn">항상 켜져 있는 VPN</string>
+  <string name="always_on_vpn_summary">VPN 권한 요청 또는 VPN 설정 열기</string>
   <string name="app">앱</string>
   <string name="append_system_dns">시스템 DNS 허용</string>
   <string name="authentication">인증</string>
@@ -80,6 +82,8 @@
   <string name="info">정보</string>
   <string name="install_time">설치 시각</string>
   <string name="interface_">테마</string>
+  <string name="ignore_battery_optimizations">배터리 최적화 무시</string>
+  <string name="ignore_battery_optimizations_summary">배터리 최적화에서 제외 요청</string>
   <string name="ipcidr_fallback">IPCIDR 폴백</string>
   <string name="ipv6">IPv6</string>
   <string name="key">키</string>
