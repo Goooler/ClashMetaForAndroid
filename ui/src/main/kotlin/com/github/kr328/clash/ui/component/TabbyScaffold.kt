@@ -48,7 +48,14 @@ fun TabbyScaffold(
   snackbarHost: @Composable () -> Unit = {
     snackbarHostState?.let { SnackbarHost(hostState = it) }
   },
+  floatingActionButton: @Composable () -> Unit = {},
   content: @Composable (PaddingValues) -> Unit,
 ) {
-  Scaffold(modifier = modifier, topBar = topBar, snackbarHost = snackbarHost, content = content)
+  Scaffold(
+    modifier = modifier,
+    topBar = topBar,
+    snackbarHost = snackbarHost,
+    floatingActionButton = floatingActionButton,
+    content = content,
+  )
 }
