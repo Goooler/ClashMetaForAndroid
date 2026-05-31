@@ -300,7 +300,7 @@ private fun ProxyPagerContent(
         index = page,
         proxyLine = uiState.proxyLine,
         group = uiState.groups.getOrNull(page) ?: ProxyViewModel.UiState.ProxyGroupUiState(),
-        gridState = gridStates.getOrElse(page) { rememberLazyGridState() },
+        gridState = gridStates[page],
         selectedProxies = selectedProxies,
         onProxySelected = onProxySelected,
       )
