@@ -3,7 +3,6 @@ package com.github.kr328.clash.proxy.ui
 import androidx.compose.foundation.background
 import androidx.compose.foundation.basicMarquee
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.gestures.animateScrollBy
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -337,7 +336,7 @@ private fun ProxyGroupPage(
   val unselectedControl = MaterialTheme.colorScheme.onSurface
   val unselectedBackground = MaterialTheme.colorScheme.surface
 
-  LaunchedEffect(scrollSelectedToTopRequestVersion, isCurrentPage, selectedProxyName, sources) {
+  LaunchedEffect(scrollSelectedToTopRequestVersion, isCurrentPage) {
     if (!isCurrentPage || scrollSelectedToTopRequestVersion == 0) return@LaunchedEffect
 
     val selectedIndex = sources.indexOfFirst { it.proxy.name == selectedProxyName }
