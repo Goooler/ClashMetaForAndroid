@@ -162,6 +162,13 @@ This is enforced automatically in the root `build.gradle.kts` via
 - Do **not** replace or remove `app/release.keystore`, and do not commit any
   personal keystores or override signing credentials.
 
+## String Resources / Localization
+
+When adding or modifying string/text resources, please ensure that:
+1. **Alphabetical Sorting**: All resource entries must be sorted alphabetically by their `name` keys.
+2. **Single-Line Format**: Each resource entry must be written entirely on a single line (no manual line wraps or breaks), and do not modify any other unrelated lines.
+3. **Complete Translations**: For any translatable content, make sure to completely supplement the internationalized translations for all supported languages in the project.
+
 ## CI / Automated Checks
 
 GitHub Actions runs on every push to `trunk` and on every pull request:
