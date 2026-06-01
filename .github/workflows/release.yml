@@ -13,6 +13,7 @@ jobs:
     steps:
       - uses: actions/checkout@v6
         with:
+          fetch-tags: true # Need to get the submodule tag for the CMake builds.
           submodules: recursive
       - uses: actions/setup-go@v6
         with:
