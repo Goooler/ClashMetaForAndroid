@@ -66,10 +66,14 @@ class ClashManager(private val context: Context) :
       val current = store.activeProfile ?: return@also
 
       Global.launch {
-        if (it) {
-          SelectionDao().setSelected(Selection(current, group, name))
-        } else {
-          SelectionDao().removeSelected(current, group)
+        try {
+          if (it) {
+            SelectionDao().setSelected(Selection(current, group, name))
+          } else {
+            SelectionDao().removeSelected(current, group)
+          }
+        } catch (e: Exception) {
+          Log.w("Persist selector failed", e)
         }
       }
     }
