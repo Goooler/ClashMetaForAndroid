@@ -26,12 +26,19 @@ android {
     }
 
   buildTypes {
-    all { signingConfig = releaseSigning }
+    all {
+      buildConfigField("String", "COMMIT", "\"$commitHash\"")
+      signingConfig = releaseSigning
+    }
     release {
       isMinifyEnabled = true
       isShrinkResources = true
       proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
     }
+  }
+
+  buildFeatures {
+    buildConfig = true
   }
 
   packaging {
@@ -120,3 +127,12 @@ fun String.toVersionCode(): Int {
   val (major, minor, patch) = split('.').map { it.toInt() }
   return major * 1_000_000 + minor * 1_000 + patch
 }
+
+val commitHash
+  get() =
+    providers
+      .exec { commandLine("git", "rev-parse", "--short=7", "HEAD") }
+      .standardOutput
+      .asText
+      .get()
+      .trim()

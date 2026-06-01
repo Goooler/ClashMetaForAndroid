@@ -4,6 +4,7 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.application
 import androidx.lifecycle.viewModelScope
+import com.github.kr328.clash.common.di.AppInfoProvider.Companion.instance as appInfoProvider
 import com.github.kr328.clash.common.log.Log
 import com.github.kr328.clash.core.bridge.Bridge
 import com.github.kr328.clash.glue.util.TABBY_RELEASES_LATEST
@@ -74,7 +75,7 @@ internal class HelpViewModel(app: Application) : AndroidViewModel(app) {
       val (appVersion, coreVersion) =
         withContext(Dispatchers.IO) {
           val pkgInfo = application.packageManager.getPackageInfo(application.packageName, 0)
-          "${pkgInfo.versionName} - ${pkgInfo.longVersionCode}" to Bridge.nativeCoreVersion()
+          "${pkgInfo.versionName} - ${appInfoProvider.buildCommit}" to Bridge.nativeCoreVersion()
         }
 
       uiState.update { it.copy(appVersion = appVersion, coreVersion = coreVersion) }
