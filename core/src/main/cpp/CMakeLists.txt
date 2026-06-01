@@ -1,39 +1,18 @@
 cmake_minimum_required(VERSION 4.0)
 
-# 获取git hash
-
-message(STATUS "CMAKE_CURRENT_SOURCE_DIR= ${CMAKE_CURRENT_SOURCE_DIR}")
+# 获取 git submodule 对应的 tag name
 execute_process(
-        COMMAND git submodule foreach git log -1 --format=%H
+        COMMAND git submodule foreach git describe --tags --always
         WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-        OUTPUT_VARIABLE COMMIT_HASH
+        OUTPUT_VARIABLE GIT_TAG
 )
-string(REPLACE "\n" ";" COMMIT_HASH "${COMMIT_HASH}")
-list(GET COMMIT_HASH 1 COMMIT_HASH)
-string(REGEX REPLACE "[\n\t\r]" "" COMMIT_HASH ${COMMIT_HASH})
-string(SUBSTRING ${COMMIT_HASH} 0 7 COMMIT_HASH)
-message(STATUS "git hash= ${COMMIT_HASH}")
-
-# 获取分支名称
-execute_process(
-        COMMAND git submodule foreach git branch -r --contains ${COMMIT_HASH}
-        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-        OUTPUT_VARIABLE CURRENT_BRANCH
-)
-string(REPLACE "\n" ";" CURRENT_BRANCH "${CURRENT_BRANCH}")
-list(GET CURRENT_BRANCH 1 CURRENT_BRANCH)
-string(REGEX REPLACE "origin/" "" CURRENT_BRANCH "${CURRENT_BRANCH}")
-string(REGEX REPLACE "[\n\t\r]" "" CURRENT_BRANCH "${CURRENT_BRANCH}")
-#string(SUBSTRING ${CURRENT_BRANCH} 0 8 CURRENT_BRANCH)
-message(STATUS "git current branch = ${CURRENT_BRANCH}")
-
-# 获取生成时间
-string(TIMESTAMP COMPILE_TIME "%y%m%d")
-string(REGEX REPLACE "[\n\t\r]" "" COMPILE_TIME ${COMPILE_TIME})
-string(REGEX REPLACE "\"" "" COMPILE_TIME ${COMPILE_TIME})
+string(REPLACE "\n" ";" GIT_TAG "${GIT_TAG}")
+list(GET GIT_TAG 1 GIT_TAG)
+string(REGEX REPLACE "[\n\t\r]" "" GIT_TAG "${GIT_TAG}")
+message(STATUS "git tag = ${GIT_TAG}")
 
 # 生成版本信息
-set(GIT_VERSION "${CURRENT_BRANCH}_${COMMIT_HASH}_${COMPILE_TIME}")
+set(GIT_VERSION "${GIT_TAG}")
 message(STATUS "version info = ${GIT_VERSION}")
 
 # 去除空格
