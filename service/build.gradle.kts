@@ -13,7 +13,6 @@ dependencies {
   implementation(libs.kotlin.serialization.json)
   implementation(libs.androidx.core)
   implementation(libs.androidx.room.runtime)
-  implementation(libs.androidx.room.ktx)
   implementation(libs.kaidl.runtime)
   implementation(libs.rikkax.multiprocess)
   implementation(libs.okhttp.client)

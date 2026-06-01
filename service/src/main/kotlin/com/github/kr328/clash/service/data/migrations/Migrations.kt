@@ -1,6 +1,6 @@
 package com.github.kr328.clash.service.data.migrations
 
-import androidx.room.migration.Migration
+import androidx.room3.migration.Migration
 
 val MIGRATIONS: Array<Migration> = arrayOf()
 

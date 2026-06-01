@@ -1,8 +1,8 @@
 package com.github.kr328.clash.service.data
 
-import androidx.room.Entity
-import androidx.room.ForeignKey
-import androidx.room.TypeConverters
+import androidx.room3.Entity
+import androidx.room3.ForeignKey
+import androidx.room3.TypeConverters
 import kotlin.uuid.Uuid
 
 @Entity(
