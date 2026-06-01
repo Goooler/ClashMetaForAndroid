@@ -300,12 +300,17 @@ internal class ProxyViewModel(app: Application) : AndroidViewModel(app), Default
           } else {
             proxy.subtitle
           }
-
+        val delayText =
+          when {
+            delayTesting -> "···"
+            proxy.delay in 0..Short.MAX_VALUE -> proxy.delay.toString()
+            else -> "--"
+          }
         return ProxyItemUiState(
           key = proxy.name,
           title = title,
           subtitle = subtitle,
-          delayText = if (proxy.delay in 0..Short.MAX_VALUE) proxy.delay.toString() else "--",
+          delayText = delayText,
           delayTesting = delayTesting,
           selected = selected,
           background = background,
