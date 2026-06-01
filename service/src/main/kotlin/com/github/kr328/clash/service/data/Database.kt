@@ -5,11 +5,7 @@ import androidx.room.Database as DB
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.github.kr328.clash.common.Global
-import com.github.kr328.clash.service.data.migrations.LEGACY_MIGRATION
-import com.github.kr328.clash.service.data.migrations.MIGRATIONS
 import java.lang.ref.SoftReference
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 
 @DB(
   version = 1,
@@ -35,12 +31,7 @@ abstract class Database : RoomDatabase() {
 
     private fun open(context: Context): Database {
       return Room.databaseBuilder(context.applicationContext, Database::class.java, "profiles")
-        .addMigrations(*MIGRATIONS)
         .build()
-    }
-
-    init {
-      Global.launch(Dispatchers.IO) { LEGACY_MIGRATION(Global.application) }
     }
   }
 }
