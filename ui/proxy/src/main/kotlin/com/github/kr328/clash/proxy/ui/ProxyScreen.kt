@@ -434,7 +434,7 @@ private fun ProxyItemCard(
       maxLines = 1,
       overflow = if (item.selected) TextOverflow.Clip else TextOverflow.Ellipsis,
     )
-    Row {
+    Row(verticalAlignment = Alignment.CenterVertically) {
       Text(
         text = item.subtitle,
         color = item.controls,
@@ -443,14 +443,13 @@ private fun ProxyItemCard(
         overflow = if (item.selected) TextOverflow.Clip else TextOverflow.Ellipsis,
       )
       WeightSpacer(1f)
-      val badgeText = if (item.delayTesting) delayTestingPlaceholder else item.delayText
       Text(
         modifier =
           Modifier.clip(CircleShape)
             .clickable(onClick = onDelayClick)
             .background(item.controls.copy(alpha = if (item.delayTesting) 0.33f else 0.14f))
             .padding(horizontal = 4.dp, vertical = 2.dp),
-        text = badgeText,
+        text = item.delayText,
         color = item.controls,
         style = MaterialTheme.typography.labelSmall,
         maxLines = 1,
@@ -585,7 +584,6 @@ private fun ProxyMenuRadioRow(title: String, selected: Boolean, onClick: () -> U
 }
 
 private val gridContentPadding = 12.dp
-private const val delayTestingPlaceholder = "···"
 
 private fun columnsForProxyLine(proxyLine: Int): Int =
   when (proxyLine) {
