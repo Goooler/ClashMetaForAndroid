@@ -374,7 +374,7 @@ private fun ProxyGroupPage(
     state = gridState,
     columns = GridCells.Fixed(columnsForProxyLine(proxyLine)),
     modifier = Modifier.fillMaxSize(),
-    contentPadding = PaddingValues(gridContentPadding),
+    contentPadding = PaddingValues(all = 12.dp),
     horizontalArrangement = Arrangement.spacedBy(12.dp),
     verticalArrangement = Arrangement.spacedBy(12.dp),
   ) {
@@ -422,7 +422,7 @@ private fun ProxyItemCard(
       .clip(shape)
       .background(item.background)
       .clickable(enabled = selectable, onClick = onClick)
-      .padding(horizontal = if (proxyLine == 3) gridContentPadding else 15.dp, vertical = 14.dp)
+      .padding(horizontal = 10.dp, vertical = 6.dp)
 
   Column(modifier = modifier, verticalArrangement = Arrangement.spacedBy(4.dp)) {
     Text(
@@ -582,8 +582,6 @@ private fun ProxyMenuRadioRow(title: String, selected: Boolean, onClick: () -> U
     Text(text = title, style = MaterialTheme.typography.bodyLarge)
   }
 }
-
-private val gridContentPadding = 12.dp
 
 private fun columnsForProxyLine(proxyLine: Int): Int =
   when (proxyLine) {
