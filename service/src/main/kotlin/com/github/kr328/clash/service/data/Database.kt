@@ -1,9 +1,9 @@
 package com.github.kr328.clash.service.data
 
 import android.content.Context
-import androidx.room.Database as DB
-import androidx.room.Room
-import androidx.room.RoomDatabase
+import androidx.room3.Database as DB
+import androidx.room3.Room
+import androidx.room3.RoomDatabase
 import com.github.kr328.clash.common.Global
 import java.lang.ref.SoftReference
 

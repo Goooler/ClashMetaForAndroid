@@ -1,6 +1,6 @@
 package com.github.kr328.clash.service.data
 
-import androidx.room.TypeConverter
+import androidx.room3.TypeConverter
 import com.github.kr328.clash.service.model.Profile
 import kotlin.uuid.Uuid
 

@@ -1,6 +1,7 @@
 package com.github.kr328.clash.service
 
 import android.content.Context
+import com.github.kr328.clash.common.Global
 import com.github.kr328.clash.common.log.Log
 import com.github.kr328.clash.core.Clash
 import com.github.kr328.clash.core.model.ConfigurationOverride
@@ -64,10 +65,16 @@ class ClashManager(private val context: Context) :
     return Clash.patchSelector(group, name).also {
       val current = store.activeProfile ?: return@also
 
-      if (it) {
-        SelectionDao().setSelected(Selection(current, group, name))
-      } else {
-        SelectionDao().removeSelected(current, group)
+      Global.launch {
+        try {
+          if (it) {
+            SelectionDao().setSelected(Selection(current, group, name))
+          } else {
+            SelectionDao().removeSelected(current, group)
+          }
+        } catch (e: Exception) {
+          Log.w("Persist selector failed", e)
+        }
       }
     }
   }
