@@ -6,6 +6,7 @@ import org.koin.dsl.module
 val appModule = module { single<AppInfoProvider> { AppInfoProviderImpl } }
 
 private object AppInfoProviderImpl : AppInfoProvider {
+  override val buildCommit: String = BuildConfig.COMMIT
   override val mainActivityClass: Class<*> = MainActivity::class.java
   override val restartReceiverClass: Class<*> = RestartReceiver::class.java
 }

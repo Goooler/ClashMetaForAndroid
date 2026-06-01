@@ -12,4 +12,7 @@ dependencies {
   implementation(libs.okhttp.client)
   implementation(libs.kotlin.serialization.json)
   implementation(libs.semver)
+
+  implementation(platform(libs.koin.bom))
+  implementation(libs.koin.android)
 }
