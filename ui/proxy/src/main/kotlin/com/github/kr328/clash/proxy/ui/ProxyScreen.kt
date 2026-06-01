@@ -68,6 +68,7 @@ import com.github.kr328.clash.proxy.vm.ProxyViewModel
 import com.github.kr328.clash.proxy.vm.ProxyViewModel.SelectedProxy
 import com.github.kr328.clash.ui.component.Spacer
 import com.github.kr328.clash.ui.component.TabbyScaffold
+import com.github.kr328.clash.ui.component.WeightSpacer
 import com.github.kr328.clash.ui.icon.BaselineArrowUp
 import com.github.kr328.clash.ui.icon.BaselineCircleCenter
 import com.github.kr328.clash.ui.icon.BaselineFlashOn
@@ -423,43 +424,38 @@ private fun ProxyItemCard(
       .clickable(enabled = selectable, onClick = onClick)
       .padding(horizontal = if (proxyLine == 3) gridContentPadding else 15.dp, vertical = 14.dp)
 
-  Row(
-    modifier = modifier,
-    verticalAlignment = Alignment.CenterVertically,
-    horizontalArrangement = Arrangement.spacedBy(12.dp),
-  ) {
-    Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(4.dp)) {
+  Column(modifier = modifier, verticalArrangement = Arrangement.spacedBy(4.dp)) {
+    Text(
+      modifier = if (item.selected) Modifier.basicMarquee() else Modifier,
+      text = item.title,
+      color = item.controls,
+      style = MaterialTheme.typography.bodyMedium,
+      fontWeight = FontWeight.Medium,
+      maxLines = 1,
+      overflow = if (item.selected) TextOverflow.Clip else TextOverflow.Ellipsis,
+    )
+    Row {
       Text(
-        modifier = if (item.selected) Modifier.basicMarquee() else Modifier,
-        text = item.title,
-        color = item.controls,
-        style = MaterialTheme.typography.bodyMedium,
-        fontWeight = FontWeight.Medium,
-        maxLines = 1,
-        overflow = if (item.selected) TextOverflow.Clip else TextOverflow.Ellipsis,
-      )
-      Text(
-        modifier = if (item.selected) Modifier.basicMarquee() else Modifier,
         text = item.subtitle,
         color = item.controls,
         style = MaterialTheme.typography.bodySmall,
         maxLines = 1,
         overflow = if (item.selected) TextOverflow.Clip else TextOverflow.Ellipsis,
       )
+      WeightSpacer(1f)
+      val badgeText = if (item.delayTesting) delayTestingPlaceholder else item.delayText
+      Text(
+        modifier =
+          Modifier.clip(CircleShape)
+            .clickable(onClick = onDelayClick)
+            .background(item.controls.copy(alpha = if (item.delayTesting) 0.33f else 0.14f))
+            .padding(horizontal = 4.dp, vertical = 2.dp),
+        text = badgeText,
+        color = item.controls,
+        style = MaterialTheme.typography.labelSmall,
+        maxLines = 1,
+      )
     }
-
-    val badgeText = if (item.delayTesting) delayTestingPlaceholder else item.delayText
-    Text(
-      modifier =
-        Modifier.clip(CircleShape)
-          .clickable(onClick = onDelayClick)
-          .background(item.controls.copy(alpha = if (item.delayTesting) 0.33f else 0.14f))
-          .padding(horizontal = 4.dp, vertical = 2.dp),
-      text = badgeText,
-      color = item.controls,
-      style = MaterialTheme.typography.labelSmall,
-      maxLines = 1,
-    )
   }
 }
 
