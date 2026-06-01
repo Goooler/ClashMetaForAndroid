@@ -2,7 +2,6 @@ package com.github.kr328.clash.service.data
 
 import androidx.room3.Entity
 import androidx.room3.ForeignKey
-import androidx.room3.TypeConverters
 import kotlin.uuid.Uuid
 
 @Entity(
@@ -19,5 +18,4 @@ import kotlin.uuid.Uuid
     ],
   primaryKeys = ["uuid", "proxy"],
 )
-@TypeConverters(RoomTypeConverters::class)
 data class Selection(val uuid: Uuid, val proxy: String, val selected: String)

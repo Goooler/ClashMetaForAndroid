@@ -4,11 +4,9 @@ import androidx.room3.Dao
 import androidx.room3.Insert
 import androidx.room3.OnConflictStrategy
 import androidx.room3.Query
-import androidx.room3.TypeConverters
 import kotlin.uuid.Uuid
 
 @Dao
-@TypeConverters(RoomTypeConverters::class)
 interface SelectionDao {
   @Insert(onConflict = OnConflictStrategy.REPLACE) suspend fun setSelected(selection: Selection)
 
