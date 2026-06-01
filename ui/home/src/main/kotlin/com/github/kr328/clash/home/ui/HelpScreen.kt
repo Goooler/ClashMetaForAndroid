@@ -1,5 +1,7 @@
 package com.github.kr328.clash.home.ui
 
+import android.content.ClipData
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
@@ -13,8 +15,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalClipboard
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.toClipEntry
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
@@ -37,6 +42,7 @@ import com.github.kr328.clash.ui.icon.OutlineInfo
 import com.github.kr328.clash.ui.icon.TabbyIcons
 import com.github.kr328.clash.ui.theme.PreviewTabby
 import com.github.kr328.clash.ui.theme.TabbyThemeWrapper
+import kotlinx.coroutines.launch
 import me.zhanghai.compose.preference.ProvidePreferenceLocals
 import me.zhanghai.compose.preference.preference
 import me.zhanghai.compose.preference.preferenceCategory
@@ -88,6 +94,18 @@ private fun HelpContent(
   modifier: Modifier = Modifier,
   snackbarHostState: SnackbarHostState? = null,
 ) {
+  val clipboard = LocalClipboard.current
+  val scope = rememberCoroutineScope()
+  val messageCopied = stringResource(CommonR.string.copied)
+
+  val onCopyVersion: (String) -> Unit = { version ->
+    scope.launch {
+      val clipEntry = ClipData.newPlainText("version", version).toClipEntry()
+      clipboard.setClipEntry(clipEntry)
+      snackbarHostState?.showSnackbar(message = messageCopied, withDismissAction = true)
+    }
+  }
+
   TabbyScaffold(
     title = stringResource(R.string.help),
     modifier = modifier,
@@ -135,6 +153,11 @@ private fun HelpContent(
               contentDescription = null,
             )
           },
+          modifier =
+            Modifier.combinedClickable(
+              onClick = {},
+              onLongClick = { onCopyVersion(uiState.appVersion) },
+            ),
         )
         preference(
           key = "core_version",
@@ -146,6 +169,11 @@ private fun HelpContent(
               contentDescription = null,
             )
           },
+          modifier =
+            Modifier.combinedClickable(
+              onClick = {},
+              onLongClick = { onCopyVersion(uiState.coreVersion) },
+            ),
         )
         preference(
           key = "check_for_updates",
