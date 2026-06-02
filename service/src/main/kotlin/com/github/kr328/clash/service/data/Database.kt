@@ -8,6 +8,7 @@ import androidx.room3.TypeConverter
 import androidx.room3.TypeConverters
 import com.github.kr328.clash.common.Global
 import com.github.kr328.clash.service.model.Profile
+import java.lang.ref.SoftReference
 import kotlin.uuid.Uuid
 
 @DB(
@@ -24,7 +25,14 @@ abstract class Database : RoomDatabase() {
   abstract fun selectionProxyDao(): SelectionDao
 
   companion object {
-    val database: Database by lazy { open(Global.application) }
+    val database: Database
+      @Synchronized
+      get() {
+        return softDatabase.get()
+          ?: open(Global.application).apply { softDatabase = SoftReference(this) }
+      }
+
+    private var softDatabase: SoftReference<Database?> = SoftReference(null)
 
     private fun open(context: Context): Database {
       return Room.databaseBuilder(context.applicationContext, Database::class.java, "profiles")
