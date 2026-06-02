@@ -1,13 +1,13 @@
 package com.github.kr328.clash.service.data
 
 fun ImportedDao(): ImportedDao {
-  return Database.database.openImportedDao()
+  return Database.database.importedDao()
 }
 
 fun PendingDao(): PendingDao {
-  return Database.database.openPendingDao()
+  return Database.database.pendingDao()
 }
 
 fun SelectionDao(): SelectionDao {
-  return Database.database.openSelectionProxyDao()
+  return Database.database.selectionProxyDao()
 }

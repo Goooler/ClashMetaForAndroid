@@ -17,11 +17,11 @@ import kotlin.uuid.Uuid
 )
 @TypeConverters(RoomTypeConverters::class)
 abstract class Database : RoomDatabase() {
-  abstract fun openImportedDao(): ImportedDao
+  abstract fun importedDao(): ImportedDao
 
-  abstract fun openPendingDao(): PendingDao
+  abstract fun pendingDao(): PendingDao
 
-  abstract fun openSelectionProxyDao(): SelectionDao
+  abstract fun selectionProxyDao(): SelectionDao
 
   companion object {
     val database: Database by lazy { open(Global.application) }
