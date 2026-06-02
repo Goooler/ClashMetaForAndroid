@@ -49,7 +49,7 @@
   <string name="fakeip_filter_mode">FakeIP 过滤器模式</string>
   <string name="fallback">Fallback Name Server</string>
   <string name="find_process_mode">查找进程模式</string>
-  <string name="follow_system_android_10">跟随系统 (Android 10+)</string>
+  <string name="follow_system">跟随系统</string>
   <string name="force_dns_mapping">强制 DNS 映射</string>
   <string name="force_domain">强制解析域名</string>
   <string name="force_enable">强制启用</string>

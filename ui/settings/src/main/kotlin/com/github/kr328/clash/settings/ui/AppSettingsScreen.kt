@@ -124,7 +124,7 @@ private val DarkMode.summaryRes: Int
   @StringRes
   get() =
     when (this) {
-      Auto -> R.string.follow_system_android_10
+      Auto -> R.string.follow_system
       ForceLight -> R.string.always_light
       ForceDark -> R.string.always_dark
     }

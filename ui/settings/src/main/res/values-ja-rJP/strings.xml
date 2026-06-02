@@ -49,7 +49,7 @@
   <string name="fakeip_filter_mode">Fake-IP フィルターモード</string>
   <string name="fallback">フォールバックネームサーバー</string>
   <string name="find_process_mode">Find Process Mode</string>
-  <string name="follow_system_android_10">システム (Android 10+)</string>
+  <string name="follow_system">システム</string>
   <string name="force_dns_mapping">Force DNS Mapping</string>
   <string name="force_domain">Force Domain</string>
   <string name="force_enable">強制的に有効</string>

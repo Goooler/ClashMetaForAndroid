@@ -49,7 +49,7 @@
   <string name="fakeip_filter_mode">Chế độ lọc Fake-IP</string>
   <string name="fallback">Máy chủ tên dự phòng</string>
   <string name="find_process_mode">Chế độ tìm tiến trình</string>
-  <string name="follow_system_android_10">Theo hệ thống (Android 10+)</string>
+  <string name="follow_system">Theo hệ thống</string>
   <string name="force_dns_mapping">Buộc ánh xạ DNS</string>
   <string name="force_domain">Buộc tên miền</string>
   <string name="force_enable">Buộc bật</string>

@@ -49,7 +49,7 @@
   <string name="fakeip_filter_mode">Fake-IP Filter Mode</string>
   <string name="fallback">Fallback Name Server</string>
   <string name="find_process_mode">Find Process Mode</string>
-  <string name="follow_system_android_10">Follow System (Android 10+)</string>
+  <string name="follow_system">Follow System</string>
   <string name="force_dns_mapping">Force DNS Mapping</string>
   <string name="force_domain">Force Domain</string>
   <string name="force_enable">Force Enable</string>

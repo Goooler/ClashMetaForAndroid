@@ -49,7 +49,7 @@
   <string name="fakeip_filter_mode">Режим фильтрации Fake-IP</string>
   <string name="fallback">Резервный сервер имён</string>
   <string name="find_process_mode">Найти режим процесса</string>
-  <string name="follow_system_android_10">Как в системе (Android 10+)</string>
+  <string name="follow_system">Как в системе</string>
   <string name="force_dns_mapping">Force DNS Mapping</string>
   <string name="force_domain">Принудительный перехват доменов</string>
   <string name="force_enable">Включить принудительно</string>

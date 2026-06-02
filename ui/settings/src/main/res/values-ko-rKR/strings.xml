@@ -49,7 +49,7 @@
   <string name="fakeip_filter_mode">Fake-IP 필터 모드</string>
   <string name="fallback">폴팩 네임 서버</string>
   <string name="find_process_mode">프로세스 모드 찾기</string>
-  <string name="follow_system_android_10">시스템 설정 (Android 10+)과 일치</string>
+  <string name="follow_system">시스템 설정과 일치</string>
   <string name="force_dns_mapping">Force DNS Mapping</string>
   <string name="force_domain">강제 도메인</string>
   <string name="force_enable">강제 활성화</string>
