@@ -1,12 +1,13 @@
 package com.github.kr328.clash.service.data
 
 import androidx.room3.Entity
+import androidx.room3.PrimaryKey
 import com.github.kr328.clash.service.model.Profile
 import kotlin.uuid.Uuid
 
-@Entity(tableName = "imported", primaryKeys = ["uuid"])
+@Entity(tableName = "imported")
 data class Imported(
-  val uuid: Uuid,
+  @PrimaryKey val uuid: Uuid,
   val name: String,
   val type: Profile.Type,
   val source: String,
