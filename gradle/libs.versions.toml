@@ -9,8 +9,11 @@ jvmTarget = "21"
 navigation3 = "1.1.2"
 
 [libraries]
+junit = "junit:junit:4.13.2"
 kotlin-coroutine = "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.11.0"
+kotlin-coroutine-test = "org.jetbrains.kotlinx:kotlinx-coroutines-test:1.11.0"
 kotlin-serialization-json = "org.jetbrains.kotlinx:kotlinx-serialization-json:1.11.0"
+kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
 
 androidx-activity-compose = "androidx.activity:activity-compose:1.13.0"
 androidx-browser = "androidx.browser:browser:1.10.0"

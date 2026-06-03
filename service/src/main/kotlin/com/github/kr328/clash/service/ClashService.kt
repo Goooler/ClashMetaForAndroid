@@ -70,6 +70,7 @@ class ClashService : BaseService() {
 
     if (StatusProvider.serviceRunning) return stopSelf()
 
+    StatusProvider.currentProfile = null
     StatusProvider.serviceRunning = true
 
     StaticNotificationModule.createNotificationChannel(this)
@@ -89,6 +90,7 @@ class ClashService : BaseService() {
   }
 
   override fun onDestroy() {
+    StatusProvider.currentProfile = null
     StatusProvider.serviceRunning = false
 
     sendClashStopped(reason)

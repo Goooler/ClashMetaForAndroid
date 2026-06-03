@@ -91,6 +91,7 @@ class TunService : VpnService(), CoroutineScope by CoroutineScope(Dispatchers.De
 
     if (StatusProvider.serviceRunning) return stopSelf()
 
+    StatusProvider.currentProfile = null
     StatusProvider.serviceRunning = true
 
     StaticNotificationModule.createNotificationChannel(this)
@@ -108,6 +109,7 @@ class TunService : VpnService(), CoroutineScope by CoroutineScope(Dispatchers.De
   override fun onDestroy() {
     TunModule.requestStop()
 
+    StatusProvider.currentProfile = null
     StatusProvider.serviceRunning = false
 
     sendClashStopped(reason)

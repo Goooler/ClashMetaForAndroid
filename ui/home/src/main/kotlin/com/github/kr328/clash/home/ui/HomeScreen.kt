@@ -62,7 +62,7 @@ import com.github.kr328.clash.ui.theme.TabbyThemeWrapper
 @Composable
 internal fun HomeScreen(
   modifier: Modifier = Modifier,
-  viewModel: HomeViewModel = viewModelWithLifecycle(),
+  viewModel: HomeViewModel = viewModelWithLifecycle(factory = HomeViewModel.Factory),
   onOpenProxy: () -> Unit,
   onOpenProfiles: () -> Unit,
   onOpenProviders: () -> Unit,
