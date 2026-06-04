@@ -7,6 +7,7 @@ plugins {
 dependencies {
   implementation(projects.glue)
   implementation(projects.ui)
+  implementation(libs.reorderable)
 
   implementation(libs.composePreference)
   implementation(libs.quickie.bundled)

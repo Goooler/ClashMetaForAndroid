@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ElevatedCard
@@ -56,6 +57,7 @@ import com.github.kr328.clash.ui.component.Spacer
 import com.github.kr328.clash.ui.component.TabbyScaffold
 import com.github.kr328.clash.ui.icon.BaselineAdd
 import com.github.kr328.clash.ui.icon.BaselineContentCopy
+import com.github.kr328.clash.ui.icon.BaselineDragHandle
 import com.github.kr328.clash.ui.icon.BaselineEdit
 import com.github.kr328.clash.ui.icon.BaselineMoreVert
 import com.github.kr328.clash.ui.icon.BaselineSync
@@ -69,6 +71,8 @@ import com.github.kr328.clash.ui.theme.tabbyDimens
 import kotlin.time.Duration.Companion.minutes
 import kotlin.uuid.Uuid
 import me.saket.bytesize.binaryBytes
+import sh.calvin.reorderable.ReorderableItem
+import sh.calvin.reorderable.rememberReorderableLazyListState
 
 @Composable
 internal fun ProfilesScreen(
@@ -120,6 +124,7 @@ internal fun ProfilesScreen(
     onEdit = viewModel::onEdit,
     onDuplicate = viewModel::onDuplicate,
     onDelete = viewModel::onDelete,
+    onReorder = viewModel::onReorder,
   )
 }
 
@@ -138,6 +143,7 @@ private fun ProfilesContent(
   onEdit: (Profile) -> Unit,
   onDuplicate: (Profile) -> Unit,
   onDelete: (Profile) -> Unit,
+  onReorder: (Int, Int) -> Unit,
 ) {
   var menuProfile by remember { mutableStateOf<Profile?>(null) }
 
@@ -187,6 +193,12 @@ private fun ProfilesContent(
     }
   }
 
+  val lazyListState = rememberLazyListState()
+  val reorderableLazyListState =
+    rememberReorderableLazyListState(lazyListState) { from, to ->
+      onReorder(from.index, to.index)
+    }
+
   TabbyScaffold(
     title = stringResource(CommonR.string.profiles),
     modifier = modifier,
@@ -213,17 +225,21 @@ private fun ProfilesContent(
     },
   ) { innerPadding ->
     LazyColumn(
+      state = lazyListState,
       modifier = Modifier.fillMaxSize().padding(innerPadding),
       contentPadding = PaddingValues(vertical = 5.dp),
       verticalArrangement = Arrangement.spacedBy(0.dp),
     ) {
-      items(items = profiles, key = Profile::uuid) { profile ->
-        ProfileItem(
-          profile = profile,
-          currentTime = currentTime,
-          onClick = { onActivate(profile) },
-          onMenuClick = { menuProfile = profile },
-        )
+      items(items = profiles, key = { it.uuid }) { profile ->
+        ReorderableItem(reorderableLazyListState, key = profile.uuid) { _ ->
+          ProfileItem(
+            profile = profile,
+            currentTime = currentTime,
+            onClick = { onActivate(profile) },
+            onMenuClick = { menuProfile = profile },
+            dragHandleModifier = Modifier.draggableHandle(),
+          )
+        }
       }
     }
   }
@@ -235,6 +251,7 @@ private fun ProfileItem(
   currentTime: Long,
   onClick: () -> Unit,
   onMenuClick: () -> Unit,
+  dragHandleModifier: Modifier = Modifier,
 ) {
   val context = LocalContext.current
   val dimens = tabbyDimens
@@ -272,8 +289,14 @@ private fun ProfileItem(
       modifier = Modifier.fillMaxWidth().clickable(onClick = onClick).padding(start = 0.dp),
       verticalAlignment = Alignment.CenterVertically,
     ) {
+      Icon(
+        imageVector = TabbyIcons.BaselineDragHandle,
+        contentDescription = stringResource(CommonR.string.reorder),
+        modifier = dragHandleModifier.padding(start = 12.dp),
+      )
+
       Box(
-        modifier = Modifier.size(width = 65.dp, height = itemMinHeight),
+        modifier = Modifier.size(width = 48.dp, height = itemMinHeight),
         contentAlignment = Alignment.Center,
       ) {
         RadioButton(selected = profile.active, onClick = null)
@@ -397,5 +420,6 @@ private fun ProfilesContentPreview() {
     onEdit = {},
     onDuplicate = {},
     onDelete = {},
+    onReorder = { _, _ -> },
   )
 }

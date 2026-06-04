@@ -207,6 +207,24 @@ class ProfileManager(private val context: Context) :
     ProfileProcessor.active(context, profile.uuid)
   }
 
+  override suspend fun reorder(uuids: List<Uuid>) {
+    val baseTime = System.currentTimeMillis() - uuids.size * 1000L
+    uuids.forEachIndexed { index, uuid ->
+      val newTime = baseTime + index * 1000L
+      val imported = ImportedDao().queryByUUID(uuid)
+      if (imported != null) {
+        ImportedDao().update(imported.copy(createdAt = newTime))
+      } else {
+        val pending = PendingDao().queryByUUID(uuid)
+        if (pending != null) {
+          PendingDao().update(pending.copy(createdAt = newTime))
+        }
+      }
+    }
+
+    context.sendProfileChanged(Uuid.fromLongs(0, 0))
+  }
+
   private suspend fun resolveProfile(uuid: Uuid): Profile? {
     val imported = ImportedDao().queryByUUID(uuid)
     val pending = PendingDao().queryByUUID(uuid)
