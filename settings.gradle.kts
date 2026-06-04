@@ -49,6 +49,7 @@ enableFeaturePreview("STABLE_CONFIGURATION_CACHE")
 include(
   ":app",
   ":core",
+  ":core:model",
   ":service",
   ":common",
   ":glue",
