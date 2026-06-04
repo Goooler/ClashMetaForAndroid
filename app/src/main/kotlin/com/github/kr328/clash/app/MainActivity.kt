@@ -19,6 +19,8 @@ import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts.RequestPermission
 import androidx.activity.viewModels
 import androidx.annotation.StringRes
+import androidx.compose.runtime.ComposeRuntimeFlags
+import androidx.compose.runtime.ExperimentalComposeApi
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
@@ -80,6 +82,10 @@ class MainActivity : ComponentActivity() {
       return
     }
     intent.handleAction(backStack)
+
+    // https://developer.android.com/reference/kotlin/androidx/compose/runtime/ComposeRuntimeFlags#isLinkBufferComposerEnabled()
+    @OptIn(ExperimentalComposeApi::class)
+    ComposeRuntimeFlags.isLinkBufferComposerEnabled = true
 
     setContent {
       val uiValueState by uiStore.valueState.collectAsStateWithLifecycle()
