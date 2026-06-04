@@ -126,20 +126,26 @@ internal class ProfilesViewModel(app: Application) :
     viewModelScope.launch { withProfile { delete(profile.uuid) } }
   }
 
-  fun onReorder(from: Int, to: Int) {
-    uiState.update { state ->
-      val newProfiles =
-        state.profiles.toMutableList().apply {
-          add(to, removeAt(from))
-        }
-      state.copy(profiles = newProfiles)
-    }
+fun onReorder(from: Int, to: Int) {
+  var uuids: List<Uuid>? = null
 
-    viewModelScope.launch {
-      val uuids = uiState.value.profiles.map { it.uuid }
-      withProfile { reorder(uuids) }
-    }
+  uiState.update { state ->
+    val profiles = state.profiles
+    if (from == to || from !in profiles.indices || to !in profiles.indices) return@update state
+
+    val newProfiles =
+      profiles.toMutableList().apply {
+        add(to, removeAt(from))
+      }
+
+    uuids = newProfiles.map { it.uuid }
+    state.copy(profiles = newProfiles)
   }
+
+  uuids?.let { orderedUuids ->
+    viewModelScope.launch { withProfile { reorder(orderedUuids) } }
+  }
+}
 
   private fun fetch() {
     fetchJob?.cancel()
