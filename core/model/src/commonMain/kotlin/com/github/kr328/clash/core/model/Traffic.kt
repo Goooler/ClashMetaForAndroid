@@ -1,7 +1,6 @@
 package com.github.kr328.clash.core.model
 
-@JvmInline
-value class Traffic(val packed: Long) {
+data class Traffic(val packed: Long) {
   val uploadScaled: Long
     get() = unpackTrafficScaled(packed ushr 32)
 

@@ -1,4 +1,6 @@
 pluginManagement {
+  includeBuild("build-logic")
+
   repositories {
     maven("https://central.sonatype.com/repository/maven-snapshots/") {
       mavenContent { includeGroupAndSubgroups("io.github.goooler.golang") }

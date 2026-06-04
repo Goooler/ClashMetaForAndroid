@@ -61,3 +61,4 @@ ksp = "com.google.devtools.ksp:2.3.9"
 golang = "io.github.goooler.golang:0.2.2"
 download = "de.undercouch.download:5.7.0"
 spotless = "com.diffplug.spotless:8.6.0"
+tabby-kmp-library = { id = "tabby.kmp.library" }
