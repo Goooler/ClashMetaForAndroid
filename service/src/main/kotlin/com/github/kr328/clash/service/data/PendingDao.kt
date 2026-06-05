@@ -22,4 +22,6 @@ interface PendingDao {
   @Insert(onConflict = OnConflictStrategy.REPLACE) suspend fun insert(pending: Pending)
 
   @Update(onConflict = OnConflictStrategy.REPLACE) suspend fun update(pending: Pending)
+
+  @Update(onConflict = OnConflictStrategy.REPLACE) suspend fun update(pending: List<Pending>)
 }

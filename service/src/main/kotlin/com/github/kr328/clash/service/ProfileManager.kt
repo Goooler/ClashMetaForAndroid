@@ -212,16 +212,26 @@ class ProfileManager(private val context: Context) :
   }
 
   override suspend fun reorder(uuids: List<Uuid>) {
+    val importedList = mutableListOf<Imported>()
+    val pendingList = mutableListOf<Pending>()
+
     uuids.forEachIndexed { index, uuid ->
       val imported = ImportedDao().queryByUUID(uuid)
       if (imported != null) {
-        ImportedDao().update(imported.copy(sortOrder = index.toLong()))
+        importedList.add(imported.copy(sortOrder = index.toLong()))
       } else {
         val pending = PendingDao().queryByUUID(uuid)
         if (pending != null) {
-          PendingDao().update(pending.copy(sortOrder = index.toLong()))
+          pendingList.add(pending.copy(sortOrder = index.toLong()))
         }
       }
+    }
+
+    if (importedList.isNotEmpty()) {
+      ImportedDao().update(importedList)
+    }
+    if (pendingList.isNotEmpty()) {
+      PendingDao().update(pendingList)
     }
 
     context.sendProfileChanged(Uuid.fromLongs(0, 0))

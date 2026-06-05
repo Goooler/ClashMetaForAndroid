@@ -18,6 +18,8 @@ interface ImportedDao {
 
   @Update(onConflict = OnConflictStrategy.ABORT) suspend fun update(imported: Imported)
 
+  @Update(onConflict = OnConflictStrategy.ABORT) suspend fun update(imported: List<Imported>)
+
   @Query("DELETE FROM imported WHERE uuid = :uuid") suspend fun remove(uuid: Uuid)
 
   @Query("SELECT EXISTS(SELECT 1 FROM imported WHERE uuid = :uuid)")
