@@ -57,7 +57,13 @@ internal class PropertiesViewModel(app: Application) :
       viewModelScope.launch {
         runCatching {
             withProfile {
-              patch(profile.uuid, profile.name, profile.source, profile.interval, profile.ageSecretKey)
+              patch(
+                profile.uuid,
+                profile.name,
+                profile.source,
+                profile.interval,
+                profile.ageSecretKey,
+              )
             }
           }
           .onFailure { e -> Log.e("Auto save profile failed: ${e.message}", e) }
@@ -149,7 +155,13 @@ internal class PropertiesViewModel(app: Application) :
       try {
         withProcessing { updateStatus ->
           withProfile {
-            patch(profile.uuid, profile.name, profile.source, profile.interval, profile.ageSecretKey)
+            patch(
+              profile.uuid,
+              profile.name,
+              profile.source,
+              profile.interval,
+              profile.ageSecretKey,
+            )
             coroutineScope { commit(profile.uuid) { launch { updateStatus(it) } } }
           }
         }

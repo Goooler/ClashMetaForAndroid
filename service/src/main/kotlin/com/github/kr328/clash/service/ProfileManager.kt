@@ -36,7 +36,12 @@ class ProfileManager(private val context: Context) :
     }
   }
 
-  override suspend fun create(type: Profile.Type, name: String, source: String, ageSecretKey: String?): Uuid {
+  override suspend fun create(
+    type: Profile.Type,
+    name: String,
+    source: String,
+    ageSecretKey: String?,
+  ): Uuid {
     val uuid = generateProfileUUID()
     val pending =
       Pending(
@@ -92,7 +97,13 @@ class ProfileManager(private val context: Context) :
     return newUUID
   }
 
-  override suspend fun patch(uuid: Uuid, name: String, source: String, interval: Long, ageSecretKey: String?) {
+  override suspend fun patch(
+    uuid: Uuid,
+    name: String,
+    source: String,
+    interval: Long,
+    ageSecretKey: String?,
+  ) {
     val pending = PendingDao().queryByUUID(uuid)
 
     if (pending == null) {

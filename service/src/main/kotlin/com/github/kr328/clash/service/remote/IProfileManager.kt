@@ -6,7 +6,12 @@ import kotlin.uuid.Uuid
 
 @BinderInterface
 interface IProfileManager {
-  suspend fun create(type: Profile.Type, name: String, source: String = "", ageSecretKey: String? = null): Uuid
+  suspend fun create(
+    type: Profile.Type,
+    name: String,
+    source: String = "",
+    ageSecretKey: String? = null,
+  ): Uuid
 
   suspend fun clone(uuid: Uuid): Uuid
 

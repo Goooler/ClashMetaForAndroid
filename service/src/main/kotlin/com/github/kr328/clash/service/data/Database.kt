@@ -7,7 +7,7 @@ import androidx.room3.RoomDatabase
 import androidx.room3.TypeConverter
 import androidx.room3.TypeConverters
 import androidx.room3.migration.Migration
-import androidx.sqlite3.db.SupportSQLiteDatabase
+import androidx.sqlite.execSQL
 import com.github.kr328.clash.common.Global
 import com.github.kr328.clash.service.model.Profile
 import java.lang.ref.SoftReference
@@ -37,11 +37,9 @@ abstract class Database : RoomDatabase() {
     private var softDatabase: SoftReference<Database?> = SoftReference(null)
 
     private val MIGRATION_1_2 =
-      object : Migration(1, 2) {
-        override fun migrate(db: SupportSQLiteDatabase) {
-          db.execSQL("ALTER TABLE imported ADD COLUMN ageSecretKey TEXT")
-          db.execSQL("ALTER TABLE pending ADD COLUMN ageSecretKey TEXT")
-        }
+      Migration(1, 2) { db ->
+        db.execSQL("ALTER TABLE imported ADD COLUMN ageSecretKey TEXT")
+        db.execSQL("ALTER TABLE pending ADD COLUMN ageSecretKey TEXT")
       }
 
     private fun open(context: Context): Database {
