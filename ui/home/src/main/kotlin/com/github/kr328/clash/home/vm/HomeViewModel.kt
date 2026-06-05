@@ -223,14 +223,14 @@ internal class HomeViewModel(private val dependencies: Dependencies) :
   }
 
   object Factory : ViewModelProvider.Factory {
-    @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(modelClass: Class<T>, extras: CreationExtras): T {
-      if (modelClass == HomeViewModel::class.java) {
-        val application =
-          checkNotNull(extras[APPLICATION_KEY]) { "Application is required for HomeViewModel" }
-        return HomeViewModel(AndroidDependencies(application)) as T
+      require(modelClass == HomeViewModel::class.java) {
+        "Unknown ViewModel class: ${modelClass.name}"
       }
-      throw IllegalArgumentException("Unknown ViewModel class: ${modelClass.name}")
+      val application =
+        checkNotNull(extras[APPLICATION_KEY]) { "Application is required for HomeViewModel" }
+      @Suppress("UNCHECKED_CAST")
+      return HomeViewModel(AndroidDependencies(application)) as T
     }
   }
 }
