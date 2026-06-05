@@ -235,6 +235,7 @@ private fun ProfilesContent(
           ProfileItem(
             profile = profile,
             currentTime = currentTime,
+            showDragHandle = profiles.size > 1,
             onClick = { onActivate(profile) },
             onMenuClick = { menuProfile = profile },
             dragHandleModifier = Modifier.draggableHandle(),
@@ -249,6 +250,7 @@ private fun ProfilesContent(
 private fun ProfileItem(
   profile: Profile,
   currentTime: Long,
+  showDragHandle: Boolean,
   onClick: () -> Unit,
   onMenuClick: () -> Unit,
   dragHandleModifier: Modifier = Modifier,
@@ -289,14 +291,20 @@ private fun ProfileItem(
       modifier = Modifier.fillMaxWidth().clickable(onClick = onClick).padding(start = 0.dp),
       verticalAlignment = Alignment.CenterVertically,
     ) {
-      Icon(
-        imageVector = TabbyIcons.BaselineDragHandle,
-        contentDescription = stringResource(CommonR.string.reorder),
-        modifier = dragHandleModifier.padding(start = 12.dp),
-      )
+      if (showDragHandle) {
+        Icon(
+          imageVector = TabbyIcons.BaselineDragHandle,
+          contentDescription = stringResource(CommonR.string.reorder),
+          modifier = dragHandleModifier.padding(start = 12.dp),
+        )
+      }
 
       Box(
-        modifier = Modifier.size(width = 48.dp, height = itemMinHeight),
+        modifier =
+          Modifier.size(
+            width = if (showDragHandle) 48.dp else 65.dp,
+            height = itemMinHeight,
+          ),
         contentAlignment = Alignment.Center,
       ) {
         RadioButton(selected = profile.active, onClick = null)
