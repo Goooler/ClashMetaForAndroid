@@ -6,6 +6,7 @@ import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.application
 import androidx.lifecycle.viewModelScope
+import com.github.kr328.clash.common.Global
 import com.github.kr328.clash.common.R as CommonR
 import com.github.kr328.clash.glue.remote.Remote
 import com.github.kr328.clash.glue.util.withProfile
@@ -28,6 +29,7 @@ internal class ProfilesViewModel(app: Application) :
   private var broadcastEventsJob: Job? = null
   private var elapsedJob: Job? = null
   private var fetchJob: Job? = null
+  private val initialUuids = mutableListOf<Uuid>()
 
   val uiState: StateFlow<UiState>
     field = MutableStateFlow(UiState())
@@ -64,6 +66,14 @@ internal class ProfilesViewModel(app: Application) :
     broadcastEventsJob = null
     elapsedJob?.cancel()
     elapsedJob = null
+
+    val currentUuids = uiState.value.profiles.map { it.uuid }
+    if (currentUuids.isNotEmpty() && currentUuids != initialUuids) {
+      // Intended to use non-viewModel scope as we need the action to be called on disposed.
+      Global.launch {
+        withProfile { reorder(currentUuids) }
+      }
+    }
   }
 
   fun consumeEvent() {
@@ -126,14 +136,8 @@ internal class ProfilesViewModel(app: Application) :
     viewModelScope.launch { withProfile { delete(profile.uuid) } }
   }
 
-  private var reorderPersistJob: Job? = null
-
   fun onReorder(from: Int, to: Int) {
-    var uuids: List<Uuid>? = null
-
     uiState.update { state ->
-      uuids = null
-
       val profiles = state.profiles
       if (from == to || from !in profiles.indices || to !in profiles.indices) return@update state
 
@@ -142,17 +146,8 @@ internal class ProfilesViewModel(app: Application) :
           add(to, removeAt(from))
         }
 
-      uuids = newProfiles.map { it.uuid }
       state.copy(profiles = newProfiles)
     }
-
-    val orderedUuids = uuids ?: return
-    reorderPersistJob?.cancel()
-    reorderPersistJob =
-      viewModelScope.launch {
-        delay(300)
-        withProfile { reorder(orderedUuids) }
-      }
   }
 
   private fun fetch() {
@@ -162,6 +157,7 @@ internal class ProfilesViewModel(app: Application) :
       val hasUpdatableProfile =
         withContext(Dispatchers.Default) { profiles.any { it.imported && it.type != File } }
 
+      initialUuids.addAll(profiles.map { it.uuid })
       uiState.update { it.copy(profiles = profiles, hasUpdatableProfile = hasUpdatableProfile) }
     }
   }
