@@ -26,6 +26,7 @@ import androidx.compose.ui.tooling.preview.PreviewWrapper
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.github.kr328.clash.common.R as CommonR
+import com.github.kr328.clash.glue.util.ValidatorAgeSecretKey
 import com.github.kr328.clash.glue.util.ValidatorAutoUpdateInterval
 import com.github.kr328.clash.glue.util.ValidatorHttpUrl
 import com.github.kr328.clash.glue.util.ValidatorNotBlank
@@ -34,6 +35,7 @@ import com.github.kr328.clash.profile.vm.PropertiesViewModel
 import com.github.kr328.clash.service.model.Profile
 import com.github.kr328.clash.ui.component.ModelProgressBarDialog
 import com.github.kr328.clash.ui.component.TabbyScaffold
+import com.github.kr328.clash.ui.icon.BaselineKey
 import com.github.kr328.clash.ui.icon.BaselineSave
 import com.github.kr328.clash.ui.icon.OutlineFolder
 import com.github.kr328.clash.ui.icon.OutlineInbox
@@ -96,6 +98,7 @@ internal fun PropertiesScreen(
       onNameChanged = viewModel::onNameChanged,
       onUrlChanged = viewModel::onUrlChanged,
       onIntervalChanged = viewModel::onIntervalChanged,
+      onAgeSecretKeyChanged = viewModel::onAgeSecretKeyChanged,
     )
   }
 }
@@ -114,6 +117,7 @@ private fun PropertiesContent(
   onNameChanged: (String) -> Unit,
   onUrlChanged: (String) -> Unit,
   onIntervalChanged: (Long) -> Unit,
+  onAgeSecretKeyChanged: (String?) -> Unit,
 ) {
   var showExitWithoutSavingDialog by rememberSaveable { mutableStateOf(false) }
 
@@ -222,6 +226,23 @@ private fun PropertiesContent(
             }
           },
         )
+        textFieldPreference(
+          key = "age_secret_key",
+          value = profile.ageSecretKey ?: "",
+          onValueChange = { newKey ->
+            val key = newKey.ifBlank { null }
+            if (key != profile.ageSecretKey) {
+              onAgeSecretKeyChanged(key)
+            }
+          },
+          title = { Text(stringResource(R.string.age_secret_key)) },
+          textToValue = { input -> if (ValidatorAgeSecretKey(input)) input else null },
+          enabled = profile.type != File,
+          icon = { Icon(imageVector = TabbyIcons.BaselineKey, contentDescription = null) },
+          summary = {
+            Text(profile.ageSecretKey ?: stringResource(R.string.age_secret_key_hint))
+          },
+        )
         preference(
           key = "browse_files",
           title = { Text(stringResource(R.string.browse_files)) },
@@ -295,5 +316,6 @@ private fun PropertiesContentPreview() {
     onNameChanged = {},
     onUrlChanged = {},
     onIntervalChanged = {},
+    onAgeSecretKeyChanged = {},
   )
 }

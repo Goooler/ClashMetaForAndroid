@@ -48,6 +48,8 @@ object ProfileProcessor {
           pending
         }
 
+        Clash.setAgeSecretKey(snapshot.ageSecretKey?.takeIf { it.isNotBlank() })
+
         val force = snapshot.type != Profile.Type.File
         var cb = callback
 
@@ -89,6 +91,7 @@ object ProfileProcessor {
                   userInfo?.total ?: 0,
                   userInfo?.expire ?: 0,
                   old?.createdAt ?: System.currentTimeMillis(),
+                  ageSecretKey = snapshot.ageSecretKey,
                 )
               if (old != null) {
                 ImportedDao().update(new)
@@ -114,6 +117,7 @@ object ProfileProcessor {
                   0,
                   0,
                   old?.createdAt ?: System.currentTimeMillis(),
+                  ageSecretKey = snapshot.ageSecretKey,
                 )
               if (old != null) {
                 ImportedDao().update(new)
@@ -150,6 +154,8 @@ object ProfileProcessor {
 
           imported
         }
+
+        Clash.setAgeSecretKey(snapshot.ageSecretKey?.takeIf { it.isNotBlank() })
 
         var cb = callback
 

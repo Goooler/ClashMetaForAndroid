@@ -36,7 +36,7 @@ class ProfileManager(private val context: Context) :
     }
   }
 
-  override suspend fun create(type: Profile.Type, name: String, source: String): Uuid {
+  override suspend fun create(type: Profile.Type, name: String, source: String, ageSecretKey: String?): Uuid {
     val uuid = generateProfileUUID()
     val pending =
       Pending(
@@ -49,6 +49,7 @@ class ProfileManager(private val context: Context) :
         total = 0,
         download = 0,
         expire = 0,
+        ageSecretKey = ageSecretKey,
       )
 
     PendingDao().insert(pending)
@@ -81,6 +82,7 @@ class ProfileManager(private val context: Context) :
         total = imported.total,
         download = imported.download,
         expire = imported.expire,
+        ageSecretKey = imported.ageSecretKey,
       )
 
     cloneImportedFiles(uuid, newUUID)
@@ -90,7 +92,7 @@ class ProfileManager(private val context: Context) :
     return newUUID
   }
 
-  override suspend fun patch(uuid: Uuid, name: String, source: String, interval: Long) {
+  override suspend fun patch(uuid: Uuid, name: String, source: String, interval: Long, ageSecretKey: String?) {
     val pending = PendingDao().queryByUUID(uuid)
 
     if (pending == null) {
@@ -111,6 +113,7 @@ class ProfileManager(private val context: Context) :
             total = 0,
             download = 0,
             expire = 0,
+            ageSecretKey = ageSecretKey,
           )
         )
     } else {
@@ -123,6 +126,7 @@ class ProfileManager(private val context: Context) :
           total = 0,
           download = 0,
           expire = 0,
+          ageSecretKey = ageSecretKey,
         )
 
       PendingDao().update(newPending)
@@ -153,6 +157,7 @@ class ProfileManager(private val context: Context) :
           userInfo.total,
           userInfo.expire,
           old.createdAt,
+          ageSecretKey = old.ageSecretKey,
         )
 
       ImportedDao().update(new)
@@ -235,6 +240,7 @@ class ProfileManager(private val context: Context) :
       resolveUpdatedAt(uuid),
       imported != null,
       pending != null,
+      ageSecretKey = if (pending != null) pending.ageSecretKey else imported?.ageSecretKey,
     )
   }
 

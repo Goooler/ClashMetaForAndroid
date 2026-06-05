@@ -88,6 +88,8 @@ object Bridge {
 
   external fun nativeCoreVersion(): String
 
+  external fun nativeSetAgeSecretKey(key: String?)
+
   private external fun nativeInit(home: String, versionName: String, sdkVersion: Int)
 
   init {

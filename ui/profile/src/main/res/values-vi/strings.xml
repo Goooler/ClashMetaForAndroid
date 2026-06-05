@@ -2,6 +2,9 @@
 
   <string name="accept_http_content">Chỉ chấp nhận http(s)</string>
   <string name="active_unsaved_tips">Hồ sơ cần được lưu trước khi kích hoạt</string>
+  <string name="age_secret_key">Khóa bí mật Age</string>
+  <string name="age_secret_key_hint">AGE-SECRET-KEY-… (tùy chọn)</string>
+  <string name="age_secret_key_error">Định dạng không hợp lệ. Khóa phải bắt đầu bằng AGE-SECRET-KEY-</string>
   <string name="at_least_15_minutes">Ít nhất 15 phút hoặc để trống</string>
   <string name="auto_update">Thời gian tự động cập nhật</string>
   <string name="auto_update_minutes">Tự động cập nhật (Phút)</string>

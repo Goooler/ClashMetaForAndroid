@@ -135,6 +135,7 @@ class Picker(private val context: Context) {
           0,
           0,
           0,
+          ageSecretKey = imported.ageSecretKey,
         )
       )
 

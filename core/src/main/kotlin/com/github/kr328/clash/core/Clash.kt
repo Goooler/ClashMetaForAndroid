@@ -204,6 +204,10 @@ object Clash {
     Bridge.nativeClearOverride(slot.ordinal)
   }
 
+  fun setAgeSecretKey(key: String?) {
+    Bridge.nativeSetAgeSecretKey(key)
+  }
+
   fun queryConfiguration(): UiConfiguration {
     return json.decodeFromString(Bridge.nativeQueryConfiguration())
   }

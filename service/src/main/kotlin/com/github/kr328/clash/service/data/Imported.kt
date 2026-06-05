@@ -17,4 +17,5 @@ data class Imported(
   val total: Long,
   val expire: Long,
   val createdAt: Long,
+  val ageSecretKey: String? = null,
 )

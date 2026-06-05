@@ -2,6 +2,9 @@
 
   <string name="accept_http_content">Принимать только http(s)</string>
   <string name="active_unsaved_tips">Профиль должен быть сохранён перед активацией</string>
+  <string name="age_secret_key">Секретный ключ Age</string>
+  <string name="age_secret_key_hint">AGE-SECRET-KEY-… (необязательно)</string>
+  <string name="age_secret_key_error">Неверный формат. Ключ должен начинаться с AGE-SECRET-KEY-</string>
   <string name="at_least_15_minutes">Не менее 15 минут или пустой</string>
   <string name="auto_update">Автообновление</string>
   <string name="auto_update_minutes">Автообновление (минут)</string>
