@@ -191,7 +191,7 @@ class ProfileManager(private val context: Context) :
   override suspend fun queryAll(): List<Profile> {
     val uuids =
       withContext(Dispatchers.IO) {
-        (ImportedDao().queryAllUUIDs() + PendingDao().queryAllUUIDs()).distinct()
+        ImportedDao().queryAllUUIDsUnified().distinct()
       }
 
     return uuids.mapNotNull { resolveProfile(it) }
