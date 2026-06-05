@@ -7,7 +7,6 @@ import androidx.room3.RoomDatabase
 import androidx.room3.TypeConverter
 import androidx.room3.TypeConverters
 import androidx.room3.migration.Migration
-import androidx.sqlite.SQLiteConnection
 import androidx.sqlite.execSQL
 import com.github.kr328.clash.common.Global
 import com.github.kr328.clash.service.model.Profile
@@ -37,12 +36,10 @@ abstract class Database : RoomDatabase() {
 
     private var softDatabase: SoftReference<Database?> = SoftReference(null)
 
-    val MIGRATION_1_2 =
-      object : Migration(1, 2) {
-        override suspend fun migrate(connection: SQLiteConnection) {
-          connection.execSQL("ALTER TABLE imported ADD COLUMN sortOrder INTEGER NOT NULL DEFAULT 0")
-          connection.execSQL("ALTER TABLE pending ADD COLUMN sortOrder INTEGER NOT NULL DEFAULT 0")
-        }
+    private val MIGRATION_1_2 =
+      Migration(1, 2) { connection ->
+        connection.execSQL("ALTER TABLE imported ADD COLUMN sortOrder INTEGER NOT NULL DEFAULT 0")
+        connection.execSQL("ALTER TABLE pending ADD COLUMN sortOrder INTEGER NOT NULL DEFAULT 0")
       }
 
     private fun open(context: Context): Database {
