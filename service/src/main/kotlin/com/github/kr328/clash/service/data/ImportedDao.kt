@@ -11,7 +11,8 @@ import kotlin.uuid.Uuid
 interface ImportedDao {
   @Query("SELECT * FROM imported WHERE uuid = :uuid") suspend fun queryByUUID(uuid: Uuid): Imported?
 
-  @Query("SELECT uuid FROM imported ORDER BY createdAt") suspend fun queryAllUUIDs(): List<Uuid>
+  @Query("SELECT uuid FROM imported ORDER BY sortOrder ASC, createdAt ASC")
+  suspend fun queryAllUUIDs(): List<Uuid>
 
   @Insert(onConflict = OnConflictStrategy.ABORT) suspend fun insert(imported: Imported): Long
 

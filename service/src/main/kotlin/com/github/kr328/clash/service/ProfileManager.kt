@@ -49,6 +49,7 @@ class ProfileManager(private val context: Context) :
         total = 0,
         download = 0,
         expire = 0,
+        sortOrder = 0,
       )
 
     PendingDao().insert(pending)
@@ -81,6 +82,7 @@ class ProfileManager(private val context: Context) :
         total = imported.total,
         download = imported.download,
         expire = imported.expire,
+        sortOrder = imported.sortOrder,
       )
 
     cloneImportedFiles(uuid, newUUID)
@@ -111,6 +113,7 @@ class ProfileManager(private val context: Context) :
             total = 0,
             download = 0,
             expire = 0,
+            sortOrder = imported.sortOrder,
           )
         )
     } else {
@@ -153,6 +156,7 @@ class ProfileManager(private val context: Context) :
           userInfo.total,
           userInfo.expire,
           old.createdAt,
+          old.sortOrder,
         )
 
       ImportedDao().update(new)
@@ -208,16 +212,14 @@ class ProfileManager(private val context: Context) :
   }
 
   override suspend fun reorder(uuids: List<Uuid>) {
-    val baseTime = System.currentTimeMillis() - uuids.size * 1000L
     uuids.forEachIndexed { index, uuid ->
-      val newTime = baseTime + index * 1000L
       val imported = ImportedDao().queryByUUID(uuid)
       if (imported != null) {
-        ImportedDao().update(imported.copy(createdAt = newTime))
+        ImportedDao().update(imported.copy(sortOrder = index.toLong()))
       } else {
         val pending = PendingDao().queryByUUID(uuid)
         if (pending != null) {
-          PendingDao().update(pending.copy(createdAt = newTime))
+          PendingDao().update(pending.copy(sortOrder = index.toLong()))
         }
       }
     }

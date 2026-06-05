@@ -16,7 +16,8 @@ interface PendingDao {
   @Query("SELECT EXISTS(SELECT 1 FROM pending WHERE uuid = :uuid)")
   suspend fun exists(uuid: Uuid): Boolean
 
-  @Query("SELECT uuid FROM pending ORDER BY createdAt") suspend fun queryAllUUIDs(): List<Uuid>
+  @Query("SELECT uuid FROM pending ORDER BY sortOrder ASC, createdAt ASC")
+  suspend fun queryAllUUIDs(): List<Uuid>
 
   @Insert(onConflict = OnConflictStrategy.REPLACE) suspend fun insert(pending: Pending)
 

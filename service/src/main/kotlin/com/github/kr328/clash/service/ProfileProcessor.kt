@@ -89,6 +89,7 @@ object ProfileProcessor {
                   userInfo?.total ?: 0,
                   userInfo?.expire ?: 0,
                   old?.createdAt ?: System.currentTimeMillis(),
+                  old?.sortOrder ?: snapshot.sortOrder,
                 )
               if (old != null) {
                 ImportedDao().update(new)
@@ -114,6 +115,7 @@ object ProfileProcessor {
                   0,
                   0,
                   old?.createdAt ?: System.currentTimeMillis(),
+                  old?.sortOrder ?: snapshot.sortOrder,
                 )
               if (old != null) {
                 ImportedDao().update(new)
