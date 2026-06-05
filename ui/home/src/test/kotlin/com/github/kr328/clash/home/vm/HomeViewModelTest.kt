@@ -3,18 +3,23 @@ package com.github.kr328.clash.home.vm
 import android.content.Intent
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LifecycleRegistry
+import androidx.lifecycle.viewmodel.CreationExtras
 import com.github.kr328.clash.core.model.Traffic
 import com.github.kr328.clash.core.model.TunnelState
 import com.github.kr328.clash.glue.remote.Broadcasts
 import kotlin.test.assertEquals
+import kotlin.test.assertIs
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.test.runTest
 import org.junit.Rule
 import org.junit.Test
+import org.koin.core.context.startKoin
+import org.koin.core.context.stopKoin
+import org.koin.dsl.module
 
-internal class HomeViewModelTest {
+class HomeViewModelTest {
   @get:Rule val mainDispatcherRule = MainDispatcherRule()
 
   @Test
@@ -83,6 +88,22 @@ internal class HomeViewModelTest {
       assertEquals("Global Mode", viewModel.uiState.value.mode)
     } finally {
       viewModel.onStop(UnusedLifecycleOwner)
+    }
+  }
+
+  @Test
+  fun factory_whenDependenciesAreWiredByKoin_thenCreatesHomeViewModel() {
+    val dependencies = TestHomeDependencies()
+    startKoin {
+      modules(module { single<HomeViewModel.Dependencies> { dependencies } })
+    }
+
+    try {
+      assertIs<HomeViewModel>(
+        HomeViewModel.Factory.create(HomeViewModel::class.java, CreationExtras.Empty)
+      )
+    } finally {
+      stopKoin()
     }
   }
 

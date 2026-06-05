@@ -6,7 +6,6 @@ import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.CreationExtras
 import com.github.kr328.clash.common.R as CommonR
@@ -29,6 +28,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
+import org.koin.core.context.GlobalContext
 
 internal class HomeViewModel(private val dependencies: Dependencies) :
   ViewModel(), DefaultLifecycleObserver {
@@ -227,15 +227,13 @@ internal class HomeViewModel(private val dependencies: Dependencies) :
       require(modelClass == HomeViewModel::class.java) {
         "Unknown ViewModel class: ${modelClass.name}"
       }
-      val application =
-        checkNotNull(extras[APPLICATION_KEY]) { "Application is required for HomeViewModel" }
       @Suppress("UNCHECKED_CAST")
-      return HomeViewModel(AndroidDependencies(application)) as T
+      return HomeViewModel(GlobalContext.get().get<Dependencies>()) as T
     }
   }
 }
 
-private class AndroidDependencies(private val application: Application) :
+internal class AndroidDependencies(private val application: Application) :
   HomeViewModel.Dependencies {
   override val clashRunning: StateFlow<Boolean> = Remote.broadcasts.clashRunningFlow
   override val profileLoaded: StateFlow<Boolean> = Remote.broadcasts.profileLoadedFlow
