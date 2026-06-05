@@ -126,6 +126,8 @@ internal class ProfilesViewModel(app: Application) :
     viewModelScope.launch { withProfile { delete(profile.uuid) } }
   }
 
+  private var reorderPersistJob: Job? = null
+
   fun onReorder(from: Int, to: Int) {
     var uuids: List<Uuid>? = null
 
@@ -145,7 +147,12 @@ internal class ProfilesViewModel(app: Application) :
     }
 
     val orderedUuids = uuids ?: return
-    viewModelScope.launch { withProfile { reorder(orderedUuids) } }
+    reorderPersistJob?.cancel()
+    reorderPersistJob =
+      viewModelScope.launch {
+        delay(300)
+        withProfile { reorder(orderedUuids) }
+      }
   }
 
   private fun fetch() {

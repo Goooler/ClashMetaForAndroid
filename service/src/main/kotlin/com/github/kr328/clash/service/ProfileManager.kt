@@ -216,15 +216,9 @@ class ProfileManager(private val context: Context) :
     val pendingList = mutableListOf<Pending>()
 
     uuids.forEachIndexed { index, uuid ->
-      val imported = ImportedDao().queryByUUID(uuid)
-      if (imported != null) {
-        importedList.add(imported.copy(sortOrder = index.toLong()))
-      } else {
-        val pending = PendingDao().queryByUUID(uuid)
-        if (pending != null) {
-          pendingList.add(pending.copy(sortOrder = index.toLong()))
-        }
-      }
+      val sortOrder = index.toLong()
+      ImportedDao().queryByUUID(uuid)?.let { importedList.add(it.copy(sortOrder = sortOrder)) }
+      PendingDao().queryByUUID(uuid)?.let { pendingList.add(it.copy(sortOrder = sortOrder)) }
     }
 
     if (importedList.isNotEmpty()) {
