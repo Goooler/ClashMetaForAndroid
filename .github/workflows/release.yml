@@ -10,6 +10,7 @@ jobs:
     permissions:
       id-token: write
       attestations: write
+      artifact-metadata: write
       contents: write
     runs-on: ubuntu-latest
     steps:
@@ -35,7 +36,7 @@ jobs:
         run: |
           ./gradlew app:assembleRelease
       - name: Generate Artifact Attestation
-        uses: actions/attest-build-provenance@v2
+        uses: actions/attest@v4
         with:
           subject-path: app/build/outputs/apk/release/*.apk
       - name: Create release
