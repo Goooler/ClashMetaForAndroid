@@ -168,7 +168,8 @@ object Clash {
                 }
 
                 override fun complete(error: String?) {
-                  if (error != null) completeExceptionally(ClashException(error)) else complete(Unit)
+                  if (error != null) completeExceptionally(ClashException(error))
+                  else complete(Unit)
                 }
               },
               path.absolutePath,
