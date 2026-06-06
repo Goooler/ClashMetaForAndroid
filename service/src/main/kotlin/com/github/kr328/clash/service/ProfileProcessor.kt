@@ -48,21 +48,23 @@ object ProfileProcessor {
           pending
         }
 
-        Clash.setAgeSecretKey(snapshot.ageSecretKey?.takeIf { it.isNotBlank() })
-
         val force = snapshot.type != Profile.Type.File
         var cb = callback
 
-        Clash.fetchAndValid(context.processingDir, snapshot.source, force) {
-            try {
-              cb?.updateStatus(it)
-            } catch (e: Exception) {
-              cb = null
+        Clash.fetchAndValid(
+          context.processingDir,
+          snapshot.source,
+          force,
+          snapshot.ageSecretKey?.takeIf { it.isNotBlank() },
+        ) {
+          try {
+            cb?.updateStatus(it)
+          } catch (e: Exception) {
+            cb = null
 
-              Log.w("Report fetch status: $e", e)
-            }
+            Log.w("Report fetch status: $e", e)
           }
-          .await()
+        }
 
         profileLock.withLock {
           if (PendingDao().queryByUUID(snapshot.uuid) == snapshot) {
@@ -155,20 +157,22 @@ object ProfileProcessor {
           imported
         }
 
-        Clash.setAgeSecretKey(snapshot.ageSecretKey?.takeIf { it.isNotBlank() })
-
         var cb = callback
 
-        Clash.fetchAndValid(context.processingDir, snapshot.source, true) {
-            try {
-              cb?.updateStatus(it)
-            } catch (e: Exception) {
-              cb = null
+        Clash.fetchAndValid(
+          context.processingDir,
+          snapshot.source,
+          true,
+          snapshot.ageSecretKey?.takeIf { it.isNotBlank() },
+        ) {
+          try {
+            cb?.updateStatus(it)
+          } catch (e: Exception) {
+            cb = null
 
-              Log.w("Report fetch status: $e", e)
-            }
+            Log.w("Report fetch status: $e", e)
           }
-          .await()
+        }
 
         profileLock.withLock {
           if (ImportedDao().exists(snapshot.uuid)) {
