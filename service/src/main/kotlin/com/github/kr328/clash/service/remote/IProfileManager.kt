@@ -21,7 +21,13 @@ interface IProfileManager {
 
   suspend fun delete(uuid: Uuid)
 
-  suspend fun patch(uuid: Uuid, name: String, source: String, interval: Long, ageSecretKey: String?)
+  suspend fun patch(
+    uuid: Uuid,
+    name: String,
+    source: String,
+    interval: Long,
+    ageSecretKey: String? = null,
+  )
 
   suspend fun update(uuid: Uuid)
 

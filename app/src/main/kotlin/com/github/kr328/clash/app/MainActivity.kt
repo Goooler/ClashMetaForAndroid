@@ -271,7 +271,7 @@ class MainActivity : ComponentActivity() {
             }
           val name =
             uri.getQueryParameter("name") ?: application.getString(CommonR.string.new_profile)
-          create(type, name).also { patch(it, name, url, 0, null) }
+          create(type, name).also { patch(it, name, url, 0) }
         }
         backStack.addIfNotLast(ProfilesRoute.Profiles(openPropertyUuid = uuid))
       }
