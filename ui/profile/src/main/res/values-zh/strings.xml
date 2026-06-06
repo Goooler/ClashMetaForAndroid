@@ -3,8 +3,8 @@
   <string name="accept_http_content">仅接受 http(s) 和 content 类型</string>
   <string name="active_unsaved_tips">配置文件需要在激活之前保存</string>
   <string name="age_secret_key">Age 私钥</string>
-  <string name="age_secret_key_hint">AGE-SECRET-KEY-…（可选）</string>
   <string name="age_secret_key_error">格式无效。密钥应以 AGE-SECRET-KEY- 开头</string>
+  <string name="age_secret_key_hint">AGE-SECRET-KEY-…（可选）</string>
   <string name="at_least_15_minutes">至少 15 分钟</string>
   <string name="auto_update">自动更新</string>
   <string name="auto_update_minutes">自动更新 (分钟)</string>
