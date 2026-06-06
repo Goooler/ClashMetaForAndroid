@@ -10,7 +10,6 @@ import androidx.room3.migration.Migration
 import androidx.sqlite.execSQL
 import com.github.kr328.clash.common.Global
 import com.github.kr328.clash.service.model.Profile
-import java.lang.ref.SoftReference
 import kotlin.uuid.Uuid
 
 @DB(
@@ -27,14 +26,7 @@ abstract class Database : RoomDatabase() {
   abstract fun selectionProxyDao(): SelectionDao
 
   companion object {
-    val database: Database
-      @Synchronized
-      get() {
-        return softDatabase.get()
-          ?: open(Global.application).apply { softDatabase = SoftReference(this) }
-      }
-
-    private var softDatabase: SoftReference<Database?> = SoftReference(null)
+    val database: Database by lazy { open(Global.application) }
 
     private val MIGRATION_1_2 =
       Migration(1, 2) { db ->
