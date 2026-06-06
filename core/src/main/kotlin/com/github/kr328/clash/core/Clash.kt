@@ -157,32 +157,40 @@ object Clash {
     reportStatus: (FetchStatus) -> Unit,
   ) {
     ageSecretKeyLock.withLock {
-      setAgeSecretKey(ageSecretKey)
-      CompletableDeferred<Unit>()
-        .apply {
-          Bridge.nativeFetchAndValid(
-            object : FetchCallback {
-              override fun report(statusJson: String) {
-                reportStatus(json.decodeFromString(statusJson))
-              }
+      try {
+        setAgeSecretKey(ageSecretKey)
+        CompletableDeferred<Unit>()
+          .apply {
+            Bridge.nativeFetchAndValid(
+              object : FetchCallback {
+                override fun report(statusJson: String) {
+                  reportStatus(json.decodeFromString(statusJson))
+                }
 
-              override fun complete(error: String?) {
-                if (error != null) completeExceptionally(ClashException(error)) else complete(Unit)
-              }
-            },
-            path.absolutePath,
-            url,
-            force,
-          )
-        }
-        .await()
+                override fun complete(error: String?) {
+                  if (error != null) completeExceptionally(ClashException(error)) else complete(Unit)
+                }
+              },
+              path.absolutePath,
+              url,
+              force,
+            )
+          }
+          .await()
+      } finally {
+        setAgeSecretKey(null)
+      }
     }
   }
 
   suspend fun load(path: File, ageSecretKey: String? = null) {
     ageSecretKeyLock.withLock {
-      setAgeSecretKey(ageSecretKey)
-      CompletableDeferred<Unit>().apply { Bridge.nativeLoad(this, path.absolutePath) }.await()
+      try {
+        setAgeSecretKey(ageSecretKey)
+        CompletableDeferred<Unit>().apply { Bridge.nativeLoad(this, path.absolutePath) }.await()
+      } finally {
+        setAgeSecretKey(null)
+      }
     }
   }
 
