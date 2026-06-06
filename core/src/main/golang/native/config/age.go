@@ -1,7 +1,18 @@
 package config
 
-import "github.com/metacubex/mihomo/component/age"
+import (
+	"strings"
+
+	"github.com/metacubex/mihomo/component/age"
+)
 
 func SetGlobalSecretKeys(secretKeys ...string) {
-	age.SetGlobalSecretKeys(secretKeys...)
+	keys := make([]string, 0, len(secretKeys))
+	for _, k := range secretKeys {
+		k = strings.TrimSpace(k)
+		if k != "" {
+			keys = append(keys, k)
+		}
+	}
+	age.SetGlobalSecretKeys(keys...)
 }
