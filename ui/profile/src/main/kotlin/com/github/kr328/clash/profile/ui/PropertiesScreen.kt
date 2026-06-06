@@ -237,7 +237,6 @@ private fun PropertiesContent(
           },
           title = { Text(stringResource(R.string.age_secret_key)) },
           textToValue = { input -> if (ValidatorAgeSecretKey(input)) input else null },
-          enabled = true,
           icon = { Icon(imageVector = TabbyIcons.BaselineKey, contentDescription = null) },
           summary = {
             Text(profile.ageSecretKey ?: stringResource(R.string.age_secret_key_hint))
