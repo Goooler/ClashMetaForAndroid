@@ -8,6 +8,9 @@ on:
 jobs:
   release:
     permissions:
+      id-token: write
+      attestations: write
+      artifact-metadata: write
       contents: write
     runs-on: ubuntu-latest
     steps:
@@ -32,6 +35,10 @@ jobs:
       - name: Build
         run: |
           ./gradlew app:assembleRelease
+      - name: Generate Artifact Attestation
+        uses: actions/attest@v4
+        with:
+          subject-path: app/build/outputs/apk/release/*.apk
       - name: Create release
         if: github.repository_owner == 'Goooler'
         env:
