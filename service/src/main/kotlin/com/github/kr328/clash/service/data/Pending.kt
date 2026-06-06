@@ -17,4 +17,5 @@ data class Pending(
   val total: Long,
   val expire: Long,
   val createdAt: Long = System.currentTimeMillis(),
+  val ageSecretKey: String? = null,
 )

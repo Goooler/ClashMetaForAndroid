@@ -2,6 +2,9 @@
 
   <string name="accept_http_content">Accept only http(s)</string>
   <string name="active_unsaved_tips">Profile needs to be saved before activation</string>
+  <string name="age_secret_key">Age Secret Key</string>
+  <string name="age_secret_key_error">Invalid format. Key should start with AGE-SECRET-KEY-</string>
+  <string name="age_secret_key_hint">AGE-SECRET-KEY-… (optional)</string>
   <string name="at_least_15_minutes">At least 15 minutes or empty</string>
   <string name="auto_update">Auto Update</string>
   <string name="auto_update_minutes">Auto Update (Minutes)</string>

@@ -22,6 +22,8 @@ import java.net.InetSocketAddress
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.ReceiveChannel
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.decodeFromJsonElement
@@ -147,32 +149,50 @@ object Clash {
     return Bridge.nativePatchSelector(selector, name)
   }
 
-  fun fetchAndValid(
+  suspend fun fetchAndValid(
     path: File,
     url: String,
     force: Boolean,
+    ageSecretKey: String? = null,
     reportStatus: (FetchStatus) -> Unit,
-  ): CompletableDeferred<Unit> {
-    return CompletableDeferred<Unit>().apply {
-      Bridge.nativeFetchAndValid(
-        object : FetchCallback {
-          override fun report(statusJson: String) {
-            reportStatus(json.decodeFromString(statusJson))
-          }
+  ) {
+    ageSecretKeyLock.withLock {
+      try {
+        setAgeSecretKey(ageSecretKey)
+        CompletableDeferred<Unit>()
+          .apply {
+            Bridge.nativeFetchAndValid(
+              object : FetchCallback {
+                override fun report(statusJson: String) {
+                  reportStatus(json.decodeFromString(statusJson))
+                }
 
-          override fun complete(error: String?) {
-            if (error != null) completeExceptionally(ClashException(error)) else complete(Unit)
+                override fun complete(error: String?) {
+                  if (error != null) completeExceptionally(ClashException(error))
+                  else complete(Unit)
+                }
+              },
+              path.absolutePath,
+              url,
+              force,
+            )
           }
-        },
-        path.absolutePath,
-        url,
-        force,
-      )
+          .await()
+      } finally {
+        setAgeSecretKey(null)
+      }
     }
   }
 
-  fun load(path: File): CompletableDeferred<Unit> {
-    return CompletableDeferred<Unit>().apply { Bridge.nativeLoad(this, path.absolutePath) }
+  suspend fun load(path: File, ageSecretKey: String? = null) {
+    ageSecretKeyLock.withLock {
+      try {
+        setAgeSecretKey(ageSecretKey)
+        CompletableDeferred<Unit>().apply { Bridge.nativeLoad(this, path.absolutePath) }.await()
+      } finally {
+        setAgeSecretKey(null)
+      }
+    }
   }
 
   fun queryProviders(): List<Provider> {
@@ -219,6 +239,12 @@ object Clash {
       )
     }
   }
+
+  private fun setAgeSecretKey(key: String?) {
+    Bridge.nativeSetAgeSecretKey(key)
+  }
 }
+
+private val ageSecretKeyLock = Mutex()
 
 private val json = Json { ignoreUnknownKeys = true }
