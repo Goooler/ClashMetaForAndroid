@@ -37,6 +37,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.PreviewWrapper
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entryProvider
 import com.github.kr328.clash.common.R as CommonR
@@ -48,7 +49,7 @@ import com.github.kr328.clash.settings.vm.MetaFeatureSettingsViewModel.ImportTyp
 import com.github.kr328.clash.ui.component.TabbyScaffold
 import com.github.kr328.clash.ui.icon.BaselineReplay
 import com.github.kr328.clash.ui.icon.TabbyIcons
-import com.github.kr328.clash.ui.lifecycle.viewModelWithLifecycle
+import com.github.kr328.clash.ui.lifecycle.withLifecycle
 import com.github.kr328.clash.ui.nav.TabbyNavDisplay
 import com.github.kr328.clash.ui.nav.addIfNotLast
 import com.github.kr328.clash.ui.nav.rememberNavBackStackBuilder
@@ -68,7 +69,8 @@ private sealed interface MetaFeatureSettingsRoute : NavKey {
 @Composable
 internal fun MetaFeatureSettingsScreen(
   modifier: Modifier = Modifier,
-  viewModel: MetaFeatureSettingsViewModel = viewModelWithLifecycle(),
+  viewModel: MetaFeatureSettingsViewModel =
+    viewModel<MetaFeatureSettingsViewModel>().withLifecycle(),
   onResetCompleted: () -> Unit,
 ) {
   val backStack = rememberNavBackStackBuilder { add(MetaFeatureSettingsRoute.Main) }
