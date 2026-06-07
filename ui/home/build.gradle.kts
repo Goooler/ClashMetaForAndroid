@@ -19,5 +19,5 @@ dependencies {
 
   testImplementation(libs.junit)
   testImplementation(libs.kotlin.coroutine.test)
-  testImplementation(libs.kotlin.test)
+  testImplementation(libs.assertk)
 }
