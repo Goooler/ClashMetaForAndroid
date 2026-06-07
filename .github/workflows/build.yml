@@ -43,8 +43,6 @@ jobs:
 
   build:
     permissions:
-      id-token: write
-      attestations: write
       contents: write
     runs-on: ubuntu-latest
     steps:
@@ -66,10 +64,6 @@ jobs:
           java-version: 25
       - uses: gradle/actions/setup-gradle@v6
       - run: ./gradlew app:assembleRelease --no-daemon
-      - name: Generate Artifact Attestation
-        uses: actions/attest@v4
-        with:
-          subject-path: app/build/outputs/apk/release/*.apk
       - name: Delete release if exist then create release
         if: github.repository_owner == 'Goooler' && github.event_name == 'push'
         env:
