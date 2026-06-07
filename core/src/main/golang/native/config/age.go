@@ -29,10 +29,10 @@ func ToPublicKeys(secretKeys ...string) (publicKeys []string, err error) {
 	return age.ToPublicKeys(secretKeys...)
 }
 
-func VeritySecretKeys(secretKeys ...string) error {
+func VerifySecretKeys(secretKeys ...string) error {
 	return age.VeritySecretKeys(secretKeys...)
 }
 
-func VerityPublicKeys(publicKeys ...string) error {
+func VerifyPublicKeys(publicKeys ...string) error {
 	return age.VerityPublicKeys(publicKeys...)
 }

@@ -584,9 +584,9 @@ private fun AgeKeyHelperDialog(
   val copiedText = stringResource(CommonR.string.copied)
   val genericError = stringResource(R.string.error)
   val secretInvalid =
-    secretKey.isNotBlank() && !runCatching { Clash.veritySecretKeys(secretKey) }.getOrDefault(false)
+    secretKey.isNotBlank() && !runCatching { Clash.verifySecretKeys(secretKey) }.getOrDefault(false)
   val publicInvalid =
-    publicKey.isNotBlank() && !runCatching { Clash.verityPublicKeys(publicKey) }.getOrDefault(false)
+    publicKey.isNotBlank() && !runCatching { Clash.verifyPublicKeys(publicKey) }.getOrDefault(false)
 
   fun copy(label: String, value: String) {
     if (value.isBlank()) return
@@ -611,12 +611,15 @@ private fun AgeKeyHelperDialog(
           label = { Text(stringResource(R.string.age_secret_key)) },
           singleLine = true,
           isError = secretInvalid,
+          supportingText =
+            if (secretInvalid) {
+              { Text(text = stringResource(R.string.age_secret_key_error)) }
+            } else {
+              null
+            },
           keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Ascii),
           modifier = Modifier.fillMaxWidth(),
         )
-        if (secretInvalid) {
-          Text(text = stringResource(R.string.age_secret_key_error))
-        }
         Row(modifier = Modifier.fillMaxWidth()) {
           TextButton(
             onClick = {
@@ -642,12 +645,15 @@ private fun AgeKeyHelperDialog(
           label = { Text(stringResource(R.string.age_public_key)) },
           singleLine = true,
           isError = publicInvalid,
+          supportingText =
+            if (publicInvalid) {
+              { Text(text = stringResource(R.string.age_public_key_error)) }
+            } else {
+              null
+            },
           keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Ascii),
           modifier = Modifier.fillMaxWidth(),
         )
-        if (publicInvalid) {
-          Text(text = stringResource(R.string.age_public_key_error))
-        }
         Row(modifier = Modifier.fillMaxWidth()) {
           TextButton(
             onClick = {

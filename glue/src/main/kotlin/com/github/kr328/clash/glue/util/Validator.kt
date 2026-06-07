@@ -18,5 +18,5 @@ val ValidatorHttpUrl: Validator = {
 val ValidatorAutoUpdateInterval: Validator = { it.isEmpty() || (it.toLongOrNull() ?: 0) >= 15 }
 
 val ValidatorAgeSecretKey: Validator = {
-  it.isEmpty() || Clash.veritySecretKeys(it)
+  it.isEmpty() || Clash.verifySecretKeys(it)
 }

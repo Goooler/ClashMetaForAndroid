@@ -255,8 +255,8 @@ object Clash {
     return json.decodeFromString(checkNotNull(Bridge.nativeGenHybridKeyPair()))
   }
 
-  fun veritySecretKeys(vararg secretKeys: String): Boolean {
-    return Bridge.nativeVeritySecretKeys(secretKeys.firstOrNull().orEmpty())
+  fun verifySecretKeys(vararg secretKeys: String): Boolean {
+    return Bridge.nativeVerifySecretKeys(secretKeys.firstOrNull().orEmpty())
   }
 
   fun toPublicKeys(vararg secretKeys: String): List<String> {
@@ -267,8 +267,8 @@ object Clash {
       .orEmpty()
   }
 
-  fun verityPublicKeys(vararg publicKeys: String): Boolean {
-    return Bridge.nativeVerityPublicKeys(publicKeys.firstOrNull().orEmpty())
+  fun verifyPublicKeys(vararg publicKeys: String): Boolean {
+    return Bridge.nativeVerifyPublicKeys(publicKeys.firstOrNull().orEmpty())
   }
 }
 

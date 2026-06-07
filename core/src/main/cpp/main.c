@@ -292,7 +292,7 @@ Java_com_github_kr328_clash_core_bridge_Bridge_nativeGenHybridKeyPair(JNIEnv *en
 }
 
 JNIEXPORT jboolean JNICALL
-Java_com_github_kr328_clash_core_bridge_Bridge_nativeVeritySecretKeys(JNIEnv *env, jobject thiz,
+Java_com_github_kr328_clash_core_bridge_Bridge_nativeVerifySecretKeys(JNIEnv *env, jobject thiz,
                                                                        jstring secret_keys) {
     TRACE_METHOD();
 
@@ -301,7 +301,7 @@ Java_com_github_kr328_clash_core_bridge_Bridge_nativeVeritySecretKeys(JNIEnv *en
 
     scoped_string _secret_keys = get_string(secret_keys);
 
-    return (jboolean) veritySecretKeys(_secret_keys);
+    return (jboolean) verifySecretKeys(_secret_keys);
 }
 
 JNIEXPORT jstring JNICALL
@@ -322,7 +322,7 @@ Java_com_github_kr328_clash_core_bridge_Bridge_nativeToPublicKeys(JNIEnv *env, j
 }
 
 JNIEXPORT jboolean JNICALL
-Java_com_github_kr328_clash_core_bridge_Bridge_nativeVerityPublicKeys(JNIEnv *env, jobject thiz,
+Java_com_github_kr328_clash_core_bridge_Bridge_nativeVerifyPublicKeys(JNIEnv *env, jobject thiz,
                                                                        jstring public_keys) {
     TRACE_METHOD();
 
@@ -331,7 +331,7 @@ Java_com_github_kr328_clash_core_bridge_Bridge_nativeVerityPublicKeys(JNIEnv *en
 
     scoped_string _public_keys = get_string(public_keys);
 
-    return (jboolean) verityPublicKeys(_public_keys);
+    return (jboolean) verifyPublicKeys(_public_keys);
 }
 
 JNIEXPORT jstring JNICALL

@@ -97,9 +97,9 @@ func genHybridKeyPair() *C.char {
 	return marshalJson(ageKeyPair{SecretKey: secretKey, PublicKey: publicKey})
 }
 
-//export veritySecretKeys
-func veritySecretKeys(secretKeys C.c_string) C.int {
-	if config.VeritySecretKeys(C.GoString(secretKeys)) != nil {
+//export verifySecretKeys
+func verifySecretKeys(secretKeys C.c_string) C.int {
+	if config.VerifySecretKeys(C.GoString(secretKeys)) != nil {
 		return 0
 	}
 
@@ -116,9 +116,9 @@ func toPublicKeys(secretKeys C.c_string) *C.char {
 	return marshalJson(publicKeys)
 }
 
-//export verityPublicKeys
-func verityPublicKeys(publicKeys C.c_string) C.int {
-	if config.VerityPublicKeys(C.GoString(publicKeys)) != nil {
+//export verifyPublicKeys
+func verifyPublicKeys(publicKeys C.c_string) C.int {
+	if config.VerifyPublicKeys(C.GoString(publicKeys)) != nil {
 		return 0
 	}
 

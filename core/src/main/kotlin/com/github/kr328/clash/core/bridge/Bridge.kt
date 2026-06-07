@@ -94,11 +94,11 @@ object Bridge {
 
   external fun nativeGenHybridKeyPair(): String?
 
-  external fun nativeVeritySecretKeys(secretKeys: String): Boolean
+  external fun nativeVerifySecretKeys(secretKeys: String): Boolean
 
   external fun nativeToPublicKeys(secretKeys: String): String?
 
-  external fun nativeVerityPublicKeys(publicKeys: String): Boolean
+  external fun nativeVerifyPublicKeys(publicKeys: String): Boolean
 
   private external fun nativeInit(home: String, versionName: String, sdkVersion: Int)
 
