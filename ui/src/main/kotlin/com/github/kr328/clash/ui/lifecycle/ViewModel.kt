@@ -12,12 +12,12 @@ import androidx.lifecycle.defaultViewModelCreationExtras
 import androidx.lifecycle.viewmodel.CreationExtras
 import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
 import androidx.lifecycle.viewmodel.compose.viewModel
-import org.koin.androidx.compose.defaultExtras
-import org.koin.androidx.compose.koinViewModel
 import org.koin.compose.currentKoinScope
+import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.ParametersDefinition
 import org.koin.core.qualifier.Qualifier
 import org.koin.core.scope.Scope
+import org.koin.viewmodel.defaultExtras
 
 @Composable
 inline fun <reified VM> viewModelWithLifecycle(
