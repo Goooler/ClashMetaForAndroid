@@ -37,8 +37,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.lerp
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -155,110 +153,27 @@ private fun HomeContent(
 ) {
   val darkTheme = isSystemInDarkTheme()
   val stoppedColor = if (darkTheme) TabbyDarkSurface else TabbyLightStopped
-  val primaryColor = MaterialTheme.colorScheme.primary
-  val baseColor = if (clashRunning) primaryColor else stoppedColor
+
+  val baseColor = if (clashRunning) MaterialTheme.colorScheme.primary else stoppedColor
 
   val infiniteTransition = rememberInfiniteTransition(label = "loadingTransition")
-
-  val xAnim1 by
+  val pulseFraction by
     infiniteTransition.animateFloat(
-      initialValue = 0.15f,
-      targetValue = 0.85f,
-      animationSpec =
-        infiniteRepeatable(
-          animation = tween(durationMillis = 3500, easing = LinearEasing),
-          repeatMode = RepeatMode.Reverse,
-        ),
-      label = "xAnim1",
-    )
-
-  val yAnim1 by
-    infiniteTransition.animateFloat(
-      initialValue = 0.2f,
-      targetValue = 0.8f,
-      animationSpec =
-        infiniteRepeatable(
-          animation = tween(durationMillis = 4500, easing = LinearEasing),
-          repeatMode = RepeatMode.Reverse,
-        ),
-      label = "yAnim1",
-    )
-
-  val xAnim2 by
-    infiniteTransition.animateFloat(
-      initialValue = 0.8f,
-      targetValue = 0.2f,
-      animationSpec =
-        infiniteRepeatable(
-          animation = tween(durationMillis = 4000, easing = LinearEasing),
-          repeatMode = RepeatMode.Reverse,
-        ),
-      label = "xAnim2",
-    )
-
-  val yAnim2 by
-    infiniteTransition.animateFloat(
-      initialValue = 0.75f,
-      targetValue = 0.25f,
-      animationSpec =
-        infiniteRepeatable(
-          animation = tween(durationMillis = 3000, easing = LinearEasing),
-          repeatMode = RepeatMode.Reverse,
-        ),
-      label = "yAnim2",
-    )
-
-  val colorFraction1 by
-    infiniteTransition.animateFloat(
-      initialValue = 0.0f,
+      initialValue = 0.4f,
       targetValue = 1.0f,
       animationSpec =
         infiniteRepeatable(
-          animation = tween(durationMillis = 5000, easing = LinearEasing),
+          animation = tween(durationMillis = 800, easing = LinearEasing),
           repeatMode = RepeatMode.Reverse,
         ),
-      label = "colorFraction1",
+      label = "loadingAlpha",
     )
 
-  val colorFraction2 by
-    infiniteTransition.animateFloat(
-      initialValue = 0.0f,
-      targetValue = 1.0f,
-      animationSpec =
-        infiniteRepeatable(
-          animation = tween(durationMillis = 6000, easing = LinearEasing),
-          repeatMode = RepeatMode.Reverse,
-        ),
-      label = "colorFraction2",
-    )
-
-  val accentColor1 = if (darkTheme) Color(0xFF673AB7) else Color(0xFF7E57C2)
-  val accentColor2 = if (darkTheme) Color(0xFF00838F) else Color(0xFF00ACC1)
-
-  val gColor1 = lerp(primaryColor, stoppedColor, colorFraction1)
-  val gColor2 = lerp(accentColor1, accentColor2, colorFraction2)
-  val gColor3 = lerp(stoppedColor, accentColor1, colorFraction1)
-  val gColor4 = lerp(accentColor2, primaryColor, colorFraction2)
-
-  val meshPoints =
-    remember(gColor1, gColor2, gColor3, gColor4, xAnim1, yAnim1, xAnim2, yAnim2) {
-      listOf(
-        listOf(
-          Offset(0f, 0f) to gColor1,
-          Offset(0.5f, 0f) to gColor2,
-          Offset(1f, 0f) to gColor1,
-        ),
-        listOf(
-          Offset(0f, yAnim1) to gColor3,
-          Offset(xAnim1, yAnim2) to gColor4,
-          Offset(1f, yAnim2) to gColor3,
-        ),
-        listOf(
-          Offset(0f, 1f) to gColor2,
-          Offset(xAnim2, 1f) to gColor1,
-          Offset(1f, 1f) to gColor2,
-        ),
-      )
+  val backgroundColor =
+    if (isTransitioning) {
+      lerp(baseColor.copy(alpha = 0.4f), baseColor, pulseFraction)
+    } else {
+      baseColor
     }
 
   TabbyScaffold(
@@ -292,27 +207,17 @@ private fun HomeContent(
       }
 
       HomeActionCard(
-        modifier =
-          Modifier.padding(vertical = cardMarginVertical)
-            .then(
-              if (isTransitioning) {
-                Modifier.clip(CardDefaults.shape)
-                  .meshGradient(points = meshPoints, resolutionX = 8, resolutionY = 8)
-              } else {
-                Modifier
-              }
-            ),
+        modifier = Modifier.padding(vertical = cardMarginVertical),
         icon = if (clashRunning) TabbyIcons.OutlineCheckCircle else TabbyIcons.OutlineNotInterested,
         text = stringResource(if (clashRunning) CommonR.string.running else CommonR.string.stopped),
         subtext =
           if (clashRunning && forwarded != null)
             stringResource(R.string.format_traffic_forwarded, forwarded)
           else stringResource(CommonR.string.tap_to_start),
-        backgroundColor = if (isTransitioning) Color.Transparent else baseColor,
+        backgroundColor = backgroundColor,
         contentColor = TabbyOnPrimary,
         onClick = onToggleStatus,
         enabled = !isTransitioning,
-        isTransitioning = isTransitioning,
       )
 
       AnimatedVisibility(visible = clashRunning) {
@@ -380,7 +285,6 @@ private fun HomeActionCard(
   onClick: () -> Unit,
   modifier: Modifier = Modifier,
   enabled: Boolean = true,
-  isTransitioning: Boolean = false,
 ) {
   Card(
     modifier = modifier.fillMaxWidth().heightIn(min = 85.dp),
@@ -393,11 +297,7 @@ private fun HomeActionCard(
         disabledContainerColor = backgroundColor,
         disabledContentColor = contentColor,
       ),
-    elevation =
-      CardDefaults.cardElevation(
-        defaultElevation = if (isTransitioning) 0.dp else 5.dp,
-        disabledElevation = if (isTransitioning) 0.dp else 5.dp,
-      ),
+    elevation = CardDefaults.cardElevation(defaultElevation = 5.dp),
   ) {
     Row(
       modifier =
