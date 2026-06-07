@@ -90,6 +90,16 @@ object Bridge {
 
   external fun nativeSetAgeSecretKey(key: String?)
 
+  external fun nativeGenX25519KeyPair(): String?
+
+  external fun nativeGenHybridKeyPair(): String?
+
+  external fun nativeVerifySecretKeys(secretKeys: String): Boolean
+
+  external fun nativeToPublicKeys(secretKeys: String): String?
+
+  external fun nativeVerifyPublicKeys(publicKeys: String): Boolean
+
   private external fun nativeInit(home: String, versionName: String, sdkVersion: Int)
 
   init {
