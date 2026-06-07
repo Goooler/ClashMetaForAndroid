@@ -3,10 +3,12 @@ package com.github.kr328.clash.home.vm
 import android.content.Intent
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LifecycleRegistry
+import assertk.assertThat
+import assertk.assertions.isEqualTo
+import assertk.assertions.isNull
 import com.github.kr328.clash.core.model.Traffic
 import com.github.kr328.clash.core.model.TunnelState
 import com.github.kr328.clash.glue.remote.Broadcasts
-import kotlin.test.assertEquals
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -58,14 +60,14 @@ class HomeViewModelTest : KoinComponent {
       viewModel.onStart(UnusedLifecycleOwner)
       dependencies.eventsFlow.emit(Broadcasts.Event.Started)
 
-      assertEquals(null, viewModel.uiState.value.mode)
-      assertEquals(0, dependencies.queryModeCalls)
+      assertThat(viewModel.uiState.value.mode).isNull()
+      assertThat(dependencies.queryModeCalls).isEqualTo(0)
 
       dependencies.mode = TunnelState.Mode.Global
       dependencies.profileLoaded.value = true
 
-      assertEquals("Global Mode", viewModel.uiState.value.mode)
-      assertEquals(1, dependencies.queryModeCalls)
+      assertThat(viewModel.uiState.value.mode).isEqualTo("Global Mode")
+      assertThat(dependencies.queryModeCalls).isEqualTo(1)
     } finally {
       viewModel.onStop(UnusedLifecycleOwner)
     }
@@ -82,7 +84,7 @@ class HomeViewModelTest : KoinComponent {
     try {
       viewModel.onStart(UnusedLifecycleOwner)
 
-      assertEquals("Global Mode", viewModel.uiState.value.mode)
+      assertThat(viewModel.uiState.value.mode).isEqualTo("Global Mode")
     } finally {
       viewModel.onStop(UnusedLifecycleOwner)
     }
@@ -98,12 +100,12 @@ class HomeViewModelTest : KoinComponent {
 
     try {
       viewModel.onStart(UnusedLifecycleOwner)
-      assertEquals("Rule Mode", viewModel.uiState.value.mode)
+      assertThat(viewModel.uiState.value.mode).isEqualTo("Rule Mode")
 
       dependencies.mode = TunnelState.Mode.Global
       dependencies.eventsFlow.emit(Broadcasts.Event.ProfileLoaded)
 
-      assertEquals("Global Mode", viewModel.uiState.value.mode)
+      assertThat(viewModel.uiState.value.mode).isEqualTo("Global Mode")
     } finally {
       viewModel.onStop(UnusedLifecycleOwner)
     }
