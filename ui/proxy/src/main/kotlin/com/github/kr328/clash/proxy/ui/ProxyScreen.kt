@@ -59,6 +59,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.PreviewWrapper
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.github.kr328.clash.common.R as CommonR
 import com.github.kr328.clash.core.model.Proxy
 import com.github.kr328.clash.core.model.ProxySort
@@ -74,7 +75,7 @@ import com.github.kr328.clash.ui.icon.BaselineCircleCenter
 import com.github.kr328.clash.ui.icon.BaselineFlashOn
 import com.github.kr328.clash.ui.icon.BaselineMoreVert
 import com.github.kr328.clash.ui.icon.TabbyIcons
-import com.github.kr328.clash.ui.lifecycle.viewModelWithLifecycle
+import com.github.kr328.clash.ui.lifecycle.withLifecycle
 import com.github.kr328.clash.ui.theme.PreviewTabby
 import com.github.kr328.clash.ui.theme.TabbyThemeWrapper
 import kotlinx.coroutines.launch
@@ -82,7 +83,7 @@ import kotlinx.coroutines.launch
 @Composable
 internal fun ProxyScreen(
   modifier: Modifier = Modifier,
-  viewModel: ProxyViewModel = viewModelWithLifecycle(),
+  viewModel: ProxyViewModel = viewModel<ProxyViewModel>().withLifecycle(),
   onReLaunch: () -> Unit,
 ) {
   val uiState by viewModel.uiState.collectAsStateWithLifecycle()

@@ -50,6 +50,7 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.PreviewWrapper
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.github.kr328.clash.common.R as CommonR
 import com.github.kr328.clash.common.util.grantPermissions
 import com.github.kr328.clash.glue.model.ConfigFile
@@ -69,7 +70,7 @@ import com.github.kr328.clash.ui.icon.OutlineArticle
 import com.github.kr328.clash.ui.icon.OutlineDelete
 import com.github.kr328.clash.ui.icon.OutlineFolder
 import com.github.kr328.clash.ui.icon.TabbyIcons
-import com.github.kr328.clash.ui.lifecycle.viewModelWithLifecycle
+import com.github.kr328.clash.ui.lifecycle.withLifecycle
 import com.github.kr328.clash.ui.theme.PreviewTabby
 import com.github.kr328.clash.ui.theme.TabbyThemeWrapper
 import kotlin.time.Duration.Companion.minutes
@@ -81,7 +82,7 @@ import me.saket.bytesize.binaryBytes
 internal fun FilesScreen(
   uuid: Uuid,
   modifier: Modifier = Modifier,
-  viewModel: FilesViewModel = viewModelWithLifecycle(),
+  viewModel: FilesViewModel = viewModel<FilesViewModel>().withLifecycle(),
   onFinish: () -> Unit,
 ) {
   val uiState by viewModel.uiState.collectAsStateWithLifecycle()

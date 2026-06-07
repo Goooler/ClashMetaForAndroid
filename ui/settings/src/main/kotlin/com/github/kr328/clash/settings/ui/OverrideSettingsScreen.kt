@@ -32,6 +32,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.PreviewWrapper
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entryProvider
 import com.github.kr328.clash.common.R as CommonR
@@ -43,7 +44,7 @@ import com.github.kr328.clash.settings.vm.OverrideSettingsViewModel
 import com.github.kr328.clash.ui.component.TabbyScaffold
 import com.github.kr328.clash.ui.icon.BaselineReplay
 import com.github.kr328.clash.ui.icon.TabbyIcons
-import com.github.kr328.clash.ui.lifecycle.viewModelWithLifecycle
+import com.github.kr328.clash.ui.lifecycle.withLifecycle
 import com.github.kr328.clash.ui.nav.TabbyNavDisplay
 import com.github.kr328.clash.ui.nav.addIfNotLast
 import com.github.kr328.clash.ui.nav.rememberNavBackStackBuilder
@@ -63,7 +64,7 @@ private sealed interface OverrideSettingsRoute : NavKey {
 @Composable
 internal fun OverrideSettingsScreen(
   modifier: Modifier = Modifier,
-  viewModel: OverrideSettingsViewModel = viewModelWithLifecycle(),
+  viewModel: OverrideSettingsViewModel = viewModel<OverrideSettingsViewModel>().withLifecycle(),
   onResetCompleted: () -> Unit,
 ) {
   val backStack = rememberNavBackStackBuilder { add(OverrideSettingsRoute.Main) }

@@ -35,6 +35,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.PreviewWrapper
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.github.kr328.clash.common.R as CommonR
 import com.github.kr328.clash.core.model.LogMessage
 import com.github.kr328.clash.glue.util.format
@@ -46,7 +47,7 @@ import com.github.kr328.clash.ui.icon.BaselineDelete
 import com.github.kr328.clash.ui.icon.BaselineSave
 import com.github.kr328.clash.ui.icon.BaselineStop
 import com.github.kr328.clash.ui.icon.TabbyIcons
-import com.github.kr328.clash.ui.lifecycle.viewModelWithLifecycle
+import com.github.kr328.clash.ui.lifecycle.withLifecycle
 import com.github.kr328.clash.ui.theme.PreviewTabby
 import com.github.kr328.clash.ui.theme.TabbyThemeWrapper
 import com.github.kr328.clash.ui.theme.tabbyDimens
@@ -57,7 +58,7 @@ import kotlinx.coroutines.launch
 internal fun LogcatScreen(
   fileName: String?,
   modifier: Modifier = Modifier,
-  viewModel: LogcatViewModel = viewModelWithLifecycle(),
+  viewModel: LogcatViewModel = viewModel<LogcatViewModel>().withLifecycle(),
   onOpenLogs: () -> Unit,
   onInvalidFile: () -> Unit,
   onClose: () -> Unit,

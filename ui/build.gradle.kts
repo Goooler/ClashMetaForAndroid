@@ -5,8 +5,4 @@ plugins {
 
 dependencies {
   implementation(projects.glue)
-
-  compileOnly(platform(libs.koin.bom))
-  compileOnly(libs.koin.android)
-  compileOnly(libs.koin.viewMdeol)
 }
