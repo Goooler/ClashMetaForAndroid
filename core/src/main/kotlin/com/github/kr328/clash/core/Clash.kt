@@ -248,29 +248,27 @@ object Clash {
   }
 
   fun genX25519KeyPair(): AgeKeyPair {
-    return parseAgeKeyPair(checkNotNull(Bridge.nativeGenX25519KeyPair()))
+    return json.decodeFromString(checkNotNull(Bridge.nativeGenX25519KeyPair()))
   }
 
   fun genHybridKeyPair(): AgeKeyPair {
-    return parseAgeKeyPair(checkNotNull(Bridge.nativeGenHybridKeyPair()))
+    return json.decodeFromString(checkNotNull(Bridge.nativeGenHybridKeyPair()))
   }
 
   fun veritySecretKeys(vararg secretKeys: String): Boolean {
-    return Bridge.nativeVeritySecretKeys(secretKeys.firstOrNull() ?: "")
+    return Bridge.nativeVeritySecretKeys(secretKeys.firstOrNull().orEmpty())
   }
 
   fun toPublicKeys(vararg secretKeys: String): List<String> {
-    return Bridge.nativeToPublicKeys(secretKeys.firstOrNull() ?: "")?.let {
-      json.decodeFromString(ListSerializer(String.serializer()), it)
-    } ?: emptyList()
+    return Bridge.nativeToPublicKeys(secretKeys.firstOrNull().orEmpty())
+      ?.let {
+        json.decodeFromString(ListSerializer(String.serializer()), it)
+      }
+      .orEmpty()
   }
 
   fun verityPublicKeys(vararg publicKeys: String): Boolean {
-    return Bridge.nativeVerityPublicKeys(publicKeys.firstOrNull() ?: "")
-  }
-
-  private fun parseAgeKeyPair(value: String): AgeKeyPair {
-    return json.decodeFromString(value)
+    return Bridge.nativeVerityPublicKeys(publicKeys.firstOrNull().orEmpty())
   }
 }
 
