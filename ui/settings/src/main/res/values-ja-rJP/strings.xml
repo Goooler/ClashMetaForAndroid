@@ -55,6 +55,15 @@
   <string name="force_enable">強制的に有効</string>
   <string name="general">一般</string>
   <string name="geodata_mode">Geodata Mode</string>
+  <string name="age_key_category">Age 鍵</string>
+  <string name="age_key_generate_summary">タップして生成</string>
+  <string name="age_secret_key">Age 秘密鍵</string>
+  <string name="age_secret_key_error">形式が無効です。キーは AGE-SECRET-KEY- で始まる必要があります</string>
+  <string name="age_public_key">Age 公開鍵</string>
+  <string name="age_public_key_error">無効な Age 公開鍵</string>
+  <string name="age_key_generate">生成</string>
+  <string name="age_key_to_public">秘密鍵から生成</string>
+  <string name="age_key_copy">コピー</string>
   <string name="geofile_import_failed">Import failed</string>
   <string name="geofile_imported">%1$s imported</string>
   <string name="geofile_unknown_db_format">Unknown Database format</string>

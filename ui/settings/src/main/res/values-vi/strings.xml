@@ -55,6 +55,15 @@
   <string name="force_enable">Buộc bật</string>
   <string name="general">Chung</string>
   <string name="geodata_mode">Chế độ dữ liệu địa lý</string>
+  <string name="age_key_category">Khóa Age</string>
+  <string name="age_key_generate_summary">Nhấn để tạo</string>
+  <string name="age_secret_key">Khóa bí mật Age</string>
+  <string name="age_secret_key_error">Định dạng không hợp lệ. Khóa phải bắt đầu bằng AGE-SECRET-KEY-</string>
+  <string name="age_public_key">Khóa công khai Age</string>
+  <string name="age_public_key_error">Khóa công khai Age không hợp lệ</string>
+  <string name="age_key_generate">Tạo</string>
+  <string name="age_key_to_public">Từ khóa bí mật</string>
+  <string name="age_key_copy">Sao chép</string>
   <string name="geofile_import_failed">Nhập thất bại</string>
   <string name="geofile_imported">Đã nhập %1$s</string>
   <string name="geofile_unknown_db_format">Định dạng cơ sở dữ liệu không xác định</string>

@@ -13,6 +13,7 @@ import com.github.kr328.clash.core.model.Provider
 import com.github.kr328.clash.core.model.Proxy
 import com.github.kr328.clash.core.model.ProxyGroup
 import com.github.kr328.clash.core.model.ProxySort
+import com.github.kr328.clash.core.model.AgeKeyPair
 import com.github.kr328.clash.core.model.Traffic
 import com.github.kr328.clash.core.model.TunnelState
 import com.github.kr328.clash.core.model.UiConfiguration
@@ -24,6 +25,8 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.ReceiveChannel
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
+import kotlinx.serialization.builtins.ListSerializer
+import kotlinx.serialization.builtins.serializer
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.decodeFromJsonElement
@@ -242,6 +245,32 @@ object Clash {
 
   private fun setAgeSecretKey(key: String?) {
     Bridge.nativeSetAgeSecretKey(key)
+  }
+
+  fun genX25519KeyPair(): AgeKeyPair {
+    return parseAgeKeyPair(checkNotNull(Bridge.nativeGenX25519KeyPair()))
+  }
+
+  fun genHybridKeyPair(): AgeKeyPair {
+    return parseAgeKeyPair(checkNotNull(Bridge.nativeGenHybridKeyPair()))
+  }
+
+  fun veritySecretKeys(vararg secretKeys: String): Boolean {
+    return Bridge.nativeVeritySecretKeys(secretKeys.firstOrNull() ?: "")
+  }
+
+  fun toPublicKeys(vararg secretKeys: String): List<String> {
+    return Bridge.nativeToPublicKeys(secretKeys.firstOrNull() ?: "")
+      ?.let { Json.Default.decodeFromString(ListSerializer(String.serializer()), it) }
+      ?: emptyList()
+  }
+
+  fun verityPublicKeys(vararg publicKeys: String): Boolean {
+    return Bridge.nativeVerityPublicKeys(publicKeys.firstOrNull() ?: "")
+  }
+
+  private fun parseAgeKeyPair(value: String): AgeKeyPair {
+    return Json.Default.decodeFromString(AgeKeyPair.serializer(), value)
   }
 }
 

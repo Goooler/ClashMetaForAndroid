@@ -55,6 +55,15 @@
   <string name="force_enable">強制啓用</string>
   <string name="general">常規</string>
   <string name="geodata_mode">Geodata Mode</string>
+  <string name="age_key_category">Age 金鑰</string>
+  <string name="age_key_generate_summary">點按產生</string>
+  <string name="age_secret_key">Age 私鑰</string>
+  <string name="age_secret_key_error">無效格式。密鑰應以 AGE-SECRET-KEY- 開頭</string>
+  <string name="age_public_key">Age 公開金鑰</string>
+  <string name="age_public_key_error">無效的 Age 公開金鑰</string>
+  <string name="age_key_generate">產生</string>
+  <string name="age_key_to_public">從私鑰取得</string>
+  <string name="age_key_copy">複製</string>
   <string name="geofile_import_failed">Import failed</string>
   <string name="geofile_imported">%1$s imported</string>
   <string name="geofile_unknown_db_format">Unknown Database format</string>
