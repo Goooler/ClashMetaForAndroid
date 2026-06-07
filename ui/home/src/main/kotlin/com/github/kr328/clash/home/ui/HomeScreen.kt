@@ -206,11 +206,8 @@ private fun HomeContent(
             else -> stoppedColor
           },
         contentColor = TabbyOnPrimary,
-        onClick =
-          when {
-            isTransitioning -> ({})
-            else -> onToggleStatus
-          },
+        onClick = onToggleStatus,
+        enabled = !isTransitioning,
       )
 
       AnimatedVisibility(visible = clashRunning) {
@@ -277,11 +274,19 @@ private fun HomeActionCard(
   contentColor: Color,
   onClick: () -> Unit,
   modifier: Modifier = Modifier,
+  enabled: Boolean = true,
 ) {
   Card(
     modifier = modifier.fillMaxWidth().heightIn(min = 85.dp),
     onClick = onClick,
-    colors = CardDefaults.cardColors(containerColor = backgroundColor, contentColor = contentColor),
+    enabled = enabled,
+    colors =
+      CardDefaults.cardColors(
+        containerColor = backgroundColor,
+        contentColor = contentColor,
+        disabledContainerColor = backgroundColor,
+        disabledContentColor = contentColor,
+      ),
     elevation = CardDefaults.cardElevation(defaultElevation = 5.dp),
   ) {
     Row(
