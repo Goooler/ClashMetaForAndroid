@@ -82,6 +82,8 @@ internal fun HomeScreen(
     rememberLauncherForActivityResult(StartActivityForResult()) { result ->
       if (result.resultCode == Activity.RESULT_OK) {
         viewModel.onVpnPermissionGranted()
+      } else {
+        viewModel.onVpnPermissionDenied()
       }
     }
 
@@ -114,6 +116,7 @@ internal fun HomeScreen(
     mode = uiState.mode,
     profileName = uiState.profileName,
     hasProviders = uiState.hasProviders,
+    isTransitioning = uiState.isTransitioning,
     onToggleStatus = viewModel::toggleStatus,
     onOpenProxy = onOpenProxy,
     onOpenProfiles = onOpenProfiles,
@@ -133,6 +136,7 @@ private fun HomeContent(
   mode: String?,
   profileName: String?,
   hasProviders: Boolean,
+  isTransitioning: Boolean,
   onToggleStatus: () -> Unit,
   onOpenProxy: () -> Unit,
   onOpenProfiles: () -> Unit,
@@ -185,6 +189,7 @@ private fun HomeContent(
         backgroundColor = if (clashRunning) MaterialTheme.colorScheme.primary else stoppedColor,
         contentColor = TabbyOnPrimary,
         onClick = onToggleStatus,
+        enabled = !isTransitioning,
       )
 
       AnimatedVisibility(visible = clashRunning) {
@@ -251,11 +256,19 @@ private fun HomeActionCard(
   contentColor: Color,
   onClick: () -> Unit,
   modifier: Modifier = Modifier,
+  enabled: Boolean = true,
 ) {
   Card(
     modifier = modifier.fillMaxWidth().heightIn(min = 85.dp),
     onClick = onClick,
-    colors = CardDefaults.cardColors(containerColor = backgroundColor, contentColor = contentColor),
+    enabled = enabled,
+    colors =
+      CardDefaults.cardColors(
+        containerColor = backgroundColor,
+        contentColor = contentColor,
+        disabledContainerColor = backgroundColor,
+        disabledContentColor = contentColor,
+      ),
     elevation = CardDefaults.cardElevation(defaultElevation = 5.dp),
   ) {
     Row(
@@ -322,6 +335,7 @@ private fun HomeContentRunningPreview() {
     mode = "Rule",
     profileName = "My Profile",
     hasProviders = true,
+    isTransitioning = false,
     onToggleStatus = {},
     onOpenProxy = {},
     onOpenProfiles = {},
@@ -343,6 +357,7 @@ private fun HomeContentStoppedPreview() {
     mode = null,
     profileName = null,
     hasProviders = false,
+    isTransitioning = false,
     onToggleStatus = {},
     onOpenProxy = {},
     onOpenProfiles = {},
