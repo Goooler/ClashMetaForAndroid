@@ -111,6 +111,43 @@ class HomeViewModelTest : KoinComponent {
     }
   }
 
+  @Test
+  fun toggleStatus_whenToggled_thenTransitionStateIsCorrect() = runTest {
+    try {
+      viewModel.onStart(UnusedLifecycleOwner)
+
+      // Initial state: not running, not transitioning
+      assertThat(viewModel.clashRunning.value).isEqualTo(false)
+      assertThat(viewModel.uiState.value.isTransitioning).isEqualTo(false)
+
+      // Act: Click toggle to start
+      viewModel.toggleStatus()
+
+      // Assert: transitions to true
+      assertThat(viewModel.uiState.value.isTransitioning).isEqualTo(true)
+
+      // Act: clash service starts
+      dependencies.clashRunning.value = true
+
+      // Assert: transitions to false
+      assertThat(viewModel.uiState.value.isTransitioning).isEqualTo(false)
+
+      // Act: Click toggle to stop
+      viewModel.toggleStatus()
+
+      // Assert: transitions to true
+      assertThat(viewModel.uiState.value.isTransitioning).isEqualTo(true)
+
+      // Act: clash service stops
+      dependencies.clashRunning.value = false
+
+      // Assert: transitions to false
+      assertThat(viewModel.uiState.value.isTransitioning).isEqualTo(false)
+    } finally {
+      viewModel.onStop(UnusedLifecycleOwner)
+    }
+  }
+
   private object UnusedLifecycleOwner : LifecycleOwner {
     override val lifecycle = LifecycleRegistry(this)
   }

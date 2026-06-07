@@ -48,6 +48,7 @@ import com.github.kr328.clash.ui.icon.BaselineAssignment
 import com.github.kr328.clash.ui.icon.BaselineHelpCenter
 import com.github.kr328.clash.ui.icon.BaselineSettings
 import com.github.kr328.clash.ui.icon.BaselineSwapVerticalCircle
+import com.github.kr328.clash.ui.icon.BaselineSync
 import com.github.kr328.clash.ui.icon.BaselineViewList
 import com.github.kr328.clash.ui.icon.OutlineCheckCircle
 import com.github.kr328.clash.ui.icon.OutlineNotInterested
@@ -82,6 +83,8 @@ internal fun HomeScreen(
     rememberLauncherForActivityResult(StartActivityForResult()) { result ->
       if (result.resultCode == Activity.RESULT_OK) {
         viewModel.onVpnPermissionGranted()
+      } else {
+        viewModel.onVpnPermissionDenied()
       }
     }
 
@@ -114,6 +117,7 @@ internal fun HomeScreen(
     mode = uiState.mode,
     profileName = uiState.profileName,
     hasProviders = uiState.hasProviders,
+    isTransitioning = uiState.isTransitioning,
     onToggleStatus = viewModel::toggleStatus,
     onOpenProxy = onOpenProxy,
     onOpenProfiles = onOpenProfiles,
@@ -133,6 +137,7 @@ private fun HomeContent(
   mode: String?,
   profileName: String?,
   hasProviders: Boolean,
+  isTransitioning: Boolean,
   onToggleStatus: () -> Unit,
   onOpenProxy: () -> Unit,
   onOpenProfiles: () -> Unit,
@@ -176,15 +181,43 @@ private fun HomeContent(
 
       HomeActionCard(
         modifier = Modifier.padding(vertical = cardMarginVertical),
-        icon = if (clashRunning) TabbyIcons.OutlineCheckCircle else TabbyIcons.OutlineNotInterested,
-        text = stringResource(if (clashRunning) CommonR.string.running else R.string.stopped),
+        icon =
+          if (isTransitioning) {
+            TabbyIcons.BaselineSync
+          } else if (clashRunning) {
+            TabbyIcons.OutlineCheckCircle
+          } else {
+            TabbyIcons.OutlineNotInterested
+          },
+        text =
+          if (isTransitioning) {
+            stringResource(CommonR.string.loading)
+          } else {
+            stringResource(if (clashRunning) CommonR.string.running else R.string.stopped)
+          },
         subtext =
-          if (clashRunning && forwarded != null)
+          if (isTransitioning) {
+            null
+          } else if (clashRunning && forwarded != null) {
             stringResource(R.string.format_traffic_forwarded, forwarded)
-          else stringResource(CommonR.string.tap_to_start),
-        backgroundColor = if (clashRunning) MaterialTheme.colorScheme.primary else stoppedColor,
+          } else {
+            stringResource(CommonR.string.tap_to_start)
+          },
+        backgroundColor =
+          if (isTransitioning) {
+            stoppedColor
+          } else if (clashRunning) {
+            MaterialTheme.colorScheme.primary
+          } else {
+            stoppedColor
+          },
         contentColor = TabbyOnPrimary,
-        onClick = onToggleStatus,
+        onClick =
+          if (isTransitioning) {
+            {}
+          } else {
+            onToggleStatus
+          },
       )
 
       AnimatedVisibility(visible = clashRunning) {
@@ -322,6 +355,7 @@ private fun HomeContentRunningPreview() {
     mode = "Rule",
     profileName = "My Profile",
     hasProviders = true,
+    isTransitioning = false,
     onToggleStatus = {},
     onOpenProxy = {},
     onOpenProfiles = {},
@@ -343,6 +377,7 @@ private fun HomeContentStoppedPreview() {
     mode = null,
     profileName = null,
     hasProviders = false,
+    isTransitioning = false,
     onToggleStatus = {},
     onOpenProxy = {},
     onOpenProfiles = {},
