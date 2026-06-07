@@ -4,6 +4,12 @@ import android.app.Activity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -32,6 +38,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.lerp
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -147,6 +154,28 @@ private fun HomeContent(
   val darkTheme = isSystemInDarkTheme()
   val stoppedColor = if (darkTheme) TabbyDarkSurface else TabbyLightStopped
 
+  val baseColor = if (clashRunning) MaterialTheme.colorScheme.primary else stoppedColor
+
+  val infiniteTransition = rememberInfiniteTransition(label = "loadingTransition")
+  val pulseFraction by
+    infiniteTransition.animateFloat(
+      initialValue = 0.4f,
+      targetValue = 1.0f,
+      animationSpec =
+        infiniteRepeatable(
+          animation = tween(durationMillis = 800, easing = LinearEasing),
+          repeatMode = RepeatMode.Reverse,
+        ),
+      label = "loadingAlpha",
+    )
+
+  val backgroundColor =
+    if (isTransitioning) {
+      lerp(baseColor.copy(alpha = 0.4f), baseColor, pulseFraction)
+    } else {
+      baseColor
+    }
+
   TabbyScaffold(
     title = "",
     modifier = modifier,
@@ -185,7 +214,7 @@ private fun HomeContent(
           if (clashRunning && forwarded != null)
             stringResource(R.string.format_traffic_forwarded, forwarded)
           else stringResource(CommonR.string.tap_to_start),
-        backgroundColor = if (clashRunning) MaterialTheme.colorScheme.primary else stoppedColor,
+        backgroundColor = backgroundColor,
         contentColor = TabbyOnPrimary,
         onClick = onToggleStatus,
         enabled = !isTransitioning,
