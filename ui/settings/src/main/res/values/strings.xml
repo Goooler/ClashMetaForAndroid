@@ -11,7 +11,7 @@
   <string name="age_public_key">Age Public Key</string>
   <string name="age_public_key_error">Invalid age public key</string>
   <string name="age_secret_key">Age Secret Key</string>
-  <string name="age_secret_key_error">Invalid format. Key should start with AGE-SECRET-KEY-</string>
+  <string name="age_secret_key_error">Invalid age secret key</string>
   <string name="allow_all_apps">Allow all apps</string>
   <string name="allow_bypass">Allow Bypass</string>
   <string name="allow_bypass_summary">Allows all apps to bypass this VPN connection</string>
