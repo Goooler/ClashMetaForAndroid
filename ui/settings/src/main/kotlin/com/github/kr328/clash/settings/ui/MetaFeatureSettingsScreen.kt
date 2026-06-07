@@ -572,7 +572,7 @@ interface MetaFeatureSettingsActions {
 private fun AgeKeyHelperDialog(
   hybrid: Boolean,
   onDismiss: () -> Unit,
-  onShowMessage: (String) -> Unit,
+  onShowMessage: suspend (String) -> Unit,
 ) {
   var secretKey by remember { mutableStateOf("") }
   var publicKey by remember { mutableStateOf("") }
