@@ -247,13 +247,17 @@ object Clash {
     Bridge.nativeSetAgeSecretKey(key)
   }
 
-  fun genX25519KeyPair(): AgeKeyPair {
-    return json.decodeFromString(checkNotNull(Bridge.nativeGenX25519KeyPair()))
-  }
+fun genX25519KeyPair(): AgeKeyPair {
+  val payload =
+    Bridge.nativeGenX25519KeyPair() ?: throw ClashException("Failed to generate Age X25519 key pair")
+  return json.decodeFromString(payload)
+}
 
-  fun genHybridKeyPair(): AgeKeyPair {
-    return json.decodeFromString(checkNotNull(Bridge.nativeGenHybridKeyPair()))
-  }
+fun genHybridKeyPair(): AgeKeyPair {
+  val payload =
+    Bridge.nativeGenHybridKeyPair() ?: throw ClashException("Failed to generate Age MLKEM768-X25519 key pair")
+  return json.decodeFromString(payload)
+}
 
   fun verifySecretKeys(vararg secretKeys: String): Boolean {
     if (secretKeys.isEmpty()) return true
