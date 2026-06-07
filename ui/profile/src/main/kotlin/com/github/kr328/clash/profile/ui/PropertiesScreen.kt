@@ -25,6 +25,7 @@ import androidx.compose.ui.text.fromHtml
 import androidx.compose.ui.tooling.preview.PreviewWrapper
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.github.kr328.clash.common.R as CommonR
 import com.github.kr328.clash.glue.util.ValidatorAgeSecretKey
 import com.github.kr328.clash.glue.util.ValidatorAutoUpdateInterval
@@ -43,7 +44,7 @@ import com.github.kr328.clash.ui.icon.OutlineInfo
 import com.github.kr328.clash.ui.icon.OutlineLabel
 import com.github.kr328.clash.ui.icon.OutlineUpdate
 import com.github.kr328.clash.ui.icon.TabbyIcons
-import com.github.kr328.clash.ui.lifecycle.viewModelWithLifecycle
+import com.github.kr328.clash.ui.lifecycle.withLifecycle
 import com.github.kr328.clash.ui.theme.PreviewTabby
 import com.github.kr328.clash.ui.theme.TabbyThemeWrapper
 import kotlin.time.Duration.Companion.milliseconds
@@ -57,7 +58,7 @@ import me.zhanghai.compose.preference.textFieldPreference
 internal fun PropertiesScreen(
   uuid: Uuid,
   modifier: Modifier = Modifier,
-  viewModel: PropertiesViewModel = viewModelWithLifecycle(),
+  viewModel: PropertiesViewModel = viewModel<PropertiesViewModel>().withLifecycle(),
   onBrowseFiles: (Uuid) -> Unit,
   onFinish: (Boolean) -> Unit,
 ) {

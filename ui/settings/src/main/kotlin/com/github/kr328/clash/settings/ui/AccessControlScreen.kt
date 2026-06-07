@@ -48,6 +48,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.graphics.drawable.toDrawable
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.github.kr328.clash.common.R as CommonR
 import com.github.kr328.clash.glue.model.AppInfo
 import com.github.kr328.clash.settings.R
@@ -57,7 +58,7 @@ import com.github.kr328.clash.ui.component.TabbyScaffold
 import com.github.kr328.clash.ui.icon.BaselineMoreVert
 import com.github.kr328.clash.ui.icon.BaselineSearch
 import com.github.kr328.clash.ui.icon.TabbyIcons
-import com.github.kr328.clash.ui.lifecycle.viewModelWithLifecycle
+import com.github.kr328.clash.ui.lifecycle.withLifecycle
 import com.github.kr328.clash.ui.theme.PreviewTabby
 import com.github.kr328.clash.ui.theme.TabbyThemeWrapper
 import com.github.kr328.clash.ui.theme.tabbyDimens
@@ -73,7 +74,7 @@ import kotlinx.coroutines.withContext
 @Composable
 internal fun AccessControlScreen(
   modifier: Modifier = Modifier,
-  viewModel: AccessControlViewModel = viewModelWithLifecycle(),
+  viewModel: AccessControlViewModel = viewModel<AccessControlViewModel>().withLifecycle(),
 ) {
   val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
