@@ -44,6 +44,7 @@
   <string name="rule_mode">规则模式</string>
   <string name="running">运行中</string>
   <string name="settings">设置</string>
+  <string name="stopped">已停止</string>
   <string name="sort">排序</string>
   <string name="tap_to_start">点此启动</string>
   <string name="unable_to_start_vpn">无法启动 VPN 组件</string>

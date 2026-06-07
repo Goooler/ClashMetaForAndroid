@@ -44,6 +44,7 @@
   <string name="rule_mode">Режим правил</string>
   <string name="running">Запущен</string>
   <string name="settings">Настройки</string>
+  <string name="stopped">Остановлен</string>
   <string name="sort">Сортировка</string>
   <string name="tap_to_start">Нажмите для запуска</string>
   <string name="unable_to_start_vpn">Не удалось запустить компонент VPN</string>

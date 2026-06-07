@@ -190,7 +190,7 @@ private fun HomeContent(
           when {
             isTransitioning -> stringResource(CommonR.string.loading)
             clashRunning -> stringResource(CommonR.string.running)
-            else -> stringResource(R.string.stopped)
+            else -> stringResource(CommonR.string.stopped)
           },
         subtext =
           when {

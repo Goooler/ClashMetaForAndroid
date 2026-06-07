@@ -44,6 +44,7 @@
   <string name="rule_mode">Chế độ quy tắc</string>
   <string name="running">Đang kết nối</string>
   <string name="settings">Cài đặt</string>
+  <string name="stopped">Đã ngắt kết nối</string>
   <string name="sort">Sắp xếp theo</string>
   <string name="tap_to_start">Chạm để kết nối</string>
   <string name="unable_to_start_vpn">Không thể khởi động thành phần VPN</string>

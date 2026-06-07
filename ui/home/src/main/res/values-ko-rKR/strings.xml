@@ -18,7 +18,6 @@
   <string name="open">열기</string>
   <string name="profile">구성</string>
   <string name="sources">소스</string>
-  <string name="stopped">중지됨</string>
   <string name="tips_help"><![CDATA[Tabby 는 <strong>프리웨어</strong>이며, <strong>우회 서비스 제공자가 아닙니다.</strong> 따라서, <strong>앱 자체 이외의 문제에 대한 피드백은 받지 않습니다.</strong>]]></string>
   <string name="update_available">새 버전이 있습니다</string>
   <string name="version_updated">앱 버전이 업데이트되었습니다.</string>

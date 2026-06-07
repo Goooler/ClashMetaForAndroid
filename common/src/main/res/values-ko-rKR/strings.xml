@@ -44,6 +44,7 @@
   <string name="rule_mode">규칙</string>
   <string name="running">연결중</string>
   <string name="settings">설정</string>
+  <string name="stopped">중지됨</string>
   <string name="sort">정렬</string>
   <string name="tap_to_start">연결하려면 터치</string>
   <string name="unable_to_start_vpn">VPN 구성 요소를 시작할 수 없습니다.</string>

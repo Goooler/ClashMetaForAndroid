@@ -44,6 +44,7 @@
   <string name="rule_mode">ルールモード</string>
   <string name="running">実行中</string>
   <string name="settings">設定</string>
+  <string name="stopped">停止中</string>
   <string name="sort">ソート</string>
   <string name="tap_to_start">タップしてスタート</string>
   <string name="unable_to_start_vpn">VPNコンポーネントを起動できませんでした</string>
