@@ -583,14 +583,16 @@ private fun AgeKeyHelperDialog(
   val scope = rememberCoroutineScope()
   val copiedText = stringResource(CommonR.string.copied)
   val genericError = stringResource(R.string.error)
-  val secretInvalid = remember(secretKey) {
-    secretKey.isNotBlank() &&
-      !runCatching { Clash.verifySecretKeys(secretKey) }.getOrDefault(false)
-  }
-  val publicInvalid = remember(publicKey) {
-    publicKey.isNotBlank() &&
-      !runCatching { Clash.verifyPublicKeys(publicKey) }.getOrDefault(false)
-  }
+  val secretInvalid =
+    remember(secretKey) {
+      secretKey.isNotBlank() &&
+        !runCatching { Clash.verifySecretKeys(secretKey) }.getOrDefault(false)
+    }
+  val publicInvalid =
+    remember(publicKey) {
+      publicKey.isNotBlank() &&
+        !runCatching { Clash.verifyPublicKeys(publicKey) }.getOrDefault(false)
+    }
   fun copy(label: String, value: String) {
     if (value.isBlank()) return
     scope.launch {
