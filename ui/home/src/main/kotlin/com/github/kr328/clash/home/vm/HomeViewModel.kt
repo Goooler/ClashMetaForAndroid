@@ -35,6 +35,7 @@ internal class HomeViewModel(private val dependencies: Dependencies) :
   private var fetchJob: Job? = null
   private var clashRunningJob: Job? = null
   private var transitionTimeoutJob: Job? = null
+  private var lastClashRunning: Boolean? = null
 
   val clashRunning: StateFlow<Boolean> = dependencies.clashRunning
 
@@ -47,10 +48,17 @@ internal class HomeViewModel(private val dependencies: Dependencies) :
   override fun onStart(owner: LifecycleOwner) {
     clashRunningJob?.cancel()
     clashRunningJob = viewModelScope.launch {
-      dependencies.clashRunning.collect {
-        uiState.update { it.copy(isTransitioning = false) }
-        cancelTransitionTimeout()
+      dependencies.clashRunning.collect { running ->
+        val last = lastClashRunning
+        lastClashRunning = running
+        if (last != null && last != running) {
+          uiState.update { it.copy(isTransitioning = false) }
+          cancelTransitionTimeout()
+        }
       }
+    }
+    if (uiState.value.isTransitioning) {
+      startTransitionTimeout()
     }
     broadcastEventsJob?.cancel()
     broadcastEventsJob = viewModelScope.launch {

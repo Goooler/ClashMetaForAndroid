@@ -148,6 +148,36 @@ class HomeViewModelTest : KoinComponent {
     }
   }
 
+  @Test
+  fun toggleStatus_whenToggledAndLifecycleRestarts_thenTransitionStateIsRetained() = runTest {
+    try {
+      viewModel.onStart(UnusedLifecycleOwner)
+
+      // Act: Click toggle to start
+      viewModel.toggleStatus()
+
+      // Assert: transitions to true
+      assertThat(viewModel.uiState.value.isTransitioning).isEqualTo(true)
+
+      // Act: lifecycle stops (e.g. going to permission activity or background)
+      viewModel.onStop(UnusedLifecycleOwner)
+
+      // Act: lifecycle starts again (resuming)
+      viewModel.onStart(UnusedLifecycleOwner)
+
+      // Assert: transition state is retained, not cleared by initial emission
+      assertThat(viewModel.uiState.value.isTransitioning).isEqualTo(true)
+
+      // Act: clash service starts
+      dependencies.clashRunning.value = true
+
+      // Assert: transitions to false
+      assertThat(viewModel.uiState.value.isTransitioning).isEqualTo(false)
+    } finally {
+      viewModel.onStop(UnusedLifecycleOwner)
+    }
+  }
+
   private object UnusedLifecycleOwner : LifecycleOwner {
     override val lifecycle = LifecycleRegistry(this)
   }
