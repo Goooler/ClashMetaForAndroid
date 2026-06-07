@@ -11,10 +11,11 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -26,14 +27,13 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.platform.LocalClipboard
-import androidx.compose.ui.platform.toClipEntry
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalClipboard
+import androidx.compose.ui.platform.toClipEntry
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.input.KeyboardOptions
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.PreviewWrapper
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -253,7 +253,10 @@ private fun MetaFeatureSettingsContent(
 }
 
 private fun LazyListScope.metaAgeKeyItems(onAgeKeyHelperRequested: (Boolean) -> Unit) {
-  preferenceCategory(key = "cat_age_key", title = { Text(stringResource(R.string.age_key_category)) })
+  preferenceCategory(
+    key = "cat_age_key",
+    title = { Text(stringResource(R.string.age_key_category)) },
+  )
   preference(
     key = "ageKeyX25519",
     title = { Text(stringResource(R.string.age_key_type_x25519)) },
@@ -587,17 +590,17 @@ private fun AgeKeyHelperDialog(
 
   fun copy(label: String, value: String) {
     if (value.isBlank()) return
-    clipboard.setClipEntry(ClipData.newPlainText(label, value).toClipEntry())
-    scope.launch { onShowMessage(copiedText) }
+    scope.launch {
+      clipboard.setClipEntry(ClipData.newPlainText(label, value).toClipEntry())
+      onShowMessage(copiedText)
+    }
   }
 
   AlertDialog(
     onDismissRequest = onDismiss,
     title = {
       Text(
-        stringResource(
-          if (hybrid) R.string.age_key_type_hybrid else R.string.age_key_type_x25519
-        )
+        stringResource(if (hybrid) R.string.age_key_type_hybrid else R.string.age_key_type_x25519)
       )
     },
     text = {

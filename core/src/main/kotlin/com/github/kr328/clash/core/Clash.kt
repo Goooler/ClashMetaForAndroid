@@ -6,6 +6,7 @@ import com.github.kr328.clash.core.bridge.ClashException
 import com.github.kr328.clash.core.bridge.FetchCallback
 import com.github.kr328.clash.core.bridge.LogcatInterface
 import com.github.kr328.clash.core.bridge.TunInterface
+import com.github.kr328.clash.core.model.AgeKeyPair
 import com.github.kr328.clash.core.model.ConfigurationOverride
 import com.github.kr328.clash.core.model.FetchStatus
 import com.github.kr328.clash.core.model.LogMessage
@@ -13,7 +14,6 @@ import com.github.kr328.clash.core.model.Provider
 import com.github.kr328.clash.core.model.Proxy
 import com.github.kr328.clash.core.model.ProxyGroup
 import com.github.kr328.clash.core.model.ProxySort
-import com.github.kr328.clash.core.model.AgeKeyPair
 import com.github.kr328.clash.core.model.Traffic
 import com.github.kr328.clash.core.model.TunnelState
 import com.github.kr328.clash.core.model.UiConfiguration
@@ -260,9 +260,9 @@ object Clash {
   }
 
   fun toPublicKeys(vararg secretKeys: String): List<String> {
-    return Bridge.nativeToPublicKeys(secretKeys.firstOrNull() ?: "")
-      ?.let { Json.Default.decodeFromString(ListSerializer(String.serializer()), it) }
-      ?: emptyList()
+    return Bridge.nativeToPublicKeys(secretKeys.firstOrNull() ?: "")?.let {
+      json.decodeFromString(ListSerializer(String.serializer()), it)
+    } ?: emptyList()
   }
 
   fun verityPublicKeys(vararg publicKeys: String): Boolean {
@@ -270,7 +270,7 @@ object Clash {
   }
 
   private fun parseAgeKeyPair(value: String): AgeKeyPair {
-    return Json.Default.decodeFromString(AgeKeyPair.serializer(), value)
+    return json.decodeFromString(value)
   }
 }
 
