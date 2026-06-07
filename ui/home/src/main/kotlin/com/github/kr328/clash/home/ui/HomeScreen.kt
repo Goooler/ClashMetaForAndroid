@@ -59,7 +59,7 @@ import com.github.kr328.clash.ui.theme.TabbyDarkSurface
 import com.github.kr328.clash.ui.theme.TabbyLightStopped
 import com.github.kr328.clash.ui.theme.TabbyOnPrimary
 import com.github.kr328.clash.ui.theme.TabbyThemeWrapper
-import org.koin.androidx.compose.koinViewModel
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 internal fun HomeScreen(
