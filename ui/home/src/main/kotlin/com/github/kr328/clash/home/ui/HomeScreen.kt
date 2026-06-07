@@ -81,10 +81,9 @@ internal fun HomeScreen(
 
   val vpnLauncher =
     rememberLauncherForActivityResult(StartActivityForResult()) { result ->
-      if (result.resultCode == Activity.RESULT_OK) {
-        viewModel.onVpnPermissionGranted()
-      } else {
-        viewModel.onVpnPermissionDenied()
+      when (result.resultCode) {
+        Activity.RESULT_OK -> viewModel.onVpnPermissionGranted()
+        else -> viewModel.onVpnPermissionDenied()
       }
     }
 
@@ -182,41 +181,35 @@ private fun HomeContent(
       HomeActionCard(
         modifier = Modifier.padding(vertical = cardMarginVertical),
         icon =
-          if (isTransitioning) {
-            TabbyIcons.BaselineSync
-          } else if (clashRunning) {
-            TabbyIcons.OutlineCheckCircle
-          } else {
-            TabbyIcons.OutlineNotInterested
+          when {
+            isTransitioning -> TabbyIcons.BaselineSync
+            clashRunning -> TabbyIcons.OutlineCheckCircle
+            else -> TabbyIcons.OutlineNotInterested
           },
         text =
-          if (isTransitioning) {
-            stringResource(CommonR.string.loading)
-          } else {
-            stringResource(if (clashRunning) CommonR.string.running else R.string.stopped)
+          when {
+            isTransitioning -> stringResource(CommonR.string.loading)
+            clashRunning -> stringResource(CommonR.string.running)
+            else -> stringResource(R.string.stopped)
           },
         subtext =
-          if (isTransitioning) {
-            null
-          } else if (clashRunning && forwarded != null) {
-            stringResource(R.string.format_traffic_forwarded, forwarded)
-          } else {
-            stringResource(CommonR.string.tap_to_start)
+          when {
+            isTransitioning -> null
+            clashRunning && forwarded != null ->
+              stringResource(R.string.format_traffic_forwarded, forwarded)
+            else -> stringResource(CommonR.string.tap_to_start)
           },
         backgroundColor =
-          if (isTransitioning) {
-            stoppedColor
-          } else if (clashRunning) {
-            MaterialTheme.colorScheme.primary
-          } else {
-            stoppedColor
+          when {
+            isTransitioning -> stoppedColor
+            clashRunning -> MaterialTheme.colorScheme.primary
+            else -> stoppedColor
           },
         contentColor = TabbyOnPrimary,
         onClick =
-          if (isTransitioning) {
-            {}
-          } else {
-            onToggleStatus
+          when {
+            isTransitioning -> ({})
+            else -> onToggleStatus
           },
       )
 

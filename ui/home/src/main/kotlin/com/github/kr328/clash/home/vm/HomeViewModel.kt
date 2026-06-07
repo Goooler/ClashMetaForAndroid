@@ -97,10 +97,9 @@ internal class HomeViewModel(private val dependencies: Dependencies) :
     uiState.update { it.copy(isTransitioning = true) }
     startTransitionTimeout()
 
-    if (clashRunning.value) {
-      dependencies.stopClashService()
-    } else {
-      startClash()
+    when (clashRunning.value) {
+      true -> dependencies.stopClashService()
+      false -> startClash()
     }
   }
 
