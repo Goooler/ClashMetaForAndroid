@@ -11,21 +11,48 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.test.runTest
+import org.junit.After
+import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.get
+import org.koin.core.context.startKoin
+import org.koin.core.context.stopKoin
+import org.koin.dsl.module
 
-class HomeViewModelTest {
+class HomeViewModelTest : KoinComponent {
   @get:Rule val mainDispatcherRule = MainDispatcherRule()
+
+  private lateinit var dependencies: TestHomeDependencies
+  private lateinit var viewModel: HomeViewModel
+
+  @Before
+  fun setUp() {
+    dependencies = TestHomeDependencies()
+    startKoin {
+      modules(
+        module {
+          single<HomeViewModel.Dependencies> { dependencies }
+          single { HomeViewModel(get()) }
+        }
+      )
+    }
+    viewModel = get()
+  }
+
+  @After
+  fun tearDown() {
+    stopKoin()
+  }
 
   @Test
   fun uiState_whenServiceStartsBeforeProfileLoaded_thenHideMode() = runTest {
-    val dependencies =
-      TestHomeDependencies().apply {
-        clashRunning.value = true
-        profileLoaded.value = false
-        mode = TunnelState.Mode.Rule
-      }
-    val viewModel = HomeViewModel(dependencies)
+    dependencies.apply {
+      clashRunning.value = true
+      profileLoaded.value = false
+      mode = TunnelState.Mode.Rule
+    }
 
     try {
       viewModel.onStart(UnusedLifecycleOwner)
@@ -46,13 +73,11 @@ class HomeViewModelTest {
 
   @Test
   fun uiState_whenProfileLoadedStateIsAlreadyTrue_thenShowMode() = runTest {
-    val dependencies =
-      TestHomeDependencies().apply {
-        clashRunning.value = true
-        profileLoaded.value = true
-        mode = TunnelState.Mode.Global
-      }
-    val viewModel = HomeViewModel(dependencies)
+    dependencies.apply {
+      clashRunning.value = true
+      profileLoaded.value = true
+      mode = TunnelState.Mode.Global
+    }
 
     try {
       viewModel.onStart(UnusedLifecycleOwner)
@@ -65,13 +90,11 @@ class HomeViewModelTest {
 
   @Test
   fun uiState_whenProfileLoadedEventIsReceived_thenRefreshMode() = runTest {
-    val dependencies =
-      TestHomeDependencies().apply {
-        clashRunning.value = true
-        profileLoaded.value = true
-        mode = TunnelState.Mode.Rule
-      }
-    val viewModel = HomeViewModel(dependencies)
+    dependencies.apply {
+      clashRunning.value = true
+      profileLoaded.value = true
+      mode = TunnelState.Mode.Rule
+    }
 
     try {
       viewModel.onStart(UnusedLifecycleOwner)
