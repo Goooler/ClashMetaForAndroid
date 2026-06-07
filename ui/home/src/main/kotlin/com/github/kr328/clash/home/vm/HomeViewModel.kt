@@ -17,6 +17,7 @@ import com.github.kr328.clash.glue.util.startClashService
 import com.github.kr328.clash.glue.util.stopClashService
 import com.github.kr328.clash.glue.util.withClash
 import com.github.kr328.clash.glue.util.withProfile
+import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.seconds
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -26,6 +27,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withTimeoutOrNull
 
 internal class HomeViewModel(private val dependencies: Dependencies) :
   ViewModel(), DefaultLifecycleObserver {
@@ -98,14 +100,28 @@ internal class HomeViewModel(private val dependencies: Dependencies) :
   private fun fetch() {
     fetchJob?.cancel()
     fetchJob = viewModelScope.launch {
-      val profileName = dependencies.queryActiveProfileName()
+      if (!clashRunning.value || !dependencies.profileLoaded.value) {
+        uiState.update {
+          it.copy(
+            mode = null,
+            hasProviders = false,
+          )
+        }
+      }
+
+      val profileName =
+        try {
+          withTimeoutOrNull(200.milliseconds) { dependencies.queryActiveProfileName() }
+        } catch (_: Exception) {
+          null
+        }
 
       if (!clashRunning.value || !dependencies.profileLoaded.value) {
         uiState.update {
           it.copy(
             mode = null,
             hasProviders = false,
-            profileName = profileName,
+            profileName = profileName ?: it.profileName,
           )
         }
         return@launch
@@ -119,7 +135,7 @@ internal class HomeViewModel(private val dependencies: Dependencies) :
           it.copy(
             mode = null,
             hasProviders = false,
-            profileName = profileName,
+            profileName = profileName ?: it.profileName,
           )
         }
         return@launch
@@ -129,7 +145,7 @@ internal class HomeViewModel(private val dependencies: Dependencies) :
         it.copy(
           mode = mode,
           hasProviders = hasProviders,
-          profileName = profileName,
+          profileName = profileName ?: it.profileName,
         )
       }
     }
@@ -159,7 +175,14 @@ internal class HomeViewModel(private val dependencies: Dependencies) :
 
   private fun startClash() {
     viewModelScope.launch {
-      if (!dependencies.hasImportedActiveProfile()) {
+      val hasProfile =
+        try {
+          withTimeoutOrNull(200.milliseconds) { dependencies.hasImportedActiveProfile() } ?: true
+        } catch (_: Exception) {
+          true
+        }
+
+      if (!hasProfile) {
         eventState.value = EventState.ShowNoProfileMessage
         return@launch
       }
