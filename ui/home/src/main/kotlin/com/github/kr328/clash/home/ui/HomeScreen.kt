@@ -52,7 +52,7 @@ import com.github.kr328.clash.ui.icon.BaselineViewList
 import com.github.kr328.clash.ui.icon.OutlineCheckCircle
 import com.github.kr328.clash.ui.icon.OutlineNotInterested
 import com.github.kr328.clash.ui.icon.TabbyIcons
-import com.github.kr328.clash.ui.lifecycle.viewModelWithLifecycle
+import com.github.kr328.clash.ui.lifecycle.koinViewModelWithLifecycle
 import com.github.kr328.clash.ui.theme.PreviewTabby
 import com.github.kr328.clash.ui.theme.TabbyDarkSurface
 import com.github.kr328.clash.ui.theme.TabbyLightStopped
@@ -62,7 +62,7 @@ import com.github.kr328.clash.ui.theme.TabbyThemeWrapper
 @Composable
 internal fun HomeScreen(
   modifier: Modifier = Modifier,
-  viewModel: HomeViewModel = viewModelWithLifecycle(),
+  viewModel: HomeViewModel = koinViewModelWithLifecycle(),
   onOpenProxy: () -> Unit,
   onOpenProfiles: () -> Unit,
   onOpenProviders: () -> Unit,

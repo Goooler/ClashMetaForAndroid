@@ -35,6 +35,9 @@ class Broadcasts(private val context: Application) {
   val clashRunningFlow: StateFlow<Boolean>
     field = MutableStateFlow(false)
 
+  val profileLoadedFlow: StateFlow<Boolean>
+    field = MutableStateFlow(false)
+
   val event: SharedFlow<Event>
     field = MutableSharedFlow(extraBufferCapacity = 64)
 
@@ -42,6 +45,12 @@ class Broadcasts(private val context: Application) {
     get() = clashRunningFlow.value
     private set(value) {
       clashRunningFlow.value = value
+    }
+
+  private var profileLoaded: Boolean
+    get() = profileLoadedFlow.value
+    set(value) {
+      profileLoadedFlow.value = value
     }
 
   private var registered = false
@@ -53,17 +62,23 @@ class Broadcasts(private val context: Application) {
         when (intent?.action) {
           Intents.ACTION_SERVICE_RECREATED -> {
             clashRunning = false
+            profileLoaded = false
             event.tryEmit(Event.ServiceRecreated)
           }
           Intents.ACTION_CLASH_STARTED -> {
             clashRunning = true
+            profileLoaded = false
             event.tryEmit(Event.Started)
           }
           Intents.ACTION_CLASH_STOPPED -> {
             clashRunning = false
+            profileLoaded = false
             event.tryEmit(Event.Stopped(intent.getStringExtra(Intents.EXTRA_STOP_REASON)))
           }
-          Intents.ACTION_PROFILE_CHANGED -> event.tryEmit(Event.ProfileChanged)
+          Intents.ACTION_PROFILE_CHANGED -> {
+            profileLoaded = false
+            event.tryEmit(Event.ProfileChanged)
+          }
           Intents.ACTION_PROFILE_UPDATE_COMPLETED ->
             event.tryEmit(
               Event.ProfileUpdateCompleted(intent.getSerializableCompat(Intents.EXTRA_UUID))
@@ -75,7 +90,11 @@ class Broadcasts(private val context: Application) {
                 intent.getStringExtra(Intents.EXTRA_FAIL_REASON),
               )
             )
-          Intents.ACTION_PROFILE_LOADED -> event.tryEmit(Event.ProfileLoaded)
+          Intents.ACTION_PROFILE_LOADED -> {
+            clashRunning = true
+            profileLoaded = true
+            event.tryEmit(Event.ProfileLoaded)
+          }
         }
       }
     }
@@ -98,7 +117,9 @@ class Broadcasts(private val context: Application) {
       )
       registered = true
 
-      clashRunning = StatusClient(context).currentProfile() != null
+      val currentProfile = StatusClient(context).currentProfile()
+      clashRunning = currentProfile != null
+      profileLoaded = currentProfile != null
     } catch (e: Exception) {
       Log.w("Register global receiver: $e", e)
     }

@@ -15,4 +15,9 @@ dependencies {
 
   implementation(platform(libs.koin.bom))
   implementation(libs.koin.android)
+  implementation(libs.koin.viewMdeol)
+
+  testImplementation(libs.junit)
+  testImplementation(libs.kotlin.coroutine.test)
+  testImplementation(libs.kotlin.test)
 }
