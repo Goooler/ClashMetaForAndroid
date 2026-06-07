@@ -34,7 +34,7 @@ jobs:
       - uses: gradle/actions/setup-gradle@v6
       - name: Build
         run: |
-          ./gradlew app:assembleRelease
+          ./gradlew app:assembleRelease --no-daemon
       - name: Generate Artifact Attestation
         uses: actions/attest@v4
         with:
