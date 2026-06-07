@@ -5,9 +5,7 @@ import android.content.Intent
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.CreationExtras
 import com.github.kr328.clash.common.R as CommonR
 import com.github.kr328.clash.common.log.Log
 import com.github.kr328.clash.core.model.Traffic
@@ -28,7 +26,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
-import org.koin.core.context.GlobalContext
 
 internal class HomeViewModel(private val dependencies: Dependencies) :
   ViewModel(), DefaultLifecycleObserver {
@@ -220,16 +217,6 @@ internal class HomeViewModel(private val dependencies: Dependencies) :
     fun startClashService(): Intent?
 
     fun stopClashService()
-  }
-
-  object Factory : ViewModelProvider.Factory {
-    override fun <T : ViewModel> create(modelClass: Class<T>, extras: CreationExtras): T {
-      require(modelClass == HomeViewModel::class.java) {
-        "Unknown ViewModel class: ${modelClass.name}"
-      }
-      @Suppress("UNCHECKED_CAST")
-      return HomeViewModel(GlobalContext.get().get<Dependencies>()) as T
-    }
   }
 }
 

@@ -12,6 +12,12 @@ import androidx.lifecycle.defaultViewModelCreationExtras
 import androidx.lifecycle.viewmodel.CreationExtras
 import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
 import androidx.lifecycle.viewmodel.compose.viewModel
+import org.koin.compose.currentKoinScope
+import org.koin.compose.viewmodel.koinViewModel
+import org.koin.core.parameter.ParametersDefinition
+import org.koin.core.qualifier.Qualifier
+import org.koin.core.scope.Scope
+import org.koin.viewmodel.defaultExtras
 
 @Composable
 inline fun <reified VM> viewModelWithLifecycle(
@@ -30,6 +36,34 @@ inline fun <reified VM> viewModelWithLifecycle(
       key = key,
       factory = factory,
       extras = extras,
+    )
+  DisposableEffect(lifecycleOwner, vm) {
+    lifecycleOwner.lifecycle.addObserver(vm)
+    onDispose { lifecycleOwner.lifecycle.removeObserver(vm) }
+  }
+  return vm
+}
+
+@Composable
+inline fun <reified VM> koinViewModelWithLifecycle(
+  qualifier: Qualifier? = null,
+  viewModelStoreOwner: ViewModelStoreOwner =
+    LocalViewModelStoreOwner.current
+      ?: error("No ViewModelStoreOwner was provided via LocalViewModelStoreOwner"),
+  key: String? = null,
+  extras: CreationExtras = defaultExtras(viewModelStoreOwner),
+  scope: Scope = currentKoinScope(),
+  noinline parameters: ParametersDefinition? = null,
+  lifecycleOwner: LifecycleOwner = LocalLifecycleOwner.current,
+): VM where VM : ViewModel, VM : LifecycleObserver {
+  val vm =
+    koinViewModel<VM>(
+      qualifier = qualifier,
+      viewModelStoreOwner = viewModelStoreOwner,
+      key = key,
+      extras = extras,
+      scope = scope,
+      parameters = parameters,
     )
   DisposableEffect(lifecycleOwner, vm) {
     lifecycleOwner.lifecycle.addObserver(vm)

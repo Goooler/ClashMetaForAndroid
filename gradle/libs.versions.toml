@@ -45,6 +45,7 @@ semver = "net.swiftzer.semver:semver:2.1.0"
 koin-bom = "io.insert-koin:koin-bom:4.2.1"
 koin-core = { module = "io.insert-koin:koin-core" }
 koin-android = { module = "io.insert-koin:koin-android" }
+koin-viewMdeol = { module = "io.insert-koin:koin-androidx-compose" }
 
 composePreference = "me.zhanghai.compose.preference:preference:2.2.0"
 reorderable = "sh.calvin.reorderable:reorderable:3.1.0"
