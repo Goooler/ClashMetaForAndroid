@@ -11,7 +11,7 @@
   <string name="age_public_key">Age 公開鍵</string>
   <string name="age_public_key_error">無効な Age 公開鍵</string>
   <string name="age_secret_key">Age 秘密鍵</string>
-  <string name="age_secret_key_error">形式が無効です。キーは AGE-SECRET-KEY- で始まる必要があります</string>
+  <string name="age_secret_key_error">無効な Age 秘密鍵</string>
   <string name="allow_all_apps">すべてのアプリを許可</string>
   <string name="allow_bypass">アプリのバイパスを許可</string>
   <string name="allow_bypass_summary">アプリにVPNのバイパスを許可</string>

@@ -11,7 +11,7 @@
   <string name="age_public_key">Age 公钥</string>
   <string name="age_public_key_error">无效的 Age 公钥</string>
   <string name="age_secret_key">Age 私钥</string>
-  <string name="age_secret_key_error">无效格式。密钥应以 AGE-SECRET-KEY- 开头</string>
+  <string name="age_secret_key_error">无效的 Age 私钥</string>
   <string name="allow_all_apps">允许所有应用</string>
   <string name="allow_bypass">允许应用绕过</string>
   <string name="allow_bypass_summary">允许其他应用绕过 VPN</string>

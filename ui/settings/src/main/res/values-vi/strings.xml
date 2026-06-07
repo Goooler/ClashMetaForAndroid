@@ -11,7 +11,7 @@
   <string name="age_public_key">Khóa công khai Age</string>
   <string name="age_public_key_error">Khóa công khai Age không hợp lệ</string>
   <string name="age_secret_key">Khóa bí mật Age</string>
-  <string name="age_secret_key_error">Định dạng không hợp lệ. Khóa phải bắt đầu bằng AGE-SECRET-KEY-</string>
+  <string name="age_secret_key_error">Khóa bí mật Age không hợp lệ</string>
   <string name="allow_all_apps">Cho phép tất cả các ứng dụng</string>
   <string name="allow_bypass">Cho phép bỏ qua</string>
   <string name="allow_bypass_summary">Cho phép tất cả các ứng dụng bỏ qua kết nối VPN này</string>

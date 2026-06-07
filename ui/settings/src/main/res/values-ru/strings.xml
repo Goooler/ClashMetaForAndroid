@@ -11,7 +11,7 @@
   <string name="age_public_key">Открытый ключ Age</string>
   <string name="age_public_key_error">Недействительный открытый ключ Age</string>
   <string name="age_secret_key">Секретный ключ Age</string>
-  <string name="age_secret_key_error">Недопустимый формат. Ключ должен начинаться с AGE-SECRET-KEY-</string>
+  <string name="age_secret_key_error">Недействительный секретный ключ Age</string>
   <string name="allow_all_apps">Разрешить все приложения</string>
   <string name="allow_bypass">Разрешить обход</string>
   <string name="allow_bypass_summary">Разрешить приложениям обходить VPN соединение</string>

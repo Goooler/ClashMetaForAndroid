@@ -11,7 +11,7 @@
   <string name="age_public_key">Age 공개 키</string>
   <string name="age_public_key_error">잘못된 Age 공개 키</string>
   <string name="age_secret_key">Age 비밀 키</string>
-  <string name="age_secret_key_error">형식이 올바르지 않습니다. 키는 AGE-SECRET-KEY-로 시작해야 합니다</string>
+  <string name="age_secret_key_error">잘못된 Age 비밀 키</string>
   <string name="allow_all_apps">모든 앱 허용</string>
   <string name="allow_bypass">앱 제외 허용</string>
   <string name="allow_bypass_summary">모든 앱이 VPN 우회 연결에서 제외될 수 있도록 합니다.</string>
