@@ -100,6 +100,7 @@ internal class HomeViewModel(private val dependencies: Dependencies) :
   private fun fetch() {
     fetchJob?.cancel()
     fetchJob = viewModelScope.launch {
+      // Clear runtime state immediately when stopping to keep the UI responsive.
       if (!clashRunning.value || !dependencies.profileLoaded.value) {
         uiState.update {
           it.copy(
@@ -109,9 +110,11 @@ internal class HomeViewModel(private val dependencies: Dependencies) :
         }
       }
 
+      // Query active profile name with a timeout. If the background process binder is disconnected,
+      // this prevents the coroutine from hanging and delaying UI updates.
       val profileName =
         try {
-          withTimeoutOrNull(200.milliseconds) { dependencies.queryActiveProfileName() }
+          withTimeoutOrNull(BINDER_IPC_TIMEOUT) { dependencies.queryActiveProfileName() }
         } catch (_: Exception) {
           null
         }
@@ -175,9 +178,11 @@ internal class HomeViewModel(private val dependencies: Dependencies) :
 
   private fun startClash() {
     viewModelScope.launch {
+      // Query profile state with a timeout. If the binder takes too long to connect,
+      // assume true and attempt to start the service immediately to avoid startup delay.
       val hasProfile =
         try {
-          withTimeoutOrNull(200.milliseconds) { dependencies.hasImportedActiveProfile() } ?: true
+          withTimeoutOrNull(BINDER_IPC_TIMEOUT) { dependencies.hasImportedActiveProfile() } ?: true
         } catch (_: Exception) {
           true
         }
@@ -240,6 +245,10 @@ internal class HomeViewModel(private val dependencies: Dependencies) :
     fun startClashService(): Intent?
 
     fun stopClashService()
+  }
+
+  companion object {
+    private val BINDER_IPC_TIMEOUT = 200.milliseconds
   }
 }
 
