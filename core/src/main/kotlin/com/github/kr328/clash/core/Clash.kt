@@ -6,6 +6,7 @@ import com.github.kr328.clash.core.bridge.ClashException
 import com.github.kr328.clash.core.bridge.FetchCallback
 import com.github.kr328.clash.core.bridge.LogcatInterface
 import com.github.kr328.clash.core.bridge.TunInterface
+import com.github.kr328.clash.core.model.AgeKeyPair
 import com.github.kr328.clash.core.model.ConfigurationOverride
 import com.github.kr328.clash.core.model.FetchStatus
 import com.github.kr328.clash.core.model.LogMessage
@@ -22,6 +23,10 @@ import java.net.InetSocketAddress
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.ReceiveChannel
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
+import kotlinx.serialization.builtins.ListSerializer
+import kotlinx.serialization.builtins.serializer
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.decodeFromJsonElement
@@ -147,32 +152,50 @@ object Clash {
     return Bridge.nativePatchSelector(selector, name)
   }
 
-  fun fetchAndValid(
+  suspend fun fetchAndValid(
     path: File,
     url: String,
     force: Boolean,
+    ageSecretKey: String? = null,
     reportStatus: (FetchStatus) -> Unit,
-  ): CompletableDeferred<Unit> {
-    return CompletableDeferred<Unit>().apply {
-      Bridge.nativeFetchAndValid(
-        object : FetchCallback {
-          override fun report(statusJson: String) {
-            reportStatus(json.decodeFromString(statusJson))
-          }
+  ) {
+    ageSecretKeyLock.withLock {
+      try {
+        setAgeSecretKey(ageSecretKey)
+        CompletableDeferred<Unit>()
+          .apply {
+            Bridge.nativeFetchAndValid(
+              object : FetchCallback {
+                override fun report(statusJson: String) {
+                  reportStatus(json.decodeFromString(statusJson))
+                }
 
-          override fun complete(error: String?) {
-            if (error != null) completeExceptionally(ClashException(error)) else complete(Unit)
+                override fun complete(error: String?) {
+                  if (error != null) completeExceptionally(ClashException(error))
+                  else complete(Unit)
+                }
+              },
+              path.absolutePath,
+              url,
+              force,
+            )
           }
-        },
-        path.absolutePath,
-        url,
-        force,
-      )
+          .await()
+      } finally {
+        setAgeSecretKey(null)
+      }
     }
   }
 
-  fun load(path: File): CompletableDeferred<Unit> {
-    return CompletableDeferred<Unit>().apply { Bridge.nativeLoad(this, path.absolutePath) }
+  suspend fun load(path: File, ageSecretKey: String? = null) {
+    ageSecretKeyLock.withLock {
+      try {
+        setAgeSecretKey(ageSecretKey)
+        CompletableDeferred<Unit>().apply { Bridge.nativeLoad(this, path.absolutePath) }.await()
+      } finally {
+        setAgeSecretKey(null)
+      }
+    }
   }
 
   fun queryProviders(): List<Provider> {
@@ -219,6 +242,49 @@ object Clash {
       )
     }
   }
+
+  private fun setAgeSecretKey(key: String?) {
+    Bridge.nativeSetAgeSecretKey(key)
+  }
+
+  fun genX25519KeyPair(): AgeKeyPair {
+    val payload =
+      Bridge.nativeGenX25519KeyPair()
+        ?: throw ClashException("Failed to generate Age X25519 key pair")
+    return json.decodeFromString(payload)
+  }
+
+  fun genHybridKeyPair(): AgeKeyPair {
+    val payload =
+      Bridge.nativeGenHybridKeyPair()
+        ?: throw ClashException("Failed to generate Age MLKEM768-X25519 key pair")
+    return json.decodeFromString(payload)
+  }
+
+  fun verifySecretKeys(vararg secretKeys: String): Boolean {
+    if (secretKeys.isEmpty()) return true
+    return secretKeys.all { key ->
+      key.isNotBlank() && Bridge.nativeVerifySecretKeys(key)
+    }
+  }
+
+  fun toPublicKeys(vararg secretKeys: String): List<String> {
+    if (secretKeys.isEmpty()) return emptyList()
+    return secretKeys.flatMap { key ->
+      Bridge.nativeToPublicKeys(key)
+        ?.let { json.decodeFromString(ListSerializer(String.serializer()), it) }
+        .orEmpty()
+    }
+  }
+
+  fun verifyPublicKeys(vararg publicKeys: String): Boolean {
+    if (publicKeys.isEmpty()) return true
+    return publicKeys.all { key ->
+      key.isNotBlank() && Bridge.nativeVerifyPublicKeys(key)
+    }
+  }
 }
+
+private val ageSecretKeyLock = Mutex()
 
 private val json = Json { ignoreUnknownKeys = true }

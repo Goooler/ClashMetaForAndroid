@@ -56,7 +56,15 @@ internal class PropertiesViewModel(app: Application) :
       val profile = uiState.value.profile ?: return
       viewModelScope.launch {
         runCatching {
-            withProfile { patch(profile.uuid, profile.name, profile.source, profile.interval) }
+            withProfile {
+              patch(
+                profile.uuid,
+                profile.name,
+                profile.source,
+                profile.interval,
+                profile.ageSecretKey,
+              )
+            }
           }
           .onFailure { e -> Log.e("Auto save profile failed: ${e.message}", e) }
           .onSuccess {
@@ -110,6 +118,16 @@ internal class PropertiesViewModel(app: Application) :
     }
   }
 
+  fun onAgeSecretKeyChanged(key: String?) {
+    uiState.update { current ->
+      val profile = current.profile?.copy(ageSecretKey = key) ?: return@update current
+      current.copy(
+        profile = profile,
+        hasUnsavedChanges = hasUnsavedChanges(profile, current.originalProfile),
+      )
+    }
+  }
+
   fun onBrowseFiles() {
     val uuid = rootUuid ?: return
     eventState.value = EventState.BrowseFiles(uuid)
@@ -137,7 +155,13 @@ internal class PropertiesViewModel(app: Application) :
       try {
         withProcessing { updateStatus ->
           withProfile {
-            patch(profile.uuid, profile.name, profile.source, profile.interval)
+            patch(
+              profile.uuid,
+              profile.name,
+              profile.source,
+              profile.interval,
+              profile.ageSecretKey,
+            )
             coroutineScope { commit(profile.uuid) { launch { updateStatus(it) } } }
           }
         }
@@ -222,7 +246,8 @@ internal class PropertiesViewModel(app: Application) :
     if (original == null) return false
     return profile.name != original.name ||
       profile.source != original.source ||
-      profile.interval != original.interval
+      profile.interval != original.interval ||
+      profile.ageSecretKey != original.ageSecretKey
   }
 
   data class UiState(

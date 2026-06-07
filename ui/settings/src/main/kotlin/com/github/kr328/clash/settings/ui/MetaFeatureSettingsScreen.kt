@@ -1,14 +1,21 @@
 package com.github.kr328.clash.settings.ui
 
+import android.content.ClipData
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts.GetContent
 import androidx.annotation.StringRes
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -18,16 +25,22 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalClipboard
+import androidx.compose.ui.platform.toClipEntry
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.PreviewWrapper
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entryProvider
 import com.github.kr328.clash.common.R as CommonR
+import com.github.kr328.clash.core.Clash
 import com.github.kr328.clash.core.model.ConfigurationOverride
 import com.github.kr328.clash.settings.R
 import com.github.kr328.clash.settings.vm.MetaFeatureSettingsViewModel
@@ -41,6 +54,7 @@ import com.github.kr328.clash.ui.nav.addIfNotLast
 import com.github.kr328.clash.ui.nav.rememberNavBackStackBuilder
 import com.github.kr328.clash.ui.theme.PreviewTabby
 import com.github.kr328.clash.ui.theme.TabbyThemeWrapper
+import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
 import me.zhanghai.compose.preference.ProvidePreferenceLocals
 import me.zhanghai.compose.preference.listPreference
@@ -76,6 +90,8 @@ internal fun MetaFeatureSettingsScreen(
           var showUnsupportedFormatDialog by remember { mutableStateOf(false) }
           var validExtensionsSummary by remember { mutableStateOf("") }
           var showResetConfirmDialog by remember { mutableStateOf(false) }
+          var showAgeKeyHelper by remember { mutableStateOf(false) }
+          var ageKeyHelperHybrid by remember { mutableStateOf(false) }
 
           LaunchedEffect(importResult) {
             when (val result = importResult) {
@@ -133,6 +149,10 @@ internal fun MetaFeatureSettingsScreen(
               currentEditableTextListOnApply = onApply
               backStack.addIfNotLast(EditableTextList(title, initialValues?.toSet()))
             },
+            onAgeKeyHelperRequested = { hybrid ->
+              ageKeyHelperHybrid = hybrid
+              showAgeKeyHelper = true
+            },
           )
 
           if (showUnsupportedFormatDialog) {
@@ -149,6 +169,14 @@ internal fun MetaFeatureSettingsScreen(
                   Text(text = stringResource(CommonR.string.ok))
                 }
               },
+            )
+          }
+
+          if (showAgeKeyHelper) {
+            AgeKeyHelperDialog(
+              hybrid = ageKeyHelperHybrid,
+              onDismiss = { showAgeKeyHelper = false },
+              onShowMessage = { message -> snackbarHostState.showSnackbar(message = message) },
             )
           }
         }
@@ -181,6 +209,7 @@ private fun MetaFeatureSettingsContent(
   onImportCountry: () -> Unit,
   onImportASN: () -> Unit,
   onOpenEditableTextList: (Int, List<String>?, (List<String>?) -> Unit) -> Unit,
+  onAgeKeyHelperRequested: (Boolean) -> Unit,
 ) {
   val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
   TabbyScaffold(
@@ -199,6 +228,7 @@ private fun MetaFeatureSettingsContent(
   ) { innerPadding ->
     ProvidePreferenceLocals {
       LazyColumn(modifier = Modifier.fillMaxSize(), contentPadding = innerPadding) {
+        metaAgeKeyItems(onAgeKeyHelperRequested = onAgeKeyHelperRequested)
         metaBasicPreferenceItems(configuration, actions)
         metaSnifferPreferenceItems(configuration, actions, onOpenEditableTextList)
         metaGeoFileItems(
@@ -220,6 +250,25 @@ private fun MetaFeatureSettingsContent(
       )
     }
   }
+}
+
+private fun LazyListScope.metaAgeKeyItems(onAgeKeyHelperRequested: (Boolean) -> Unit) {
+  preferenceCategory(
+    key = "cat_age_key",
+    title = { Text(stringResource(R.string.age_key_category)) },
+  )
+  preference(
+    key = "ageKeyX25519",
+    title = { Text(stringResource(R.string.age_key_type_x25519)) },
+    summary = { Text(stringResource(R.string.age_key_generate_summary)) },
+    onClick = { onAgeKeyHelperRequested(false) },
+  )
+  preference(
+    key = "ageKeyHybrid",
+    title = { Text(stringResource(R.string.age_key_type_hybrid)) },
+    summary = { Text(stringResource(R.string.age_key_generate_summary)) },
+    onClick = { onAgeKeyHelperRequested(true) },
+  )
 }
 
 private fun LazyListScope.metaBasicPreferenceItems(
@@ -522,6 +571,116 @@ interface MetaFeatureSettingsActions {
   fun updateSkipDstAddress(value: List<String>?) = Unit
 }
 
+@Composable
+private fun AgeKeyHelperDialog(
+  hybrid: Boolean,
+  onDismiss: () -> Unit,
+  onShowMessage: suspend (String) -> Unit,
+) {
+  var secretKey by remember { mutableStateOf("") }
+  var publicKey by remember { mutableStateOf("") }
+  val clipboard = LocalClipboard.current
+  val scope = rememberCoroutineScope()
+  val copiedText = stringResource(CommonR.string.copied)
+  val genericError = stringResource(R.string.error)
+  val secretInvalid =
+    remember(secretKey) {
+      secretKey.isNotBlank() &&
+        !runCatching { Clash.verifySecretKeys(secretKey) }.getOrDefault(false)
+    }
+  val publicInvalid =
+    remember(publicKey) {
+      publicKey.isNotBlank() &&
+        !runCatching { Clash.verifyPublicKeys(publicKey) }.getOrDefault(false)
+    }
+  fun copy(label: String, value: String) {
+    if (value.isBlank()) return
+    scope.launch {
+      clipboard.setClipEntry(ClipData.newPlainText(label, value).toClipEntry())
+      onShowMessage(copiedText)
+    }
+  }
+
+  AlertDialog(
+    onDismissRequest = onDismiss,
+    title = {
+      Text(
+        stringResource(if (hybrid) R.string.age_key_type_hybrid else R.string.age_key_type_x25519)
+      )
+    },
+    text = {
+      Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+        OutlinedTextField(
+          value = secretKey,
+          onValueChange = { secretKey = it },
+          label = { Text(stringResource(R.string.age_secret_key)) },
+          singleLine = true,
+          isError = secretInvalid,
+          supportingText =
+            if (secretInvalid) {
+              { Text(text = stringResource(R.string.age_secret_key_error)) }
+            } else {
+              null
+            },
+          keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Ascii),
+          modifier = Modifier.fillMaxWidth(),
+        )
+        Row(modifier = Modifier.fillMaxWidth()) {
+          TextButton(
+            onClick = {
+              runCatching {
+                  if (hybrid) Clash.genHybridKeyPair() else Clash.genX25519KeyPair()
+                }
+                .onSuccess {
+                  secretKey = it.secretKey
+                  publicKey = it.publicKey
+                }
+                .onFailure { scope.launch { onShowMessage(genericError) } }
+            }
+          ) {
+            Text(stringResource(R.string.age_key_generate))
+          }
+          TextButton(onClick = { copy("age_secret_key", secretKey) }) {
+            Text(stringResource(R.string.age_key_copy))
+          }
+        }
+        OutlinedTextField(
+          value = publicKey,
+          onValueChange = { publicKey = it },
+          label = { Text(stringResource(R.string.age_public_key)) },
+          singleLine = true,
+          isError = publicInvalid,
+          supportingText =
+            if (publicInvalid) {
+              { Text(text = stringResource(R.string.age_public_key_error)) }
+            } else {
+              null
+            },
+          keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Ascii),
+          modifier = Modifier.fillMaxWidth(),
+        )
+        Row(modifier = Modifier.fillMaxWidth()) {
+          TextButton(
+            onClick = {
+              runCatching { Clash.toPublicKeys(secretKey).firstOrNull().orEmpty() }
+                .onSuccess { publicKey = it }
+                .onFailure { scope.launch { onShowMessage(genericError) } }
+            }
+          ) {
+            Text(stringResource(R.string.age_key_to_public))
+          }
+          TextButton(onClick = { copy("age_public_key", publicKey) }) {
+            Text(stringResource(R.string.age_key_copy))
+          }
+        }
+      }
+    },
+    confirmButton = {
+      TextButton(onClick = onDismiss) { Text(stringResource(CommonR.string.ok)) }
+    },
+  )
+}
+
 @PreviewWrapper(TabbyThemeWrapper::class)
 @PreviewTabby
 @Composable
@@ -538,5 +697,6 @@ private fun MetaFeatureSettingsContentPreview() {
     onImportCountry = {},
     onImportASN = {},
     onOpenEditableTextList = { _, _, _ -> },
+    onAgeKeyHelperRequested = {},
   )
 }

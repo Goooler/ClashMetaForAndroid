@@ -3,6 +3,15 @@
   <string name="access_control_mode">Режим контроля доступа</string>
   <string name="access_control_packages">Приложения с контролируемым доступом</string>
   <string name="access_control_packages_summary">Настройте доступ для приложения</string>
+  <string name="age_key_category">Ключ Age</string>
+  <string name="age_key_copy">Копировать</string>
+  <string name="age_key_generate">Сгенерировать</string>
+  <string name="age_key_generate_summary">Нажмите, чтобы сгенерировать</string>
+  <string name="age_key_to_public">Из секретного ключа</string>
+  <string name="age_public_key">Открытый ключ Age</string>
+  <string name="age_public_key_error">Недействительный открытый ключ Age</string>
+  <string name="age_secret_key">Секретный ключ Age</string>
+  <string name="age_secret_key_error">Недействительный секретный ключ Age</string>
   <string name="allow_all_apps">Разрешить все приложения</string>
   <string name="allow_bypass">Разрешить обход</string>
   <string name="allow_bypass_summary">Разрешить приложениям обходить VPN соединение</string>

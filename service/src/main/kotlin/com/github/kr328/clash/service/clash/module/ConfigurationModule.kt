@@ -51,7 +51,10 @@ class ConfigurationModule(service: Service) : Module<ConfigurationModule.LoadExc
         val active =
           ImportedDao().queryByUUID(current) ?: throw NullPointerException("No profile selected")
 
-        Clash.load(service.importedDir.resolve(active.uuid.toString())).await()
+        Clash.load(
+          service.importedDir.resolve(active.uuid.toString()),
+          active.ageSecretKey?.takeIf { it.isNotBlank() },
+        )
 
         val remove =
           SelectionDao()

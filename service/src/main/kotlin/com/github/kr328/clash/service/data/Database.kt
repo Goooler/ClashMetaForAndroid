@@ -6,13 +6,14 @@ import androidx.room3.Room
 import androidx.room3.RoomDatabase
 import androidx.room3.TypeConverter
 import androidx.room3.TypeConverters
+import androidx.room3.migration.Migration
+import androidx.sqlite.execSQL
 import com.github.kr328.clash.common.Global
 import com.github.kr328.clash.service.model.Profile
-import java.lang.ref.SoftReference
 import kotlin.uuid.Uuid
 
 @DB(
-  version = 1,
+  version = 2,
   entities = [Imported::class, Pending::class, Selection::class],
   exportSchema = false,
 )
@@ -25,17 +26,17 @@ abstract class Database : RoomDatabase() {
   abstract fun selectionProxyDao(): SelectionDao
 
   companion object {
-    val database: Database
-      @Synchronized
-      get() {
-        return softDatabase.get()
-          ?: open(Global.application).apply { softDatabase = SoftReference(this) }
-      }
+    val database: Database by lazy { open(Global.application) }
 
-    private var softDatabase: SoftReference<Database?> = SoftReference(null)
+    private val MIGRATION_1_2 =
+      Migration(1, 2) { db ->
+        db.execSQL("ALTER TABLE imported ADD COLUMN ageSecretKey TEXT")
+        db.execSQL("ALTER TABLE pending ADD COLUMN ageSecretKey TEXT")
+      }
 
     private fun open(context: Context): Database {
       return Room.databaseBuilder(context.applicationContext, Database::class.java, "profiles")
+        .addMigrations(MIGRATION_1_2)
         .build()
     }
   }

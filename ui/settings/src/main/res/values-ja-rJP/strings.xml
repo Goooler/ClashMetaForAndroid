@@ -3,6 +3,15 @@
   <string name="access_control_mode">アクセスコントロールモード</string>
   <string name="access_control_packages">アクセスコントロールリスト</string>
   <string name="access_control_packages_summary">アプリプロファイルへのアクセスを許可</string>
+  <string name="age_key_category">Age 鍵</string>
+  <string name="age_key_copy">コピー</string>
+  <string name="age_key_generate">生成</string>
+  <string name="age_key_generate_summary">タップして生成</string>
+  <string name="age_key_to_public">秘密鍵から生成</string>
+  <string name="age_public_key">Age 公開鍵</string>
+  <string name="age_public_key_error">無効な Age 公開鍵</string>
+  <string name="age_secret_key">Age 秘密鍵</string>
+  <string name="age_secret_key_error">無効な Age 秘密鍵</string>
   <string name="allow_all_apps">すべてのアプリを許可</string>
   <string name="allow_bypass">アプリのバイパスを許可</string>
   <string name="allow_bypass_summary">アプリにVPNのバイパスを許可</string>
