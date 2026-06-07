@@ -256,19 +256,26 @@ object Clash {
   }
 
   fun verifySecretKeys(vararg secretKeys: String): Boolean {
-    return Bridge.nativeVerifySecretKeys(secretKeys.firstOrNull().orEmpty())
+    if (secretKeys.isEmpty()) return true
+    return secretKeys.all { key ->
+      key.isNotBlank() && Bridge.nativeVerifySecretKeys(key)
+    }
   }
 
   fun toPublicKeys(vararg secretKeys: String): List<String> {
-    return Bridge.nativeToPublicKeys(secretKeys.firstOrNull().orEmpty())
-      ?.let {
-        json.decodeFromString(ListSerializer(String.serializer()), it)
-      }
-      .orEmpty()
+    if (secretKeys.isEmpty()) return emptyList()
+    return secretKeys.flatMap { key ->
+      Bridge.nativeToPublicKeys(key)
+        ?.let { json.decodeFromString(ListSerializer(String.serializer()), it) }
+        .orEmpty()
+    }
   }
 
   fun verifyPublicKeys(vararg publicKeys: String): Boolean {
-    return Bridge.nativeVerifyPublicKeys(publicKeys.firstOrNull().orEmpty())
+    if (publicKeys.isEmpty()) return true
+    return publicKeys.all { key ->
+      key.isNotBlank() && Bridge.nativeVerifyPublicKeys(key)
+    }
   }
 }
 
