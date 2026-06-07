@@ -48,7 +48,6 @@ import com.github.kr328.clash.ui.icon.BaselineAssignment
 import com.github.kr328.clash.ui.icon.BaselineHelpCenter
 import com.github.kr328.clash.ui.icon.BaselineSettings
 import com.github.kr328.clash.ui.icon.BaselineSwapVerticalCircle
-import com.github.kr328.clash.ui.icon.BaselineSync
 import com.github.kr328.clash.ui.icon.BaselineViewList
 import com.github.kr328.clash.ui.icon.OutlineCheckCircle
 import com.github.kr328.clash.ui.icon.OutlineNotInterested
@@ -81,9 +80,8 @@ internal fun HomeScreen(
 
   val vpnLauncher =
     rememberLauncherForActivityResult(StartActivityForResult()) { result ->
-      when (result.resultCode) {
-        Activity.RESULT_OK -> viewModel.onVpnPermissionGranted()
-        else -> viewModel.onVpnPermissionDenied()
+      if (result.resultCode == Activity.RESULT_OK) {
+        viewModel.onVpnPermissionGranted()
       }
     }
 
@@ -116,7 +114,6 @@ internal fun HomeScreen(
     mode = uiState.mode,
     profileName = uiState.profileName,
     hasProviders = uiState.hasProviders,
-    isTransitioning = uiState.isTransitioning,
     onToggleStatus = viewModel::toggleStatus,
     onOpenProxy = onOpenProxy,
     onOpenProfiles = onOpenProfiles,
@@ -136,7 +133,6 @@ private fun HomeContent(
   mode: String?,
   profileName: String?,
   hasProviders: Boolean,
-  isTransitioning: Boolean,
   onToggleStatus: () -> Unit,
   onOpenProxy: () -> Unit,
   onOpenProfiles: () -> Unit,
@@ -180,34 +176,15 @@ private fun HomeContent(
 
       HomeActionCard(
         modifier = Modifier.padding(vertical = cardMarginVertical),
-        icon =
-          when {
-            isTransitioning -> TabbyIcons.BaselineSync
-            clashRunning -> TabbyIcons.OutlineCheckCircle
-            else -> TabbyIcons.OutlineNotInterested
-          },
-        text =
-          when {
-            isTransitioning -> stringResource(CommonR.string.loading)
-            clashRunning -> stringResource(CommonR.string.running)
-            else -> stringResource(CommonR.string.stopped)
-          },
+        icon = if (clashRunning) TabbyIcons.OutlineCheckCircle else TabbyIcons.OutlineNotInterested,
+        text = stringResource(if (clashRunning) CommonR.string.running else CommonR.string.stopped),
         subtext =
-          when {
-            isTransitioning -> null
-            clashRunning && forwarded != null ->
-              stringResource(R.string.format_traffic_forwarded, forwarded)
-            else -> stringResource(CommonR.string.tap_to_start)
-          },
-        backgroundColor =
-          when {
-            isTransitioning -> stoppedColor
-            clashRunning -> MaterialTheme.colorScheme.primary
-            else -> stoppedColor
-          },
+          if (clashRunning && forwarded != null)
+            stringResource(R.string.format_traffic_forwarded, forwarded)
+          else stringResource(CommonR.string.tap_to_start),
+        backgroundColor = if (clashRunning) MaterialTheme.colorScheme.primary else stoppedColor,
         contentColor = TabbyOnPrimary,
         onClick = onToggleStatus,
-        enabled = !isTransitioning,
       )
 
       AnimatedVisibility(visible = clashRunning) {
@@ -274,19 +251,11 @@ private fun HomeActionCard(
   contentColor: Color,
   onClick: () -> Unit,
   modifier: Modifier = Modifier,
-  enabled: Boolean = true,
 ) {
   Card(
     modifier = modifier.fillMaxWidth().heightIn(min = 85.dp),
     onClick = onClick,
-    enabled = enabled,
-    colors =
-      CardDefaults.cardColors(
-        containerColor = backgroundColor,
-        contentColor = contentColor,
-        disabledContainerColor = backgroundColor,
-        disabledContentColor = contentColor,
-      ),
+    colors = CardDefaults.cardColors(containerColor = backgroundColor, contentColor = contentColor),
     elevation = CardDefaults.cardElevation(defaultElevation = 5.dp),
   ) {
     Row(
@@ -353,7 +322,6 @@ private fun HomeContentRunningPreview() {
     mode = "Rule",
     profileName = "My Profile",
     hasProviders = true,
-    isTransitioning = false,
     onToggleStatus = {},
     onOpenProxy = {},
     onOpenProfiles = {},
@@ -375,7 +343,6 @@ private fun HomeContentStoppedPreview() {
     mode = null,
     profileName = null,
     hasProviders = false,
-    isTransitioning = false,
     onToggleStatus = {},
     onOpenProxy = {},
     onOpenProfiles = {},
