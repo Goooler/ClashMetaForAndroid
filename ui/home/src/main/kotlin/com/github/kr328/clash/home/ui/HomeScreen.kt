@@ -80,10 +80,9 @@ internal fun HomeScreen(
 
   val vpnLauncher =
     rememberLauncherForActivityResult(StartActivityForResult()) { result ->
-      if (result.resultCode == Activity.RESULT_OK) {
-        viewModel.onVpnPermissionGranted()
-      } else {
-        viewModel.onVpnPermissionDenied()
+      when (result.resultCode) {
+        Activity.RESULT_OK -> viewModel.onVpnPermissionGranted()
+        else -> viewModel.onVpnPermissionDenied()
       }
     }
 
