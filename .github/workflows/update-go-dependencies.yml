@@ -8,8 +8,6 @@ on:
       - .github/workflows/update-go-dependencies.yml
       - core/src/main/golang/go.mod
       - core/src/foss/golang/clash
-  schedule:
-    - cron: '0 */12 * * *'
   workflow_dispatch:
 
 jobs:
