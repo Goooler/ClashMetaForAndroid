@@ -13,10 +13,6 @@ dependencies {
   implementation(libs.kotlin.serialization.json)
   implementation(libs.semver)
 
-  implementation(platform(libs.koin.bom))
-  implementation(libs.koin.android)
-  implementation(libs.koin.viewModel)
-
   testImplementation(libs.junit)
   testImplementation(libs.kotlin.coroutine.test)
   testImplementation(libs.assertk)

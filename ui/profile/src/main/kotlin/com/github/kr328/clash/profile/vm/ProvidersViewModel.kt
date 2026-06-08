@@ -1,10 +1,9 @@
 package com.github.kr328.clash.profile.vm
 
 import android.app.Application
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.application
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.github.kr328.clash.common.log.Log
 import com.github.kr328.clash.core.model.Provider
@@ -20,8 +19,8 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 
-internal class ProvidersViewModel(app: Application) :
-  AndroidViewModel(app), DefaultLifecycleObserver {
+internal class ProvidersViewModel(private val application: Application) :
+  ViewModel(), DefaultLifecycleObserver {
   private var broadcastEventsJob: Job? = null
   private var elapsedJob: Job? = null
   private var fetchJob: Job? = null

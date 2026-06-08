@@ -1,10 +1,9 @@
 package com.github.kr328.clash.profile.vm
 
 import android.app.Application
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.application
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.github.kr328.clash.common.R as CommonR
 import com.github.kr328.clash.glue.remote.Remote
@@ -23,8 +22,8 @@ import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-internal class ProfilesViewModel(app: Application) :
-  AndroidViewModel(app), DefaultLifecycleObserver {
+internal class ProfilesViewModel(private val application: Application) :
+  ViewModel(), DefaultLifecycleObserver {
   private var broadcastEventsJob: Job? = null
   private var elapsedJob: Job? = null
   private var fetchJob: Job? = null

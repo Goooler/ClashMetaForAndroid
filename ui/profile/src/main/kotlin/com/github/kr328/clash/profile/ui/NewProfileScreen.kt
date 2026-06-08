@@ -35,7 +35,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.PreviewWrapper
 import androidx.core.graphics.drawable.toBitmap
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.github.kr328.clash.common.R as CommonR
 import com.github.kr328.clash.common.constants.Intents
 import com.github.kr328.clash.profile.model.ProfileProvider
@@ -51,11 +50,12 @@ import com.github.kr328.clash.ui.theme.tabbyDimens
 import io.github.g00fy2.quickie.ScanQRCode
 import kotlin.math.roundToInt
 import kotlin.uuid.Uuid
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 internal fun NewProfileScreen(
   modifier: Modifier = Modifier,
-  viewModel: NewProfileViewModel = viewModel(),
+  viewModel: NewProfileViewModel = koinViewModel(),
   onProperties: (Uuid) -> Unit,
   onFinish: () -> Unit,
 ) {

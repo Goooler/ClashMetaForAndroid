@@ -27,7 +27,6 @@ import androidx.compose.ui.text.fromHtml
 import androidx.compose.ui.tooling.preview.PreviewWrapper
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.github.kr328.clash.common.R as CommonR
 import com.github.kr328.clash.glue.util.MIHOMO_CORE
 import com.github.kr328.clash.glue.util.MIHOMO_WIKI
@@ -46,9 +45,10 @@ import kotlinx.coroutines.launch
 import me.zhanghai.compose.preference.ProvidePreferenceLocals
 import me.zhanghai.compose.preference.preference
 import me.zhanghai.compose.preference.preferenceCategory
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
-internal fun HelpScreen(modifier: Modifier = Modifier, viewModel: HelpViewModel = viewModel()) {
+internal fun HelpScreen(modifier: Modifier = Modifier, viewModel: HelpViewModel = koinViewModel()) {
   val uiState by viewModel.uiState.collectAsStateWithLifecycle()
   val eventState by viewModel.eventState.collectAsStateWithLifecycle()
   val snackbarHostState = remember { SnackbarHostState() }

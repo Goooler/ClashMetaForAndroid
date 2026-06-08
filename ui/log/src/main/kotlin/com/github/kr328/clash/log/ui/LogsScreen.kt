@@ -31,7 +31,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.PreviewWrapper
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.github.kr328.clash.common.R as CommonR
 import com.github.kr328.clash.glue.util.format
 import com.github.kr328.clash.log.R
@@ -46,11 +45,12 @@ import com.github.kr328.clash.ui.theme.PreviewTabby
 import com.github.kr328.clash.ui.theme.TabbyThemeWrapper
 import com.github.kr328.clash.ui.theme.tabbyDimens
 import java.util.Date
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 internal fun LogsScreen(
   modifier: Modifier = Modifier,
-  viewModel: LogsViewModel = viewModel(),
+  viewModel: LogsViewModel = koinViewModel(),
   onStartLogcat: () -> Unit,
   onOpenFile: (LogFile) -> Unit,
 ) {

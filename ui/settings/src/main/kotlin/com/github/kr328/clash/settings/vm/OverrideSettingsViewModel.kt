@@ -1,9 +1,8 @@
 package com.github.kr328.clash.settings.vm
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.github.kr328.clash.common.Global
 import com.github.kr328.clash.core.Clash
@@ -17,8 +16,8 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-internal class OverrideSettingsViewModel(app: Application) :
-  AndroidViewModel(app), OverrideSettingsActions, DefaultLifecycleObserver {
+internal class OverrideSettingsViewModel :
+  ViewModel(), OverrideSettingsActions, DefaultLifecycleObserver {
   @Volatile private var skipPersist = false
 
   val configuration: StateFlow<ConfigurationOverride>

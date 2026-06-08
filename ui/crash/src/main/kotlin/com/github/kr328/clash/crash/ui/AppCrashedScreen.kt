@@ -14,17 +14,17 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.PreviewWrapper
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.github.kr328.clash.crash.R
 import com.github.kr328.clash.crash.vm.AppCrashedViewModel
 import com.github.kr328.clash.ui.component.TabbyScaffold
 import com.github.kr328.clash.ui.theme.PreviewTabby
 import com.github.kr328.clash.ui.theme.TabbyThemeWrapper
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 internal fun AppCrashedScreen(
   modifier: Modifier = Modifier,
-  viewModel: AppCrashedViewModel = viewModel(),
+  viewModel: AppCrashedViewModel = koinViewModel(),
 ) {
   val logs by viewModel.logs.collectAsStateWithLifecycle()
 

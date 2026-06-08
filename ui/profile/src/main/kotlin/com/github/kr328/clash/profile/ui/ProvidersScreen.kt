@@ -29,7 +29,6 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.PreviewWrapper
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.github.kr328.clash.common.R as CommonR
 import com.github.kr328.clash.core.model.Provider
 import com.github.kr328.clash.glue.util.elapsedIntervalString
@@ -46,11 +45,12 @@ import com.github.kr328.clash.ui.lifecycle.withLifecycle
 import com.github.kr328.clash.ui.theme.PreviewTabby
 import com.github.kr328.clash.ui.theme.TabbyThemeWrapper
 import com.github.kr328.clash.ui.theme.tabbyDimens
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 internal fun ProvidersScreen(
   modifier: Modifier = Modifier,
-  viewModel: ProvidersViewModel = viewModel<ProvidersViewModel>().withLifecycle(),
+  viewModel: ProvidersViewModel = koinViewModel<ProvidersViewModel>().withLifecycle(),
 ) {
   val uiState by viewModel.uiState.collectAsStateWithLifecycle()
   val eventState by viewModel.eventState.collectAsStateWithLifecycle()

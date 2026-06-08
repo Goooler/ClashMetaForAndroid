@@ -11,9 +11,9 @@ import android.graphics.drawable.AdaptiveIconDrawable
 import android.graphics.drawable.Drawable
 import android.os.Process
 import androidx.core.content.getSystemService
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.github.kr328.clash.common.Global
 import com.github.kr328.clash.common.compat.getInstalledPackagesCompat
@@ -35,11 +35,10 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.withTimeoutOrNull
 
-internal class AccessControlViewModel(app: Application) :
-  AndroidViewModel(app), AccessControlActions, DefaultLifecycleObserver {
-  private val appContext = app
-  private val uiStore = UiStore(app)
-  private val serviceStore = ServiceStore(app)
+internal class AccessControlViewModel(private val application: Application) :
+  ViewModel(), AccessControlActions, DefaultLifecycleObserver {
+  private val uiStore = UiStore(application)
+  private val serviceStore = ServiceStore(application)
   private var reloadAppsJob: Job? = null
 
   val uiState: StateFlow<UiState>
@@ -75,7 +74,7 @@ internal class AccessControlViewModel(app: Application) :
         serviceStore.accessControlPackages = selected
       }
       if (clashRunning.value && changed) {
-        appContext.stopClashService()
+        application.stopClashService()
 
         val stopped =
           withTimeoutOrNull(10.seconds) {
@@ -85,10 +84,10 @@ internal class AccessControlViewModel(app: Application) :
 
         if (!stopped) {
           // The stop signal may be lost; continue with a best-effort restart path.
-          appContext.stopClashService()
+          application.stopClashService()
         }
 
-        appContext.startClashService()
+        application.startClashService()
       }
     }
   }
@@ -127,7 +126,7 @@ internal class AccessControlViewModel(app: Application) :
   }
 
   override fun importFromClipboard() {
-    val clipboard = appContext.getSystemService<ClipboardManager>()
+    val clipboard = application.getSystemService<ClipboardManager>()
     val data = clipboard?.primaryClip
 
     if (data != null && data.itemCount > 0) {
@@ -147,7 +146,7 @@ internal class AccessControlViewModel(app: Application) :
   }
 
   override fun exportToClipboard() {
-    val clipboard = appContext.getSystemService<ClipboardManager>()
+    val clipboard = application.getSystemService<ClipboardManager>()
     val data = ClipData.newPlainText("packages", uiState.value.selected.sorted().joinToString("\n"))
     clipboard?.setPrimaryClip(data)
   }
@@ -196,11 +195,11 @@ internal class AccessControlViewModel(app: Application) :
       val base = compareByDescending<AppInfo> { it.packageName in selected }
       val comparator = if (reverse) base.thenDescending(sort) else base.then(sort)
 
-      val pm = appContext.packageManager
+      val pm = application.packageManager
       pm
         .getInstalledPackagesCompat(PackageManager.GET_PERMISSIONS)
         .asSequence()
-        .filter { it.packageName != appContext.packageName }
+        .filter { it.packageName != application.packageName }
         .filter { it.applicationInfo != null }
         .filter {
           it.requestedPermissions?.contains(Manifest.permission.INTERNET) == true ||

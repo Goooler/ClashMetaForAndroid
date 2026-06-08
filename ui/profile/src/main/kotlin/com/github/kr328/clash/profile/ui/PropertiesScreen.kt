@@ -25,7 +25,6 @@ import androidx.compose.ui.text.fromHtml
 import androidx.compose.ui.tooling.preview.PreviewWrapper
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.github.kr328.clash.common.R as CommonR
 import com.github.kr328.clash.glue.util.ValidatorAgeSecretKey
 import com.github.kr328.clash.glue.util.ValidatorAutoUpdateInterval
@@ -53,12 +52,13 @@ import kotlin.uuid.Uuid
 import me.zhanghai.compose.preference.ProvidePreferenceLocals
 import me.zhanghai.compose.preference.preference
 import me.zhanghai.compose.preference.textFieldPreference
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 internal fun PropertiesScreen(
   uuid: Uuid,
   modifier: Modifier = Modifier,
-  viewModel: PropertiesViewModel = viewModel<PropertiesViewModel>().withLifecycle(),
+  viewModel: PropertiesViewModel = koinViewModel<PropertiesViewModel>().withLifecycle(),
   onBrowseFiles: (Uuid) -> Unit,
   onFinish: (Boolean) -> Unit,
 ) {

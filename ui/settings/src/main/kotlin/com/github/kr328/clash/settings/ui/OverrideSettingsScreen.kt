@@ -32,7 +32,6 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.PreviewWrapper
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entryProvider
 import com.github.kr328.clash.common.R as CommonR
@@ -56,6 +55,7 @@ import me.zhanghai.compose.preference.ProvidePreferenceLocals
 import me.zhanghai.compose.preference.listPreference
 import me.zhanghai.compose.preference.preference
 import me.zhanghai.compose.preference.preferenceCategory
+import org.koin.compose.viewmodel.koinViewModel
 
 private sealed interface OverrideSettingsRoute : NavKey {
   @Serializable data object Main : OverrideSettingsRoute
@@ -64,7 +64,7 @@ private sealed interface OverrideSettingsRoute : NavKey {
 @Composable
 internal fun OverrideSettingsScreen(
   modifier: Modifier = Modifier,
-  viewModel: OverrideSettingsViewModel = viewModel<OverrideSettingsViewModel>().withLifecycle(),
+  viewModel: OverrideSettingsViewModel = koinViewModel<OverrideSettingsViewModel>().withLifecycle(),
   onResetCompleted: () -> Unit,
 ) {
   val backStack = rememberNavBackStackBuilder { add(OverrideSettingsRoute.Main) }

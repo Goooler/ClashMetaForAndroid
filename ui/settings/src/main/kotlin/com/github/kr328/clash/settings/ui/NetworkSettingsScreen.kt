@@ -15,7 +15,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.PreviewWrapper
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.github.kr328.clash.service.model.AccessControlMode
 import com.github.kr328.clash.settings.R
 import com.github.kr328.clash.settings.vm.NetworkSettingsViewModel
@@ -29,11 +28,12 @@ import me.zhanghai.compose.preference.listPreference
 import me.zhanghai.compose.preference.preference
 import me.zhanghai.compose.preference.preferenceCategory
 import me.zhanghai.compose.preference.switchPreference
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 internal fun NetworkSettingsScreen(
   modifier: Modifier = Modifier,
-  viewModel: NetworkSettingsViewModel = viewModel(),
+  viewModel: NetworkSettingsViewModel = koinViewModel(),
   onStartAccessControlList: () -> Unit,
 ) {
   val clashRunning by viewModel.clashRunning.collectAsStateWithLifecycle()

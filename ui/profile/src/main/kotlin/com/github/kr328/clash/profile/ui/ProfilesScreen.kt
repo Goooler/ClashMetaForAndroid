@@ -45,7 +45,6 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.PreviewWrapper
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.github.kr328.clash.common.R as CommonR
 import com.github.kr328.clash.glue.util.elapsedIntervalString
 import com.github.kr328.clash.glue.util.toDateStr
@@ -70,11 +69,12 @@ import com.github.kr328.clash.ui.theme.tabbyDimens
 import kotlin.time.Duration.Companion.minutes
 import kotlin.uuid.Uuid
 import me.saket.bytesize.binaryBytes
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 internal fun ProfilesScreen(
   modifier: Modifier = Modifier,
-  viewModel: ProfilesViewModel = viewModel<ProfilesViewModel>().withLifecycle(),
+  viewModel: ProfilesViewModel = koinViewModel<ProfilesViewModel>().withLifecycle(),
   onOpenCreate: () -> Unit,
   onOpenEdit: (Uuid) -> Unit,
 ) {
