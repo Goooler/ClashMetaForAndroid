@@ -15,11 +15,8 @@ import com.github.kr328.clash.service.di.serviceModule
 import com.github.kr328.clash.service.util.sendServiceRecreated
 import com.github.kr328.clash.settings.di.settingsModule
 import java.io.File
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.cancel
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
-import org.koin.core.context.GlobalContext
 import org.koin.core.context.startKoin
 
 class MainApplication : Application() {
@@ -89,9 +86,5 @@ class MainApplication : Application() {
     if (!asnFile.exists()) {
       asnFile.outputStream().use { assets.open("ASN.mmdb").copyTo(it) }
     }
-  }
-
-  fun finalize() {
-    GlobalContext.getOrNull()?.getOrNull<CoroutineScope>()?.cancel()
   }
 }
