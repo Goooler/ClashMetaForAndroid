@@ -2,9 +2,9 @@ package com.github.kr328.clash.proxy.vm
 
 import android.app.Application
 import androidx.compose.ui.graphics.Color
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.github.kr328.clash.core.Clash
 import com.github.kr328.clash.core.model.Proxy
@@ -24,8 +24,9 @@ import kotlinx.coroutines.sync.Semaphore
 import kotlinx.coroutines.sync.withPermit
 import kotlinx.coroutines.withContext
 
-internal class ProxyViewModel(app: Application) : AndroidViewModel(app), DefaultLifecycleObserver {
-  private val uiStore = UiStore(app)
+internal class ProxyViewModel(private val application: Application) :
+  ViewModel(), DefaultLifecycleObserver {
+  private val uiStore = UiStore(application)
   private var broadcastEventsJob: Job? = null
   private var fetchInitialStateJob: Job? = null
   @Volatile private var initialized = false
