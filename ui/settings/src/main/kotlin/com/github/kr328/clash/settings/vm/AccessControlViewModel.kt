@@ -38,8 +38,8 @@ import kotlinx.coroutines.withTimeoutOrNull
 internal class AccessControlViewModel(
   private val application: Application,
   private val scope: CoroutineScope,
+  private val uiStore: UiStore,
 ) : ViewModel(), AccessControlActions, DefaultLifecycleObserver {
-  private val uiStore = UiStore(application)
   private val serviceStore = ServiceStore(application)
   private var reloadAppsJob: Job? = null
 

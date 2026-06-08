@@ -65,9 +65,10 @@ import com.github.kr328.clash.ui.nav.addIfNotLast
 import com.github.kr328.clash.ui.theme.TabbyTheme
 import java.util.Locale
 import kotlinx.coroutines.launch
+import org.koin.android.ext.android.inject
 
 class MainActivity : ComponentActivity() {
-  private val uiStore by lazy(NONE) { UiStore(this) }
+  private val uiStore: UiStore by inject()
   private val viewModel: ViewModel by
     viewModels(factoryProducer = { ViewModel.Factory(this@MainActivity) })
   private inline val backStack

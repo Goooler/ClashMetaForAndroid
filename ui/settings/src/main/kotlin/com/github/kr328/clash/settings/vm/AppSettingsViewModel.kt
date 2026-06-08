@@ -15,8 +15,10 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 
-internal class AppSettingsViewModel(private val application: Application) : ViewModel() {
-  private val uiStore = UiStore(application)
+internal class AppSettingsViewModel(
+  private val application: Application,
+  private val uiStore: UiStore,
+) : ViewModel() {
   private val serviceStore = ServiceStore(application)
   private val pm = application.packageManager
   private val restartReceiverClass = appInfoProvider.restartReceiverClass

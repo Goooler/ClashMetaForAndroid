@@ -11,8 +11,10 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 
-internal class NetworkSettingsViewModel(private val application: Application) : ViewModel() {
-  private val uiStore = UiStore(application)
+internal class NetworkSettingsViewModel(
+  application: Application,
+  private val uiStore: UiStore,
+) : ViewModel() {
   private val serviceStore = ServiceStore(application)
 
   val clashRunning: StateFlow<Boolean> = Remote.broadcasts.clashRunningFlow

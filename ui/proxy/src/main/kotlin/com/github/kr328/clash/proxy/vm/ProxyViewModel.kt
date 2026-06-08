@@ -24,9 +24,10 @@ import kotlinx.coroutines.sync.Semaphore
 import kotlinx.coroutines.sync.withPermit
 import kotlinx.coroutines.withContext
 
-internal class ProxyViewModel(private val application: Application) :
-  ViewModel(), DefaultLifecycleObserver {
-  private val uiStore = UiStore(application)
+internal class ProxyViewModel(
+  private val application: Application,
+  private val uiStore: UiStore,
+) : ViewModel(), DefaultLifecycleObserver {
   private var broadcastEventsJob: Job? = null
   private var fetchInitialStateJob: Job? = null
   @Volatile private var initialized = false
