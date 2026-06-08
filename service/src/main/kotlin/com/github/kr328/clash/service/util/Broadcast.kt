@@ -3,11 +3,11 @@ package com.github.kr328.clash.service.util
 import android.content.Context
 import android.content.Intent
 import com.github.kr328.clash.common.constants.Intents
-import com.github.kr328.clash.common.constants.Permissions
+import com.github.kr328.clash.common.di.AppInfoProvider.Companion.instance as appInfoProvider
 import kotlin.uuid.Uuid
 
 fun Context.sendBroadcastSelf(intent: Intent) {
-  sendBroadcast(intent.setPackage(this.packageName), Permissions.RECEIVE_SELF_BROADCASTS)
+  sendBroadcast(intent.setPackage(this.packageName), appInfoProvider.receiveBroadcastsPermission)
 }
 
 fun Context.sendProfileChanged(uuid: Uuid) {

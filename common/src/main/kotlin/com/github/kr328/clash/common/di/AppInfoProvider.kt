@@ -4,7 +4,9 @@ import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
 interface AppInfoProvider {
+  val packageName: String
   val buildCommit: String
+  val receiveBroadcastsPermission: String
   val mainActivityClass: Class<*>
   val restartReceiverClass: Class<*>
 

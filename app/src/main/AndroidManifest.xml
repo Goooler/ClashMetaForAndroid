@@ -9,6 +9,14 @@
     android:name="android.hardware.touchscreen"
     android:required="false" />
 
+  <permission
+    android:name="${applicationId}.permission.RECEIVE_BROADCASTS"
+    android:description="@string/receive_broadcasts_of_tabby"
+    android:label="@string/receive_tabby_broadcasts"
+    android:protectionLevel="privileged|signature" />
+
+  <uses-permission android:name="${applicationId}.permission.RECEIVE_BROADCASTS" />
+
   <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
   <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
   <uses-permission
