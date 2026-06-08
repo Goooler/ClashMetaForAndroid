@@ -48,7 +48,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.graphics.drawable.toDrawable
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.github.kr328.clash.common.R as CommonR
 import com.github.kr328.clash.glue.model.AppInfo
 import com.github.kr328.clash.settings.R
@@ -70,11 +69,12 @@ import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.withContext
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 internal fun AccessControlScreen(
   modifier: Modifier = Modifier,
-  viewModel: AccessControlViewModel = viewModel<AccessControlViewModel>().withLifecycle(),
+  viewModel: AccessControlViewModel = koinViewModel<AccessControlViewModel>().withLifecycle(),
 ) {
   val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 

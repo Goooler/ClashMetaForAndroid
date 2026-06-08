@@ -4,9 +4,9 @@ import android.app.Application
 import android.database.Cursor
 import android.net.Uri
 import android.provider.OpenableColumns
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.github.kr328.clash.common.Global
 import com.github.kr328.clash.common.log.Log
@@ -21,9 +21,9 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-internal class MetaFeatureSettingsViewModel(app: Application) :
-  AndroidViewModel(app), MetaFeatureSettingsActions, DefaultLifecycleObserver {
-  private val appContext = app
+internal class MetaFeatureSettingsViewModel(private val application: Application) :
+  ViewModel(), MetaFeatureSettingsActions, DefaultLifecycleObserver {
+  private val appContext = application
   private val validDatabaseExtensions = listOf(".metadb", ".db", ".dat", ".mmdb")
   @Volatile private var skipPersist = false
 

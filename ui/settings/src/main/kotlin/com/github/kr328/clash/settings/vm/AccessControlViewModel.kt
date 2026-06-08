@@ -11,9 +11,9 @@ import android.graphics.drawable.AdaptiveIconDrawable
 import android.graphics.drawable.Drawable
 import android.os.Process
 import androidx.core.content.getSystemService
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.github.kr328.clash.common.Global
 import com.github.kr328.clash.common.compat.getInstalledPackagesCompat
@@ -35,11 +35,11 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.withTimeoutOrNull
 
-internal class AccessControlViewModel(app: Application) :
-  AndroidViewModel(app), AccessControlActions, DefaultLifecycleObserver {
-  private val appContext = app
-  private val uiStore = UiStore(app)
-  private val serviceStore = ServiceStore(app)
+internal class AccessControlViewModel(private val application: Application) :
+  ViewModel(), AccessControlActions, DefaultLifecycleObserver {
+  private val appContext = application
+  private val uiStore = UiStore(application)
+  private val serviceStore = ServiceStore(application)
   private var reloadAppsJob: Job? = null
 
   val uiState: StateFlow<UiState>

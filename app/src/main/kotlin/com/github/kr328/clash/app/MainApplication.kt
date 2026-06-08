@@ -12,6 +12,7 @@ import com.github.kr328.clash.log.di.logModule
 import com.github.kr328.clash.profile.di.profileModule
 import com.github.kr328.clash.proxy.di.proxyModule
 import com.github.kr328.clash.service.util.sendServiceRecreated
+import com.github.kr328.clash.settings.di.settingsModule
 import java.io.File
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
@@ -46,7 +47,15 @@ class MainApplication : Application() {
     startKoin {
       androidLogger()
       androidContext(this@MainApplication)
-      modules(appModule, homeModule, profileModule, crashModule, logModule, proxyModule)
+      modules(
+        appModule,
+        homeModule,
+        profileModule,
+        crashModule,
+        logModule,
+        proxyModule,
+        settingsModule,
+      )
     }
   }
 

@@ -11,7 +11,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.PreviewWrapper
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.github.kr328.clash.glue.model.DarkMode
 import com.github.kr328.clash.settings.R
 import com.github.kr328.clash.settings.vm.AppSettingsViewModel
@@ -28,11 +27,12 @@ import me.zhanghai.compose.preference.ProvidePreferenceLocals
 import me.zhanghai.compose.preference.listPreference
 import me.zhanghai.compose.preference.preferenceCategory
 import me.zhanghai.compose.preference.switchPreference
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 internal fun AppSettingsScreen(
   modifier: Modifier = Modifier,
-  viewModel: AppSettingsViewModel = viewModel(),
+  viewModel: AppSettingsViewModel = koinViewModel(),
 ) {
   val clashRunning by viewModel.clashRunning.collectAsStateWithLifecycle()
   val uiState by viewModel.uiState.collectAsStateWithLifecycle()

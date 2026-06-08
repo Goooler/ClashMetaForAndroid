@@ -37,7 +37,6 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.PreviewWrapper
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entryProvider
 import com.github.kr328.clash.common.R as CommonR
@@ -61,6 +60,7 @@ import me.zhanghai.compose.preference.ProvidePreferenceLocals
 import me.zhanghai.compose.preference.listPreference
 import me.zhanghai.compose.preference.preference
 import me.zhanghai.compose.preference.preferenceCategory
+import org.koin.compose.viewmodel.koinViewModel
 
 private sealed interface MetaFeatureSettingsRoute : NavKey {
   @Serializable data object Main : MetaFeatureSettingsRoute
@@ -70,7 +70,7 @@ private sealed interface MetaFeatureSettingsRoute : NavKey {
 internal fun MetaFeatureSettingsScreen(
   modifier: Modifier = Modifier,
   viewModel: MetaFeatureSettingsViewModel =
-    viewModel<MetaFeatureSettingsViewModel>().withLifecycle(),
+    koinViewModel<MetaFeatureSettingsViewModel>().withLifecycle(),
   onResetCompleted: () -> Unit,
 ) {
   val backStack = rememberNavBackStackBuilder { add(MetaFeatureSettingsRoute.Main) }

@@ -2,8 +2,7 @@ package com.github.kr328.clash.settings.vm
 
 import android.app.Application
 import android.content.pm.PackageManager
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.application
+import androidx.lifecycle.ViewModel
 import com.github.kr328.clash.common.di.AppInfoProvider.Companion.instance as appInfoProvider
 import com.github.kr328.clash.common.util.componentName
 import com.github.kr328.clash.common.util.mainActivityAlias
@@ -16,10 +15,10 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 
-internal class AppSettingsViewModel(app: Application) : AndroidViewModel(app) {
-  private val uiStore = UiStore(app)
-  private val serviceStore = ServiceStore(app)
-  private val pm = app.packageManager
+internal class AppSettingsViewModel(private val application: Application) : ViewModel() {
+  private val uiStore = UiStore(application)
+  private val serviceStore = ServiceStore(application)
+  private val pm = application.packageManager
   private val restartReceiverClass = appInfoProvider.restartReceiverClass
 
   val clashRunning: StateFlow<Boolean> = Remote.broadcasts.clashRunningFlow

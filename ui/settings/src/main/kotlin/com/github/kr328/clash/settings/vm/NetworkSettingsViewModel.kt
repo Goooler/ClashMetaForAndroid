@@ -2,7 +2,7 @@ package com.github.kr328.clash.settings.vm
 
 import android.app.Application
 import android.os.Build
-import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
 import com.github.kr328.clash.glue.remote.Remote
 import com.github.kr328.clash.glue.store.UiStore
 import com.github.kr328.clash.service.model.AccessControlMode
@@ -11,9 +11,9 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 
-internal class NetworkSettingsViewModel(app: Application) : AndroidViewModel(app) {
-  private val uiStore = UiStore(app)
-  private val serviceStore = ServiceStore(app)
+internal class NetworkSettingsViewModel(private val application: Application) : ViewModel() {
+  private val uiStore = UiStore(application)
+  private val serviceStore = ServiceStore(application)
 
   val clashRunning: StateFlow<Boolean> = Remote.broadcasts.clashRunningFlow
 
