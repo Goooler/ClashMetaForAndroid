@@ -4,8 +4,7 @@ import android.app.Application
 import android.content.ComponentName
 import android.content.Intent
 import android.net.Uri
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.application
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.github.kr328.clash.common.R as CommonR
 import com.github.kr328.clash.common.constants.Intents
@@ -23,7 +22,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-internal class NewProfileViewModel(app: Application) : AndroidViewModel(app) {
+internal class NewProfileViewModel(private val application: Application) : ViewModel() {
   val uiState: StateFlow<UiState>
     field = MutableStateFlow(UiState())
 

@@ -2,9 +2,9 @@ package com.github.kr328.clash.profile.vm
 
 import android.app.Application
 import android.net.Uri
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.github.kr328.clash.common.log.Log
 import com.github.kr328.clash.glue.model.ConfigFile
@@ -18,8 +18,9 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-internal class FilesViewModel(app: Application) : AndroidViewModel(app), DefaultLifecycleObserver {
-  private val client = FilesClient(app)
+internal class FilesViewModel(private val application: Application) :
+  ViewModel(), DefaultLifecycleObserver {
+  private val client = FilesClient(application)
   private val stack = ArrayDeque<String>()
   private var root: String = ""
   private var fetchJob: Job? = null

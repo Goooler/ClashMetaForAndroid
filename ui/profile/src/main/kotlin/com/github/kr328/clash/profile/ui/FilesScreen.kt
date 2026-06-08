@@ -50,7 +50,6 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.PreviewWrapper
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.github.kr328.clash.common.R as CommonR
 import com.github.kr328.clash.common.util.grantPermissions
 import com.github.kr328.clash.glue.model.ConfigFile
@@ -77,12 +76,13 @@ import kotlin.time.Duration.Companion.minutes
 import kotlin.uuid.Uuid
 import kotlinx.coroutines.delay
 import me.saket.bytesize.binaryBytes
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 internal fun FilesScreen(
   uuid: Uuid,
   modifier: Modifier = Modifier,
-  viewModel: FilesViewModel = viewModel<FilesViewModel>().withLifecycle(),
+  viewModel: FilesViewModel = koinViewModel<FilesViewModel>().withLifecycle(),
   onFinish: () -> Unit,
 ) {
   val uiState by viewModel.uiState.collectAsStateWithLifecycle()
