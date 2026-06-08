@@ -1,6 +1,9 @@
-package com.github.kr328.clash.app
+package com.github.kr328.clash.app.di
 
 import android.app.Application
+import com.github.kr328.clash.app.BuildConfig
+import com.github.kr328.clash.app.MainActivity
+import com.github.kr328.clash.app.RestartReceiver
 import com.github.kr328.clash.common.di.AppInfoProvider
 import org.koin.dsl.module
 

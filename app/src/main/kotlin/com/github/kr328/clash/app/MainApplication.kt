@@ -2,6 +2,7 @@ package com.github.kr328.clash.app
 
 import android.app.Application
 import android.content.Context
+import com.github.kr328.clash.app.di.appModule
 import com.github.kr328.clash.common.Global
 import com.github.kr328.clash.common.log.Log
 import com.github.kr328.clash.crash.di.crashModule
