@@ -4,6 +4,7 @@ import android.app.Application
 import android.content.Context
 import com.github.kr328.clash.common.Global
 import com.github.kr328.clash.common.log.Log
+import com.github.kr328.clash.crash.di.crashModule
 import com.github.kr328.clash.glue.remote.Remote
 import com.github.kr328.clash.glue.util.clashDir
 import com.github.kr328.clash.home.di.homeModule
@@ -43,7 +44,7 @@ class MainApplication : Application() {
     startKoin {
       androidLogger()
       androidContext(this@MainApplication)
-      modules(appModule, homeModule, profileModule)
+      modules(appModule, homeModule, profileModule, crashModule)
     }
   }
 
