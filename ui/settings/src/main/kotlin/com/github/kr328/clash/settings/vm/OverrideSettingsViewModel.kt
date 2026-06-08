@@ -1,6 +1,5 @@
 package com.github.kr328.clash.settings.vm
 
-import android.app.Application
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModel
@@ -17,7 +16,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-internal class OverrideSettingsViewModel(private val application: Application) :
+internal class OverrideSettingsViewModel :
   ViewModel(), OverrideSettingsActions, DefaultLifecycleObserver {
   @Volatile private var skipPersist = false
 
