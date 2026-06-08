@@ -211,8 +211,8 @@ class MainActivity : ComponentActivity() {
         Auto -> SystemBarStyle.auto(TRANSPARENT, TRANSPARENT)
       }
     enableEdgeToEdge(statusBarStyle = systemBars, navigationBarStyle = systemBars)
-    // TODO: https://issuetracker.google.com/issues/298296168
-    //  Fix for three-button nav not properly going edge-to-edge.
+    // Fix for three-button nav not properly going edge-to-edge.
+    // See https://issuetracker.google.com/issues/298296168
     ViewCompat.setOnApplyWindowInsetsListener(window.decorView) { _, insets -> insets }
   }
 
