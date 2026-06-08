@@ -8,6 +8,7 @@ import com.github.kr328.clash.crash.di.crashModule
 import com.github.kr328.clash.glue.remote.Remote
 import com.github.kr328.clash.glue.util.clashDir
 import com.github.kr328.clash.home.di.homeModule
+import com.github.kr328.clash.log.di.logModule
 import com.github.kr328.clash.profile.di.profileModule
 import com.github.kr328.clash.service.util.sendServiceRecreated
 import java.io.File
@@ -44,7 +45,7 @@ class MainApplication : Application() {
     startKoin {
       androidLogger()
       androidContext(this@MainApplication)
-      modules(appModule, homeModule, profileModule, crashModule)
+      modules(appModule, homeModule, profileModule, crashModule, logModule)
     }
   }
 

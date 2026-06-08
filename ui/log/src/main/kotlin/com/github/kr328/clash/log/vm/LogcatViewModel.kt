@@ -6,10 +6,9 @@ import android.content.Context
 import android.content.ServiceConnection
 import android.net.Uri
 import android.os.IBinder
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.application
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.github.kr328.clash.common.R as CommonR
 import com.github.kr328.clash.common.log.Log
@@ -36,7 +35,8 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
 
-internal class LogcatViewModel(app: Application) : AndroidViewModel(app), DefaultLifecycleObserver {
+internal class LogcatViewModel(private val application: Application) :
+  ViewModel(), DefaultLifecycleObserver {
   private var conn: ServiceConnection? = null
   @Suppress("StaticFieldLeak") private var logcat: LogcatService? = null
   private var pollJob: Job? = null

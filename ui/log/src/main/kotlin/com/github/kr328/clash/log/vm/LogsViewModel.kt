@@ -1,8 +1,7 @@
 package com.github.kr328.clash.log.vm
 
 import android.app.Application
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.application
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.github.kr328.clash.glue.util.logsDir
 import com.github.kr328.clash.log.model.LogFile
@@ -12,7 +11,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-internal class LogsViewModel(app: Application) : AndroidViewModel(app) {
+internal class LogsViewModel(private val application: Application) : ViewModel() {
   val logFiles: StateFlow<List<LogFile>>
     field = MutableStateFlow(emptyList<LogFile>())
 

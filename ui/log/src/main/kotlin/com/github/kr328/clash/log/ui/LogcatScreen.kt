@@ -35,12 +35,17 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.PreviewWrapper
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.github.kr328.clash.common.R as CommonR
 import com.github.kr328.clash.core.model.LogMessage
 import com.github.kr328.clash.glue.util.format
 import com.github.kr328.clash.log.R
 import com.github.kr328.clash.log.vm.LogcatViewModel
+import com.github.kr328.clash.log.vm.LogcatViewModel.EventState.Close
+import com.github.kr328.clash.log.vm.LogcatViewModel.EventState.Idle
+import com.github.kr328.clash.log.vm.LogcatViewModel.EventState.InvalidFile
+import com.github.kr328.clash.log.vm.LogcatViewModel.EventState.OpenLogs
+import com.github.kr328.clash.log.vm.LogcatViewModel.EventState.RequestExport
+import com.github.kr328.clash.log.vm.LogcatViewModel.EventState.ShowMessage
 import com.github.kr328.clash.ui.component.ModelProgressBarDialog
 import com.github.kr328.clash.ui.component.TabbyScaffold
 import com.github.kr328.clash.ui.icon.BaselineDelete
@@ -53,12 +58,13 @@ import com.github.kr328.clash.ui.theme.TabbyThemeWrapper
 import com.github.kr328.clash.ui.theme.tabbyDimens
 import java.util.Date
 import kotlinx.coroutines.launch
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 internal fun LogcatScreen(
   fileName: String?,
   modifier: Modifier = Modifier,
-  viewModel: LogcatViewModel = viewModel<LogcatViewModel>().withLifecycle(),
+  viewModel: LogcatViewModel = koinViewModel<LogcatViewModel>().withLifecycle(),
   onOpenLogs: () -> Unit,
   onInvalidFile: () -> Unit,
   onClose: () -> Unit,
