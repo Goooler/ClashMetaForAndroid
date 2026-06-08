@@ -11,7 +11,6 @@ import com.github.kr328.clash.home.di.homeModule
 import com.github.kr328.clash.log.di.logModule
 import com.github.kr328.clash.profile.di.profileModule
 import com.github.kr328.clash.proxy.di.proxyModule
-import com.github.kr328.clash.service.di.serviceModule
 import com.github.kr328.clash.service.util.sendServiceRecreated
 import com.github.kr328.clash.settings.di.settingsModule
 import java.io.File
@@ -48,7 +47,6 @@ class MainApplication : Application() {
       androidContext(this@MainApplication)
       modules(
         appModule,
-        serviceModule,
         homeModule,
         profileModule,
         crashModule,

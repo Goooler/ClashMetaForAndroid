@@ -1,5 +1,6 @@
 package com.github.kr328.clash.service.data
 
+import android.app.Application
 import android.content.Context
 import androidx.room3.Database as DB
 import androidx.room3.Room
@@ -10,7 +11,8 @@ import androidx.room3.migration.Migration
 import androidx.sqlite.execSQL
 import com.github.kr328.clash.service.model.Profile
 import kotlin.uuid.Uuid
-import org.koin.core.context.GlobalContext
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 
 @DB(
   version = 2,
@@ -25,8 +27,10 @@ abstract class Database : RoomDatabase() {
 
   abstract fun selectionProxyDao(): SelectionDao
 
-  companion object {
-    val database: Database by lazy { GlobalContext.get().get() }
+  companion object : KoinComponent {
+    private val application: Application by inject(mode = NONE)
+
+    val database: Database by lazy { open(application) }
 
     private val MIGRATION_1_2 =
       Migration(1, 2) { db ->

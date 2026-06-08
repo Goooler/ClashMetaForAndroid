@@ -15,8 +15,8 @@ import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
 object Remote : KoinComponent {
-  private val application: Application by inject()
-  private val scope: CoroutineScope by inject()
+  private val application: Application by inject(mode = NONE)
+  private val scope: CoroutineScope by inject(mode = NONE)
 
   val broadcasts: Broadcasts by lazy { Broadcasts(application) }
   val service: Service by lazy {
