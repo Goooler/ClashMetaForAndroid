@@ -1,8 +1,7 @@
 package com.github.kr328.clash.home.vm
 
 import android.app.Application
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.application
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.github.kr328.clash.common.di.AppInfoProvider.Companion.instance as appInfoProvider
 import com.github.kr328.clash.common.log.Log
@@ -18,7 +17,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import net.swiftzer.semver.SemVer
 
-internal class HelpViewModel(app: Application) : AndroidViewModel(app) {
+internal class HelpViewModel(private val application: Application) : ViewModel() {
   private val api = HelpApi()
 
   val uiState: StateFlow<UiState>
