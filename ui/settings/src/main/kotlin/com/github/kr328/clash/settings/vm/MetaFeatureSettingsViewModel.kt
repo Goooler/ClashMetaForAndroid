@@ -23,7 +23,6 @@ import kotlinx.coroutines.launch
 
 internal class MetaFeatureSettingsViewModel(private val application: Application) :
   ViewModel(), MetaFeatureSettingsActions, DefaultLifecycleObserver {
-  private val appContext = application
   private val validDatabaseExtensions = listOf(".metadb", ".db", ".dat", ".mmdb")
   @Volatile private var skipPersist = false
 
@@ -57,7 +56,7 @@ internal class MetaFeatureSettingsViewModel(private val application: Application
     viewModelScope.launch(Dispatchers.IO) {
       importResult.value = ImportResult.InProgress
       try {
-        val resolver = appContext.contentResolver
+        val resolver = application.contentResolver
         val cursor: Cursor =
           uri?.let { resolver.query(it, null, null, null, null, null) }
             ?: run {
@@ -84,7 +83,7 @@ internal class MetaFeatureSettingsViewModel(private val application: Application
               ASN -> "ASN$ext"
             }
 
-          val outputFile = appContext.clashDir.resolve(outputFileName)
+          val outputFile = application.clashDir.resolve(outputFileName)
           outputFile.parentFile?.mkdirs()
           val inputStream = resolver.openInputStream(uri) ?: return@use ImportResult.Failed
           inputStream.use { ins -> outputFile.outputStream().use { outs -> ins.copyTo(outs) } }
