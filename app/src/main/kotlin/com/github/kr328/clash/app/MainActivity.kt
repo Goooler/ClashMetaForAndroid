@@ -30,9 +30,7 @@ import androidx.core.content.pm.ShortcutInfoCompat
 import androidx.core.content.pm.ShortcutManagerCompat
 import androidx.core.graphics.drawable.IconCompat
 import androidx.core.view.ViewCompat
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.application
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation3.runtime.NavKey
@@ -255,7 +253,7 @@ class MainActivity : ComponentActivity() {
     ShortcutManagerCompat.setDynamicShortcuts(this, listOf(toggle, start, stop))
   }
 
-  private class ViewModel(application: Application) : AndroidViewModel(application) {
+  private class ViewModel(private val application: Application) : androidx.lifecycle.ViewModel() {
     val backStack = mutableStateListOf<NavKey>(HomeRoute.Home)
 
     fun handleInstallConfigUri(uri: Uri) {
