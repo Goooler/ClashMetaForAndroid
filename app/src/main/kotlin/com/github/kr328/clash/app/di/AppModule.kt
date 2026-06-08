@@ -14,7 +14,7 @@ import org.koin.dsl.module
 val appModule = module {
   single<AppInfoProvider> { AppInfoProviderImpl(application = get()) }
   single<CoroutineScope> { CoroutineScope(Dispatchers.IO + SupervisorJob()) }
-  single { UiStore(context = get()) }
+  single { UiStore(application = get(), scope = get()) }
 }
 
 private class AppInfoProviderImpl(application: Application) : AppInfoProvider {

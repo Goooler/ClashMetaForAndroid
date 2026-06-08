@@ -1,5 +1,6 @@
 package com.github.kr328.clash.glue.store
 
+import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener
 import android.content.pm.PackageManager
@@ -19,9 +20,8 @@ import kotlinx.coroutines.flow.stateIn
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
-class UiStore(context: Context) : KoinComponent {
-  private val scope: CoroutineScope by inject()
-  private val preferences = context.getSharedPreferences(PREFERENCE_NAME, Context.MODE_PRIVATE)
+class UiStore(application: Application, val scope: CoroutineScope) {
+  private val preferences = application.getSharedPreferences(PREFERENCE_NAME, Context.MODE_PRIVATE)
   private val store = Store(preferences.asStoreProvider())
 
   val valueState: StateFlow<ValueState> by
@@ -63,7 +63,8 @@ class UiStore(context: Context) : KoinComponent {
     store.boolean(
       key = "hide_app_icon",
       defaultValue =
-        context.packageManager.getComponentEnabledSetting(context.mainActivityAlias).let { state ->
+        application.packageManager.getComponentEnabledSetting(application.mainActivityAlias).let {
+          state ->
           state != PackageManager.COMPONENT_ENABLED_STATE_ENABLED &&
             state != PackageManager.COMPONENT_ENABLED_STATE_DEFAULT
         },
@@ -112,7 +113,9 @@ class UiStore(context: Context) : KoinComponent {
     val accessControlSystemApp: Boolean,
   )
 
-  companion object {
+  companion object : KoinComponent {
     private const val PREFERENCE_NAME = "ui"
+
+    val instance: UiStore by inject(mode = NONE)
   }
 }

@@ -68,7 +68,7 @@ import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 
 class MainActivity : ComponentActivity() {
-  private val uiStore: UiStore by inject()
+  private val uiStore: UiStore by inject(mode = NONE)
   private val viewModel: ViewModel by
     viewModels(factoryProducer = { ViewModel.Factory(this@MainActivity) })
   private inline val backStack
