@@ -40,12 +40,6 @@ import com.github.kr328.clash.core.model.LogMessage
 import com.github.kr328.clash.glue.util.format
 import com.github.kr328.clash.log.R
 import com.github.kr328.clash.log.vm.LogcatViewModel
-import com.github.kr328.clash.log.vm.LogcatViewModel.EventState.Close
-import com.github.kr328.clash.log.vm.LogcatViewModel.EventState.Idle
-import com.github.kr328.clash.log.vm.LogcatViewModel.EventState.InvalidFile
-import com.github.kr328.clash.log.vm.LogcatViewModel.EventState.OpenLogs
-import com.github.kr328.clash.log.vm.LogcatViewModel.EventState.RequestExport
-import com.github.kr328.clash.log.vm.LogcatViewModel.EventState.ShowMessage
 import com.github.kr328.clash.ui.component.ModelProgressBarDialog
 import com.github.kr328.clash.ui.component.TabbyScaffold
 import com.github.kr328.clash.ui.icon.BaselineDelete
