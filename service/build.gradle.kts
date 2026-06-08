@@ -18,6 +18,9 @@ dependencies {
   implementation(libs.okhttp.client)
   implementation(libs.okhttp.interceptor)
 
+  implementation(platform(libs.koin.bom))
+  implementation(libs.koin.core)
+
   ksp(libs.kaidl.compiler)
   ksp(libs.androidx.room.compiler)
 }

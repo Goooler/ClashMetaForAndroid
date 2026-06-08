@@ -6,7 +6,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import com.github.kr328.clash.common.compat.registerReceiverCompat
-import com.github.kr328.clash.common.constants.Permissions
+import com.github.kr328.clash.common.di.AppInfoProvider.Companion.instance as appInfoProvider
 import com.github.kr328.clash.common.log.Log
 import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.channels.Channel
@@ -46,7 +46,12 @@ sealed class Module<E>(val service: Service) {
       }
 
     if (requireSelf) {
-      service.registerReceiverCompat(receiver, filter, Permissions.RECEIVE_SELF_BROADCASTS, null)
+      service.registerReceiverCompat(
+        receiver,
+        filter,
+        appInfoProvider.receiveBroadcastsPermission,
+        null,
+      )
     } else {
       service.registerReceiverCompat(receiver, filter)
     }
