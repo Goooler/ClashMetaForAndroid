@@ -16,7 +16,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-internal class OverrideSettingsViewModel(private val globalScope: CoroutineScope) :
+internal class OverrideSettingsViewModel(private val scope: CoroutineScope) :
   ViewModel(), OverrideSettingsActions, DefaultLifecycleObserver {
   @Volatile private var skipPersist = false
 
@@ -31,7 +31,7 @@ internal class OverrideSettingsViewModel(private val globalScope: CoroutineScope
 
   override fun onStop(owner: LifecycleOwner) {
     // Intended to use non-viewModel scope as we need the action to be called on disposed.
-    globalScope.launch {
+    scope.launch {
       withClash {
         if (skipPersist) clearOverride(Clash.OverrideSlot.Persist)
         else patchOverride(Clash.OverrideSlot.Persist, configuration.value)

@@ -23,7 +23,7 @@ import kotlinx.coroutines.launch
 
 internal class MetaFeatureSettingsViewModel(
   private val application: Application,
-  private val globalScope: CoroutineScope,
+  private val scope: CoroutineScope,
 ) : ViewModel(), MetaFeatureSettingsActions, DefaultLifecycleObserver {
   private val validDatabaseExtensions = listOf(".metadb", ".db", ".dat", ".mmdb")
   @Volatile private var skipPersist = false
@@ -42,7 +42,7 @@ internal class MetaFeatureSettingsViewModel(
 
   override fun onStop(owner: LifecycleOwner) {
     // Intended to use non-viewModel scope as we need the action to be called on disposed.
-    globalScope.launch {
+    scope.launch {
       withClash {
         if (skipPersist) clearOverride(Clash.OverrideSlot.Persist)
         else patchOverride(Clash.OverrideSlot.Persist, configuration.value)

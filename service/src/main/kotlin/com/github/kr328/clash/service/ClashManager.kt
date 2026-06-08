@@ -31,7 +31,7 @@ import org.koin.core.component.inject
 
 class ClashManager(private val context: Context) :
   IClashManager, CoroutineScope by CoroutineScope(Dispatchers.IO), KoinComponent {
-  private val globalScope: CoroutineScope by inject()
+  private val scope: CoroutineScope by inject()
   private val store = ServiceStore(context)
   private var logReceiver: ReceiveChannel<LogMessage>? = null
 
@@ -67,7 +67,7 @@ class ClashManager(private val context: Context) :
     return Clash.patchSelector(group, name).also {
       val current = store.activeProfile ?: return@also
 
-      globalScope.launch {
+      scope.launch {
         try {
           if (it) {
             SelectionDao().setSelected(Selection(current, group, name))

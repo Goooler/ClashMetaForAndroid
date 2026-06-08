@@ -24,7 +24,7 @@ import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
 class ProfileReceiver : BroadcastReceiver(), KoinComponent {
-  private val globalScope: CoroutineScope by inject()
+  private val scope: CoroutineScope by inject()
 
   override fun onReceive(context: Context, intent: Intent) {
     when (intent.action) {
@@ -32,7 +32,7 @@ class ProfileReceiver : BroadcastReceiver(), KoinComponent {
       Intent.ACTION_MY_PACKAGE_REPLACED,
       Intent.ACTION_TIMEZONE_CHANGED,
       Intent.ACTION_TIME_CHANGED -> {
-        globalScope.launch {
+        scope.launch {
           reset()
 
           val service =

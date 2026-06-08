@@ -37,7 +37,7 @@ import kotlinx.coroutines.withTimeoutOrNull
 
 internal class AccessControlViewModel(
   private val application: Application,
-  private val globalScope: CoroutineScope,
+  private val scope: CoroutineScope,
 ) : ViewModel(), AccessControlActions, DefaultLifecycleObserver {
   private val uiStore = UiStore(application)
   private val serviceStore = ServiceStore(application)
@@ -67,7 +67,7 @@ internal class AccessControlViewModel(
 
   override fun onStop(owner: LifecycleOwner) {
     // Intended to use non-viewModel scope as we need the action to be called on disposed.
-    globalScope.launch {
+    scope.launch {
       val selected = uiState.value.selected
       val persistedSelection = serviceStore.accessControlPackages
       val changed = selected != persistedSelection

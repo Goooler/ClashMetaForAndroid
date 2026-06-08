@@ -23,7 +23,7 @@ import kotlinx.coroutines.withContext
 
 internal class PropertiesViewModel(
   private val application: Application,
-  private val globalScope: CoroutineScope,
+  private val scope: CoroutineScope,
 ) : ViewModel(), DefaultLifecycleObserver {
   private var rootUuid: Uuid? = null
   private var canceled = false
@@ -79,7 +79,7 @@ internal class PropertiesViewModel(
 
   override fun onCleared() {
     rootUuid?.let { uuid ->
-      globalScope.launch {
+      scope.launch {
         try {
           withProfile { release(uuid) }
         } catch (e: Exception) {
