@@ -1,10 +1,9 @@
 package com.github.kr328.clash.profile.vm
 
 import android.app.Application
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.application
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.github.kr328.clash.common.Global
 import com.github.kr328.clash.common.R as CommonR
@@ -22,8 +21,8 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-internal class PropertiesViewModel(app: Application) :
-  AndroidViewModel(app), DefaultLifecycleObserver {
+internal class PropertiesViewModel(private val application: Application) :
+  ViewModel(), DefaultLifecycleObserver {
   private var rootUuid: Uuid? = null
   private var canceled = false
 
