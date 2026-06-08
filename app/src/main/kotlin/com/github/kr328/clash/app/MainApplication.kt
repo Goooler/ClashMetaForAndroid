@@ -6,7 +6,7 @@ import com.github.kr328.clash.common.Global
 import com.github.kr328.clash.common.log.Log
 import com.github.kr328.clash.glue.remote.Remote
 import com.github.kr328.clash.glue.util.clashDir
-import com.github.kr328.clash.home.homeModule
+import com.github.kr328.clash.home.di.homeModule
 import com.github.kr328.clash.profile.di.profileModule
 import com.github.kr328.clash.service.util.sendServiceRecreated
 import java.io.File
