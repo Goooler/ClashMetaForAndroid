@@ -1,12 +1,13 @@
 package com.github.kr328.clash.core.bridge
 
+import android.app.Application
 import android.os.Build
 import android.os.ParcelFileDescriptor
 import androidx.annotation.Keep
-import com.github.kr328.clash.common.Global
 import com.github.kr328.clash.common.log.Log
 import java.io.File
 import kotlinx.coroutines.CompletableDeferred
+import org.koin.core.context.GlobalContext
 
 @Keep
 object Bridge {
@@ -105,7 +106,7 @@ object Bridge {
   init {
     System.loadLibrary("bridge")
 
-    val ctx = Global.application
+    val ctx = GlobalContext.get().get<Application>()
 
     ParcelFileDescriptor.open(File(ctx.packageCodePath), ParcelFileDescriptor.MODE_READ_ONLY)
       .detachFd()

@@ -3,20 +3,24 @@ package com.github.kr328.clash.glue.store
 import android.content.Context
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener
 import android.content.pm.PackageManager
-import com.github.kr328.clash.common.Global
 import com.github.kr328.clash.common.store.Store
 import com.github.kr328.clash.common.store.asStoreProvider
 import com.github.kr328.clash.common.util.mainActivityAlias
 import com.github.kr328.clash.core.model.ProxySort
 import com.github.kr328.clash.glue.model.AppInfo
 import com.github.kr328.clash.glue.model.DarkMode
+import kotlin.LazyThreadSafetyMode.NONE
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.stateIn
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 
-class UiStore(context: Context) {
+class UiStore(context: Context) : KoinComponent {
+  private val scope: CoroutineScope by inject()
   private val preferences = context.getSharedPreferences(PREFERENCE_NAME, Context.MODE_PRIVATE)
   private val store = Store(preferences.asStoreProvider())
 
@@ -44,7 +48,7 @@ class UiStore(context: Context) {
           awaitClose { preferences.unregisterOnSharedPreferenceChangeListener(listener) }
         }
         .stateIn(
-          scope = Global,
+          scope = scope,
           started = SharingStarted.WhileSubscribed(),
           initialValue = readValues(),
         )

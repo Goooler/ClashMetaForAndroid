@@ -1,21 +1,25 @@
 package com.github.kr328.clash.glue.remote
 
+import android.app.Application
 import android.content.Context
 import android.content.Intent
-import com.github.kr328.clash.common.Global
-import com.github.kr328.clash.common.Global.application
 import com.github.kr328.clash.common.constants.Intents
 import com.github.kr328.clash.common.log.Log
 import com.github.kr328.clash.common.util.mainIntent
 import com.github.kr328.clash.glue.store.AppStore
 import com.github.kr328.clash.glue.util.ApplicationObserver
 import com.github.kr328.clash.glue.util.verifyApk
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 
-object Remote {
-  val broadcasts: Broadcasts = Broadcasts(application)
-  val service: Service =
+object Remote : KoinComponent {
+  private val application: Application by inject()
+  private val scope: CoroutineScope by inject()
+
+  val broadcasts: Broadcasts by lazy { Broadcasts(application) }
+  val service: Service by lazy {
     Service(application) {
       ApplicationObserver.createdActivities.forEach { it.finish() }
 
@@ -25,6 +29,7 @@ object Remote {
       }
       application.startActivity(intent)
     }
+  }
 
   fun launch() {
     broadcasts.register()
@@ -39,7 +44,7 @@ object Remote {
       }
     }
 
-    Global.launch(Dispatchers.IO) { verifyApp() }
+    scope.launch { verifyApp() }
   }
 
   private fun verifyApp() {

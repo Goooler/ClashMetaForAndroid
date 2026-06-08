@@ -5,7 +5,6 @@ import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.github.kr328.clash.common.Global
 import com.github.kr328.clash.common.R as CommonR
 import com.github.kr328.clash.common.log.Log
 import com.github.kr328.clash.core.model.FetchStatus
@@ -13,6 +12,7 @@ import com.github.kr328.clash.glue.util.withProfile
 import com.github.kr328.clash.profile.R
 import com.github.kr328.clash.service.model.Profile
 import kotlin.uuid.Uuid
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -21,8 +21,10 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-internal class PropertiesViewModel(private val application: Application) :
-  ViewModel(), DefaultLifecycleObserver {
+internal class PropertiesViewModel(
+  private val application: Application,
+  private val globalScope: CoroutineScope,
+) : ViewModel(), DefaultLifecycleObserver {
   private var rootUuid: Uuid? = null
   private var canceled = false
 
@@ -77,7 +79,7 @@ internal class PropertiesViewModel(private val application: Application) :
 
   override fun onCleared() {
     rootUuid?.let { uuid ->
-      Global.launch {
+      globalScope.launch {
         try {
           withProfile { release(uuid) }
         } catch (e: Exception) {

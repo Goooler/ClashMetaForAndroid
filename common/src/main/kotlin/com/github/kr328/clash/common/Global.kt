@@ -1,21 +1,7 @@
 package com.github.kr328.clash.common
 
 import android.app.Application
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.cancel
+import org.koin.core.context.GlobalContext
 
-object Global : CoroutineScope by CoroutineScope(Dispatchers.IO) {
-  lateinit var application: Application
-    private set
-
-  fun init(application: Application) {
-    this.application = application
-  }
-
-  fun destroy() {
-    cancel()
-  }
-}
-
-val packageName: String = Global.application.packageName
+val packageName: String
+  get() = GlobalContext.get().get<Application>().packageName

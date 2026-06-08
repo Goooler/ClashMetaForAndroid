@@ -8,9 +8,9 @@ import androidx.room3.TypeConverter
 import androidx.room3.TypeConverters
 import androidx.room3.migration.Migration
 import androidx.sqlite.execSQL
-import com.github.kr328.clash.common.Global
 import com.github.kr328.clash.service.model.Profile
 import kotlin.uuid.Uuid
+import org.koin.core.context.GlobalContext
 
 @DB(
   version = 2,
@@ -26,7 +26,7 @@ abstract class Database : RoomDatabase() {
   abstract fun selectionProxyDao(): SelectionDao
 
   companion object {
-    val database: Database by lazy { open(Global.application) }
+    val database: Database by lazy { GlobalContext.get().get() }
 
     private val MIGRATION_1_2 =
       Migration(1, 2) { db ->
@@ -34,7 +34,7 @@ abstract class Database : RoomDatabase() {
         db.execSQL("ALTER TABLE pending ADD COLUMN ageSecretKey TEXT")
       }
 
-    private fun open(context: Context): Database {
+    internal fun open(context: Context): Database {
       return Room.databaseBuilder(context.applicationContext, Database::class.java, "profiles")
         .addMigrations(MIGRATION_1_2)
         .build()

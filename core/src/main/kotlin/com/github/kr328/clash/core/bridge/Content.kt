@@ -1,9 +1,10 @@
 package com.github.kr328.clash.core.bridge
 
+import android.app.Application
 import androidx.annotation.Keep
 import androidx.core.net.toUri
-import com.github.kr328.clash.common.Global
 import java.io.FileNotFoundException
+import org.koin.core.context.GlobalContext
 
 @Keep
 object Content {
@@ -15,7 +16,10 @@ object Content {
       throw UnsupportedOperationException("Unsupported scheme ${uri.scheme}")
     }
 
-    return Global.application.contentResolver.openFileDescriptor(uri, "r")?.detachFd()
-      ?: throw FileNotFoundException("$uri not found")
+    return GlobalContext.get()
+      .get<Application>()
+      .contentResolver
+      .openFileDescriptor(uri, "r")
+      ?.detachFd() ?: throw FileNotFoundException("$uri not found")
   }
 }
