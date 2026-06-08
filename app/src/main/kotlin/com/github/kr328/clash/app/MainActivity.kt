@@ -40,7 +40,6 @@ import androidx.navigation3.runtime.entryProvider
 import com.github.kr328.clash.common.R as CommonR
 import com.github.kr328.clash.common.constants.Intents
 import com.github.kr328.clash.common.util.mainIntent
-import com.github.kr328.clash.common.util.unsafeLazy
 import com.github.kr328.clash.common.util.uuid
 import com.github.kr328.clash.crash.CrashRoute
 import com.github.kr328.clash.crash.crashEntries
@@ -68,7 +67,7 @@ import java.util.Locale
 import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
-  private val uiStore by unsafeLazy { UiStore(this) }
+  private val uiStore by lazy(NONE) { UiStore(this) }
   private val viewModel: ViewModel by
     viewModels(factoryProducer = { ViewModel.Factory(this@MainActivity) })
   private inline val backStack

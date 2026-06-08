@@ -7,7 +7,6 @@ import com.github.kr328.clash.common.Global
 import com.github.kr328.clash.common.store.Store
 import com.github.kr328.clash.common.store.asStoreProvider
 import com.github.kr328.clash.common.util.mainActivityAlias
-import com.github.kr328.clash.common.util.unsafeLazy
 import com.github.kr328.clash.core.model.ProxySort
 import com.github.kr328.clash.glue.model.AppInfo
 import com.github.kr328.clash.glue.model.DarkMode
@@ -21,34 +20,35 @@ class UiStore(context: Context) {
   private val preferences = context.getSharedPreferences(PREFERENCE_NAME, Context.MODE_PRIVATE)
   private val store = Store(preferences.asStoreProvider())
 
-  val valueState: StateFlow<ValueState> by unsafeLazy {
-    val readValues = {
-      ValueState(
-        enableVpn = enableVpn,
-        darkMode = darkMode,
-        hideAppIcon = hideAppIcon,
-        hideFromRecents = hideFromRecents,
-        proxyExcludeNotSelectable = proxyExcludeNotSelectable,
-        proxyLine = proxyLine,
-        proxySort = proxySort,
-        proxyLastGroup = proxyLastGroup,
-        accessControlSort = accessControlSort,
-        accessControlReverse = accessControlReverse,
-        accessControlSystemApp = accessControlSystemApp,
-      )
-    }
-    callbackFlow {
-        val listener = OnSharedPreferenceChangeListener { _, _ -> trySend(readValues()) }
-        preferences.registerOnSharedPreferenceChangeListener(listener)
-        trySend(readValues())
-        awaitClose { preferences.unregisterOnSharedPreferenceChangeListener(listener) }
+  val valueState: StateFlow<ValueState> by
+    lazy(NONE) {
+      val readValues = {
+        ValueState(
+          enableVpn = enableVpn,
+          darkMode = darkMode,
+          hideAppIcon = hideAppIcon,
+          hideFromRecents = hideFromRecents,
+          proxyExcludeNotSelectable = proxyExcludeNotSelectable,
+          proxyLine = proxyLine,
+          proxySort = proxySort,
+          proxyLastGroup = proxyLastGroup,
+          accessControlSort = accessControlSort,
+          accessControlReverse = accessControlReverse,
+          accessControlSystemApp = accessControlSystemApp,
+        )
       }
-      .stateIn(
-        scope = Global,
-        started = SharingStarted.WhileSubscribed(),
-        initialValue = readValues(),
-      )
-  }
+      callbackFlow {
+          val listener = OnSharedPreferenceChangeListener { _, _ -> trySend(readValues()) }
+          preferences.registerOnSharedPreferenceChangeListener(listener)
+          trySend(readValues())
+          awaitClose { preferences.unregisterOnSharedPreferenceChangeListener(listener) }
+        }
+        .stateIn(
+          scope = Global,
+          started = SharingStarted.WhileSubscribed(),
+          initialValue = readValues(),
+        )
+    }
 
   var enableVpn: Boolean by store.boolean(key = "enable_vpn", defaultValue = true)
 
