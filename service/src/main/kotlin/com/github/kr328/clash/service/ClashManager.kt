@@ -26,12 +26,9 @@ import kotlinx.coroutines.channels.ReceiveChannel
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import org.koin.core.component.KoinComponent
-import org.koin.core.component.inject
 
 class ClashManager(private val context: Context) :
-  IClashManager, CoroutineScope by CoroutineScope(Dispatchers.IO), KoinComponent {
-  private val scope: CoroutineScope by inject()
+  IClashManager, CoroutineScope by CoroutineScope(Dispatchers.IO) {
   private val store = ServiceStore(context)
   private var logReceiver: ReceiveChannel<LogMessage>? = null
 
@@ -67,7 +64,7 @@ class ClashManager(private val context: Context) :
     return Clash.patchSelector(group, name).also {
       val current = store.activeProfile ?: return@also
 
-      scope.launch {
+      launch {
         try {
           if (it) {
             SelectionDao().setSelected(Selection(current, group, name))
