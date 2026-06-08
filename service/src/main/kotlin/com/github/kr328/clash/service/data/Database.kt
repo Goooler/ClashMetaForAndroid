@@ -29,7 +29,6 @@ abstract class Database : RoomDatabase() {
 
   companion object : KoinComponent {
     private val application: Application by inject(mode = NONE)
-
     val database: Database by lazy { open(application) }
 
     private val MIGRATION_1_2 =
@@ -38,7 +37,7 @@ abstract class Database : RoomDatabase() {
         db.execSQL("ALTER TABLE pending ADD COLUMN ageSecretKey TEXT")
       }
 
-    internal fun open(context: Context): Database {
+    private fun open(context: Context): Database {
       return Room.databaseBuilder(context.applicationContext, Database::class.java, "profiles")
         .addMigrations(MIGRATION_1_2)
         .build()
