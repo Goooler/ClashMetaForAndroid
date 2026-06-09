@@ -22,8 +22,6 @@ jobs:
         with:
           go-version: "1.26"
           check-latest: true
-      # TODO: https://github.com/Goooler/golang-gradle-plugin/issues/90
-      - run: echo "GOROOT=$(go env GOROOT)" >> "$GITHUB_ENV"
       - name: Install update-go-mod-replace
         run: |
           go install github.com/metacubex/update-go-mod-replace@latest
