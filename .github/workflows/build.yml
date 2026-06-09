@@ -34,6 +34,7 @@ jobs:
             core/src/main/golang/go.sum
             core/src/foss/golang/go.sum
             core/src/foss/golang/clash/go.sum
+      # https://github.com/actions/setup-go/issues/107
       - run: echo "GOROOT=$(go env GOROOT)" >> "$GITHUB_ENV"
       - uses: actions/setup-java@v5
         with:
