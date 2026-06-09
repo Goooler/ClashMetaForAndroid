@@ -61,6 +61,6 @@ kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "ko
 kotlin-parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize", version.ref = "kotlin" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 ksp = "com.google.devtools.ksp:2.3.9"
-golang = "io.github.goooler.golang:0.2.3-SNAPSHOT"
+golang = "io.github.goooler.golang:0.3.0"
 download = "de.undercouch.download:5.7.0"
 spotless = "com.diffplug.spotless:8.6.0"
