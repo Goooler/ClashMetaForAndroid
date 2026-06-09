@@ -3,7 +3,7 @@ module cfa
 go 1.25.0
 
 require (
-	github.com/dlclark/regexp2 v1.12.0
+	github.com/dlclark/regexp2/v2 v2.2.1
 	github.com/metacubex/mihomo v1.19.27
 	golang.org/x/sync v0.21.0
 )
