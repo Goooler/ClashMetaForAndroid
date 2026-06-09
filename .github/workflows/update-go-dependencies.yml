@@ -22,7 +22,7 @@ jobs:
         with:
           go-version: "1.26"
           check-latest: true
-      # https://github.com/actions/setup-go/issues/107
+      # TODO: https://github.com/Goooler/golang-gradle-plugin/issues/90
       - run: echo "GOROOT=$(go env GOROOT)" >> "$GITHUB_ENV"
       - name: Install update-go-mod-replace
         run: |
