@@ -21,7 +21,6 @@ import androidx.compose.ui.platform.LocalClipboard
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.toClipEntry
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.fromHtml
 import androidx.compose.ui.tooling.preview.PreviewWrapper
@@ -33,6 +32,18 @@ import com.github.kr328.clash.glue.util.MIHOMO_WIKI
 import com.github.kr328.clash.glue.util.TABBY_GITHUB
 import com.github.kr328.clash.glue.util.openLink
 import com.github.kr328.clash.home.R
+import com.github.kr328.clash.home.about
+import com.github.kr328.clash.home.app_version
+import com.github.kr328.clash.home.check_for_updates
+import com.github.kr328.clash.home.core_version
+import com.github.kr328.clash.home.document
+import com.github.kr328.clash.home.help
+import com.github.kr328.clash.home.mihomo_core
+import com.github.kr328.clash.home.mihomo_wiki
+import com.github.kr328.clash.home.open
+import com.github.kr328.clash.home.sources
+import com.github.kr328.clash.home.tips_help
+import com.github.kr328.clash.home.update_available
 import com.github.kr328.clash.home.vm.HelpViewModel
 import com.github.kr328.clash.ui.component.TabbyScaffold
 import com.github.kr328.clash.ui.icon.BaselineMihomo
@@ -41,6 +52,7 @@ import com.github.kr328.clash.ui.icon.OutlineInfo
 import com.github.kr328.clash.ui.icon.TabbyIcons
 import com.github.kr328.clash.ui.theme.PreviewTabby
 import com.github.kr328.clash.ui.theme.TabbyThemeWrapper
+import com.github.kr328.clash.ui.util.stringResource
 import kotlinx.coroutines.launch
 import me.zhanghai.compose.preference.ProvidePreferenceLocals
 import me.zhanghai.compose.preference.preference

@@ -40,7 +40,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.PreviewWrapper
@@ -51,6 +50,19 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.github.kr328.clash.common.R as CommonR
 import com.github.kr328.clash.glue.model.AppInfo
 import com.github.kr328.clash.settings.R
+import com.github.kr328.clash.settings.access_control_packages
+import com.github.kr328.clash.settings.export_to_clipboard
+import com.github.kr328.clash.settings.import_from_clipboard
+import com.github.kr328.clash.settings.install_time
+import com.github.kr328.clash.settings.keyword
+import com.github.kr328.clash.settings.package_name
+import com.github.kr328.clash.settings.reverse
+import com.github.kr328.clash.settings.search
+import com.github.kr328.clash.settings.select_all
+import com.github.kr328.clash.settings.select_invert
+import com.github.kr328.clash.settings.select_none
+import com.github.kr328.clash.settings.system_apps
+import com.github.kr328.clash.settings.update_time
 import com.github.kr328.clash.settings.vm.AccessControlViewModel
 import com.github.kr328.clash.ui.component.Spacer
 import com.github.kr328.clash.ui.component.TabbyScaffold
@@ -69,6 +81,7 @@ import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.withContext
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable

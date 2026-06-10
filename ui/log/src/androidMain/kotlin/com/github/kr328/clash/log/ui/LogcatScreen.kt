@@ -30,7 +30,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalClipboard
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.toClipEntry
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.PreviewWrapper
 import androidx.compose.ui.unit.dp
@@ -39,6 +38,9 @@ import com.github.kr328.clash.common.R as CommonR
 import com.github.kr328.clash.core.model.LogMessage
 import com.github.kr328.clash.glue.util.format
 import com.github.kr328.clash.log.R
+import com.github.kr328.clash.log.copied
+import com.github.kr328.clash.log.invalid_log_file
+import com.github.kr328.clash.log.tabby_logcat
 import com.github.kr328.clash.log.vm.LogcatViewModel
 import com.github.kr328.clash.ui.component.ModelProgressBarDialog
 import com.github.kr328.clash.ui.component.TabbyScaffold
@@ -50,6 +52,7 @@ import com.github.kr328.clash.ui.lifecycle.withLifecycle
 import com.github.kr328.clash.ui.theme.PreviewTabby
 import com.github.kr328.clash.ui.theme.TabbyThemeWrapper
 import com.github.kr328.clash.ui.theme.tabbyDimens
+import com.github.kr328.clash.ui.util.stringResource
 import java.util.Date
 import kotlinx.coroutines.launch
 import org.koin.compose.viewmodel.koinViewModel

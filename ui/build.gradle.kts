@@ -1,6 +1,7 @@
 plugins {
   alias(libs.plugins.android.multiplatform)
 }
+
 kotlin {
   sourceSets {
     androidMain.dependencies {
@@ -8,4 +9,3 @@ kotlin {
     }
   }
 }
-

@@ -27,6 +27,7 @@ import com.github.kr328.clash.service.RemoteService
 import com.github.kr328.clash.service.remote.ILogObserver
 import com.github.kr328.clash.service.remote.IRemoteService
 import com.github.kr328.clash.service.remote.unwrap
+import com.github.kr328.clash.ui.util.getString
 import java.io.IOException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -146,6 +147,7 @@ internal class LogcatService :
   }
 
   private fun showNotification() {
+    val statusNotificationId = resources.getIdentifier("nf_logcat_status", "id", packageName)
     val notification =
       NotificationCompat.Builder(this, CHANNEL_ID)
         .setSmallIcon(CommonR.drawable.ic_tabby_small)
@@ -155,7 +157,7 @@ internal class LogcatService :
         .setContentIntent(
           PendingIntent.getActivity(
             this,
-            R.id.nf_logcat_status,
+            statusNotificationId,
             mainIntent {
               action = Intents.ACTION_LOGCAT
               setFlags(
@@ -169,7 +171,7 @@ internal class LogcatService :
         )
         .build()
 
-    startForegroundCompat(R.id.nf_logcat_status, notification)
+    startForegroundCompat(statusNotificationId, notification)
   }
 
   companion object {

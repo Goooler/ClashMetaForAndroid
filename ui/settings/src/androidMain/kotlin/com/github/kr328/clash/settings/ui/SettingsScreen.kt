@@ -1,6 +1,5 @@
 package com.github.kr328.clash.settings.ui
 
-import androidx.annotation.StringRes
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -22,6 +21,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.PreviewWrapper
 import com.github.kr328.clash.common.R as CommonR
 import com.github.kr328.clash.settings.R
+import com.github.kr328.clash.settings.app
+import com.github.kr328.clash.settings.meta_features
+import com.github.kr328.clash.settings.network
+import com.github.kr328.clash.settings.override
 import com.github.kr328.clash.ui.component.Spacer
 import com.github.kr328.clash.ui.component.TabbyScaffold
 import com.github.kr328.clash.ui.icon.BaselineDns
@@ -32,6 +35,7 @@ import com.github.kr328.clash.ui.icon.TabbyIcons
 import com.github.kr328.clash.ui.theme.PreviewTabby
 import com.github.kr328.clash.ui.theme.TabbyThemeWrapper
 import com.github.kr328.clash.ui.theme.tabbyDimens
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 internal fun SettingsScreen(
@@ -76,7 +80,7 @@ internal fun SettingsScreen(
 @Composable
 private fun SettingsEntryItem(
   icon: ImageVector,
-  @StringRes titleRes: Int,
+  titleRes: Any,
   onClick: () -> Unit,
   modifier: Modifier = Modifier,
 ) {

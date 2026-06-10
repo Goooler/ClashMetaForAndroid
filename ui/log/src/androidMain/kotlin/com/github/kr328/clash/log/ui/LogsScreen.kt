@@ -28,13 +28,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.PreviewWrapper
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.github.kr328.clash.common.R as CommonR
 import com.github.kr328.clash.glue.util.format
 import com.github.kr328.clash.log.R
+import com.github.kr328.clash.log.delete_all_logs
+import com.github.kr328.clash.log.delete_all_logs_warn
+import com.github.kr328.clash.log.history
 import com.github.kr328.clash.log.model.LogFile
+import com.github.kr328.clash.log.tabby_logcat
 import com.github.kr328.clash.log.vm.LogsViewModel
 import com.github.kr328.clash.ui.component.SizeSpacer
 import com.github.kr328.clash.ui.component.TabbyScaffold
@@ -44,6 +47,7 @@ import com.github.kr328.clash.ui.icon.TabbyIcons
 import com.github.kr328.clash.ui.theme.PreviewTabby
 import com.github.kr328.clash.ui.theme.TabbyThemeWrapper
 import com.github.kr328.clash.ui.theme.tabbyDimens
+import com.github.kr328.clash.ui.util.stringResource
 import java.util.Date
 import org.koin.compose.viewmodel.koinViewModel
 

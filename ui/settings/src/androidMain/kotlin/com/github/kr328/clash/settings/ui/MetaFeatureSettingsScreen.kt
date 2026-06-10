@@ -3,7 +3,6 @@ package com.github.kr328.clash.settings.ui
 import android.content.ClipData
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts.GetContent
-import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -30,8 +29,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalClipboard
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.toClipEntry
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.PreviewWrapper
@@ -43,6 +42,53 @@ import com.github.kr328.clash.common.R as CommonR
 import com.github.kr328.clash.core.Clash
 import com.github.kr328.clash.core.model.ConfigurationOverride
 import com.github.kr328.clash.settings.R
+import com.github.kr328.clash.settings.age_key_category
+import com.github.kr328.clash.settings.age_key_copy
+import com.github.kr328.clash.settings.age_key_generate
+import com.github.kr328.clash.settings.age_key_generate_summary
+import com.github.kr328.clash.settings.age_key_to_public
+import com.github.kr328.clash.settings.age_key_type_hybrid
+import com.github.kr328.clash.settings.age_key_type_x25519
+import com.github.kr328.clash.settings.age_public_key
+import com.github.kr328.clash.settings.age_public_key_error
+import com.github.kr328.clash.settings.age_secret_key
+import com.github.kr328.clash.settings.age_secret_key_error
+import com.github.kr328.clash.settings.always
+import com.github.kr328.clash.settings.dont_modify
+import com.github.kr328.clash.settings.error
+import com.github.kr328.clash.settings.find_process_mode
+import com.github.kr328.clash.settings.force_dns_mapping
+import com.github.kr328.clash.settings.force_domain
+import com.github.kr328.clash.settings.general
+import com.github.kr328.clash.settings.geodata_mode
+import com.github.kr328.clash.settings.geofile_import_failed
+import com.github.kr328.clash.settings.geofile_imported
+import com.github.kr328.clash.settings.geofile_unknown_db_format
+import com.github.kr328.clash.settings.geofile_unknown_db_format_message
+import com.github.kr328.clash.settings.geox_files
+import com.github.kr328.clash.settings.import_asn_file
+import com.github.kr328.clash.settings.import_country_file
+import com.github.kr328.clash.settings.import_geoip_file
+import com.github.kr328.clash.settings.import_geosite_file
+import com.github.kr328.clash.settings.meta_features
+import com.github.kr328.clash.settings.off
+import com.github.kr328.clash.settings.override_destination
+import com.github.kr328.clash.settings.parse_pure_ip
+import com.github.kr328.clash.settings.press_to_import
+import com.github.kr328.clash.settings.skip_domain
+import com.github.kr328.clash.settings.skip_dst_address
+import com.github.kr328.clash.settings.skip_src_address
+import com.github.kr328.clash.settings.sniff_http_override_destination
+import com.github.kr328.clash.settings.sniff_http_ports
+import com.github.kr328.clash.settings.sniff_quic_override_destination
+import com.github.kr328.clash.settings.sniff_quic_ports
+import com.github.kr328.clash.settings.sniff_tls_override_destination
+import com.github.kr328.clash.settings.sniff_tls_ports
+import com.github.kr328.clash.settings.sniffer_setting
+import com.github.kr328.clash.settings.strategy
+import com.github.kr328.clash.settings.strict
+import com.github.kr328.clash.settings.tcp_concurrent
+import com.github.kr328.clash.settings.unified_delay
 import com.github.kr328.clash.settings.vm.MetaFeatureSettingsViewModel
 import com.github.kr328.clash.settings.vm.MetaFeatureSettingsViewModel.ImportType
 import com.github.kr328.clash.ui.component.TabbyScaffold
@@ -60,6 +106,7 @@ import me.zhanghai.compose.preference.ProvidePreferenceLocals
 import me.zhanghai.compose.preference.listPreference
 import me.zhanghai.compose.preference.preference
 import me.zhanghai.compose.preference.preferenceCategory
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
 private sealed interface MetaFeatureSettingsRoute : NavKey {
@@ -83,6 +130,7 @@ internal fun MetaFeatureSettingsScreen(
     entryProvider =
       entryProvider {
         entry<MetaFeatureSettingsRoute.Main> {
+          val context = LocalContext.current
           val configuration by viewModel.configuration.collectAsStateWithLifecycle()
           val importResult by viewModel.importResult.collectAsStateWithLifecycle()
           val snackbarHostState = remember { SnackbarHostState() }
@@ -149,7 +197,9 @@ internal fun MetaFeatureSettingsScreen(
             },
             onOpenEditableTextList = { title, initialValues, onApply ->
               currentEditableTextListOnApply = onApply
-              backStack.addIfNotLast(EditableTextList(title, initialValues?.toSet()))
+              backStack.addIfNotLast(
+                EditableTextList(context.getStringId(title), initialValues?.toSet())
+              )
             },
             onAgeKeyHelperRequested = { hybrid ->
               ageKeyHelperHybrid = hybrid
@@ -210,7 +260,7 @@ private fun MetaFeatureSettingsContent(
   onImportGeoSite: () -> Unit,
   onImportCountry: () -> Unit,
   onImportASN: () -> Unit,
-  onOpenEditableTextList: (Int, List<String>?, (List<String>?) -> Unit) -> Unit,
+  onOpenEditableTextList: (Any, List<String>?, (List<String>?) -> Unit) -> Unit,
   onAgeKeyHelperRequested: (Boolean) -> Unit,
 ) {
   val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
@@ -319,7 +369,7 @@ private fun LazyListScope.metaBasicPreferenceItems(
 private fun LazyListScope.metaSnifferPreferenceItems(
   configuration: ConfigurationOverride,
   actions: MetaFeatureSettingsActions,
-  onOpenEditableTextList: (Int, List<String>?, (List<String>?) -> Unit) -> Unit,
+  onOpenEditableTextList: (Any, List<String>?, (List<String>?) -> Unit) -> Unit,
 ) {
   val enabled = configuration.sniffer.enable != false
   preferenceCategory(
@@ -525,8 +575,7 @@ private fun LazyListScope.metaGeoFileItems(
   )
 }
 
-private val ConfigurationOverride.FindProcessMode?.textRes: Int
-  @StringRes
+private val ConfigurationOverride.FindProcessMode?.textRes: Any
   get() =
     when (this) {
       Off -> R.string.off

@@ -5,10 +5,15 @@ import android.content.Intent
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.github.kr328.clash.common.R as CommonR
 import com.github.kr328.clash.profile.R
+import com.github.kr328.clash.profile.import_from_file
+import com.github.kr328.clash.profile.import_from_qr
+import com.github.kr328.clash.profile.import_from_url
+import com.github.kr328.clash.profile.qr
 import com.github.kr328.clash.ui.icon.BaselineAttachFile
 import com.github.kr328.clash.ui.icon.BaselineCloudDownload
 import com.github.kr328.clash.ui.icon.BaselineQrCodeScanner
 import com.github.kr328.clash.ui.icon.TabbyIcons
+import com.github.kr328.clash.ui.util.getString
 
 internal sealed class ProfileProvider {
   class File(private val context: Context) : ProfileProvider() {

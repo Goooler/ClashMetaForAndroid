@@ -1,6 +1,5 @@
 package com.github.kr328.clash.settings.ui
 
-import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Icon
@@ -12,12 +11,36 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.PreviewWrapper
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.github.kr328.clash.service.model.AccessControlMode
 import com.github.kr328.clash.settings.R
+import com.github.kr328.clash.settings.access_control_mode
+import com.github.kr328.clash.settings.access_control_packages
+import com.github.kr328.clash.settings.access_control_packages_summary
+import com.github.kr328.clash.settings.allow_all_apps
+import com.github.kr328.clash.settings.allow_bypass
+import com.github.kr328.clash.settings.allow_bypass_summary
+import com.github.kr328.clash.settings.allow_ipv6
+import com.github.kr328.clash.settings.allow_ipv6_summary
+import com.github.kr328.clash.settings.allow_selected_apps
+import com.github.kr328.clash.settings.bypass_private_network
+import com.github.kr328.clash.settings.bypass_private_network_summary
+import com.github.kr328.clash.settings.deny_selected_apps
+import com.github.kr328.clash.settings.dns_hijacking
+import com.github.kr328.clash.settings.dns_hijacking_summary
+import com.github.kr328.clash.settings.network
+import com.github.kr328.clash.settings.options_unavailable
+import com.github.kr328.clash.settings.route_system_traffic
+import com.github.kr328.clash.settings.routing_via_vpn_service
+import com.github.kr328.clash.settings.system_proxy
+import com.github.kr328.clash.settings.system_proxy_summary
+import com.github.kr328.clash.settings.tun_stack_gvisor
+import com.github.kr328.clash.settings.tun_stack_mixed
+import com.github.kr328.clash.settings.tun_stack_mode
+import com.github.kr328.clash.settings.tun_stack_system
 import com.github.kr328.clash.settings.vm.NetworkSettingsViewModel
+import com.github.kr328.clash.settings.vpn_service_options
 import com.github.kr328.clash.ui.component.TabbyScaffold
 import com.github.kr328.clash.ui.icon.BaselineVpnLock
 import com.github.kr328.clash.ui.icon.TabbyIcons
@@ -28,6 +51,7 @@ import me.zhanghai.compose.preference.listPreference
 import me.zhanghai.compose.preference.preference
 import me.zhanghai.compose.preference.preferenceCategory
 import me.zhanghai.compose.preference.switchPreference
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -191,8 +215,7 @@ private enum class TunStackMode(val persistedValue: String) {
   }
 }
 
-private val TunStackMode.summaryRes: Int
-  @StringRes
+private val TunStackMode.summaryRes: Any
   get() =
     when (this) {
       TunStackMode.System -> R.string.tun_stack_system
@@ -200,8 +223,7 @@ private val TunStackMode.summaryRes: Int
       Mixed -> R.string.tun_stack_mixed
     }
 
-private val AccessControlMode.summaryRes: Int
-  @StringRes
+private val AccessControlMode.summaryRes: Any
   get() =
     when (this) {
       AcceptAll -> R.string.allow_all_apps

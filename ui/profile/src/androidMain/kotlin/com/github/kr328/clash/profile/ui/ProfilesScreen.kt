@@ -40,7 +40,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.PreviewWrapper
 import androidx.compose.ui.unit.dp
@@ -50,6 +49,11 @@ import com.github.kr328.clash.glue.util.elapsedIntervalString
 import com.github.kr328.clash.glue.util.toDateStr
 import com.github.kr328.clash.glue.util.toString
 import com.github.kr328.clash.profile.R
+import com.github.kr328.clash.profile.duplicate
+import com.github.kr328.clash.profile.edit
+import com.github.kr328.clash.profile.format_type_unsaved
+import com.github.kr328.clash.profile.update
+import com.github.kr328.clash.profile.update_all
 import com.github.kr328.clash.profile.vm.ProfilesViewModel
 import com.github.kr328.clash.service.model.Profile
 import com.github.kr328.clash.ui.component.Spacer
@@ -66,6 +70,7 @@ import com.github.kr328.clash.ui.lifecycle.withLifecycle
 import com.github.kr328.clash.ui.theme.PreviewTabby
 import com.github.kr328.clash.ui.theme.TabbyThemeWrapper
 import com.github.kr328.clash.ui.theme.tabbyDimens
+import com.github.kr328.clash.ui.util.stringResource
 import kotlin.time.Duration.Companion.minutes
 import kotlin.uuid.Uuid
 import me.saket.bytesize.binaryBytes

@@ -1,6 +1,5 @@
 package com.github.kr328.clash.settings.ui
 
-import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Icon
@@ -8,11 +7,26 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.PreviewWrapper
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.github.kr328.clash.glue.model.DarkMode
 import com.github.kr328.clash.settings.R
+import com.github.kr328.clash.settings.allow_tabby_auto_restart
+import com.github.kr328.clash.settings.always_dark
+import com.github.kr328.clash.settings.always_light
+import com.github.kr328.clash.settings.app
+import com.github.kr328.clash.settings.auto_restart
+import com.github.kr328.clash.settings.behavior
+import com.github.kr328.clash.settings.dark_mode
+import com.github.kr328.clash.settings.follow_system
+import com.github.kr328.clash.settings.hide_app_icon_desc
+import com.github.kr328.clash.settings.hide_app_icon_title
+import com.github.kr328.clash.settings.hide_from_recents_desc
+import com.github.kr328.clash.settings.hide_from_recents_title
+import com.github.kr328.clash.settings.interface_
+import com.github.kr328.clash.settings.service
+import com.github.kr328.clash.settings.show_traffic
+import com.github.kr328.clash.settings.show_traffic_summary
 import com.github.kr328.clash.settings.vm.AppSettingsViewModel
 import com.github.kr328.clash.ui.component.TabbyScaffold
 import com.github.kr328.clash.ui.icon.BaselineBrightness4
@@ -27,6 +41,7 @@ import me.zhanghai.compose.preference.ProvidePreferenceLocals
 import me.zhanghai.compose.preference.listPreference
 import me.zhanghai.compose.preference.preferenceCategory
 import me.zhanghai.compose.preference.switchPreference
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -120,8 +135,7 @@ private fun AppSettingsContent(
   }
 }
 
-private val DarkMode.summaryRes: Int
-  @StringRes
+private val DarkMode.summaryRes: Any
   get() =
     when (this) {
       Auto -> R.string.follow_system

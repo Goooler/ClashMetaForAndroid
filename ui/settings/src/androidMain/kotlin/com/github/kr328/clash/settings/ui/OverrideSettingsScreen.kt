@@ -1,6 +1,5 @@
 package com.github.kr328.clash.settings.ui
 
-import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -24,8 +23,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.KeyboardType
@@ -39,7 +38,57 @@ import com.github.kr328.clash.core.model.ConfigurationOverride
 import com.github.kr328.clash.core.model.LogMessage
 import com.github.kr328.clash.core.model.TunnelState
 import com.github.kr328.clash.settings.R
+import com.github.kr328.clash.settings.allow_lan
+import com.github.kr328.clash.settings.allow_origins
+import com.github.kr328.clash.settings.allow_private_network
+import com.github.kr328.clash.settings.append_system_dns
+import com.github.kr328.clash.settings.authentication
+import com.github.kr328.clash.settings.bind_address
+import com.github.kr328.clash.settings.blacklist
+import com.github.kr328.clash.settings.debug
+import com.github.kr328.clash.settings.default_name_server
+import com.github.kr328.clash.settings.dns
+import com.github.kr328.clash.settings.domain_fallback
+import com.github.kr328.clash.settings.dont_modify
+import com.github.kr328.clash.settings.empty
+import com.github.kr328.clash.settings.enabled
+import com.github.kr328.clash.settings.enhanced_mode
+import com.github.kr328.clash.settings.error
+import com.github.kr328.clash.settings.external_controller
+import com.github.kr328.clash.settings.external_controller_tls
+import com.github.kr328.clash.settings.fakeip
+import com.github.kr328.clash.settings.fakeip_filter
+import com.github.kr328.clash.settings.fakeip_filter_mode
+import com.github.kr328.clash.settings.fallback
+import com.github.kr328.clash.settings.force_enable
+import com.github.kr328.clash.settings.general
+import com.github.kr328.clash.settings.geoip_fallback
+import com.github.kr328.clash.settings.geoip_fallback_code
+import com.github.kr328.clash.settings.hosts
+import com.github.kr328.clash.settings.http_port
+import com.github.kr328.clash.settings.info
+import com.github.kr328.clash.settings.ipcidr_fallback
+import com.github.kr328.clash.settings.ipv6
+import com.github.kr328.clash.settings.listen
+import com.github.kr328.clash.settings.log_level
+import com.github.kr328.clash.settings.mapping
+import com.github.kr328.clash.settings.mixed_port
+import com.github.kr328.clash.settings.name_server
+import com.github.kr328.clash.settings.name_server_policy
+import com.github.kr328.clash.settings.override
+import com.github.kr328.clash.settings.prefer_h3
+import com.github.kr328.clash.settings.raw_cn
+import com.github.kr328.clash.settings.redirect_port
+import com.github.kr328.clash.settings.secret
+import com.github.kr328.clash.settings.silent
+import com.github.kr328.clash.settings.socks_port
+import com.github.kr328.clash.settings.strategy
+import com.github.kr328.clash.settings.tproxy_port
+import com.github.kr328.clash.settings.use_built_in
+import com.github.kr328.clash.settings.use_hosts
 import com.github.kr328.clash.settings.vm.OverrideSettingsViewModel
+import com.github.kr328.clash.settings.warning
+import com.github.kr328.clash.settings.whitelist
 import com.github.kr328.clash.ui.component.TabbyScaffold
 import com.github.kr328.clash.ui.icon.BaselineReplay
 import com.github.kr328.clash.ui.icon.TabbyIcons
@@ -55,6 +104,7 @@ import me.zhanghai.compose.preference.ProvidePreferenceLocals
 import me.zhanghai.compose.preference.listPreference
 import me.zhanghai.compose.preference.preference
 import me.zhanghai.compose.preference.preferenceCategory
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
 private sealed interface OverrideSettingsRoute : NavKey {
@@ -80,6 +130,7 @@ internal fun OverrideSettingsScreen(
     entryProvider =
       entryProvider {
         entry<OverrideSettingsRoute.Main> {
+          val context = LocalContext.current
           val configuration by viewModel.configuration.collectAsStateWithLifecycle()
           var showResetConfirmDialog by remember { mutableStateOf(false) }
 
@@ -95,11 +146,13 @@ internal fun OverrideSettingsScreen(
             },
             onOpenEditableTextMap = { title, initialValues, onApply ->
               currentEditableTextMapOnApply = onApply
-              backStack.addIfNotLast(EditableTextMap(title, initialValues))
+              backStack.addIfNotLast(EditableTextMap(context.getStringId(title), initialValues))
             },
             onOpenEditableTextList = { title, initialValues, onApply ->
               currentEditableTextListOnApply = onApply
-              backStack.addIfNotLast(EditableTextList(title, initialValues?.toSet()))
+              backStack.addIfNotLast(
+                EditableTextList(context.getStringId(title), initialValues?.toSet())
+              )
             },
           )
         }
@@ -137,8 +190,8 @@ private fun OverrideSettingsContent(
   showResetConfirmDialog: Boolean,
   onShowResetConfirmDialogChange: (Boolean) -> Unit,
   onResetConfirmed: () -> Unit,
-  onOpenEditableTextMap: (Int, Map<String, String>?, (Map<String, String>?) -> Unit) -> Unit,
-  onOpenEditableTextList: (Int, List<String>?, (List<String>?) -> Unit) -> Unit,
+  onOpenEditableTextMap: (Any, Map<String, String>?, (Map<String, String>?) -> Unit) -> Unit,
+  onOpenEditableTextList: (Any, List<String>?, (List<String>?) -> Unit) -> Unit,
 ) {
   val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
   TabbyScaffold(
@@ -186,8 +239,8 @@ private fun OverrideSettingsContent(
 private fun LazyListScope.generalPreferenceItems(
   configuration: ConfigurationOverride,
   actions: OverrideSettingsActions,
-  onOpenEditableTextMap: (Int, Map<String, String>?, (Map<String, String>?) -> Unit) -> Unit,
-  onOpenEditableTextList: (Int, List<String>?, (List<String>?) -> Unit) -> Unit,
+  onOpenEditableTextMap: (Any, Map<String, String>?, (Map<String, String>?) -> Unit) -> Unit,
+  onOpenEditableTextList: (Any, List<String>?, (List<String>?) -> Unit) -> Unit,
 ) {
   preferenceCategory(key = "cat_general", title = { Text(stringResource(R.string.general)) })
   overrideEditTextPreferenceItem(
@@ -351,8 +404,8 @@ private fun LazyListScope.generalPreferenceItems(
 private fun LazyListScope.dnsPreferenceItems(
   configuration: ConfigurationOverride,
   actions: OverrideSettingsActions,
-  onOpenEditableTextMap: (Int, Map<String, String>?, (Map<String, String>?) -> Unit) -> Unit,
-  onOpenEditableTextList: (Int, List<String>?, (List<String>?) -> Unit) -> Unit,
+  onOpenEditableTextMap: (Any, Map<String, String>?, (Map<String, String>?) -> Unit) -> Unit,
+  onOpenEditableTextList: (Any, List<String>?, (List<String>?) -> Unit) -> Unit,
 ) {
   val enabled = configuration.dns.enable != false
   preferenceCategory(key = "cat_dns", title = { Text(stringResource(R.string.dns)) })
@@ -548,9 +601,9 @@ private fun LazyListScope.dnsPreferenceItems(
 
 private fun LazyListScope.overrideEditTextPreferenceItem(
   key: String,
-  @StringRes title: Int,
-  @StringRes placeholder: Int,
-  @StringRes emptyLabel: Int,
+  title: Any,
+  placeholder: Any,
+  emptyLabel: Any,
   value: String?,
   onValueChange: (String?) -> Unit,
   enabled: Boolean = true,
@@ -645,15 +698,14 @@ private fun TextFieldValue.filterDigits(): TextFieldValue {
 }
 
 @Composable
-private fun Map<String, String>?.summary(@StringRes placeholder: Int) =
+private fun Map<String, String>?.summary(placeholder: Any) =
   when {
     this == null -> stringResource(placeholder)
     isEmpty() -> stringResource(R.string.empty)
     else -> stringResource(CommonR.string.format_elements, size)
   }
 
-internal val Boolean?.textRes: Int
-  @StringRes
+internal val Boolean?.textRes: Any
   get() =
     when (this) {
       true -> R.string.enabled
@@ -661,8 +713,7 @@ internal val Boolean?.textRes: Int
       null -> R.string.dont_modify
     }
 
-private val Boolean?.dnsStrategyTextRes: Int
-  @StringRes
+private val Boolean?.dnsStrategyTextRes: Any
   get() =
     when (this) {
       true -> R.string.force_enable
@@ -670,8 +721,7 @@ private val Boolean?.dnsStrategyTextRes: Int
       null -> R.string.dont_modify
     }
 
-private val TunnelState.Mode?.textRes: Int
-  @StringRes
+private val TunnelState.Mode?.textRes: Any
   get() =
     when (this) {
       Direct -> CommonR.string.direct_mode
@@ -680,8 +730,7 @@ private val TunnelState.Mode?.textRes: Int
       null -> R.string.dont_modify
     }
 
-private val LogMessage.Level?.textRes: Int
-  @StringRes
+private val LogMessage.Level?.textRes: Any
   get() =
     when (this) {
       Info -> R.string.info
@@ -693,8 +742,7 @@ private val LogMessage.Level?.textRes: Int
       null -> R.string.dont_modify
     }
 
-private val ConfigurationOverride.DnsEnhancedMode?.textRes: Int
-  @StringRes
+private val ConfigurationOverride.DnsEnhancedMode?.textRes: Any
   get() =
     when (this) {
       None -> CommonR.string.disabled
@@ -703,8 +751,7 @@ private val ConfigurationOverride.DnsEnhancedMode?.textRes: Int
       null -> R.string.dont_modify
     }
 
-private val ConfigurationOverride.FilterMode?.textRes: Int
-  @StringRes
+private val ConfigurationOverride.FilterMode?.textRes: Any
   get() =
     when (this) {
       BlackList -> R.string.blacklist

@@ -2,13 +2,13 @@ import com.android.build.api.dsl.CommonExtension
 import com.android.build.api.dsl.KotlinMultiplatformAndroidLibraryTarget
 import com.android.build.gradle.api.AndroidBasePlugin
 import com.diffplug.gradle.spotless.SpotlessExtension
+import org.jetbrains.compose.ComposeExtension
+import org.jetbrains.compose.resources.ResourcesExtension
 import org.jetbrains.kotlin.compose.compiler.gradle.ComposeCompilerGradlePluginExtension
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSet
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-import org.jetbrains.compose.ComposeExtension
-import org.jetbrains.compose.resources.ResourcesExtension
 
 plugins {
   alias(libs.plugins.android.application) apply false
@@ -88,7 +88,7 @@ allprojects {
           implementation(libs.androidx.compose.ui)
           implementation(libs.androidx.compose.ui.tooling.preview)
           implementation(libs.androidx.compose.ui.util)
-//          "debugImplementation"(libs.androidx.compose.ui.tooling)
+          //          "debugImplementation"(libs.androidx.compose.ui.tooling)
           implementation(libs.androidx.compose.animation)
           implementation(libs.androidx.compose.material3)
           implementation(libs.androidx.lifecycle.viewmodel.compose)

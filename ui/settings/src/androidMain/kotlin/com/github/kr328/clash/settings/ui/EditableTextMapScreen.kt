@@ -1,6 +1,5 @@
 package com.github.kr328.clash.settings.ui
 
-import androidx.annotation.StringRes
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -30,13 +29,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.PreviewWrapper
 import androidx.compose.ui.unit.dp
 import androidx.navigation3.runtime.EntryProviderScope
 import androidx.navigation3.runtime.NavKey
 import com.github.kr328.clash.common.R as CommonR
 import com.github.kr328.clash.settings.R
+import com.github.kr328.clash.settings.hosts
+import com.github.kr328.clash.settings.key
+import com.github.kr328.clash.settings.value
 import com.github.kr328.clash.ui.component.TabbyScaffold
 import com.github.kr328.clash.ui.icon.BaselineAdd
 import com.github.kr328.clash.ui.icon.BaselineDragHandle
@@ -45,6 +46,7 @@ import com.github.kr328.clash.ui.icon.TabbyIcons
 import com.github.kr328.clash.ui.theme.PreviewTabby
 import com.github.kr328.clash.ui.theme.TabbyThemeWrapper
 import kotlinx.serialization.Serializable
+import org.jetbrains.compose.resources.stringResource
 import sh.calvin.reorderable.ReorderableItem
 import sh.calvin.reorderable.rememberReorderableLazyListState
 
@@ -68,7 +70,7 @@ internal fun EntryProviderScope<NavKey>.editableTextMapScreenEntry(
 
 @Composable
 private fun EditableTextMapScreen(
-  @StringRes title: Int,
+  title: Any,
   initialValues: Map<String, String>?,
   onDismiss: () -> Unit,
   onApply: (Map<String, String>?) -> Unit,
@@ -185,7 +187,7 @@ private fun EditableTextMapScreen(
 
 @Composable
 private fun MapEntryInputDialog(
-  @StringRes title: Int,
+  title: Any,
   initialKey: String,
   initialValue: String,
   onDismiss: () -> Unit,

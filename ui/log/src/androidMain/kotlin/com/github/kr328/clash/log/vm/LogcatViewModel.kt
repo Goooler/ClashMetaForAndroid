@@ -17,9 +17,11 @@ import com.github.kr328.clash.core.model.LogMessage
 import com.github.kr328.clash.glue.util.logsDir
 import com.github.kr328.clash.log.LogcatService
 import com.github.kr328.clash.log.R
+import com.github.kr328.clash.log.file_exported
 import com.github.kr328.clash.log.model.LogFile
 import com.github.kr328.clash.log.util.LogcatFilter
 import com.github.kr328.clash.log.util.LogcatReader
+import com.github.kr328.clash.ui.util.getString
 import java.io.OutputStreamWriter
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException

@@ -9,7 +9,11 @@ import com.github.kr328.clash.common.R as CommonR
 import com.github.kr328.clash.glue.remote.Remote
 import com.github.kr328.clash.glue.util.withProfile
 import com.github.kr328.clash.profile.R
+import com.github.kr328.clash.profile.active_unsaved_tips
+import com.github.kr328.clash.profile.toast_profile_updated_complete
+import com.github.kr328.clash.profile.toast_profile_updated_failed
 import com.github.kr328.clash.service.model.Profile
+import com.github.kr328.clash.ui.util.getString
 import kotlin.time.Duration.Companion.minutes
 import kotlin.uuid.Uuid
 import kotlinx.coroutines.Dispatchers

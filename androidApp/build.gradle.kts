@@ -86,8 +86,18 @@ dependencies {
 
   implementation(libs.androidx.core)
   implementation(libs.androidx.activity.compose)
+  implementation(libs.androidx.compose.ui)
+  implementation(libs.androidx.compose.ui.tooling.preview)
+  implementation(libs.androidx.compose.ui.util)
+  implementation(libs.androidx.compose.animation)
+  implementation(libs.androidx.compose.material3)
+  implementation(libs.androidx.lifecycle.viewmodel.compose)
+  implementation(libs.androidx.lifecycle.viewmodel.navigation3)
+  implementation(libs.androidx.navigation3.runtime)
+  implementation(libs.androidx.navigation3.ui)
 
   implementation(libs.koin.android)
+  implementation(libs.koin.viewModel)
 }
 
 val downloadGeoFiles by

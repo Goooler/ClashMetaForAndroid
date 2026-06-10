@@ -10,6 +10,8 @@ import com.github.kr328.clash.core.model.Provider
 import com.github.kr328.clash.glue.remote.Remote
 import com.github.kr328.clash.glue.util.withClash
 import com.github.kr328.clash.profile.R
+import com.github.kr328.clash.profile.format_update_provider_failure
+import com.github.kr328.clash.ui.util.getString
 import kotlin.time.Duration.Companion.minutes
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay

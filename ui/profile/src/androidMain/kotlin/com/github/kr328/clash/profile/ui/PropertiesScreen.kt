@@ -19,7 +19,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.fromHtml
 import androidx.compose.ui.tooling.preview.PreviewWrapper
@@ -31,6 +30,19 @@ import com.github.kr328.clash.glue.util.ValidatorAutoUpdateInterval
 import com.github.kr328.clash.glue.util.ValidatorHttpUrl
 import com.github.kr328.clash.glue.util.ValidatorNotBlank
 import com.github.kr328.clash.profile.R
+import com.github.kr328.clash.profile.accept_http_content
+import com.github.kr328.clash.profile.age_secret_key
+import com.github.kr328.clash.profile.age_secret_key_hint
+import com.github.kr328.clash.profile.auto_update
+import com.github.kr328.clash.profile.browse_configuration_providers
+import com.github.kr328.clash.profile.browse_files
+import com.github.kr328.clash.profile.exit_without_save
+import com.github.kr328.clash.profile.exit_without_save_warning
+import com.github.kr328.clash.profile.format_minutes
+import com.github.kr328.clash.profile.profile_name
+import com.github.kr328.clash.profile.properties
+import com.github.kr328.clash.profile.save
+import com.github.kr328.clash.profile.tips_properties
 import com.github.kr328.clash.profile.vm.PropertiesViewModel
 import com.github.kr328.clash.service.model.Profile
 import com.github.kr328.clash.ui.component.ModelProgressBarDialog
@@ -46,6 +58,7 @@ import com.github.kr328.clash.ui.icon.TabbyIcons
 import com.github.kr328.clash.ui.lifecycle.withLifecycle
 import com.github.kr328.clash.ui.theme.PreviewTabby
 import com.github.kr328.clash.ui.theme.TabbyThemeWrapper
+import com.github.kr328.clash.ui.util.stringResource
 import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.minutes
 import kotlin.uuid.Uuid

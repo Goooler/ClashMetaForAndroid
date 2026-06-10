@@ -44,7 +44,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.PreviewWrapper
@@ -57,6 +56,11 @@ import com.github.kr328.clash.glue.util.Validator
 import com.github.kr328.clash.glue.util.ValidatorFileName
 import com.github.kr328.clash.glue.util.elapsedIntervalString
 import com.github.kr328.clash.profile.R
+import com.github.kr328.clash.profile.file_name
+import com.github.kr328.clash.profile.files
+import com.github.kr328.clash.profile.import_
+import com.github.kr328.clash.profile.invalid_file_name
+import com.github.kr328.clash.profile.rename
 import com.github.kr328.clash.profile.vm.FilesViewModel
 import com.github.kr328.clash.ui.component.SizeSpacer
 import com.github.kr328.clash.ui.component.TabbyScaffold
@@ -72,6 +76,7 @@ import com.github.kr328.clash.ui.icon.TabbyIcons
 import com.github.kr328.clash.ui.lifecycle.withLifecycle
 import com.github.kr328.clash.ui.theme.PreviewTabby
 import com.github.kr328.clash.ui.theme.TabbyThemeWrapper
+import com.github.kr328.clash.ui.util.stringResource
 import kotlin.time.Duration.Companion.minutes
 import kotlin.uuid.Uuid
 import kotlinx.coroutines.delay

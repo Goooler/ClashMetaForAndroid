@@ -24,7 +24,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.PreviewWrapper
 import androidx.compose.ui.unit.dp
@@ -34,6 +33,8 @@ import com.github.kr328.clash.core.model.Provider
 import com.github.kr328.clash.glue.util.elapsedIntervalString
 import com.github.kr328.clash.glue.util.type
 import com.github.kr328.clash.profile.R
+import com.github.kr328.clash.profile.update
+import com.github.kr328.clash.profile.update_all
 import com.github.kr328.clash.profile.vm.ProvidersViewModel
 import com.github.kr328.clash.profile.vm.ProvidersViewModel.UiState.ProviderItemState
 import com.github.kr328.clash.ui.component.Spacer
@@ -45,6 +46,7 @@ import com.github.kr328.clash.ui.lifecycle.withLifecycle
 import com.github.kr328.clash.ui.theme.PreviewTabby
 import com.github.kr328.clash.ui.theme.TabbyThemeWrapper
 import com.github.kr328.clash.ui.theme.tabbyDimens
+import com.github.kr328.clash.ui.util.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable

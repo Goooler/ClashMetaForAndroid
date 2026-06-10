@@ -7,9 +7,12 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.PreviewWrapper
 import com.github.kr328.clash.crash.R
+import com.github.kr328.clash.crash.application_broken
+import com.github.kr328.clash.crash.application_broken_tips
+import com.github.kr328.clash.crash.github_releases
+import com.github.kr328.clash.crash.reinstall
 import com.github.kr328.clash.glue.util.TABBY_GITHUB
 import com.github.kr328.clash.glue.util.openLink
 import com.github.kr328.clash.ui.component.TabbyScaffold
@@ -20,6 +23,7 @@ import com.github.kr328.clash.ui.theme.TabbyThemeWrapper
 import me.zhanghai.compose.preference.ProvidePreferenceLocals
 import me.zhanghai.compose.preference.preference
 import me.zhanghai.compose.preference.preferenceCategory
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 internal fun ApkBrokenScreen() {

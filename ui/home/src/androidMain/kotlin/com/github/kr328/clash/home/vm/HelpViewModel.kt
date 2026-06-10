@@ -8,7 +8,10 @@ import com.github.kr328.clash.common.log.Log
 import com.github.kr328.clash.core.bridge.Bridge
 import com.github.kr328.clash.glue.util.TABBY_RELEASES_LATEST
 import com.github.kr328.clash.home.R
+import com.github.kr328.clash.home.already_up_to_date
 import com.github.kr328.clash.home.api.HelpApi
+import com.github.kr328.clash.home.check_update_failed
+import com.github.kr328.clash.ui.util.getString
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

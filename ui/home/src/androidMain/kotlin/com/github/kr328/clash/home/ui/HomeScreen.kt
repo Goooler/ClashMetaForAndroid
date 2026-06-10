@@ -34,12 +34,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.PreviewWrapper
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.github.kr328.clash.common.R as CommonR
 import com.github.kr328.clash.home.R
+import com.github.kr328.clash.home.format_profile_activated
+import com.github.kr328.clash.home.format_traffic_forwarded
+import com.github.kr328.clash.home.help
+import com.github.kr328.clash.home.no_profile_selected
+import com.github.kr328.clash.home.profile
 import com.github.kr328.clash.home.vm.HomeViewModel
 import com.github.kr328.clash.ui.component.Spacer
 import com.github.kr328.clash.ui.component.TabbyScaffold
@@ -59,6 +63,7 @@ import com.github.kr328.clash.ui.theme.TabbyDarkSurface
 import com.github.kr328.clash.ui.theme.TabbyLightStopped
 import com.github.kr328.clash.ui.theme.TabbyOnPrimary
 import com.github.kr328.clash.ui.theme.TabbyThemeWrapper
+import com.github.kr328.clash.ui.util.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable

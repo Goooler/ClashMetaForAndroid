@@ -52,7 +52,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -64,6 +63,17 @@ import com.github.kr328.clash.core.model.Proxy
 import com.github.kr328.clash.core.model.ProxySort
 import com.github.kr328.clash.core.model.TunnelState
 import com.github.kr328.clash.proxy.R
+import com.github.kr328.clash.proxy.delay
+import com.github.kr328.clash.proxy.delay_test
+import com.github.kr328.clash.proxy.doubles
+import com.github.kr328.clash.proxy.layout
+import com.github.kr328.clash.proxy.mode_switch_tips
+import com.github.kr328.clash.proxy.multiple
+import com.github.kr328.clash.proxy.not_selectable
+import com.github.kr328.clash.proxy.proxy_empty_tips
+import com.github.kr328.clash.proxy.proxy_scroll_to_top
+import com.github.kr328.clash.proxy.scroll_selected_to_top
+import com.github.kr328.clash.proxy.single
 import com.github.kr328.clash.proxy.vm.ProxyViewModel
 import com.github.kr328.clash.proxy.vm.ProxyViewModel.SelectedProxy
 import com.github.kr328.clash.ui.component.Spacer
@@ -78,6 +88,7 @@ import com.github.kr328.clash.ui.lifecycle.withLifecycle
 import com.github.kr328.clash.ui.theme.PreviewTabby
 import com.github.kr328.clash.ui.theme.TabbyThemeWrapper
 import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -669,4 +680,14 @@ private fun ProxyContentPreview() {
     onProxySelected = { _, _ -> },
     onProxyDelayTest = { _, _ -> },
   )
+}
+
+@Composable
+internal fun stringResource(res: Any, vararg formatArgs: Any): String {
+  return when (res) {
+    is org.jetbrains.compose.resources.StringResource ->
+      org.jetbrains.compose.resources.stringResource(res, *formatArgs)
+    is Int -> androidx.compose.ui.res.stringResource(res, *formatArgs)
+    else -> throw IllegalArgumentException("Unsupported resource type: $res")
+  }
 }
