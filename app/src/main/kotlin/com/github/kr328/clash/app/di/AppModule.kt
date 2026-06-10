@@ -9,7 +9,6 @@ import com.github.kr328.clash.app.MainActivity
 import com.github.kr328.clash.app.RestartReceiver
 import com.github.kr328.clash.common.compat.queryIntentActivitiesCompat
 import com.github.kr328.clash.common.di.AppInfoProvider
-import com.github.kr328.clash.common.di.AppInfoProvider.Companion.appInfoProvider
 import com.github.kr328.clash.glue.store.UiStore
 import kotlin.reflect.KClass
 import kotlinx.coroutines.CoroutineScope
@@ -20,7 +19,7 @@ import org.koin.dsl.module
 val appModule = module {
   single<AppInfoProvider> { AppInfoProviderImpl(application = get()) }
   single<CoroutineScope> { CoroutineScope(Dispatchers.IO + SupervisorJob()) }
-  single { UiStore(application = get(), scope = get()) }
+  single { UiStore(application = get(), scope = get(), appInfoProvider = get()) }
 }
 
 private class AppInfoProviderImpl(application: Application) : AppInfoProvider {
@@ -30,7 +29,7 @@ private class AppInfoProviderImpl(application: Application) : AppInfoProvider {
   override val mainActivityClass: KClass<*> = MainActivity::class
   override val restartReceiverClass: KClass<*> = RestartReceiver::class
   override val mainActivityAlias: ComponentName = application.run {
-    val mainActivityName = appInfoProvider.mainActivityClass.java.name
+    val mainActivityName = mainActivityClass.java.name
     val launcherIntent = Intent(Intent.ACTION_MAIN).addCategory(Intent.CATEGORY_LAUNCHER)
     val resolveFlags = PackageManager.MATCH_DISABLED_COMPONENTS
 

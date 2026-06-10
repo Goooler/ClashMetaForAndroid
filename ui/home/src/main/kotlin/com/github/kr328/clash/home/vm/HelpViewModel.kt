@@ -3,7 +3,7 @@ package com.github.kr328.clash.home.vm
 import android.app.Application
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.github.kr328.clash.common.di.AppInfoProvider.Companion.appInfoProvider
+import com.github.kr328.clash.common.di.AppInfoProvider
 import com.github.kr328.clash.common.log.Log
 import com.github.kr328.clash.core.bridge.Bridge
 import com.github.kr328.clash.glue.util.TABBY_RELEASES_LATEST
@@ -17,7 +17,10 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import net.swiftzer.semver.SemVer
 
-internal class HelpViewModel(private val application: Application) : ViewModel() {
+internal class HelpViewModel(
+  private val application: Application,
+  private val appInfoProvider: AppInfoProvider,
+) : ViewModel() {
   private val api = HelpApi()
 
   val uiState: StateFlow<UiState>

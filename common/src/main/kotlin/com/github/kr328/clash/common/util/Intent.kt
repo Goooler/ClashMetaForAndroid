@@ -8,17 +8,13 @@ import java.io.Serializable
 import kotlin.uuid.Uuid
 
 fun mainIntent(block: Intent.() -> Unit = {}): Intent {
-  val mainActivityClass = appInfoProvider.mainActivityClass
-  return mainActivityClass.intent.apply(block = block)
+  return appInfoProvider.mainActivityClass.intent.apply(block = block)
 }
 
 fun Intent.grantPermissions(read: Boolean = true, write: Boolean = true): Intent = apply {
   var flags = 0
-
   if (read) flags = flags or Intent.FLAG_GRANT_READ_URI_PERMISSION
-
   if (write) flags = flags or Intent.FLAG_GRANT_WRITE_URI_PERMISSION
-
   addFlags(flags)
 }
 

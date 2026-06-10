@@ -4,7 +4,7 @@ import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener
 import android.content.pm.PackageManager
-import com.github.kr328.clash.common.di.AppInfoProvider.Companion.appInfoProvider
+import com.github.kr328.clash.common.di.AppInfoProvider
 import com.github.kr328.clash.common.store.Store
 import com.github.kr328.clash.common.store.asStoreProvider
 import com.github.kr328.clash.core.model.ProxySort
@@ -20,7 +20,11 @@ import kotlinx.coroutines.flow.stateIn
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
 
-class UiStore(application: Application, val scope: CoroutineScope) {
+class UiStore(
+  application: Application,
+  private val scope: CoroutineScope,
+  appInfoProvider: AppInfoProvider,
+) {
   private val preferences = application.getSharedPreferences(PREFERENCE_NAME, Context.MODE_PRIVATE)
   private val store = Store(preferences.asStoreProvider())
 
