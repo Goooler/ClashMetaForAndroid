@@ -7,7 +7,7 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
 import com.github.kr328.clash.common.compat.queryIntentActivitiesCompat
-import com.github.kr328.clash.common.di.AppInfoProvider.Companion.instance as appInfoProvider
+import com.github.kr328.clash.common.di.AppInfoProvider.Companion.appInfoProvider
 import java.io.Serializable
 import kotlin.uuid.Uuid
 

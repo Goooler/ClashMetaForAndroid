@@ -3,7 +3,7 @@ package com.github.kr328.clash.service.util
 import android.content.Context
 import android.content.Intent
 import com.github.kr328.clash.common.constants.Intents
-import com.github.kr328.clash.common.di.AppInfoProvider.Companion.instance as appInfoProvider
+import com.github.kr328.clash.common.di.AppInfoProvider.Companion.appInfoProvider
 import kotlin.uuid.Uuid
 
 fun Context.sendBroadcastSelf(intent: Intent) {

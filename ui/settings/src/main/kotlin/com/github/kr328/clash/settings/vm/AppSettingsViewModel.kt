@@ -3,7 +3,7 @@ package com.github.kr328.clash.settings.vm
 import android.app.Application
 import android.content.pm.PackageManager
 import androidx.lifecycle.ViewModel
-import com.github.kr328.clash.common.di.AppInfoProvider.Companion.instance as appInfoProvider
+import com.github.kr328.clash.common.di.AppInfoProvider.Companion.appInfoProvider
 import com.github.kr328.clash.common.util.componentName
 import com.github.kr328.clash.common.util.mainActivityAlias
 import com.github.kr328.clash.glue.model.DarkMode

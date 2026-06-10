@@ -116,6 +116,6 @@ class UiStore(application: Application, val scope: CoroutineScope) {
   companion object : KoinComponent {
     private const val PREFERENCE_NAME = "ui"
 
-    val instance: UiStore by inject(mode = NONE)
+    val uiStore: UiStore by inject(mode = NONE)
   }
 }

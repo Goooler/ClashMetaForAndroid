@@ -3,7 +3,7 @@ package com.github.kr328.clash.home.vm
 import android.app.Application
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.github.kr328.clash.common.di.AppInfoProvider.Companion.instance as appInfoProvider
+import com.github.kr328.clash.common.di.AppInfoProvider.Companion.appInfoProvider
 import com.github.kr328.clash.common.log.Log
 import com.github.kr328.clash.core.bridge.Bridge
 import com.github.kr328.clash.glue.util.TABBY_RELEASES_LATEST

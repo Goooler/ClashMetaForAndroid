@@ -12,6 +12,6 @@ interface AppInfoProvider {
   val restartReceiverClass: KClass<*>
 
   companion object : KoinComponent {
-    val instance: AppInfoProvider by inject(mode = NONE)
+    val appInfoProvider: AppInfoProvider by inject(mode = NONE)
   }
 }
