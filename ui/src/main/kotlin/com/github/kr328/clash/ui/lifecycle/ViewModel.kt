@@ -10,8 +10,7 @@ import androidx.lifecycle.compose.LocalLifecycleOwner
 @Composable
 inline fun <reified VM> VM.withLifecycle(
   lifecycleOwner: LifecycleOwner = LocalLifecycleOwner.current
-): VM where VM : ViewModel, VM : LifecycleObserver = apply {
-  val vm = this
+): VM where VM : ViewModel, VM : LifecycleObserver = also { vm ->
   DisposableEffect(lifecycleOwner, vm) {
     lifecycleOwner.lifecycle.addObserver(vm)
     onDispose { lifecycleOwner.lifecycle.removeObserver(vm) }
