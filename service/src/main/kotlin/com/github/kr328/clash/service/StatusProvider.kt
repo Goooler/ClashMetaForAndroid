@@ -1,13 +1,11 @@
 package com.github.kr328.clash.service
 
-import android.app.Application
 import android.content.ContentProvider
 import android.content.ContentValues
 import android.database.Cursor
 import android.net.Uri
 import android.os.Bundle
-import org.koin.core.component.KoinComponent
-import org.koin.core.component.inject
+import com.github.kr328.clash.common.util.application
 
 class StatusProvider : ContentProvider() {
   override fun call(method: String, arg: String?, extras: Bundle?): Bundle? {
@@ -54,9 +52,7 @@ class StatusProvider : ContentProvider() {
     return true
   }
 
-  companion object : KoinComponent {
-    private val application: Application by inject(mode = NONE)
-
+  companion object {
     const val METHOD_CURRENT_PROFILE = "currentProfile"
 
     private const val CLASH_SERVICE_RUNNING_FILE = "service_running.lock"

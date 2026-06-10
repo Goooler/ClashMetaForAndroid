@@ -1,19 +1,15 @@
 package com.github.kr328.clash.core.bridge
 
-import android.app.Application
 import android.os.Build
 import android.os.ParcelFileDescriptor
 import androidx.annotation.Keep
 import com.github.kr328.clash.common.log.Log
+import com.github.kr328.clash.common.util.application
 import java.io.File
 import kotlinx.coroutines.CompletableDeferred
-import org.koin.core.component.KoinComponent
-import org.koin.core.component.inject
 
 @Keep
-object Bridge : KoinComponent {
-  private val application: Application by inject(mode = NONE)
-
+object Bridge {
   external fun nativeReset()
 
   external fun nativeForceGc()

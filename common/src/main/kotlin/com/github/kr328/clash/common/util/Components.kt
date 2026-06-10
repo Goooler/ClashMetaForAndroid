@@ -13,6 +13,8 @@ inline val KClass<*>.componentName: ComponentName
 inline val KClass<*>.intent: Intent
   get() = Intent().setComponent(componentName)
 
+val application: Application by lazy(NONE) { GlobalContext.get().get<Application>() }
+
 @PublishedApi
 internal inline val packageName
-  get() = GlobalContext.get().get<Application>().packageName
+  get() = application.packageName
