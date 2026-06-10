@@ -4,9 +4,9 @@ import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener
 import android.content.pm.PackageManager
+import com.github.kr328.clash.common.di.AppInfoProvider.Companion.appInfoProvider
 import com.github.kr328.clash.common.store.Store
 import com.github.kr328.clash.common.store.asStoreProvider
-import com.github.kr328.clash.common.util.mainActivityAlias
 import com.github.kr328.clash.core.model.ProxySort
 import com.github.kr328.clash.glue.model.AppInfo
 import com.github.kr328.clash.glue.model.DarkMode
@@ -63,11 +63,12 @@ class UiStore(application: Application, val scope: CoroutineScope) {
     store.boolean(
       key = "hide_app_icon",
       defaultValue =
-        application.packageManager.getComponentEnabledSetting(application.mainActivityAlias).let {
-          state ->
-          state != PackageManager.COMPONENT_ENABLED_STATE_ENABLED &&
-            state != PackageManager.COMPONENT_ENABLED_STATE_DEFAULT
-        },
+        application.packageManager
+          .getComponentEnabledSetting(appInfoProvider.mainActivityAlias)
+          .let { state ->
+            state != PackageManager.COMPONENT_ENABLED_STATE_ENABLED &&
+              state != PackageManager.COMPONENT_ENABLED_STATE_DEFAULT
+          },
     )
 
   var hideFromRecents: Boolean by store.boolean(key = "hide_from_recents", defaultValue = false)

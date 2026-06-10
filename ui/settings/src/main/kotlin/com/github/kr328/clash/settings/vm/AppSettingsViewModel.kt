@@ -5,7 +5,6 @@ import android.content.pm.PackageManager
 import androidx.lifecycle.ViewModel
 import com.github.kr328.clash.common.di.AppInfoProvider.Companion.appInfoProvider
 import com.github.kr328.clash.common.util.componentName
-import com.github.kr328.clash.common.util.mainActivityAlias
 import com.github.kr328.clash.glue.model.DarkMode
 import com.github.kr328.clash.glue.remote.Remote
 import com.github.kr328.clash.glue.store.UiStore
@@ -16,7 +15,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 
 internal class AppSettingsViewModel(
-  private val application: Application,
+  application: Application,
   private val uiStore: UiStore,
 ) : ViewModel() {
   private val serviceStore = ServiceStore(application)
@@ -89,7 +88,7 @@ internal class AppSettingsViewModel(
         PackageManager.COMPONENT_ENABLED_STATE_ENABLED
       }
     pm.setComponentEnabledSetting(
-      application.mainActivityAlias,
+      appInfoProvider.mainActivityAlias,
       newState,
       PackageManager.DONT_KILL_APP,
     )
