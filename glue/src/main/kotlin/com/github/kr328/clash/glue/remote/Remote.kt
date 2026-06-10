@@ -12,14 +12,14 @@ import com.github.kr328.clash.glue.util.verifyApk
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
-import org.koin.core.component.inject
+import org.koin.core.component.get
 
 object Remote : KoinComponent {
-  private val application: Application by inject(mode = NONE)
-  private val scope: CoroutineScope by inject(mode = NONE)
+  private val application: Application = get()
+  private val scope: CoroutineScope = get()
 
-  val broadcasts: Broadcasts by lazy { Broadcasts(application) }
-  val service: Service by lazy {
+  val broadcasts: Broadcasts = Broadcasts(application)
+  val service: Service =
     Service(application) {
       ApplicationObserver.createdActivities.forEach { it.finish() }
 
@@ -29,7 +29,6 @@ object Remote : KoinComponent {
       }
       application.startActivity(intent)
     }
-  }
 
   fun launch() {
     broadcasts.register()

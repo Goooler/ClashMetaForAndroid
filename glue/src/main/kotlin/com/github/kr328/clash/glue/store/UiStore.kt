@@ -18,7 +18,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.stateIn
 import org.koin.core.component.KoinComponent
-import org.koin.core.component.inject
+import org.koin.core.component.get
 
 class UiStore(application: Application, val scope: CoroutineScope) {
   private val preferences = application.getSharedPreferences(PREFERENCE_NAME, Context.MODE_PRIVATE)
@@ -116,6 +116,6 @@ class UiStore(application: Application, val scope: CoroutineScope) {
   companion object : KoinComponent {
     private const val PREFERENCE_NAME = "ui"
 
-    val uiStore: UiStore by inject(mode = NONE)
+    val uiStore: UiStore = get()
   }
 }
