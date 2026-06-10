@@ -32,6 +32,8 @@ androidx-core = "androidx.core:core:1.19.0"
 androidx-room-compiler = { module = "androidx.room3:room3-compiler", version.ref = "room" }
 androidx-room-runtime = { module = "androidx.room3:room3-runtime", version.ref = "room" }
 
+jb-compose-resources = { module = "org.jetbrains.compose.components:components-resources", version.ref = "cmp" }
+
 kaidl-compiler = { module = "io.github.goooler.kaidl:kaidl-compiler", version.ref = "kaidl" }
 kaidl-runtime = { module = "io.github.goooler.kaidl:kaidl-runtime", version.ref = "kaidl" }
 rikkax-multiprocess = "dev.rikka.rikkax.preference:multiprocess:1.0.0"

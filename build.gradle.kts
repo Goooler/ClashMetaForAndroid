@@ -4,10 +4,11 @@ import com.android.build.gradle.api.AndroidBasePlugin
 import com.diffplug.gradle.spotless.SpotlessExtension
 import org.jetbrains.kotlin.compose.compiler.gradle.ComposeCompilerGradlePluginExtension
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-import org.jetbrains.kotlin.gradle.dsl.KotlinAndroidProjectExtension
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSet
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import org.jetbrains.compose.ComposeExtension
+import org.jetbrains.compose.resources.ResourcesExtension
 
 plugins {
   alias(libs.plugins.android.application) apply false
@@ -79,6 +80,10 @@ allprojects {
       }
 
       extensions.configure<NamedDomainObjectContainer<KotlinSourceSet>> {
+        commonMain.dependencies {
+          implementation(libs.jb.compose.resources)
+        }
+
         androidMain.dependencies {
           implementation(libs.androidx.compose.ui)
           implementation(libs.androidx.compose.ui.tooling.preview)
@@ -103,6 +108,14 @@ allprojects {
 
     extensions.configure<ComposeCompilerGradlePluginExtension> {
       stabilityConfigurationFiles.add(rootProject.layout.projectDirectory.file("stability.conf"))
+    }
+
+    extensions.configure<ComposeExtension> {
+      extensions.configure<ResourcesExtension> {
+        packageOfResClass = "com.github.kr328.clash.${project.name}"
+        nameOfResClass = "R"
+        generateResClass = always
+      }
     }
   }
 }

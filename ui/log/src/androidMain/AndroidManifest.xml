@@ -5,8 +5,7 @@
     <service
       android:name=".LogcatService"
       android:exported="false"
-      android:foregroundServiceType="specialUse"
-      android:label="@string/tabby_logcat">
+      android:foregroundServiceType="specialUse">
       <property
         android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
         android:value="explanation_for_special_use" />
