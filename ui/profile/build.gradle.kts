@@ -1,14 +1,17 @@
 plugins {
-  alias(libs.plugins.android.library)
-  alias(libs.plugins.kotlin.compose)
+  alias(libs.plugins.android.multiplatform)
   alias(libs.plugins.kotlin.serialization)
 }
 
-dependencies {
-  implementation(projects.glue)
-  implementation(projects.ui)
+kotlin {
+  sourceSets {
+    androidMain.dependencies {
+      implementation(projects.glue)
+      implementation(projects.ui)
 
-  implementation(libs.composePreference)
-  implementation(libs.quickie.bundled)
-  implementation(libs.bytesize)
+      implementation(libs.composePreference)
+      implementation(libs.quickie.bundled)
+      implementation(libs.bytesize)
+    }
+  }
 }
