@@ -91,10 +91,10 @@ app → ui/*
 ./gradlew spotlessApply
 
 # Build a debug APK (required before every commit)
-./gradlew app:assembleDebug
+./gradlew androidApp:assembleDebug
 
 # Build a release APK (don't have to run this in general developments)
-./gradlew app:assembleRelease
+./gradlew androidApp:assembleRelease
 
 # Run all checks
 ./gradlew check
@@ -177,7 +177,7 @@ GitHub Actions runs on every push to `trunk` and on every pull request:
 |----------------|---------------------------------|-----------------------------------------------------------|
 | `check-style`  | `./gradlew spotlessCheck`       | Fails if formatting issues exist                          |
 | `lint`         | `./gradlew lintDebug`           | Runs Android lint checks for the debug variant            |
-| `build`        | `./gradlew app:assembleRelease` | Full release build including Go cross-compilation         |
+| `build`        | `./gradlew androidApp:assembleRelease` | Full release build including Go cross-compilation         |
 | `final-status` | —                               | Required branch-protection status combining all CI checks |
 
 A nightly pre-release is published automatically on pushes to `trunk`.
@@ -187,7 +187,7 @@ A nightly pre-release is published automatically on pushes to `trunk`.
 - Branch from `trunk`.
 - Keep changes focused and small.
 - Include a clear description of what changed and why.
-- Run `./gradlew spotlessApply` and `./gradlew app:assembleDebug` locally
+- Run `./gradlew spotlessApply` and `./gradlew androidApp:assembleDebug` locally
   before opening a PR.
 - Link related issues when applicable.
 - Update docs when behavior or developer workflow changes.

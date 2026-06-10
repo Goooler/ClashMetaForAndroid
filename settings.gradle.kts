@@ -47,7 +47,7 @@ enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 enableFeaturePreview("STABLE_CONFIGURATION_CACHE")
 
 include(
-  ":app",
+  ":androidApp",
   ":core",
   ":service",
   ":common",

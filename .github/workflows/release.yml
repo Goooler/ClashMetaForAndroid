@@ -31,10 +31,10 @@ jobs:
       - uses: gradle/actions/setup-gradle@v6
       - name: Build
         run: |
-          ./gradlew app:assembleRelease --no-daemon
+          ./gradlew androidApp:assembleRelease --no-daemon
       - name: Create release
         if: github.repository_owner == 'Goooler'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          gh release create ${{ github.ref_name }} "./app/build/outputs/apk/release/"*.apk --generate-notes
+          gh release create ${{ github.ref_name }} "./androidApp/build/outputs/apk/release/"*.apk --generate-notes
