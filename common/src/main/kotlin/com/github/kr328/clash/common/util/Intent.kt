@@ -11,14 +11,14 @@ import com.github.kr328.clash.common.di.AppInfoProvider.Companion.instance as ap
 import java.io.Serializable
 import kotlin.uuid.Uuid
 
-fun Context.mainIntent(block: Intent.() -> Unit = {}): Intent {
+fun mainIntent(block: Intent.() -> Unit = {}): Intent {
   val mainActivityClass = appInfoProvider.mainActivityClass
-  return Intent(this, mainActivityClass).apply(block = block)
+  return mainActivityClass.intent.apply(block = block)
 }
 
 val Context.mainActivityAlias: ComponentName
   get() {
-    val mainActivityName = appInfoProvider.mainActivityClass.name
+    val mainActivityName = appInfoProvider.mainActivityClass.java.name
     val launcherIntent = Intent(Intent.ACTION_MAIN).addCategory(Intent.CATEGORY_LAUNCHER)
     val resolveFlags = PackageManager.MATCH_DISABLED_COMPONENTS
 

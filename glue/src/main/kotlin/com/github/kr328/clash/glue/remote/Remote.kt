@@ -23,7 +23,7 @@ object Remote : KoinComponent {
     Service(application) {
       ApplicationObserver.createdActivities.forEach { it.finish() }
 
-      val intent = application.mainIntent {
+      val intent = mainIntent {
         action = Intents.ACTION_APP_CRASHED
         addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
       }
@@ -56,7 +56,7 @@ object Remote : KoinComponent {
       if (!context.verifyApk()) {
         ApplicationObserver.createdActivities.forEach { it.finish() }
 
-        val intent = application.mainIntent {
+        val intent = mainIntent {
           action = Intents.ACTION_APK_BROKEN
           addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         }

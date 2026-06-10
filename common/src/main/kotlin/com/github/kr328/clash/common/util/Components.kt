@@ -7,9 +7,6 @@ import com.github.kr328.clash.common.util.packageName as pkgName
 import kotlin.reflect.KClass
 import org.koin.core.context.GlobalContext
 
-inline val Class<*>.componentName: ComponentName
-  get() = ComponentName(pkgName, name)
-
 inline val KClass<*>.componentName: ComponentName
   get() = ComponentName(pkgName, this.java.name)
 

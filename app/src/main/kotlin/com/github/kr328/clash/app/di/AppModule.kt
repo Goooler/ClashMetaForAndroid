@@ -6,6 +6,7 @@ import com.github.kr328.clash.app.MainActivity
 import com.github.kr328.clash.app.RestartReceiver
 import com.github.kr328.clash.common.di.AppInfoProvider
 import com.github.kr328.clash.glue.store.UiStore
+import kotlin.reflect.KClass
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -21,6 +22,6 @@ private class AppInfoProviderImpl(application: Application) : AppInfoProvider {
   override val packageName: String = application.packageName
   override val buildCommit: String = BuildConfig.COMMIT
   override val receiveBroadcastsPermission: String = "${packageName}.permission.RECEIVE_BROADCASTS"
-  override val mainActivityClass: Class<*> = MainActivity::class.java
-  override val restartReceiverClass: Class<*> = RestartReceiver::class.java
+  override val mainActivityClass: KClass<*> = MainActivity::class
+  override val restartReceiverClass: KClass<*> = RestartReceiver::class
 }
