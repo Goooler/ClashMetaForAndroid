@@ -2,7 +2,7 @@ package com.github.kr328.clash.core.bridge
 
 import androidx.annotation.Keep
 import androidx.core.net.toUri
-import com.github.kr328.clash.common.Global
+import com.github.kr328.clash.common.util.application
 import java.io.FileNotFoundException
 
 @Keep
@@ -15,7 +15,7 @@ object Content {
       throw UnsupportedOperationException("Unsupported scheme ${uri.scheme}")
     }
 
-    return Global.application.contentResolver.openFileDescriptor(uri, "r")?.detachFd()
+    return application.contentResolver.openFileDescriptor(uri, "r")?.detachFd()
       ?: throw FileNotFoundException("$uri not found")
   }
 }

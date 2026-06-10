@@ -15,7 +15,6 @@ import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.github.kr328.clash.common.Global
 import com.github.kr328.clash.common.compat.getInstalledPackagesCompat
 import com.github.kr328.clash.glue.model.AppInfo
 import com.github.kr328.clash.glue.remote.Remote
@@ -25,6 +24,7 @@ import com.github.kr328.clash.glue.util.stopClashService
 import com.github.kr328.clash.service.store.ServiceStore
 import com.github.kr328.clash.settings.ui.AccessControlActions
 import kotlin.time.Duration.Companion.seconds
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -35,9 +35,11 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.withTimeoutOrNull
 
-internal class AccessControlViewModel(private val application: Application) :
-  ViewModel(), AccessControlActions, DefaultLifecycleObserver {
-  private val uiStore = UiStore(application)
+internal class AccessControlViewModel(
+  private val application: Application,
+  private val scope: CoroutineScope,
+  private val uiStore: UiStore,
+) : ViewModel(), AccessControlActions, DefaultLifecycleObserver {
   private val serviceStore = ServiceStore(application)
   private var reloadAppsJob: Job? = null
 
@@ -65,7 +67,7 @@ internal class AccessControlViewModel(private val application: Application) :
 
   override fun onStop(owner: LifecycleOwner) {
     // Intended to use non-viewModel scope as we need the action to be called on disposed.
-    Global.launch {
+    scope.launch {
       val selected = uiState.value.selected
       val persistedSelection = serviceStore.accessControlPackages
       val changed = selected != persistedSelection

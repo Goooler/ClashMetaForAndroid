@@ -1,23 +1,31 @@
 package com.github.kr328.clash.glue.store
 
+import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener
 import android.content.pm.PackageManager
-import com.github.kr328.clash.common.Global
+import com.github.kr328.clash.common.di.AppInfoProvider
 import com.github.kr328.clash.common.store.Store
 import com.github.kr328.clash.common.store.asStoreProvider
-import com.github.kr328.clash.common.util.mainActivityAlias
 import com.github.kr328.clash.core.model.ProxySort
 import com.github.kr328.clash.glue.model.AppInfo
 import com.github.kr328.clash.glue.model.DarkMode
+import kotlin.LazyThreadSafetyMode.NONE
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.stateIn
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.get
 
-class UiStore(context: Context) {
-  private val preferences = context.getSharedPreferences(PREFERENCE_NAME, Context.MODE_PRIVATE)
+class UiStore(
+  application: Application,
+  private val scope: CoroutineScope,
+  appInfoProvider: AppInfoProvider,
+) {
+  private val preferences = application.getSharedPreferences(PREFERENCE_NAME, Context.MODE_PRIVATE)
   private val store = Store(preferences.asStoreProvider())
 
   val valueState: StateFlow<ValueState> by
@@ -44,7 +52,7 @@ class UiStore(context: Context) {
           awaitClose { preferences.unregisterOnSharedPreferenceChangeListener(listener) }
         }
         .stateIn(
-          scope = Global,
+          scope = scope,
           started = SharingStarted.WhileSubscribed(),
           initialValue = readValues(),
         )
@@ -59,10 +67,12 @@ class UiStore(context: Context) {
     store.boolean(
       key = "hide_app_icon",
       defaultValue =
-        context.packageManager.getComponentEnabledSetting(context.mainActivityAlias).let { state ->
-          state != PackageManager.COMPONENT_ENABLED_STATE_ENABLED &&
-            state != PackageManager.COMPONENT_ENABLED_STATE_DEFAULT
-        },
+        application.packageManager
+          .getComponentEnabledSetting(appInfoProvider.mainActivityAlias)
+          .let { state ->
+            state != PackageManager.COMPONENT_ENABLED_STATE_ENABLED &&
+              state != PackageManager.COMPONENT_ENABLED_STATE_DEFAULT
+          },
     )
 
   var hideFromRecents: Boolean by store.boolean(key = "hide_from_recents", defaultValue = false)
@@ -108,7 +118,9 @@ class UiStore(context: Context) {
     val accessControlSystemApp: Boolean,
   )
 
-  companion object {
+  companion object : KoinComponent {
     private const val PREFERENCE_NAME = "ui"
+
+    val uiStore: UiStore = get()
   }
 }

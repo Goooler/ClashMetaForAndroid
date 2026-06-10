@@ -6,7 +6,6 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import androidx.core.content.getSystemService
-import com.github.kr328.clash.common.Global
 import com.github.kr328.clash.common.compat.pendingIntentFlags
 import com.github.kr328.clash.common.constants.Intents
 import com.github.kr328.clash.common.log.Log
@@ -17,18 +16,23 @@ import com.github.kr328.clash.service.data.ImportedDao
 import com.github.kr328.clash.service.model.Profile
 import com.github.kr328.clash.service.util.importedDir
 import kotlin.time.Duration.Companion.minutes
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 
-class ProfileReceiver : BroadcastReceiver() {
+class ProfileReceiver : BroadcastReceiver(), KoinComponent {
+  private val scope: CoroutineScope by inject()
+
   override fun onReceive(context: Context, intent: Intent) {
     when (intent.action) {
       Intent.ACTION_BOOT_COMPLETED,
       Intent.ACTION_MY_PACKAGE_REPLACED,
       Intent.ACTION_TIMEZONE_CHANGED,
       Intent.ACTION_TIME_CHANGED -> {
-        Global.launch {
+        scope.launch {
           reset()
 
           val service =

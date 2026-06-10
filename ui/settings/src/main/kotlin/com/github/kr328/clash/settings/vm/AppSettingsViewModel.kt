@@ -3,9 +3,8 @@ package com.github.kr328.clash.settings.vm
 import android.app.Application
 import android.content.pm.PackageManager
 import androidx.lifecycle.ViewModel
-import com.github.kr328.clash.common.di.AppInfoProvider.Companion.instance as appInfoProvider
+import com.github.kr328.clash.common.di.AppInfoProvider
 import com.github.kr328.clash.common.util.componentName
-import com.github.kr328.clash.common.util.mainActivityAlias
 import com.github.kr328.clash.glue.model.DarkMode
 import com.github.kr328.clash.glue.remote.Remote
 import com.github.kr328.clash.glue.store.UiStore
@@ -15,11 +14,13 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 
-internal class AppSettingsViewModel(private val application: Application) : ViewModel() {
-  private val uiStore = UiStore(application)
+internal class AppSettingsViewModel(
+  application: Application,
+  private val uiStore: UiStore,
+  private val appInfoProvider: AppInfoProvider,
+) : ViewModel() {
   private val serviceStore = ServiceStore(application)
   private val pm = application.packageManager
-  private val restartReceiverClass = appInfoProvider.restartReceiverClass
 
   val clashRunning: StateFlow<Boolean> = Remote.broadcasts.clashRunningFlow
 
@@ -64,7 +65,7 @@ internal class AppSettingsViewModel(private val application: Application) : View
 
   private var autoRestartValue: Boolean
     get() {
-      val status = pm.getComponentEnabledSetting(restartReceiverClass.componentName)
+      val status = pm.getComponentEnabledSetting(appInfoProvider.restartReceiverClass.componentName)
       return status == PackageManager.COMPONENT_ENABLED_STATE_ENABLED
     }
     set(value) {
@@ -73,7 +74,7 @@ internal class AppSettingsViewModel(private val application: Application) : View
         else PackageManager.COMPONENT_ENABLED_STATE_DISABLED
 
       pm.setComponentEnabledSetting(
-        restartReceiverClass.componentName,
+        appInfoProvider.restartReceiverClass.componentName,
         status,
         PackageManager.DONT_KILL_APP,
       )
@@ -87,7 +88,7 @@ internal class AppSettingsViewModel(private val application: Application) : View
         PackageManager.COMPONENT_ENABLED_STATE_ENABLED
       }
     pm.setComponentEnabledSetting(
-      application.mainActivityAlias,
+      appInfoProvider.mainActivityAlias,
       newState,
       PackageManager.DONT_KILL_APP,
     )

@@ -29,7 +29,7 @@ class StaticNotificationModule(service: Service) : Module<Unit>(service) {
         PendingIntent.getActivity(
           service,
           R.id.nf_tabby_status,
-          service.mainIntent {
+          mainIntent {
             addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
           },
           pendingIntentFlags(PendingIntent.FLAG_UPDATE_CURRENT),

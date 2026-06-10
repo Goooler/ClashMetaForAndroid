@@ -9,12 +9,15 @@ import android.service.quicksettings.Tile
 import com.github.kr328.clash.common.R as CommonR
 import com.github.kr328.clash.common.compat.registerReceiverCompat
 import com.github.kr328.clash.common.constants.Intents
-import com.github.kr328.clash.common.di.AppInfoProvider.Companion.instance as appInfoProvider
+import com.github.kr328.clash.common.di.AppInfoProvider
 import com.github.kr328.clash.glue.remote.StatusClient
 import com.github.kr328.clash.glue.util.startClashService
 import com.github.kr328.clash.glue.util.stopClashService
+import org.koin.android.ext.android.inject
 
 class TileService : android.service.quicksettings.TileService() {
+  private val appInfoProvider: AppInfoProvider by inject()
+
   private var currentProfile = ""
   private var clashRunning = false
 

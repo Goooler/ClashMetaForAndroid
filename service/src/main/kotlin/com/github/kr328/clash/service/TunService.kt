@@ -194,7 +194,7 @@ class TunService : VpnService(), CoroutineScope by CoroutineScope(Dispatchers.De
           PendingIntent.getActivity(
             self,
             R.id.nf_vpn_status,
-            service.mainIntent {
+            mainIntent {
               addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             },
             pendingIntentFlags(PendingIntent.FLAG_UPDATE_CURRENT),

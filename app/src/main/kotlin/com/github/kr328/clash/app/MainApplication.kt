@@ -3,7 +3,6 @@ package com.github.kr328.clash.app
 import android.app.Application
 import android.content.Context
 import com.github.kr328.clash.app.di.appModule
-import com.github.kr328.clash.common.Global
 import com.github.kr328.clash.common.log.Log
 import com.github.kr328.clash.crash.di.crashModule
 import com.github.kr328.clash.glue.remote.Remote
@@ -23,8 +22,6 @@ class MainApplication : Application() {
 
   override fun attachBaseContext(base: Context?) {
     super.attachBaseContext(base)
-
-    Global.init(this)
   }
 
   override fun onCreate() {
@@ -87,9 +84,5 @@ class MainApplication : Application() {
     if (!asnFile.exists()) {
       asnFile.outputStream().use { assets.open("ASN.mmdb").copyTo(it) }
     }
-  }
-
-  fun finalize() {
-    Global.destroy()
   }
 }

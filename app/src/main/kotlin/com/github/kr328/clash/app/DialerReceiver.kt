@@ -8,7 +8,7 @@ import com.github.kr328.clash.common.util.mainIntent
 class DialerReceiver : BroadcastReceiver() {
   @Suppress("UnsafeProtectedBroadcastReceiver")
   override fun onReceive(context: Context, intent: Intent) {
-    val intent = context.mainIntent().addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+    val intent = mainIntent { addFlags(Intent.FLAG_ACTIVITY_NEW_TASK) }
     context.startActivity(intent)
   }
 }

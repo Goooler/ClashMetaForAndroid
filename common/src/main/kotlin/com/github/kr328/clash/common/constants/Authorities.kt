@@ -1,6 +1,6 @@
 package com.github.kr328.clash.common.constants
 
-import com.github.kr328.clash.common.packageName
+import com.github.kr328.clash.common.util.packageName
 
 object Authorities {
   val STATUS_PROVIDER = "$packageName.status"

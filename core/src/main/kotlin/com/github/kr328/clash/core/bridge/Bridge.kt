@@ -3,8 +3,8 @@ package com.github.kr328.clash.core.bridge
 import android.os.Build
 import android.os.ParcelFileDescriptor
 import androidx.annotation.Keep
-import com.github.kr328.clash.common.Global
 import com.github.kr328.clash.common.log.Log
+import com.github.kr328.clash.common.util.application
 import java.io.File
 import kotlinx.coroutines.CompletableDeferred
 
@@ -105,17 +105,18 @@ object Bridge {
   init {
     System.loadLibrary("bridge")
 
-    val ctx = Global.application
-
-    ParcelFileDescriptor.open(File(ctx.packageCodePath), ParcelFileDescriptor.MODE_READ_ONLY)
+    ParcelFileDescriptor.open(
+        File(application.packageCodePath),
+        ParcelFileDescriptor.MODE_READ_ONLY,
+      )
       .detachFd()
 
-    val home = ctx.filesDir.resolve("clash").apply { mkdirs() }.absolutePath
-    val versionName = ctx.packageManager.getPackageInfo(ctx.packageName, 0).versionName ?: "unknown"
-    val sdkVersion = Build.VERSION.SDK_INT
+    val home = application.filesDir.resolve("clash").apply { mkdirs() }.absolutePath
+    val versionName =
+      application.packageManager.getPackageInfo(application.packageName, 0).versionName ?: "unknown"
 
     Log.d("Home = $home")
 
-    nativeInit(home, versionName, sdkVersion)
+    nativeInit(home, versionName, Build.VERSION.SDK_INT)
   }
 }
