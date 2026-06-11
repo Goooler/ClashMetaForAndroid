@@ -5,12 +5,14 @@ plugins {
 
 kotlin {
   sourceSets {
-    androidMain.dependencies {
-      implementation(projects.glue)
+    commonMain.dependencies {
       implementation(projects.ui)
 
       implementation(libs.composePreference)
       implementation(libs.reorderable)
+    }
+    androidMain.dependencies {
+      implementation(projects.glue)
     }
   }
 }

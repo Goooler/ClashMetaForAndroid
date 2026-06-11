@@ -5,11 +5,14 @@ plugins {
 
 kotlin {
   sourceSets {
-    androidMain.dependencies {
-      implementation(projects.glue)
+    commonMain.dependencies {
       implementation(projects.ui)
 
       implementation(libs.composePreference)
+    }
+    androidMain.dependencies {
+      implementation(projects.glue)
+
       implementation(libs.okhttp.client)
       implementation(libs.kotlin.serialization.json)
       implementation(libs.semver)

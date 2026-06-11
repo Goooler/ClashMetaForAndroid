@@ -5,13 +5,16 @@ plugins {
 
 kotlin {
   sourceSets {
-    androidMain.dependencies {
-      implementation(projects.glue)
+    commonMain.dependencies {
       implementation(projects.ui)
 
       implementation(libs.composePreference)
-      implementation(libs.quickie.bundled)
       implementation(libs.bytesize)
+    }
+    androidMain.dependencies {
+      implementation(projects.glue)
+
+      implementation(libs.quickie.bundled)
     }
   }
 }

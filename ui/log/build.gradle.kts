@@ -5,9 +5,11 @@ plugins {
 
 kotlin {
   sourceSets {
+    commonMain.dependencies {
+      implementation(projects.ui)
+    }
     androidMain.dependencies {
       implementation(projects.glue)
-      implementation(projects.ui)
     }
   }
 }
