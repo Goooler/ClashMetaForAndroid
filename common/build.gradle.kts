@@ -1,9 +1,20 @@
-plugins { alias(libs.plugins.android.library) }
+plugins { alias(libs.plugins.android.multiplatform) }
 
-dependencies {
-  api(platform(libs.koin.bom))
-  api(libs.koin.core)
+kotlin {
+  sourceSets {
+    commonMain.dependencies {
+      api(libs.koin.core)
 
-  implementation(libs.kotlin.coroutine)
-  implementation(libs.androidx.core)
+      implementation(libs.kotlin.coroutine)
+    }
+    androidMain.dependencies {
+      implementation(libs.androidx.core)
+    }
+  }
+}
+
+compose {
+  resources {
+    publicResClass = true
+  }
 }
