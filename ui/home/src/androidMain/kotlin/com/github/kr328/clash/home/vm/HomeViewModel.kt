@@ -6,8 +6,12 @@ import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.github.kr328.clash.common.R as CommonR
+import com.github.kr328.clash.common.Res as CommonRes
+import com.github.kr328.clash.common.direct_mode
+import com.github.kr328.clash.common.global_mode
 import com.github.kr328.clash.common.log.Log
+import com.github.kr328.clash.common.rule_mode
+import com.github.kr328.clash.common.unable_to_start_vpn
 import com.github.kr328.clash.core.model.Traffic
 import com.github.kr328.clash.core.model.TunnelState
 import com.github.kr328.clash.core.util.trafficTotal
@@ -17,6 +21,7 @@ import com.github.kr328.clash.glue.util.startClashService
 import com.github.kr328.clash.glue.util.stopClashService
 import com.github.kr328.clash.glue.util.withClash
 import com.github.kr328.clash.glue.util.withProfile
+import com.github.kr328.clash.ui.util.getString
 import kotlin.time.Duration.Companion.seconds
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -287,14 +292,14 @@ internal class AndroidDependencies(private val application: Application) :
 
   override fun modeText(mode: TunnelState.Mode): String {
     return when (mode) {
-      Direct -> application.getString(CommonR.string.direct_mode)
-      Global -> application.getString(CommonR.string.global_mode)
-      Rule -> application.getString(CommonR.string.rule_mode)
+      Direct -> application.getString(CommonRes.string.direct_mode)
+      Global -> application.getString(CommonRes.string.global_mode)
+      Rule -> application.getString(CommonRes.string.rule_mode)
     }
   }
 
   override fun unableToStartVpnText(): String {
-    return application.getString(CommonR.string.unable_to_start_vpn)
+    return application.getString(CommonRes.string.unable_to_start_vpn)
   }
 
   override fun startClashService(): Intent? = application.startClashService()

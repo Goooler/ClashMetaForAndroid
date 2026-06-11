@@ -11,8 +11,6 @@
 
   <permission
     android:name="${applicationId}.permission.RECEIVE_BROADCASTS"
-    android:description="@string/receive_broadcasts_of_tabby"
-    android:label="@string/receive_tabby_broadcasts"
     android:protectionLevel="privileged|signature" />
 
   <uses-permission android:name="${applicationId}.permission.RECEIVE_BROADCASTS" />
@@ -30,7 +28,6 @@
     android:allowBackup="true"
     android:fullBackupContent="@xml/full_backup_content"
     android:icon="@mipmap/ic_launcher"
-    android:label="@string/tabby"
     android:localeConfig="@xml/locales_config"
     android:networkSecurityConfig="@xml/network_security_config"
     android:supportsRtl="true"
@@ -88,7 +85,6 @@
       android:name=".TileService"
       android:exported="true"
       android:icon="@drawable/ic_tabby_small"
-      android:label="@string/tabby"
       android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
       <intent-filter>
         <action android:name="android.service.quicksettings.action.QS_TILE" />

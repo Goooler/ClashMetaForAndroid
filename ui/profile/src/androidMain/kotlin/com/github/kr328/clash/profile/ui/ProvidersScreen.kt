@@ -28,13 +28,13 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.PreviewWrapper
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.github.kr328.clash.common.R as CommonR
+import com.github.kr328.clash.common.Res as CommonRes
+import com.github.kr328.clash.common.providers
 import com.github.kr328.clash.core.model.Provider
-import com.github.kr328.clash.glue.util.elapsedIntervalString
-import com.github.kr328.clash.glue.util.type
 import com.github.kr328.clash.profile.Res
 import com.github.kr328.clash.profile.update
 import com.github.kr328.clash.profile.update_all
+import com.github.kr328.clash.profile.util.type
 import com.github.kr328.clash.profile.vm.ProvidersViewModel
 import com.github.kr328.clash.profile.vm.ProvidersViewModel.UiState.ProviderItemState
 import com.github.kr328.clash.ui.component.Spacer
@@ -46,6 +46,7 @@ import com.github.kr328.clash.ui.lifecycle.withLifecycle
 import com.github.kr328.clash.ui.theme.PreviewTabby
 import com.github.kr328.clash.ui.theme.TabbyThemeWrapper
 import com.github.kr328.clash.ui.theme.tabbyDimens
+import com.github.kr328.clash.ui.util.elapsedIntervalString
 import com.github.kr328.clash.ui.util.stringResCompat
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -88,7 +89,7 @@ private fun ProvidersContent(
   onUpdate: (Int, Provider) -> Unit,
 ) {
   TabbyScaffold(
-    title = stringResCompat(CommonR.string.providers),
+    title = stringResCompat(CommonRes.string.providers),
     modifier = modifier,
     snackbarHostState = snackbarHostState,
     actions = {

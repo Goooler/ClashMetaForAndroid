@@ -34,8 +34,9 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.tooling.preview.PreviewWrapper
 import androidx.core.graphics.drawable.toBitmap
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.github.kr328.clash.common.R as CommonR
+import com.github.kr328.clash.common.Res as CommonRes
 import com.github.kr328.clash.common.constants.Intents
+import com.github.kr328.clash.common.new_profile
 import com.github.kr328.clash.profile.model.ProfileProvider
 import com.github.kr328.clash.profile.vm.NewProfileViewModel
 import com.github.kr328.clash.ui.component.SizeSpacer
@@ -110,7 +111,7 @@ private fun NewProfileContent(
   onDetail: (ProfileProvider.External) -> Unit,
 ) {
   TabbyScaffold(
-    title = stringResCompat(CommonR.string.new_profile),
+    title = stringResCompat(CommonRes.string.new_profile),
     modifier = modifier,
     snackbarHostState = snackbarHostState,
   ) { innerPadding ->

@@ -14,11 +14,12 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
-import com.github.kr328.clash.common.R as CommonR
+import com.github.kr328.clash.common.Res as CommonRes
+import com.github.kr328.clash.common.close
 import com.github.kr328.clash.ui.icon.BaselineArrowBack
 import com.github.kr328.clash.ui.icon.TabbyIcons
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun TabbyScaffold(
@@ -36,7 +37,7 @@ fun TabbyScaffold(
         IconButton(onClick = onBack) {
           Icon(
             imageVector = TabbyIcons.BaselineArrowBack,
-            contentDescription = stringResource(CommonR.string.close),
+            contentDescription = stringResource(CommonRes.string.close),
           )
         }
       },

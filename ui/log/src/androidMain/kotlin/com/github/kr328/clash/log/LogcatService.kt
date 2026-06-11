@@ -12,11 +12,13 @@ import androidx.core.app.NotificationChannelCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.github.kr328.clash.common.R as CommonR
+import com.github.kr328.clash.common.Res as CommonRes
 import com.github.kr328.clash.common.compat.getColorCompat
 import com.github.kr328.clash.common.compat.pendingIntentFlags
 import com.github.kr328.clash.common.compat.startForegroundCompat
 import com.github.kr328.clash.common.constants.Intents
 import com.github.kr328.clash.common.log.Log
+import com.github.kr328.clash.common.running
 import com.github.kr328.clash.common.util.intent
 import com.github.kr328.clash.common.util.mainIntent
 import com.github.kr328.clash.core.model.LogMessage
@@ -153,7 +155,7 @@ internal class LogcatService :
         .setSmallIcon(CommonR.drawable.ic_tabby_small)
         .setColor(getColorCompat(CommonR.color.color_tabby_light))
         .setContentTitle(getString(Res.string.tabby_logcat))
-        .setContentText(getString(CommonR.string.running))
+        .setContentText(getString(CommonRes.string.running))
         .setContentIntent(
           PendingIntent.getActivity(
             this,

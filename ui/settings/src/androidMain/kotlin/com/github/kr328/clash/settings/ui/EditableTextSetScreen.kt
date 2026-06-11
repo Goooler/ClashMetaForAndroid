@@ -34,7 +34,13 @@ import androidx.compose.ui.tooling.preview.PreviewWrapper
 import androidx.compose.ui.unit.dp
 import androidx.navigation3.runtime.EntryProviderScope
 import androidx.navigation3.runtime.NavKey
-import com.github.kr328.clash.common.R as CommonR
+import com.github.kr328.clash.common.Res as CommonRes
+import com.github.kr328.clash.common._new
+import com.github.kr328.clash.common.cancel
+import com.github.kr328.clash.common.delete
+import com.github.kr328.clash.common.ok
+import com.github.kr328.clash.common.reorder
+import com.github.kr328.clash.common.reset
 import com.github.kr328.clash.settings.Res
 import com.github.kr328.clash.settings.sniff_http_ports
 import com.github.kr328.clash.ui.component.TabbyScaffold
@@ -90,7 +96,7 @@ private fun EditableTextSetScreen(
       IconButton(onClick = { showAddDialog = true }) {
         Icon(
           imageVector = TabbyIcons.BaselineAdd,
-          contentDescription = stringResource(CommonR.string._new),
+          contentDescription = stringResource(CommonRes.string._new),
         )
       }
     },
@@ -112,7 +118,7 @@ private fun EditableTextSetScreen(
                 leadingContent = {
                   Icon(
                     imageVector = TabbyIcons.BaselineDragHandle,
-                    contentDescription = stringResource(CommonR.string.reorder),
+                    contentDescription = stringResource(CommonRes.string.reorder),
                     modifier = Modifier.draggableHandle(),
                   )
                 },
@@ -120,7 +126,7 @@ private fun EditableTextSetScreen(
                   IconButton(onClick = { values.remove(value) }) {
                     Icon(
                       imageVector = TabbyIcons.OutlineDelete,
-                      contentDescription = stringResource(CommonR.string.delete),
+                      contentDescription = stringResource(CommonRes.string.delete),
                     )
                   }
                 },
@@ -135,10 +141,10 @@ private fun EditableTextSetScreen(
         modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 8.dp),
         horizontalArrangement = Arrangement.End,
       ) {
-        TextButton(onClick = { onApply(null) }) { Text(stringResource(CommonR.string.reset)) }
-        TextButton(onClick = onDismiss) { Text(stringResource(CommonR.string.cancel)) }
+        TextButton(onClick = { onApply(null) }) { Text(stringResource(CommonRes.string.reset)) }
+        TextButton(onClick = onDismiss) { Text(stringResource(CommonRes.string.cancel)) }
         TextButton(onClick = { onApply(values.toSet()) }) {
-          Text(stringResource(CommonR.string.ok))
+          Text(stringResource(CommonRes.string.ok))
         }
       }
     }
@@ -202,11 +208,11 @@ private fun SingleTextInputDialog(
     },
     confirmButton = {
       TextButton(onClick = { onConfirm(inputText.text) }) {
-        Text(stringResource(CommonR.string.ok))
+        Text(stringResource(CommonRes.string.ok))
       }
     },
     dismissButton = {
-      TextButton(onClick = onDismiss) { Text(stringResource(CommonR.string.cancel)) }
+      TextButton(onClick = onDismiss) { Text(stringResource(CommonRes.string.cancel)) }
     },
   )
 }

@@ -39,7 +39,10 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entryProvider
-import com.github.kr328.clash.common.R as CommonR
+import com.github.kr328.clash.common.Res as CommonRes
+import com.github.kr328.clash.common.copied
+import com.github.kr328.clash.common.ok
+import com.github.kr328.clash.common.reset
 import com.github.kr328.clash.core.Clash
 import com.github.kr328.clash.core.model.ConfigurationOverride
 import com.github.kr328.clash.settings.Res
@@ -223,7 +226,7 @@ internal fun MetaFeatureSettingsScreen(
               },
               confirmButton = {
                 TextButton(onClick = { showUnsupportedFormatDialog = false }) {
-                  Text(text = stringResource(CommonR.string.ok))
+                  Text(text = stringResource(CommonRes.string.ok))
                 }
               },
             )
@@ -278,7 +281,7 @@ private fun MetaFeatureSettingsContent(
       IconButton(onClick = { onShowResetConfirmDialogChange(true) }) {
         Icon(
           imageVector = TabbyIcons.BaselineReplay,
-          contentDescription = stringResource(CommonR.string.reset),
+          contentDescription = stringResource(CommonRes.string.reset),
         )
       }
     },
@@ -639,7 +642,7 @@ private fun AgeKeyHelperDialog(
   var publicKey by remember { mutableStateOf("") }
   val clipboard = LocalClipboard.current
   val scope = rememberCoroutineScope()
-  val copiedText = stringResource(CommonR.string.copied)
+  val copiedText = stringResource(CommonRes.string.copied)
   val genericError = stringResource(Res.string.error)
   val secretInvalid =
     remember(secretKey) {
@@ -736,7 +739,7 @@ private fun AgeKeyHelperDialog(
       }
     },
     confirmButton = {
-      TextButton(onClick = onDismiss) { Text(stringResource(CommonR.string.ok)) }
+      TextButton(onClick = onDismiss) { Text(stringResource(CommonRes.string.ok)) }
     },
   )
 }

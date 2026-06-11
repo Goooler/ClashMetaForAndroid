@@ -6,9 +6,11 @@ import android.content.Intent
 import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.github.kr328.clash.common.R as CommonR
+import com.github.kr328.clash.common.Res as CommonRes
 import com.github.kr328.clash.common.constants.Intents
 import com.github.kr328.clash.common.log.Log
+import com.github.kr328.clash.common.new_profile
+import com.github.kr328.clash.common.unknown
 import com.github.kr328.clash.glue.util.withProfile
 import com.github.kr328.clash.profile.Res
 import com.github.kr328.clash.profile.import_from_qr_exception
@@ -58,13 +60,13 @@ internal class NewProfileViewModel(private val application: Application) : ViewM
   fun onExternalProviderResult(uri: Uri, name: String?) {
     viewModelScope.launch {
       try {
-        val profileName = application.getString(CommonR.string.new_profile)
+        val profileName = application.getString(CommonRes.string.new_profile)
         val uuid = withProfile { create(External, name ?: profileName, uri.toString()) }
         eventState.value = EventState.LaunchProperties(uuid)
       } catch (e: Exception) {
         Log.e("Create external profile failed: ${e.message}", e)
         eventState.value =
-          EventState.ShowMessage(e.message ?: application.getString(CommonR.string.unknown))
+          EventState.ShowMessage(e.message ?: application.getString(CommonRes.string.unknown))
       }
     }
   }
@@ -76,13 +78,13 @@ internal class NewProfileViewModel(private val application: Application) : ViewM
         viewModelScope.launch {
           try {
             val uuid = withProfile {
-              create(type = Url, name = application.getString(CommonR.string.new_profile), url)
+              create(type = Url, name = application.getString(CommonRes.string.new_profile), url)
             }
             eventState.value = EventState.LaunchProperties(uuid)
           } catch (e: Exception) {
             Log.e("Create QR profile failed: ${e.message}", e)
             eventState.value =
-              EventState.ShowMessage(e.message ?: application.getString(CommonR.string.unknown))
+              EventState.ShowMessage(e.message ?: application.getString(CommonRes.string.unknown))
           }
         }
       }
@@ -99,13 +101,13 @@ internal class NewProfileViewModel(private val application: Application) : ViewM
   private fun createProfile(type: Profile.Type) {
     viewModelScope.launch {
       try {
-        val name = application.getString(CommonR.string.new_profile)
+        val name = application.getString(CommonRes.string.new_profile)
         val uuid = withProfile { create(type, name) }
         eventState.value = EventState.LaunchProperties(uuid)
       } catch (e: Exception) {
         Log.e("Create profile failed: ${e.message}", e)
         eventState.value =
-          EventState.ShowMessage(e.message ?: application.getString(CommonR.string.unknown))
+          EventState.ShowMessage(e.message ?: application.getString(CommonRes.string.unknown))
       }
     }
   }

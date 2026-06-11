@@ -34,7 +34,10 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.PreviewWrapper
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.github.kr328.clash.common.R as CommonR
+import com.github.kr328.clash.common.Res as CommonRes
+import com.github.kr328.clash.common.close
+import com.github.kr328.clash.common.delete
+import com.github.kr328.clash.common.export
 import com.github.kr328.clash.core.model.LogMessage
 import com.github.kr328.clash.glue.util.format
 import com.github.kr328.clash.log.Res
@@ -158,20 +161,20 @@ private fun LogcatContent(
         IconButton(onClick = onClose) {
           Icon(
             imageVector = TabbyIcons.BaselineStop,
-            contentDescription = stringResCompat(CommonR.string.close),
+            contentDescription = stringResCompat(CommonRes.string.close),
           )
         }
       } else {
         IconButton(onClick = onDelete) {
           Icon(
             imageVector = TabbyIcons.BaselineDelete,
-            contentDescription = stringResCompat(CommonR.string.delete),
+            contentDescription = stringResCompat(CommonRes.string.delete),
           )
         }
         IconButton(onClick = onExport) {
           Icon(
             imageVector = TabbyIcons.BaselineSave,
-            contentDescription = stringResCompat(CommonR.string.export),
+            contentDescription = stringResCompat(CommonRes.string.export),
           )
         }
       }

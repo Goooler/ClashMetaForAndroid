@@ -24,7 +24,12 @@ import androidx.compose.ui.text.fromHtml
 import androidx.compose.ui.tooling.preview.PreviewWrapper
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.github.kr328.clash.common.R as CommonR
+import com.github.kr328.clash.common.Res as CommonRes
+import com.github.kr328.clash.common.cancel
+import com.github.kr328.clash.common.disabled
+import com.github.kr328.clash.common.name
+import com.github.kr328.clash.common.ok
+import com.github.kr328.clash.common.url
 import com.github.kr328.clash.glue.util.ValidatorAgeSecretKey
 import com.github.kr328.clash.glue.util.ValidatorAutoUpdateInterval
 import com.github.kr328.clash.glue.util.ValidatorHttpUrl
@@ -180,7 +185,7 @@ private fun PropertiesContent(
               onNameChanged(newName)
             }
           },
-          title = { Text(stringResCompat(CommonR.string.name)) },
+          title = { Text(stringResCompat(CommonRes.string.name)) },
           textToValue = { input -> if (ValidatorNotBlank(input)) input else null },
           icon = { Icon(imageVector = TabbyIcons.OutlineLabel, contentDescription = null) },
           summary = { Text(profile.name.ifBlank { stringResCompat(Res.string.profile_name) }) },
@@ -193,7 +198,7 @@ private fun PropertiesContent(
               onUrlChanged(newUrl)
             }
           },
-          title = { Text(stringResCompat(CommonR.string.url)) },
+          title = { Text(stringResCompat(CommonRes.string.url)) },
           textToValue = { input -> if (ValidatorHttpUrl(input)) input else null },
           enabled = profile.type != File && profile.type != External,
           icon = { Icon(imageVector = TabbyIcons.OutlineInbox, contentDescription = null) },
@@ -223,7 +228,7 @@ private fun PropertiesContent(
           summary = {
             val intervalSummary =
               if (profile.interval == 0L) {
-                stringResCompat(CommonR.string.disabled)
+                stringResCompat(CommonRes.string.disabled)
               } else {
                 stringResCompat(
                   Res.string.format_minutes,
@@ -290,10 +295,10 @@ private fun ExitWithoutSavingDialog(onConfirm: () -> Unit, onDismiss: () -> Unit
     title = { Text(text = stringResCompat(Res.string.exit_without_save)) },
     text = { Text(text = stringResCompat(Res.string.exit_without_save_warning)) },
     confirmButton = {
-      TextButton(onClick = onConfirm) { Text(text = stringResCompat(CommonR.string.ok)) }
+      TextButton(onClick = onConfirm) { Text(text = stringResCompat(CommonRes.string.ok)) }
     },
     dismissButton = {
-      TextButton(onClick = onDismiss) { Text(text = stringResCompat(CommonR.string.cancel)) }
+      TextButton(onClick = onDismiss) { Text(text = stringResCompat(CommonRes.string.cancel)) }
     },
   )
 }

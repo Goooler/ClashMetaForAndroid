@@ -19,7 +19,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.PreviewWrapper
-import com.github.kr328.clash.common.R as CommonR
+import com.github.kr328.clash.common.Res as CommonRes
+import com.github.kr328.clash.common.settings
 import com.github.kr328.clash.settings.Res
 import com.github.kr328.clash.settings.app
 import com.github.kr328.clash.settings.meta_features
@@ -46,8 +47,8 @@ internal fun SettingsScreen(
   onOpenOverrideSettings: () -> Unit,
   onOpenMetaFeatureSettings: () -> Unit,
 ) {
-  TabbyScaffold(title = stringResource(CommonR.string.settings), modifier = modifier) { innerPadding
-    ->
+  TabbyScaffold(title = stringResource(CommonRes.string.settings), modifier = modifier) {
+    innerPadding ->
     Column(
       modifier = Modifier.fillMaxSize().padding(innerPadding).verticalScroll(rememberScrollState())
     ) {

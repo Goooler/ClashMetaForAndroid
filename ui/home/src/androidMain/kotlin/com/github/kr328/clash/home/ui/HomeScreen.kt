@@ -38,6 +38,18 @@ import androidx.compose.ui.tooling.preview.PreviewWrapper
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.github.kr328.clash.common.R as CommonR
+import com.github.kr328.clash.common.Res as CommonRes
+import com.github.kr328.clash.common.loading
+import com.github.kr328.clash.common.logs
+import com.github.kr328.clash.common.not_selected
+import com.github.kr328.clash.common.profiles
+import com.github.kr328.clash.common.providers
+import com.github.kr328.clash.common.proxy
+import com.github.kr328.clash.common.running
+import com.github.kr328.clash.common.settings
+import com.github.kr328.clash.common.stopped
+import com.github.kr328.clash.common.tabby
+import com.github.kr328.clash.common.tap_to_start
 import com.github.kr328.clash.home.Res
 import com.github.kr328.clash.home.format_profile_activated
 import com.github.kr328.clash.home.format_traffic_forwarded
@@ -83,7 +95,7 @@ internal fun HomeScreen(
   val snackbarHostState = remember { SnackbarHostState() }
 
   val noProfileText = stringResCompat(Res.string.no_profile_selected)
-  val profilesActionText = stringResCompat(CommonR.string.profiles)
+  val profilesActionText = stringResCompat(CommonRes.string.profiles)
 
   val vpnLauncher =
     rememberLauncherForActivityResult(StartActivityForResult()) { result ->
@@ -179,7 +191,7 @@ private fun HomeContent(
         )
         Spacer(10.dp)
         Text(
-          text = stringResCompat(CommonR.string.tabby),
+          text = stringResCompat(CommonRes.string.tabby),
           style = MaterialTheme.typography.headlineLarge,
         )
       }
@@ -194,16 +206,16 @@ private fun HomeContent(
           },
         text =
           when {
-            isTransitioning -> stringResCompat(CommonR.string.loading)
-            clashRunning -> stringResCompat(CommonR.string.running)
-            else -> stringResCompat(CommonR.string.stopped)
+            isTransitioning -> stringResCompat(CommonRes.string.loading)
+            clashRunning -> stringResCompat(CommonRes.string.running)
+            else -> stringResCompat(CommonRes.string.stopped)
           },
         subtext =
           when {
             isTransitioning -> null
             clashRunning && forwarded != null ->
               stringResCompat(Res.string.format_traffic_forwarded, forwarded)
-            else -> stringResCompat(CommonR.string.tap_to_start)
+            else -> stringResCompat(CommonRes.string.tap_to_start)
           },
         backgroundColor =
           when {
@@ -220,7 +232,7 @@ private fun HomeContent(
         HomeActionCard(
           modifier = Modifier.padding(vertical = cardMarginVertical),
           icon = TabbyIcons.BaselineApps,
-          text = stringResCompat(CommonR.string.proxy),
+          text = stringResCompat(CommonRes.string.proxy),
           subtext = mode,
           backgroundColor = MaterialTheme.colorScheme.surface,
           contentColor = MaterialTheme.colorScheme.onSurface,
@@ -234,7 +246,7 @@ private fun HomeContent(
         text = stringResCompat(Res.string.profile),
         subtext =
           if (profileName != null) stringResCompat(Res.string.format_profile_activated, profileName)
-          else stringResCompat(CommonR.string.not_selected),
+          else stringResCompat(CommonRes.string.not_selected),
         backgroundColor = MaterialTheme.colorScheme.surface,
         contentColor = MaterialTheme.colorScheme.onSurface,
         onClick = onOpenProfiles,
@@ -244,7 +256,7 @@ private fun HomeContent(
         HomeActionLabel(
           modifier = Modifier.padding(vertical = labelMarginVertical),
           icon = TabbyIcons.BaselineSwapVerticalCircle,
-          text = stringResCompat(CommonR.string.providers),
+          text = stringResCompat(CommonRes.string.providers),
           onClick = onOpenProviders,
         )
       }
@@ -252,13 +264,13 @@ private fun HomeContent(
       HomeActionLabel(
         modifier = Modifier.padding(vertical = labelMarginVertical),
         icon = TabbyIcons.BaselineAssignment,
-        text = stringResCompat(CommonR.string.logs),
+        text = stringResCompat(CommonRes.string.logs),
         onClick = onOpenLogs,
       )
       HomeActionLabel(
         modifier = Modifier.padding(vertical = labelMarginVertical),
         icon = TabbyIcons.BaselineSettings,
-        text = stringResCompat(CommonR.string.settings),
+        text = stringResCompat(CommonRes.string.settings),
         onClick = onOpenSettings,
       )
       HomeActionLabel(

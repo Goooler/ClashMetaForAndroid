@@ -34,7 +34,18 @@ import androidx.compose.ui.tooling.preview.PreviewWrapper
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entryProvider
-import com.github.kr328.clash.common.R as CommonR
+import com.github.kr328.clash.common.Res as CommonRes
+import com.github.kr328.clash.common.cancel
+import com.github.kr328.clash.common.default_
+import com.github.kr328.clash.common.direct_mode
+import com.github.kr328.clash.common.disabled
+import com.github.kr328.clash.common.format_elements
+import com.github.kr328.clash.common.global_mode
+import com.github.kr328.clash.common.mode
+import com.github.kr328.clash.common.ok
+import com.github.kr328.clash.common.reset
+import com.github.kr328.clash.common.rule_mode
+import com.github.kr328.clash.common.unknown
 import com.github.kr328.clash.core.model.ConfigurationOverride
 import com.github.kr328.clash.core.model.LogMessage
 import com.github.kr328.clash.core.model.TunnelState
@@ -204,7 +215,7 @@ private fun OverrideSettingsContent(
       IconButton(onClick = { onShowResetConfirmDialogChange(true) }) {
         Icon(
           imageVector = TabbyIcons.BaselineReplay,
-          contentDescription = stringResource(CommonR.string.reset),
+          contentDescription = stringResource(CommonRes.string.reset),
         )
       }
     },
@@ -249,7 +260,7 @@ private fun LazyListScope.generalPreferenceItems(
     key = "httpPort",
     title = Res.string.http_port,
     placeholder = Res.string.dont_modify,
-    emptyLabel = CommonR.string.disabled,
+    emptyLabel = CommonRes.string.disabled,
     value = portText(configuration.httpPort),
     onValueChange = { actions.updateHttpPort(parsePort(it)) },
     numericOnly = true,
@@ -258,7 +269,7 @@ private fun LazyListScope.generalPreferenceItems(
     key = "socksPort",
     title = Res.string.socks_port,
     placeholder = Res.string.dont_modify,
-    emptyLabel = CommonR.string.disabled,
+    emptyLabel = CommonRes.string.disabled,
     value = portText(configuration.socksPort),
     onValueChange = { actions.updateSocksPort(parsePort(it)) },
     numericOnly = true,
@@ -267,7 +278,7 @@ private fun LazyListScope.generalPreferenceItems(
     key = "redirectPort",
     title = Res.string.redirect_port,
     placeholder = Res.string.dont_modify,
-    emptyLabel = CommonR.string.disabled,
+    emptyLabel = CommonRes.string.disabled,
     value = portText(configuration.redirectPort),
     onValueChange = { actions.updateRedirectPort(parsePort(it)) },
     numericOnly = true,
@@ -276,7 +287,7 @@ private fun LazyListScope.generalPreferenceItems(
     key = "tproxyPort",
     title = Res.string.tproxy_port,
     placeholder = Res.string.dont_modify,
-    emptyLabel = CommonR.string.disabled,
+    emptyLabel = CommonRes.string.disabled,
     value = portText(configuration.tproxyPort),
     onValueChange = { actions.updateTproxyPort(parsePort(it)) },
     numericOnly = true,
@@ -285,7 +296,7 @@ private fun LazyListScope.generalPreferenceItems(
     key = "mixedPort",
     title = Res.string.mixed_port,
     placeholder = Res.string.dont_modify,
-    emptyLabel = CommonR.string.disabled,
+    emptyLabel = CommonRes.string.disabled,
     value = portText(configuration.mixedPort),
     onValueChange = { actions.updateMixedPort(parsePort(it)) },
     numericOnly = true,
@@ -324,7 +335,7 @@ private fun LazyListScope.generalPreferenceItems(
     key = "bindAddress",
     title = Res.string.bind_address,
     placeholder = Res.string.dont_modify,
-    emptyLabel = CommonR.string.default_,
+    emptyLabel = CommonRes.string.default_,
     value = configuration.bindAddress,
     onValueChange = actions::updateBindAddress,
   )
@@ -332,7 +343,7 @@ private fun LazyListScope.generalPreferenceItems(
     key = "externalController",
     title = Res.string.external_controller,
     placeholder = Res.string.dont_modify,
-    emptyLabel = CommonR.string.default_,
+    emptyLabel = CommonRes.string.default_,
     value = configuration.externalController,
     onValueChange = actions::updateExternalController,
   )
@@ -340,7 +351,7 @@ private fun LazyListScope.generalPreferenceItems(
     key = "externalControllerTls",
     title = Res.string.external_controller_tls,
     placeholder = Res.string.dont_modify,
-    emptyLabel = CommonR.string.default_,
+    emptyLabel = CommonRes.string.default_,
     value = configuration.externalControllerTLS,
     onValueChange = actions::updateExternalControllerTls,
   )
@@ -373,7 +384,7 @@ private fun LazyListScope.generalPreferenceItems(
     key = "secret",
     title = Res.string.secret,
     placeholder = Res.string.dont_modify,
-    emptyLabel = CommonR.string.default_,
+    emptyLabel = CommonRes.string.default_,
     value = configuration.secret,
     onValueChange = actions::updateSecret,
   )
@@ -382,7 +393,7 @@ private fun LazyListScope.generalPreferenceItems(
     value = configuration.mode,
     onValueChange = actions::updateMode,
     values = TunnelState.Mode.entries,
-    title = { Text(stringResource(CommonR.string.mode)) },
+    title = { Text(stringResource(CommonRes.string.mode)) },
     summary = { Text(stringResCompat(configuration.mode.textRes)) },
     valueToText = { AnnotatedString(stringResCompat(it.textRes)) },
   )
@@ -436,7 +447,7 @@ private fun LazyListScope.dnsPreferenceItems(
     key = "dnsListen",
     title = Res.string.listen,
     placeholder = Res.string.dont_modify,
-    emptyLabel = CommonR.string.disabled,
+    emptyLabel = CommonRes.string.disabled,
     value = configuration.dns.listen,
     onValueChange = actions::updateDnsListen,
     enabled = enabled,
@@ -670,7 +681,7 @@ private fun LazyListScope.overrideEditTextPreferenceItem(
               showDialog = false
             }
           ) {
-            Text(stringResource(CommonR.string.ok))
+            Text(stringResource(CommonRes.string.ok))
           }
         },
         dismissButton = {
@@ -681,10 +692,10 @@ private fun LazyListScope.overrideEditTextPreferenceItem(
                 showDialog = false
               }
             ) {
-              Text(stringResource(CommonR.string.reset))
+              Text(stringResource(CommonRes.string.reset))
             }
             TextButton(onClick = { showDialog = false }) {
-              Text(stringResource(CommonR.string.cancel))
+              Text(stringResource(CommonRes.string.cancel))
             }
           }
         },
@@ -706,14 +717,14 @@ private fun Map<String, String>?.summary(placeholder: Any) =
   when {
     this == null -> stringResCompat(placeholder)
     isEmpty() -> stringResCompat(Res.string.empty)
-    else -> stringResCompat(CommonR.string.format_elements, size)
+    else -> stringResCompat(CommonRes.string.format_elements, size)
   }
 
 internal val Boolean?.textRes: Any
   get() =
     when (this) {
       true -> Res.string.enabled
-      false -> CommonR.string.disabled
+      false -> CommonRes.string.disabled
       null -> Res.string.dont_modify
     }
 
@@ -728,9 +739,9 @@ private val Boolean?.dnsStrategyTextRes: Any
 private val TunnelState.Mode?.textRes: Any
   get() =
     when (this) {
-      Direct -> CommonR.string.direct_mode
-      Global -> CommonR.string.global_mode
-      Rule -> CommonR.string.rule_mode
+      Direct -> CommonRes.string.direct_mode
+      Global -> CommonRes.string.global_mode
+      Rule -> CommonRes.string.rule_mode
       null -> Res.string.dont_modify
     }
 
@@ -742,14 +753,14 @@ private val LogMessage.Level?.textRes: Any
       LogMessage.Level.Error -> Res.string.error
       Debug -> Res.string.debug
       Silent -> Res.string.silent
-      Unknown -> CommonR.string.unknown
+      Unknown -> CommonRes.string.unknown
       null -> Res.string.dont_modify
     }
 
 private val ConfigurationOverride.DnsEnhancedMode?.textRes: Any
   get() =
     when (this) {
-      None -> CommonR.string.disabled
+      None -> CommonRes.string.disabled
       FakeIp -> Res.string.fakeip
       Mapping -> Res.string.mapping
       null -> Res.string.dont_modify

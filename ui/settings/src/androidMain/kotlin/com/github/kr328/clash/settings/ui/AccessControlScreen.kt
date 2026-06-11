@@ -48,7 +48,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.graphics.drawable.toDrawable
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.github.kr328.clash.common.R as CommonR
+import com.github.kr328.clash.common.Res as CommonRes
+import com.github.kr328.clash.common.external
+import com.github.kr328.clash.common.filter
+import com.github.kr328.clash.common.more
+import com.github.kr328.clash.common.name
+import com.github.kr328.clash.common.sort
 import com.github.kr328.clash.glue.model.AppInfo
 import com.github.kr328.clash.settings.Res
 import com.github.kr328.clash.settings.access_control_packages
@@ -184,7 +189,7 @@ private fun AccessControlContent(
       IconButton(onClick = { showMenu = true }) {
         Icon(
           imageVector = TabbyIcons.BaselineMoreVert,
-          contentDescription = stringResource(CommonR.string.more),
+          contentDescription = stringResource(CommonRes.string.more),
         )
       }
     },
@@ -278,16 +283,16 @@ private fun ColumnScope.AccessControlMenuContent(
       onClick = onSelectInvert,
     )
 
-    AccessControlMenuSectionTitle(text = stringResource(CommonR.string.filter))
+    AccessControlMenuSectionTitle(text = stringResource(CommonRes.string.filter))
     AccessControlMenuCheckAction(
       text = stringResource(Res.string.system_apps),
       checked = showSystemApps,
       onCheckedChange = onUpdateShowSystemApps,
     )
 
-    AccessControlMenuSectionTitle(text = stringResource(CommonR.string.sort))
+    AccessControlMenuSectionTitle(text = stringResource(CommonRes.string.sort))
     AccessControlMenuSortAction(
-      text = stringResource(CommonR.string.name),
+      text = stringResource(CommonRes.string.name),
       checked = sort == Label,
       onClick = { onUpdateSort(Label) },
     )
@@ -312,7 +317,7 @@ private fun ColumnScope.AccessControlMenuContent(
       onCheckedChange = onUpdateReverse,
     )
 
-    AccessControlMenuSectionTitle(text = stringResource(CommonR.string.external))
+    AccessControlMenuSectionTitle(text = stringResource(CommonRes.string.external))
     AccessControlMenuAction(
       text = stringResource(Res.string.import_from_clipboard),
       onClick = onImport,

@@ -5,8 +5,9 @@ import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.github.kr328.clash.common.R as CommonR
+import com.github.kr328.clash.common.Res as CommonRes
 import com.github.kr328.clash.common.log.Log
+import com.github.kr328.clash.common.unknown
 import com.github.kr328.clash.core.model.FetchStatus
 import com.github.kr328.clash.glue.util.withProfile
 import com.github.kr328.clash.profile.Res
@@ -178,7 +179,7 @@ internal class PropertiesViewModel(
       } catch (e: Exception) {
         Log.e("Commit profile failed: ${e.message}", e)
         eventState.value =
-          EventState.ShowMessage(e.message ?: application.getString(CommonR.string.unknown))
+          EventState.ShowMessage(e.message ?: application.getString(CommonRes.string.unknown))
       }
     }
   }

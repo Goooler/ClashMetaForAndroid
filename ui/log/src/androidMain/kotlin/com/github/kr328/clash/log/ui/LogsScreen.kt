@@ -30,7 +30,11 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.PreviewWrapper
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.github.kr328.clash.common.R as CommonR
+import com.github.kr328.clash.common.Res as CommonRes
+import com.github.kr328.clash.common.cancel
+import com.github.kr328.clash.common.logs
+import com.github.kr328.clash.common.ok
+import com.github.kr328.clash.common.tap_to_start
 import com.github.kr328.clash.glue.util.format
 import com.github.kr328.clash.log.Res
 import com.github.kr328.clash.log.delete_all_logs
@@ -71,12 +75,12 @@ internal fun LogsScreen(
             viewModel.deleteAll()
           }
         ) {
-          Text(text = stringResCompat(CommonR.string.ok))
+          Text(text = stringResCompat(CommonRes.string.ok))
         }
       },
       dismissButton = {
         TextButton(onClick = { showDeleteAllDialog = false }) {
-          Text(text = stringResCompat(CommonR.string.cancel))
+          Text(text = stringResCompat(CommonRes.string.cancel))
         }
       },
     )
@@ -103,7 +107,7 @@ private fun LogsContent(
 ) {
   TabbyScaffold(
     modifier = modifier,
-    title = stringResCompat(CommonR.string.logs),
+    title = stringResCompat(CommonRes.string.logs),
     actions = {
       IconButton(onClick = onDeleteAllConfirm) {
         Icon(
@@ -120,7 +124,7 @@ private fun LogsContent(
       item {
         LogsActionItem(
           title = stringResCompat(Res.string.tabby_logcat),
-          summary = stringResCompat(CommonR.string.tap_to_start),
+          summary = stringResCompat(CommonRes.string.tap_to_start),
           icon = TabbyIcons.BaselineAdb,
           onClick = onStartLogcat,
         )

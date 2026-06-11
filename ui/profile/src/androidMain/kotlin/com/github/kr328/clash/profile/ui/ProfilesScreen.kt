@@ -1,5 +1,6 @@
 package com.github.kr328.clash.profile.ui
 
+import android.content.Context
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -44,10 +45,16 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.PreviewWrapper
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.github.kr328.clash.common.R as CommonR
-import com.github.kr328.clash.glue.util.elapsedIntervalString
+import com.github.kr328.clash.common.Res as CommonRes
+import com.github.kr328.clash.common.delete
+import com.github.kr328.clash.common.external
+import com.github.kr328.clash.common.file
+import com.github.kr328.clash.common.more
+import com.github.kr328.clash.common.new_profile
+import com.github.kr328.clash.common.profiles
+import com.github.kr328.clash.common.url
+import com.github.kr328.clash.core.model.Provider.VehicleType.File
 import com.github.kr328.clash.glue.util.toDateStr
-import com.github.kr328.clash.glue.util.toString
 import com.github.kr328.clash.profile.Res
 import com.github.kr328.clash.profile.duplicate
 import com.github.kr328.clash.profile.edit
@@ -70,6 +77,8 @@ import com.github.kr328.clash.ui.lifecycle.withLifecycle
 import com.github.kr328.clash.ui.theme.PreviewTabby
 import com.github.kr328.clash.ui.theme.TabbyThemeWrapper
 import com.github.kr328.clash.ui.theme.tabbyDimens
+import com.github.kr328.clash.ui.util.elapsedIntervalString
+import com.github.kr328.clash.ui.util.getString
 import com.github.kr328.clash.ui.util.stringResCompat
 import kotlin.time.Duration.Companion.minutes
 import kotlin.uuid.Uuid
@@ -152,7 +161,7 @@ private fun ProfilesContent(
       sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
       onDismissRequest = { menuProfile = null },
     ) {
-      if (profile.imported && profile.type != File) {
+      if (profile.imported && profile.type != Profile.Type.File) {
         ProfilesMenuAction(
           icon = TabbyIcons.BaselineUpdate,
           text = stringResCompat(Res.string.update),
@@ -182,7 +191,7 @@ private fun ProfilesContent(
       }
       ProfilesMenuAction(
         icon = TabbyIcons.OutlineDelete,
-        text = stringResCompat(CommonR.string.delete),
+        text = stringResCompat(CommonRes.string.delete),
         tint = MaterialTheme.colorScheme.error,
         onClick = {
           menuProfile = null
@@ -194,7 +203,7 @@ private fun ProfilesContent(
   }
 
   TabbyScaffold(
-    title = stringResCompat(CommonR.string.profiles),
+    title = stringResCompat(CommonRes.string.profiles),
     modifier = modifier,
     snackbarHostState = snackbarHostState,
     actions = {
@@ -213,7 +222,7 @@ private fun ProfilesContent(
       IconButton(onClick = onCreate) {
         Icon(
           imageVector = TabbyIcons.BaselineAdd,
-          contentDescription = stringResCompat(CommonR.string.new_profile),
+          contentDescription = stringResCompat(CommonRes.string.new_profile),
         )
       }
     },
@@ -320,7 +329,7 @@ private fun ProfileItem(
       IconButton(onClick = onMenuClick, modifier = Modifier.padding(horizontal = 4.dp)) {
         Icon(
           imageVector = TabbyIcons.BaselineMoreVert,
-          contentDescription = stringResCompat(CommonR.string.more),
+          contentDescription = stringResCompat(CommonRes.string.more),
         )
       }
     }
@@ -354,6 +363,14 @@ private fun ProfilesMenuAction(
   }
 }
 
+private fun Profile.Type.toString(context: Context): String {
+  return when (this) {
+    Profile.Type.File -> context.getString(CommonRes.string.file)
+    Url -> context.getString(CommonRes.string.url)
+    External -> context.getString(CommonRes.string.external)
+  }
+}
+
 @PreviewWrapper(TabbyThemeWrapper::class)
 @PreviewTabby
 @Composable
@@ -380,7 +397,7 @@ private fun ProfilesContentPreview() {
         Profile(
           uuid = Uuid.fromLongs(0, 1),
           name = "Draft Profile",
-          type = File,
+          type = Profile.Type.File,
           source = "",
           active = false,
           interval = 0,

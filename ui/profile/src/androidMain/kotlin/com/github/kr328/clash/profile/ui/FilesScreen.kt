@@ -49,12 +49,17 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.PreviewWrapper
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.github.kr328.clash.common.R as CommonR
+import com.github.kr328.clash.common.Res as CommonRes
+import com.github.kr328.clash.common._new
+import com.github.kr328.clash.common.cancel
+import com.github.kr328.clash.common.delete
+import com.github.kr328.clash.common.export
+import com.github.kr328.clash.common.more
+import com.github.kr328.clash.common.ok
 import com.github.kr328.clash.common.util.grantPermissions
 import com.github.kr328.clash.glue.model.ConfigFile
 import com.github.kr328.clash.glue.util.Validator
 import com.github.kr328.clash.glue.util.ValidatorFileName
-import com.github.kr328.clash.glue.util.elapsedIntervalString
 import com.github.kr328.clash.profile.Res
 import com.github.kr328.clash.profile.file_name
 import com.github.kr328.clash.profile.files
@@ -76,6 +81,7 @@ import com.github.kr328.clash.ui.icon.TabbyIcons
 import com.github.kr328.clash.ui.lifecycle.withLifecycle
 import com.github.kr328.clash.ui.theme.PreviewTabby
 import com.github.kr328.clash.ui.theme.TabbyThemeWrapper
+import com.github.kr328.clash.ui.util.elapsedIntervalString
 import com.github.kr328.clash.ui.util.stringResCompat
 import kotlin.time.Duration.Companion.minutes
 import kotlin.uuid.Uuid
@@ -191,7 +197,7 @@ private fun FilesContent(
       if (!file.isDirectory && file.size > 0) {
         FilesMenuAction(
           icon = TabbyIcons.BaselineSave,
-          text = stringResCompat(CommonR.string.export),
+          text = stringResCompat(CommonRes.string.export),
           onClick = {
             menuConfigFile = null
             onExport(file)
@@ -209,7 +215,7 @@ private fun FilesContent(
         )
         FilesMenuAction(
           icon = TabbyIcons.OutlineDelete,
-          text = stringResCompat(CommonR.string.delete),
+          text = stringResCompat(CommonRes.string.delete),
           tint = MaterialTheme.colorScheme.error,
           onClick = {
             menuConfigFile = null
@@ -233,7 +239,7 @@ private fun FilesContent(
         IconButton(onClick = onNew) {
           Icon(
             imageVector = TabbyIcons.BaselineAdd,
-            contentDescription = stringResCompat(CommonR.string._new),
+            contentDescription = stringResCompat(CommonRes.string._new),
           )
         }
       }
@@ -331,11 +337,11 @@ private fun TextInputDialog(
     },
     confirmButton = {
       TextButton(onClick = { onConfirm(inputText.text) }, enabled = isValidInput) {
-        Text(stringResCompat(CommonR.string.ok))
+        Text(stringResCompat(CommonRes.string.ok))
       }
     },
     dismissButton = {
-      TextButton(onClick = onDismiss) { Text(stringResCompat(CommonR.string.cancel)) }
+      TextButton(onClick = onDismiss) { Text(stringResCompat(CommonRes.string.cancel)) }
     },
   )
 }
@@ -390,7 +396,7 @@ private fun FileItem(
     IconButton(onClick = onMore) {
       Icon(
         imageVector = TabbyIcons.BaselineMoreVert,
-        contentDescription = stringResCompat(CommonR.string.more),
+        contentDescription = stringResCompat(CommonRes.string.more),
       )
     }
   }

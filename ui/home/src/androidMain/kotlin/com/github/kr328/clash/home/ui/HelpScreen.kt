@@ -27,6 +27,9 @@ import androidx.compose.ui.tooling.preview.PreviewWrapper
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.github.kr328.clash.common.R as CommonR
+import com.github.kr328.clash.common.Res as CommonRes
+import com.github.kr328.clash.common.copied
+import com.github.kr328.clash.common.tabby
 import com.github.kr328.clash.glue.util.MIHOMO_CORE
 import com.github.kr328.clash.glue.util.MIHOMO_WIKI
 import com.github.kr328.clash.glue.util.TABBY_GITHUB
@@ -108,7 +111,7 @@ private fun HelpContent(
 ) {
   val clipboard = LocalClipboard.current
   val scope = rememberCoroutineScope()
-  val messageCopied = stringResCompat(CommonR.string.copied)
+  val messageCopied = stringResCompat(CommonRes.string.copied)
 
   val onCopyVersion: (String) -> Unit = { version ->
     scope.launch {
@@ -153,7 +156,7 @@ private fun HelpContent(
         )
         preference(
           key = "tabby",
-          title = { Text(stringResCompat(CommonR.string.tabby)) },
+          title = { Text(stringResCompat(CommonRes.string.tabby)) },
           summary = { Text(TABBY_GITHUB) },
           onClick = { onOpenLink(TABBY_GITHUB) },
         )

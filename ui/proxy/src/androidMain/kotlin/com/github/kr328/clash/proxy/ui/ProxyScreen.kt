@@ -59,7 +59,18 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.PreviewWrapper
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.github.kr328.clash.common.R as CommonR
+import com.github.kr328.clash.common.Res as CommonRes
+import com.github.kr328.clash.common.default_
+import com.github.kr328.clash.common.direct_mode
+import com.github.kr328.clash.common.dont_modify
+import com.github.kr328.clash.common.filter
+import com.github.kr328.clash.common.global_mode
+import com.github.kr328.clash.common.mode
+import com.github.kr328.clash.common.more
+import com.github.kr328.clash.common.name
+import com.github.kr328.clash.common.proxy
+import com.github.kr328.clash.common.rule_mode
+import com.github.kr328.clash.common.sort
 import com.github.kr328.clash.core.model.Proxy
 import com.github.kr328.clash.core.model.ProxySort
 import com.github.kr328.clash.core.model.TunnelState
@@ -221,7 +232,7 @@ private fun ProxyContent(
   TabbyScaffold(
     modifier = modifier,
     snackbarHostState = snackbarHostState,
-    title = stringResource(CommonR.string.proxy),
+    title = stringResource(CommonRes.string.proxy),
     actions = {
       if (hasGroups) {
         if (currentGroup?.urlTesting == true) {
@@ -254,7 +265,7 @@ private fun ProxyContent(
       IconButton(onClick = { menuVisible = true }) {
         Icon(
           imageVector = TabbyIcons.BaselineMoreVert,
-          contentDescription = stringResource(CommonR.string.more),
+          contentDescription = stringResource(CommonRes.string.more),
         )
       }
     },
@@ -482,7 +493,7 @@ private fun ColumnScope.ProxyMenuSheetContent(
   onProxySortChanged: (ProxySort) -> Unit,
   onOverrideModeSelected: (TunnelState.Mode?) -> Unit,
 ) {
-  ProxyMenuSection(title = stringResource(CommonR.string.filter)) {
+  ProxyMenuSection(title = stringResource(CommonRes.string.filter)) {
     ProxyMenuCheckboxRow(
       title = stringResource(Res.string.not_selectable),
       checked = excludeNotSelectable,
@@ -490,24 +501,24 @@ private fun ColumnScope.ProxyMenuSheetContent(
     )
   }
 
-  ProxyMenuSection(title = stringResource(CommonR.string.mode)) {
+  ProxyMenuSection(title = stringResource(CommonRes.string.mode)) {
     ProxyMenuRadioRow(
-      title = stringResource(CommonR.string.dont_modify),
+      title = stringResource(CommonRes.string.dont_modify),
       selected = overrideMode == null,
       onClick = { onOverrideModeSelected(null) },
     )
     ProxyMenuRadioRow(
-      title = stringResource(CommonR.string.direct_mode),
+      title = stringResource(CommonRes.string.direct_mode),
       selected = overrideMode == TunnelState.Mode.Direct,
       onClick = { onOverrideModeSelected(TunnelState.Mode.Direct) },
     )
     ProxyMenuRadioRow(
-      title = stringResource(CommonR.string.global_mode),
+      title = stringResource(CommonRes.string.global_mode),
       selected = overrideMode == TunnelState.Mode.Global,
       onClick = { onOverrideModeSelected(TunnelState.Mode.Global) },
     )
     ProxyMenuRadioRow(
-      title = stringResource(CommonR.string.rule_mode),
+      title = stringResource(CommonRes.string.rule_mode),
       selected = overrideMode == TunnelState.Mode.Rule,
       onClick = { onOverrideModeSelected(TunnelState.Mode.Rule) },
     )
@@ -531,14 +542,14 @@ private fun ColumnScope.ProxyMenuSheetContent(
     )
   }
 
-  ProxyMenuSection(title = stringResource(CommonR.string.sort)) {
+  ProxyMenuSection(title = stringResource(CommonRes.string.sort)) {
     ProxyMenuRadioRow(
-      title = stringResource(CommonR.string.default_),
+      title = stringResource(CommonRes.string.default_),
       selected = proxySort == ProxySort.Default,
       onClick = { onProxySortChanged(ProxySort.Default) },
     )
     ProxyMenuRadioRow(
-      title = stringResource(CommonR.string.name),
+      title = stringResource(CommonRes.string.name),
       selected = proxySort == ProxySort.Title,
       onClick = { onProxySortChanged(ProxySort.Title) },
     )

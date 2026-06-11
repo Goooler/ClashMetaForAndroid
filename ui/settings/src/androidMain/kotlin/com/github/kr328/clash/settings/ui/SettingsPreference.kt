@@ -8,7 +8,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
-import com.github.kr328.clash.common.R as CommonR
+import com.github.kr328.clash.common.Res as CommonRes
+import com.github.kr328.clash.common.format_elements
 import com.github.kr328.clash.settings.Res
 import com.github.kr328.clash.settings.empty
 import com.github.kr328.clash.ui.util.stringResCompat
@@ -26,7 +27,7 @@ internal fun List<String>?.listSummary(placeholder: Any) =
   when {
     this == null -> stringResCompat(placeholder)
     isEmpty() -> stringResCompat(Res.string.empty)
-    else -> stringResCompat(CommonR.string.format_elements, size)
+    else -> stringResCompat(CommonRes.string.format_elements, size)
   }
 
 internal fun initialTextFieldValue(text: String) =

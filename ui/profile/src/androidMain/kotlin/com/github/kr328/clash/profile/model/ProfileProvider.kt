@@ -3,7 +3,9 @@ package com.github.kr328.clash.profile.model
 import android.content.Context
 import android.content.Intent
 import androidx.compose.ui.graphics.vector.ImageVector
-import com.github.kr328.clash.common.R as CommonR
+import com.github.kr328.clash.common.Res as CommonRes
+import com.github.kr328.clash.common.file
+import com.github.kr328.clash.common.url
 import com.github.kr328.clash.profile.Res
 import com.github.kr328.clash.profile.import_from_file
 import com.github.kr328.clash.profile.import_from_qr
@@ -18,7 +20,7 @@ import com.github.kr328.clash.ui.util.getString
 internal sealed class ProfileProvider {
   class File(private val context: Context) : ProfileProvider() {
     override val name: String
-      get() = context.getString(CommonR.string.file)
+      get() = context.getString(CommonRes.string.file)
 
     override val summary: String
       get() = context.getString(Res.string.import_from_file)
@@ -28,7 +30,7 @@ internal sealed class ProfileProvider {
 
   class Url(private val context: Context) : ProfileProvider() {
     override val name: String
-      get() = context.getString(CommonR.string.url)
+      get() = context.getString(CommonRes.string.url)
 
     override val summary: String
       get() = context.getString(Res.string.import_from_url)
