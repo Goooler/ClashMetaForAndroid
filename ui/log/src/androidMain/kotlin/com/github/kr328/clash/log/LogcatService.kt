@@ -39,7 +39,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import org.jetbrains.compose.resources.getString
 
@@ -63,9 +62,10 @@ internal class LogcatService :
 
     running.value = true
 
-    createNotificationChannel()
-
-    showNotification()
+    launch {
+      createNotificationChannel()
+      showNotification()
+    }
 
     bindService(RemoteService::class.intent, connection, BIND_AUTO_CREATE)
   }
@@ -140,27 +140,26 @@ internal class LogcatService :
     }
   }
 
-  private fun createNotificationChannel() {
+  private suspend fun createNotificationChannel() {
     NotificationManagerCompat.from(this)
       .createNotificationChannel(
         NotificationChannelCompat.Builder(CHANNEL_ID, NotificationManagerCompat.IMPORTANCE_DEFAULT)
-          .setName(runBlocking { getString(Res.string.tabby_logcat) })
+          .setName(getString(Res.string.tabby_logcat))
           .build()
       )
   }
 
-  private fun showNotification() {
-    val statusNotificationId = resources.getIdentifier("nf_logcat_status", "id", packageName)
+  private suspend fun showNotification() {
     val notification =
       NotificationCompat.Builder(this, CHANNEL_ID)
         .setSmallIcon(CommonR.drawable.ic_tabby_small)
         .setColor(getColorCompat(CommonR.color.color_tabby_light))
-        .setContentTitle(runBlocking { getString(Res.string.tabby_logcat) })
-        .setContentText(runBlocking { getString(CommonRes.string.running) })
+        .setContentTitle(getString(Res.string.tabby_logcat))
+        .setContentText(getString(CommonRes.string.running))
         .setContentIntent(
           PendingIntent.getActivity(
             this,
-            statusNotificationId,
+            R.id.nf_logcat_status,
             mainIntent {
               action = Intents.ACTION_LOGCAT
               setFlags(
@@ -174,7 +173,7 @@ internal class LogcatService :
         )
         .build()
 
-    startForegroundCompat(statusNotificationId, notification)
+    startForegroundCompat(R.id.nf_logcat_status, notification)
   }
 
   companion object {

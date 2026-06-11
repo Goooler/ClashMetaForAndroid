@@ -44,11 +44,10 @@ internal class NewProfileViewModel(private val application: Application) : ViewM
 
   fun onCreate(provider: ProfileProvider) {
     when (provider) {
-      ProfileProvider.QR -> eventState.value = EventState.LaunchQRScanner
-      is ProfileProvider.External ->
-        eventState.value = EventState.LaunchExternalProvider(provider.intent)
-      ProfileProvider.File -> createProfile(Profile.Type.File)
-      ProfileProvider.Url -> createProfile(Profile.Type.Url)
+      QR -> eventState.value = EventState.LaunchQRScanner
+      is External -> eventState.value = EventState.LaunchExternalProvider(provider.intent)
+      File -> createProfile(File)
+      Url -> createProfile(Url)
     }
   }
 
@@ -62,9 +61,7 @@ internal class NewProfileViewModel(private val application: Application) : ViewM
     viewModelScope.launch {
       try {
         val profileName = getString(CommonRes.string.new_profile)
-        val uuid = withProfile {
-          create(Profile.Type.External, name ?: profileName, uri.toString())
-        }
+        val uuid = withProfile { create(External, name ?: profileName, uri.toString()) }
         eventState.value = EventState.LaunchProperties(uuid)
       } catch (e: Exception) {
         Log.e("Create external profile failed: ${e.message}", e)
@@ -80,7 +77,7 @@ internal class NewProfileViewModel(private val application: Application) : ViewM
         viewModelScope.launch {
           try {
             val uuid = withProfile {
-              create(type = Profile.Type.Url, name = getString(CommonRes.string.new_profile), url)
+              create(type = Url, name = getString(CommonRes.string.new_profile), url)
             }
             eventState.value = EventState.LaunchProperties(uuid)
           } catch (e: Exception) {

@@ -7,9 +7,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.tooling.preview.PreviewWrapper
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.github.kr328.clash.glue.model.DarkMode
+import com.github.kr328.clash.common.model.DarkMode
 import com.github.kr328.clash.settings.Res
 import com.github.kr328.clash.settings.allow_tabby_auto_restart
 import com.github.kr328.clash.settings.always_dark
@@ -41,6 +42,7 @@ import me.zhanghai.compose.preference.ProvidePreferenceLocals
 import me.zhanghai.compose.preference.listPreference
 import me.zhanghai.compose.preference.preferenceCategory
 import me.zhanghai.compose.preference.switchPreference
+import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -102,9 +104,7 @@ private fun AppSettingsContent(
           icon = { Icon(imageVector = TabbyIcons.BaselineBrightness4, contentDescription = null) },
           title = { Text(stringResource(Res.string.dark_mode)) },
           summary = { Text(stringResource(uiState.darkMode.summaryRes)) },
-          valueToText = {
-            androidx.compose.ui.text.AnnotatedString(stringResource(it.summaryRes))
-          },
+          valueToText = { AnnotatedString(stringResource(it.summaryRes)) },
         )
         switchPreference(
           key = "hide_app_icon",
@@ -140,7 +140,7 @@ private fun AppSettingsContent(
   }
 }
 
-private val DarkMode.summaryRes: org.jetbrains.compose.resources.StringResource
+private val DarkMode.summaryRes: StringResource
   get() =
     when (this) {
       Auto -> Res.string.follow_system

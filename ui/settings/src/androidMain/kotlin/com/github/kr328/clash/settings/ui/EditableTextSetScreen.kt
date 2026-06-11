@@ -28,9 +28,7 @@ import androidx.compose.runtime.toMutableStateList
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.PreviewWrapper
 import androidx.compose.ui.unit.dp
 import androidx.navigation3.runtime.EntryProviderScope
@@ -55,7 +53,7 @@ import sh.calvin.reorderable.ReorderableItem
 import sh.calvin.reorderable.rememberReorderableLazyListState
 
 @Serializable
-internal data class EditableTextList(val titleKey: String, val initialValues: Set<String>?) : NavKey
+internal data class EditableTextList(val title: String, val initialValues: Set<String>?) : NavKey
 
 internal fun EntryProviderScope<NavKey>.editableTextSetScreenEntry(
   onDismiss: () -> Unit,
@@ -63,7 +61,7 @@ internal fun EntryProviderScope<NavKey>.editableTextSetScreenEntry(
 ) {
   entry<EditableTextList> { key ->
     EditableTextSetScreen(
-      titleKey = key.titleKey,
+      title = key.title,
       initialValues = key.initialValues,
       onDismiss = onDismiss,
       onApply = onApply,
@@ -73,17 +71,11 @@ internal fun EntryProviderScope<NavKey>.editableTextSetScreenEntry(
 
 @Composable
 private fun EditableTextSetScreen(
-  titleKey: String,
+  title: String,
   initialValues: Set<String>?,
   onDismiss: () -> Unit,
   onApply: (Set<String>?) -> Unit,
 ) {
-  val context = LocalContext.current
-  val id =
-    remember(titleKey) {
-      context.resources.getIdentifier(titleKey, "string", context.packageName)
-    }
-  val title = androidx.compose.ui.res.stringResource(id)
 
   val values = remember(initialValues) { initialValues.orEmpty().toMutableStateList() }
   var showAddDialog by remember { mutableStateOf(false) }
@@ -227,7 +219,7 @@ private fun SingleTextInputDialog(
 @Composable
 private fun EditableTextSetScreenPreview() {
   EditableTextSetScreen(
-    titleKey = "sniff_http_ports",
+    title = "sniff_http_ports",
     initialValues = setOf("80", "8080"),
     onDismiss = {},
     onApply = {},

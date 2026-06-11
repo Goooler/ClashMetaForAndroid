@@ -1,4 +1,4 @@
-package com.github.kr328.clash.ui.util
+package com.github.kr328.clash.profile.util
 
 import androidx.compose.runtime.Composable
 import com.github.kr328.clash.common.Res as CommonRes
@@ -10,7 +10,7 @@ import kotlin.time.Duration.Companion.milliseconds
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-fun Long.elapsedIntervalString(): String {
+internal fun Long.elapsedIntervalString(): String {
   val duration = this.milliseconds
   val day = duration.inWholeDays
   val hour = duration.inWholeHours

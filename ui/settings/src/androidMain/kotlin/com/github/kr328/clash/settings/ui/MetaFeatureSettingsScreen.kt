@@ -29,9 +29,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalClipboard
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.toClipEntry
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.PreviewWrapper
@@ -111,6 +109,7 @@ import me.zhanghai.compose.preference.listPreference
 import me.zhanghai.compose.preference.preference
 import me.zhanghai.compose.preference.preferenceCategory
 import org.jetbrains.compose.resources.StringResource
+import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -135,7 +134,7 @@ internal fun MetaFeatureSettingsScreen(
     entryProvider =
       entryProvider {
         entry<MetaFeatureSettingsRoute.Main> {
-          val context = LocalContext.current
+          val scope = rememberCoroutineScope()
           val configuration by viewModel.configuration.collectAsStateWithLifecycle()
           val importResult by viewModel.importResult.collectAsStateWithLifecycle()
           val snackbarHostState = remember { SnackbarHostState() }
@@ -202,7 +201,9 @@ internal fun MetaFeatureSettingsScreen(
             },
             onOpenEditableTextList = { title, initialValues, onApply ->
               currentEditableTextListOnApply = onApply
-              backStack.addIfNotLast(EditableTextList(title.key, initialValues?.toSet()))
+              scope.launch {
+                backStack.addIfNotLast(EditableTextList(getString(title), initialValues?.toSet()))
+              }
             },
             onAgeKeyHelperRequested = { hybrid ->
               ageKeyHelperHybrid = hybrid

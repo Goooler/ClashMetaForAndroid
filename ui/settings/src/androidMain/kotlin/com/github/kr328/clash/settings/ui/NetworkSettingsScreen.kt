@@ -52,6 +52,7 @@ import me.zhanghai.compose.preference.listPreference
 import me.zhanghai.compose.preference.preference
 import me.zhanghai.compose.preference.preferenceCategory
 import me.zhanghai.compose.preference.switchPreference
+import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -216,7 +217,7 @@ private enum class TunStackMode(val persistedValue: String) {
   }
 }
 
-private val TunStackMode.summaryRes: org.jetbrains.compose.resources.StringResource
+private val TunStackMode.summaryRes: StringResource
   get() =
     when (this) {
       TunStackMode.System -> Res.string.tun_stack_system
@@ -224,7 +225,7 @@ private val TunStackMode.summaryRes: org.jetbrains.compose.resources.StringResou
       Mixed -> Res.string.tun_stack_mixed
     }
 
-private val AccessControlMode.summaryRes: org.jetbrains.compose.resources.StringResource
+private val AccessControlMode.summaryRes: StringResource
   get() =
     when (this) {
       AcceptAll -> Res.string.allow_all_apps

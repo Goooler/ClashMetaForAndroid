@@ -4,8 +4,8 @@ plugins {
 
 kotlin {
   sourceSets {
-    androidMain.dependencies {
-      implementation(projects.glue)
+    commonMain.dependencies {
+      implementation(projects.common)
     }
   }
 }

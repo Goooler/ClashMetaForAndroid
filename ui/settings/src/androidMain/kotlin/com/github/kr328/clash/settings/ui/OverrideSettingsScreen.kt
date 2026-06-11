@@ -18,14 +18,13 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.KeyboardType
@@ -110,6 +109,7 @@ import com.github.kr328.clash.ui.nav.addIfNotLast
 import com.github.kr328.clash.ui.nav.rememberNavBackStackBuilder
 import com.github.kr328.clash.ui.theme.PreviewTabby
 import com.github.kr328.clash.ui.theme.TabbyThemeWrapper
+import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
 import me.zhanghai.compose.preference.Preference
 import me.zhanghai.compose.preference.ProvidePreferenceLocals
@@ -117,6 +117,7 @@ import me.zhanghai.compose.preference.listPreference
 import me.zhanghai.compose.preference.preference
 import me.zhanghai.compose.preference.preferenceCategory
 import org.jetbrains.compose.resources.StringResource
+import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -131,6 +132,7 @@ internal fun OverrideSettingsScreen(
   onResetCompleted: () -> Unit,
 ) {
   val backStack = rememberNavBackStackBuilder { add(OverrideSettingsRoute.Main) }
+  val scope = rememberCoroutineScope()
   var currentEditableTextMapOnApply by remember {
     mutableStateOf<((Map<String, String>?) -> Unit)?>(null)
   }
@@ -143,7 +145,6 @@ internal fun OverrideSettingsScreen(
     entryProvider =
       entryProvider {
         entry<OverrideSettingsRoute.Main> {
-          val context = LocalContext.current
           val configuration by viewModel.configuration.collectAsStateWithLifecycle()
           var showResetConfirmDialog by remember { mutableStateOf(false) }
 
@@ -159,11 +160,15 @@ internal fun OverrideSettingsScreen(
             },
             onOpenEditableTextMap = { title, initialValues, onApply ->
               currentEditableTextMapOnApply = onApply
-              backStack.addIfNotLast(EditableTextMap(title.key, initialValues))
+              scope.launch {
+                backStack.addIfNotLast(EditableTextMap(getString(title), initialValues))
+              }
             },
             onOpenEditableTextList = { title, initialValues, onApply ->
               currentEditableTextListOnApply = onApply
-              backStack.addIfNotLast(EditableTextList(title.key, initialValues?.toSet()))
+              scope.launch {
+                backStack.addIfNotLast(EditableTextList(getString(title), initialValues?.toSet()))
+              }
             },
           )
         }

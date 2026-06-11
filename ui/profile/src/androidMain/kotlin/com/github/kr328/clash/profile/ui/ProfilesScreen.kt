@@ -39,7 +39,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.PreviewWrapper
 import androidx.compose.ui.unit.dp
@@ -52,7 +51,6 @@ import com.github.kr328.clash.common.more
 import com.github.kr328.clash.common.new_profile
 import com.github.kr328.clash.common.profiles
 import com.github.kr328.clash.common.url
-import com.github.kr328.clash.core.model.Provider.VehicleType.File
 import com.github.kr328.clash.glue.util.toDateStr
 import com.github.kr328.clash.profile.Res
 import com.github.kr328.clash.profile.duplicate
@@ -60,6 +58,7 @@ import com.github.kr328.clash.profile.edit
 import com.github.kr328.clash.profile.format_type_unsaved
 import com.github.kr328.clash.profile.update
 import com.github.kr328.clash.profile.update_all
+import com.github.kr328.clash.profile.util.elapsedIntervalString
 import com.github.kr328.clash.profile.vm.ProfilesViewModel
 import com.github.kr328.clash.service.model.Profile
 import com.github.kr328.clash.ui.component.Spacer
@@ -76,11 +75,9 @@ import com.github.kr328.clash.ui.lifecycle.withLifecycle
 import com.github.kr328.clash.ui.theme.PreviewTabby
 import com.github.kr328.clash.ui.theme.TabbyThemeWrapper
 import com.github.kr328.clash.ui.theme.tabbyDimens
-import com.github.kr328.clash.ui.util.elapsedIntervalString
 import kotlin.time.Duration.Companion.minutes
 import kotlin.uuid.Uuid
 import me.saket.bytesize.binaryBytes
-import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -160,7 +157,7 @@ private fun ProfilesContent(
       sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
       onDismissRequest = { menuProfile = null },
     ) {
-      if (profile.imported && profile.type != Profile.Type.File) {
+      if (profile.imported && profile.type != File) {
         ProfilesMenuAction(
           icon = TabbyIcons.BaselineUpdate,
           text = stringResource(Res.string.update),
@@ -250,7 +247,6 @@ private fun ProfileItem(
   onClick: () -> Unit,
   onMenuClick: () -> Unit,
 ) {
-  val context = LocalContext.current
   val dimens = tabbyDimens
   val itemMinHeight = dimens.itemMinHeight
   val itemHeaderMargin = dimens.itemHeaderMargin
@@ -258,9 +254,9 @@ private fun ProfileItem(
 
   val profileTypeText =
     if (profile.pending) {
-      stringResource(Res.string.format_type_unsaved, stringResource(profile.type.toResource()))
+      stringResource(Res.string.format_type_unsaved, profile.type.text())
     } else {
-      stringResource(profile.type.toResource())
+      profile.type.text()
     }
   val showTraffic = profile.download >= 2 && profile.total > 1
   val usageText =
@@ -362,12 +358,15 @@ private fun ProfilesMenuAction(
   }
 }
 
-private fun Profile.Type.toResource(): StringResource {
-  return when (this) {
-    Profile.Type.File -> CommonRes.string.file
-    Url -> CommonRes.string.url
-    External -> CommonRes.string.external
-  }
+@Composable
+private fun Profile.Type.text(): String {
+  val res =
+    when (this) {
+      File -> CommonRes.string.file
+      Url -> CommonRes.string.url
+      External -> CommonRes.string.external
+    }
+  return stringResource(res)
 }
 
 @PreviewWrapper(TabbyThemeWrapper::class)
@@ -396,7 +395,7 @@ private fun ProfilesContentPreview() {
         Profile(
           uuid = Uuid.fromLongs(0, 1),
           name = "Draft Profile",
-          type = Profile.Type.File,
+          type = File,
           source = "",
           active = false,
           interval = 0,

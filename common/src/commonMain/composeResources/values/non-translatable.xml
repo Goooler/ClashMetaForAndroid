@@ -1,4 +1,3 @@
-<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="PluralsCandidate">
-
+<resources>
   <string name="tabby" translatable="false">Tabby</string>
 </resources>

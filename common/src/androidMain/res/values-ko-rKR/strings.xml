@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <resources>
   <string name="new_profile">새 구성</string>
   <string name="unable_to_start_vpn">VPN 구성 요소를 시작할 수 없습니다.</string>

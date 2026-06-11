@@ -17,7 +17,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.PreviewWrapper
 import com.github.kr328.clash.common.Res as CommonRes
 import com.github.kr328.clash.common.settings
@@ -36,6 +35,7 @@ import com.github.kr328.clash.ui.icon.TabbyIcons
 import com.github.kr328.clash.ui.theme.PreviewTabby
 import com.github.kr328.clash.ui.theme.TabbyThemeWrapper
 import com.github.kr328.clash.ui.theme.tabbyDimens
+import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
@@ -81,7 +81,7 @@ internal fun SettingsScreen(
 @Composable
 private fun SettingsEntryItem(
   icon: ImageVector,
-  titleRes: org.jetbrains.compose.resources.StringResource,
+  titleRes: StringResource,
   onClick: () -> Unit,
   modifier: Modifier = Modifier,
 ) {

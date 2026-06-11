@@ -28,9 +28,7 @@ import androidx.compose.runtime.toMutableStateList
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.PreviewWrapper
 import androidx.compose.ui.unit.dp
 import androidx.navigation3.runtime.EntryProviderScope
@@ -58,7 +56,7 @@ import sh.calvin.reorderable.ReorderableItem
 import sh.calvin.reorderable.rememberReorderableLazyListState
 
 @Serializable
-internal data class EditableTextMap(val titleKey: String, val initialValues: Map<String, String>?) :
+internal data class EditableTextMap(val title: String, val initialValues: Map<String, String>?) :
   NavKey
 
 internal fun EntryProviderScope<NavKey>.editableTextMapScreenEntry(
@@ -67,7 +65,7 @@ internal fun EntryProviderScope<NavKey>.editableTextMapScreenEntry(
 ) {
   entry<EditableTextMap> { key ->
     EditableTextMapScreen(
-      titleKey = key.titleKey,
+      title = key.title,
       initialValues = key.initialValues,
       onDismiss = onDismiss,
       onApply = onApply,
@@ -77,18 +75,11 @@ internal fun EntryProviderScope<NavKey>.editableTextMapScreenEntry(
 
 @Composable
 private fun EditableTextMapScreen(
-  titleKey: String,
+  title: String,
   initialValues: Map<String, String>?,
   onDismiss: () -> Unit,
   onApply: (Map<String, String>?) -> Unit,
 ) {
-  val context = LocalContext.current
-  val id =
-    remember(titleKey) {
-      context.resources.getIdentifier(titleKey, "string", context.packageName)
-    }
-  val title = androidx.compose.ui.res.stringResource(id)
-
   val values =
     remember(initialValues) {
       initialValues?.entries.orEmpty().map { it.toPair() }.toMutableStateList()
@@ -260,7 +251,7 @@ private fun MapEntryInputDialog(
 @Composable
 private fun EditableTextMapScreenPreview() {
   EditableTextMapScreen(
-    titleKey = "hosts",
+    title = "hosts",
     initialValues = mapOf("example.com" to "127.0.0.1", "test.com" to "192.168.1.1"),
     onDismiss = {},
     onApply = {},

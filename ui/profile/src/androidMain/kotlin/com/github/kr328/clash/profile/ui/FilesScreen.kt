@@ -66,6 +66,7 @@ import com.github.kr328.clash.profile.files
 import com.github.kr328.clash.profile.import_
 import com.github.kr328.clash.profile.invalid_file_name
 import com.github.kr328.clash.profile.rename
+import com.github.kr328.clash.profile.util.elapsedIntervalString
 import com.github.kr328.clash.profile.vm.FilesViewModel
 import com.github.kr328.clash.ui.component.SizeSpacer
 import com.github.kr328.clash.ui.component.TabbyScaffold
@@ -81,7 +82,6 @@ import com.github.kr328.clash.ui.icon.TabbyIcons
 import com.github.kr328.clash.ui.lifecycle.withLifecycle
 import com.github.kr328.clash.ui.theme.PreviewTabby
 import com.github.kr328.clash.ui.theme.TabbyThemeWrapper
-import com.github.kr328.clash.ui.util.elapsedIntervalString
 import kotlin.time.Duration.Companion.minutes
 import kotlin.uuid.Uuid
 import kotlinx.coroutines.delay

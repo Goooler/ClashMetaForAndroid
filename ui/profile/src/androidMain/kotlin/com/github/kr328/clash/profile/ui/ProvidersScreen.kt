@@ -23,18 +23,24 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.PreviewWrapper
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.github.kr328.clash.common.Res as CommonRes
+import com.github.kr328.clash.common.compatible
+import com.github.kr328.clash.common.file
+import com.github.kr328.clash.common.format_provider_type
+import com.github.kr328.clash.common.http
+import com.github.kr328.clash.common.inline
 import com.github.kr328.clash.common.providers
+import com.github.kr328.clash.common.proxy
+import com.github.kr328.clash.common.rule
 import com.github.kr328.clash.core.model.Provider
 import com.github.kr328.clash.profile.Res
 import com.github.kr328.clash.profile.update
 import com.github.kr328.clash.profile.update_all
-import com.github.kr328.clash.profile.util.type
+import com.github.kr328.clash.profile.util.elapsedIntervalString
 import com.github.kr328.clash.profile.vm.ProvidersViewModel
 import com.github.kr328.clash.profile.vm.ProvidersViewModel.UiState.ProviderItemState
 import com.github.kr328.clash.ui.component.Spacer
@@ -46,7 +52,6 @@ import com.github.kr328.clash.ui.lifecycle.withLifecycle
 import com.github.kr328.clash.ui.theme.PreviewTabby
 import com.github.kr328.clash.ui.theme.TabbyThemeWrapper
 import com.github.kr328.clash.ui.theme.tabbyDimens
-import com.github.kr328.clash.ui.util.elapsedIntervalString
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -118,7 +123,6 @@ private fun ProvidersContent(
 
 @Composable
 private fun ProviderItem(state: ProviderItemState, currentTime: Long, onUpdate: () -> Unit) {
-  val context = LocalContext.current
   val dimens = tabbyDimens
   val itemMinHeight = dimens.itemMinHeight
   val itemHeaderMargin = dimens.itemHeaderMargin
@@ -134,7 +138,7 @@ private fun ProviderItem(state: ProviderItemState, currentTime: Long, onUpdate: 
     Column(modifier = Modifier.weight(1f)) {
       Text(text = state.provider.name, maxLines = 1, overflow = TextOverflow.Ellipsis)
       Spacer(itemTextMargin)
-      Text(text = state.provider.type(), style = MaterialTheme.typography.bodyMedium)
+      Text(text = state.provider.text(), style = MaterialTheme.typography.bodyMedium)
     }
 
     if (canUpdate) {
@@ -163,6 +167,25 @@ private fun ProviderItem(state: ProviderItemState, currentTime: Long, onUpdate: 
       }
     }
   }
+}
+
+@Composable
+private fun Provider.text(): String {
+  val type =
+    when (type) {
+      Proxy -> stringResource(CommonRes.string.proxy)
+      Rule -> stringResource(CommonRes.string.rule)
+    }
+
+  val vehicle =
+    when (vehicleType) {
+      HTTP -> stringResource(CommonRes.string.http)
+      File -> stringResource(CommonRes.string.file)
+      Inline -> stringResource(CommonRes.string.inline)
+      Compatible -> stringResource(CommonRes.string.compatible)
+    }
+
+  return stringResource(CommonRes.string.format_provider_type, type, vehicle)
 }
 
 @PreviewWrapper(TabbyThemeWrapper::class)

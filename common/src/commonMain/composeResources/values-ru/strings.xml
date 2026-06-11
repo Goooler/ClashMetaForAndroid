@@ -1,5 +1,4 @@
-<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="PluralsCandidate">
-
+<resources>
   <string name="_new">Новый</string>
   <string name="cancel">Отмена</string>
   <string name="close">Закрыть</string>
@@ -35,8 +34,6 @@
   <string name="profiles">Профили</string>
   <string name="providers">Провайдеры</string>
   <string name="proxy">Прокси</string>
-  <string name="receive_broadcasts_of_tabby">Получать уведомления от сервисов Tabby</string>
-  <string name="receive_tabby_broadcasts">Получать уведомления Tabby</string>
   <string name="recently">Недавно</string>
   <string name="reorder">Изменить порядок</string>
   <string name="reset">Сброс</string>
