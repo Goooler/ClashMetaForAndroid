@@ -9,7 +9,6 @@ private const val DATE_DATE_ONLY = "yyyy-MM-dd"
 private const val DATE_TIME_ONLY = "HH:mm:ss.SSS"
 private const val DATE_ALL = "$DATE_DATE_ONLY $DATE_TIME_ONLY"
 
-@JvmOverloads
 fun Date.format(
   context: Context,
   includeDate: Boolean = true,
