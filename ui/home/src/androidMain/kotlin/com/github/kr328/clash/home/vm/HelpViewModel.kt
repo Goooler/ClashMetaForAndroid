@@ -7,7 +7,7 @@ import com.github.kr328.clash.common.di.AppInfoProvider
 import com.github.kr328.clash.common.log.Log
 import com.github.kr328.clash.core.bridge.Bridge
 import com.github.kr328.clash.glue.util.TABBY_RELEASES_LATEST
-import com.github.kr328.clash.home.R
+import com.github.kr328.clash.home.Res
 import com.github.kr328.clash.home.already_up_to_date
 import com.github.kr328.clash.home.api.HelpApi
 import com.github.kr328.clash.home.check_update_failed
@@ -46,7 +46,7 @@ internal class HelpViewModel(
 
         if (latestTag == null) {
           eventState.update {
-            EventState.ShowMessage(application.getString(R.string.check_update_failed))
+            EventState.ShowMessage(application.getString(Res.string.check_update_failed))
           }
           return@launch
         }
@@ -57,13 +57,13 @@ internal class HelpViewModel(
           eventState.update { EventState.UpdateAvailable(TABBY_RELEASES_LATEST) }
         } else {
           eventState.update {
-            EventState.ShowMessage(application.getString(R.string.already_up_to_date))
+            EventState.ShowMessage(application.getString(Res.string.already_up_to_date))
           }
         }
       } catch (e: Exception) {
         Log.e("Check for updates failed: ${e.message}", e)
         eventState.update {
-          EventState.ShowMessage(application.getString(R.string.check_update_failed))
+          EventState.ShowMessage(application.getString(Res.string.check_update_failed))
         }
       } finally {
         uiState.update { it.copy(checkingForUpdates = false) }

@@ -32,7 +32,7 @@ import androidx.compose.ui.tooling.preview.PreviewWrapper
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.github.kr328.clash.common.R as CommonR
 import com.github.kr328.clash.glue.util.format
-import com.github.kr328.clash.log.R
+import com.github.kr328.clash.log.Res
 import com.github.kr328.clash.log.delete_all_logs
 import com.github.kr328.clash.log.delete_all_logs_warn
 import com.github.kr328.clash.log.history
@@ -62,8 +62,8 @@ internal fun LogsScreen(
   if (showDeleteAllDialog) {
     AlertDialog(
       onDismissRequest = { showDeleteAllDialog = false },
-      title = { Text(text = stringResource(R.string.delete_all_logs)) },
-      text = { Text(text = stringResource(R.string.delete_all_logs_warn)) },
+      title = { Text(text = stringResource(Res.string.delete_all_logs)) },
+      text = { Text(text = stringResource(Res.string.delete_all_logs_warn)) },
       confirmButton = {
         TextButton(
           onClick = {
@@ -108,7 +108,7 @@ private fun LogsContent(
       IconButton(onClick = onDeleteAllConfirm) {
         Icon(
           imageVector = TabbyIcons.BaselineClearAll,
-          contentDescription = stringResource(R.string.delete_all_logs),
+          contentDescription = stringResource(Res.string.delete_all_logs),
         )
       }
     },
@@ -119,7 +119,7 @@ private fun LogsContent(
     LazyColumn(modifier = Modifier.fillMaxSize().padding(innerPadding)) {
       item {
         LogsActionItem(
-          title = stringResource(R.string.tabby_logcat),
+          title = stringResource(Res.string.tabby_logcat),
           summary = stringResource(CommonR.string.tap_to_start),
           icon = TabbyIcons.BaselineAdb,
           onClick = onStartLogcat,
@@ -128,7 +128,7 @@ private fun LogsContent(
       item { HorizontalDivider() }
       item {
         Text(
-          text = stringResource(R.string.history),
+          text = stringResource(Res.string.history),
           color = MaterialTheme.colorScheme.primary,
           modifier =
             Modifier.fillMaxWidth()

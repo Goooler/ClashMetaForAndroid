@@ -9,7 +9,7 @@ import com.github.kr328.clash.common.R as CommonR
 import com.github.kr328.clash.common.log.Log
 import com.github.kr328.clash.core.model.FetchStatus
 import com.github.kr328.clash.glue.util.withProfile
-import com.github.kr328.clash.profile.R
+import com.github.kr328.clash.profile.Res
 import com.github.kr328.clash.profile.empty_name
 import com.github.kr328.clash.profile.format_fetching_configuration
 import com.github.kr328.clash.profile.format_fetching_provider
@@ -150,12 +150,12 @@ internal class PropertiesViewModel(
     val profile = uiState.value.profile ?: return
 
     if (profile.name.isBlank()) {
-      eventState.value = EventState.ShowMessage(application.getString(R.string.empty_name))
+      eventState.value = EventState.ShowMessage(application.getString(Res.string.empty_name))
       return
     }
 
     if (profile.type != File && profile.source.isBlank()) {
-      eventState.value = EventState.ShowMessage(application.getString(R.string.invalid_url))
+      eventState.value = EventState.ShowMessage(application.getString(Res.string.invalid_url))
       return
     }
 
@@ -193,7 +193,7 @@ internal class PropertiesViewModel(
               ProgressState(
                 visible = true,
                 isIndeterminate = true,
-                text = application.getString(R.string.initializing),
+                text = application.getString(Res.string.initializing),
                 progress = 0,
                 max = 0,
               ),
@@ -219,7 +219,7 @@ internal class PropertiesViewModel(
             current.progress.copy(
               text =
                 application.getString(
-                  R.string.format_fetching_configuration,
+                  Res.string.format_fetching_configuration,
                   status.args.getOrNull(0).orEmpty(),
                 ),
               isIndeterminate = true,
@@ -229,7 +229,7 @@ internal class PropertiesViewModel(
             current.progress.copy(
               text =
                 application.getString(
-                  R.string.format_fetching_provider,
+                  Res.string.format_fetching_provider,
                   status.args.getOrNull(0).orEmpty(),
                 ),
               isIndeterminate = false,
@@ -239,7 +239,7 @@ internal class PropertiesViewModel(
           }
           Verifying -> {
             current.progress.copy(
-              text = application.getString(R.string.verifying),
+              text = application.getString(Res.string.verifying),
               isIndeterminate = false,
               max = status.max,
               progress = status.progress,

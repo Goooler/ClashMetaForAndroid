@@ -31,7 +31,7 @@ import com.github.kr328.clash.glue.util.MIHOMO_CORE
 import com.github.kr328.clash.glue.util.MIHOMO_WIKI
 import com.github.kr328.clash.glue.util.TABBY_GITHUB
 import com.github.kr328.clash.glue.util.openLink
-import com.github.kr328.clash.home.R
+import com.github.kr328.clash.home.Res
 import com.github.kr328.clash.home.about
 import com.github.kr328.clash.home.app_version
 import com.github.kr328.clash.home.check_for_updates
@@ -65,8 +65,8 @@ internal fun HelpScreen(modifier: Modifier = Modifier, viewModel: HelpViewModel 
   val eventState by viewModel.eventState.collectAsStateWithLifecycle()
   val snackbarHostState = remember { SnackbarHostState() }
   val context = LocalContext.current
-  val updateAvailableText = stringResource(R.string.update_available)
-  val openActionText = stringResource(R.string.open)
+  val updateAvailableText = stringResource(Res.string.update_available)
+  val openActionText = stringResource(Res.string.open)
 
   LaunchedEffect(eventState) {
     when (val event = eventState) {
@@ -119,7 +119,7 @@ private fun HelpContent(
   }
 
   TabbyScaffold(
-    title = stringResource(R.string.help),
+    title = stringResource(Res.string.help),
     modifier = modifier,
     snackbarHostState = snackbarHostState,
   ) { innerPadding ->
@@ -128,23 +128,26 @@ private fun HelpContent(
         preference(
           key = "tips",
           title = {},
-          summary = { Text(AnnotatedString.fromHtml(stringResource(R.string.tips_help))) },
+          summary = { Text(AnnotatedString.fromHtml(stringResource(Res.string.tips_help))) },
           icon = { Icon(imageVector = TabbyIcons.OutlineInfo, contentDescription = null) },
         )
         preferenceCategory(
           key = "cat_document",
-          title = { Text(stringResource(R.string.document)) },
+          title = { Text(stringResource(Res.string.document)) },
         )
         preference(
           key = "mihomo_wiki",
-          title = { Text(stringResource(R.string.mihomo_wiki)) },
+          title = { Text(stringResource(Res.string.mihomo_wiki)) },
           summary = { Text(MIHOMO_WIKI) },
           onClick = { onOpenLink(MIHOMO_WIKI) },
         )
-        preferenceCategory(key = "cat_sources", title = { Text(stringResource(R.string.sources)) })
+        preferenceCategory(
+          key = "cat_sources",
+          title = { Text(stringResource(Res.string.sources)) },
+        )
         preference(
           key = "mihomo_core",
-          title = { Text(stringResource(R.string.mihomo_core)) },
+          title = { Text(stringResource(Res.string.mihomo_core)) },
           summary = { Text(MIHOMO_CORE) },
           onClick = { onOpenLink(MIHOMO_CORE) },
         )
@@ -154,10 +157,10 @@ private fun HelpContent(
           summary = { Text(TABBY_GITHUB) },
           onClick = { onOpenLink(TABBY_GITHUB) },
         )
-        preferenceCategory(key = "cat_update", title = { Text(stringResource(R.string.about)) })
+        preferenceCategory(key = "cat_update", title = { Text(stringResource(Res.string.about)) })
         preference(
           key = "app_version",
-          title = { Text(stringResource(R.string.app_version)) },
+          title = { Text(stringResource(Res.string.app_version)) },
           summary = { Text(uiState.appVersion) },
           icon = {
             Icon(
@@ -173,7 +176,7 @@ private fun HelpContent(
         )
         preference(
           key = "core_version",
-          title = { Text(stringResource(R.string.core_version)) },
+          title = { Text(stringResource(Res.string.core_version)) },
           summary = { Text(uiState.coreVersion) },
           icon = {
             Icon(
@@ -189,7 +192,7 @@ private fun HelpContent(
         )
         preference(
           key = "check_for_updates",
-          title = { Text(stringResource(R.string.check_for_updates)) },
+          title = { Text(stringResource(Res.string.check_for_updates)) },
           icon = {
             if (uiState.checkingForUpdates) {
               CircularProgressIndicator(modifier = Modifier.size(24.dp))

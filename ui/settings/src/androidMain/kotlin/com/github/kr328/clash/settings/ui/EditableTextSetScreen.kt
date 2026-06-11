@@ -34,7 +34,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation3.runtime.EntryProviderScope
 import androidx.navigation3.runtime.NavKey
 import com.github.kr328.clash.common.R as CommonR
-import com.github.kr328.clash.settings.R
+import com.github.kr328.clash.settings.Res
 import com.github.kr328.clash.settings.sniff_http_ports
 import com.github.kr328.clash.ui.component.TabbyScaffold
 import com.github.kr328.clash.ui.icon.BaselineAdd
@@ -214,7 +214,7 @@ private fun SingleTextInputDialog(
 @Composable
 private fun EditableTextSetScreenPreview() {
   EditableTextSetScreen(
-    title = R.string.sniff_http_ports,
+    title = Res.string.sniff_http_ports,
     initialValues = setOf("80", "8080"),
     onDismiss = {},
     onApply = {},

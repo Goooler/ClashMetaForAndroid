@@ -37,7 +37,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.github.kr328.clash.common.R as CommonR
 import com.github.kr328.clash.core.model.LogMessage
 import com.github.kr328.clash.glue.util.format
-import com.github.kr328.clash.log.R
+import com.github.kr328.clash.log.Res
 import com.github.kr328.clash.log.copied
 import com.github.kr328.clash.log.invalid_log_file
 import com.github.kr328.clash.log.tabby_logcat
@@ -72,8 +72,8 @@ internal fun LogcatScreen(
   val listState = rememberLazyListState()
   val snackbarHostState = remember { SnackbarHostState() }
   val scope = rememberCoroutineScope()
-  val messageCopied = stringResource(R.string.copied)
-  val invalidFileTip = stringResource(R.string.invalid_log_file)
+  val messageCopied = stringResource(Res.string.copied)
+  val invalidFileTip = stringResource(Res.string.invalid_log_file)
 
   LaunchedEffect(fileName, viewModel) { viewModel.init(fileName) }
 
@@ -150,7 +150,7 @@ private fun LogcatContent(
   modifier: Modifier = Modifier,
 ) {
   TabbyScaffold(
-    title = stringResource(R.string.tabby_logcat),
+    title = stringResource(Res.string.tabby_logcat),
     modifier = modifier,
     snackbarHostState = snackbarHostState,
     actions = {

@@ -141,7 +141,7 @@ internal class LogcatService :
     NotificationManagerCompat.from(this)
       .createNotificationChannel(
         NotificationChannelCompat.Builder(CHANNEL_ID, NotificationManagerCompat.IMPORTANCE_DEFAULT)
-          .setName(getString(R.string.tabby_logcat))
+          .setName(getString(Res.string.tabby_logcat))
           .build()
       )
   }
@@ -152,7 +152,7 @@ internal class LogcatService :
       NotificationCompat.Builder(this, CHANNEL_ID)
         .setSmallIcon(CommonR.drawable.ic_tabby_small)
         .setColor(getColorCompat(CommonR.color.color_tabby_light))
-        .setContentTitle(getString(R.string.tabby_logcat))
+        .setContentTitle(getString(Res.string.tabby_logcat))
         .setContentText(getString(CommonR.string.running))
         .setContentIntent(
           PendingIntent.getActivity(

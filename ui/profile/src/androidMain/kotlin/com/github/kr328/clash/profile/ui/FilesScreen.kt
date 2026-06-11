@@ -55,7 +55,7 @@ import com.github.kr328.clash.glue.model.ConfigFile
 import com.github.kr328.clash.glue.util.Validator
 import com.github.kr328.clash.glue.util.ValidatorFileName
 import com.github.kr328.clash.glue.util.elapsedIntervalString
-import com.github.kr328.clash.profile.R
+import com.github.kr328.clash.profile.Res
 import com.github.kr328.clash.profile.file_name
 import com.github.kr328.clash.profile.files
 import com.github.kr328.clash.profile.import_
@@ -181,7 +181,7 @@ private fun FilesContent(
       if (!file.isDirectory && (!currentInBaseDir || configurationEditable)) {
         FilesMenuAction(
           icon = TabbyIcons.BaselineGetApp,
-          text = stringResource(R.string.import_),
+          text = stringResource(Res.string.import_),
           onClick = {
             menuConfigFile = null
             onImport(file)
@@ -201,7 +201,7 @@ private fun FilesContent(
       if (!currentInBaseDir) {
         FilesMenuAction(
           icon = TabbyIcons.BaselineEdit,
-          text = stringResource(R.string.rename),
+          text = stringResource(Res.string.rename),
           onClick = {
             menuConfigFile = null
             renameConfigFile = file
@@ -226,7 +226,7 @@ private fun FilesContent(
   TabbyScaffold(
     modifier = modifier,
     snackbarHostState = snackbarHostState,
-    title = stringResource(R.string.files),
+    title = stringResource(Res.string.files),
     onBack = onBack,
     actions = {
       if (!currentInBaseDir) {
@@ -265,10 +265,10 @@ private fun FilesContent(
 
   if (renameConfigFile != null) {
     TextInputDialog(
-      title = stringResource(R.string.file_name),
+      title = stringResource(Res.string.file_name),
       initialValue = renameConfigFile!!.name,
-      hint = stringResource(R.string.file_name),
-      error = stringResource(R.string.invalid_file_name),
+      hint = stringResource(Res.string.file_name),
+      error = stringResource(Res.string.invalid_file_name),
       validator = ValidatorFileName,
       onDismiss = { renameConfigFile = null },
       onConfirm = { newName ->

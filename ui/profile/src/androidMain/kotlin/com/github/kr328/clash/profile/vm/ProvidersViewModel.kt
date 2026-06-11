@@ -9,7 +9,7 @@ import com.github.kr328.clash.common.log.Log
 import com.github.kr328.clash.core.model.Provider
 import com.github.kr328.clash.glue.remote.Remote
 import com.github.kr328.clash.glue.util.withClash
-import com.github.kr328.clash.profile.R
+import com.github.kr328.clash.profile.Res
 import com.github.kr328.clash.profile.format_update_provider_failure
 import com.github.kr328.clash.ui.util.getString
 import kotlin.time.Duration.Companion.minutes
@@ -82,7 +82,7 @@ internal class ProvidersViewModel(private val application: Application) :
         eventState.value =
           EventState.ShowMessage(
             application.getString(
-              R.string.format_update_provider_failure,
+              Res.string.format_update_provider_failure,
               provider.name,
               errorMessage,
             )

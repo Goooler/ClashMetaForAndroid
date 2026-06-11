@@ -9,14 +9,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
 import com.github.kr328.clash.common.R as CommonR
-import com.github.kr328.clash.settings.R
+import com.github.kr328.clash.settings.Res
 import com.github.kr328.clash.settings.empty
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
 internal fun EmptyEditorContent(modifier: Modifier = Modifier) {
   Box(modifier = modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
-    Text(stringResource(R.string.empty))
+    Text(stringResource(Res.string.empty))
   }
 }
 
@@ -24,7 +24,7 @@ internal fun EmptyEditorContent(modifier: Modifier = Modifier) {
 internal fun List<String>?.listSummary(placeholder: Any) =
   when {
     this == null -> stringResource(placeholder)
-    isEmpty() -> stringResource(R.string.empty)
+    isEmpty() -> stringResource(Res.string.empty)
     else -> stringResource(CommonR.string.format_elements, size)
   }
 

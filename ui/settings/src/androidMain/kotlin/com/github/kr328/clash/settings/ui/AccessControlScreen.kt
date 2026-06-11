@@ -49,7 +49,7 @@ import androidx.core.graphics.drawable.toDrawable
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.github.kr328.clash.common.R as CommonR
 import com.github.kr328.clash.glue.model.AppInfo
-import com.github.kr328.clash.settings.R
+import com.github.kr328.clash.settings.Res
 import com.github.kr328.clash.settings.access_control_packages
 import com.github.kr328.clash.settings.export_to_clipboard
 import com.github.kr328.clash.settings.import_from_clipboard
@@ -171,13 +171,13 @@ private fun AccessControlContent(
   }
 
   TabbyScaffold(
-    title = stringResource(R.string.access_control_packages),
+    title = stringResource(Res.string.access_control_packages),
     modifier = modifier,
     actions = {
       IconButton(onClick = { showSearch = true }) {
         Icon(
           imageVector = TabbyIcons.BaselineSearch,
-          contentDescription = stringResource(R.string.search),
+          contentDescription = stringResource(Res.string.search),
         )
       }
       IconButton(onClick = { showMenu = true }) {
@@ -234,7 +234,7 @@ private fun ColumnScope.AccessControlSearchContent(
     value = keyword,
     onValueChange = { keyword = it },
     modifier = Modifier.fillMaxWidth().padding(horizontal = 20.dp),
-    placeholder = { Text(text = stringResource(R.string.keyword)) },
+    placeholder = { Text(text = stringResource(Res.string.keyword)) },
     singleLine = true,
     colors = TextFieldDefaults.colors(),
   )
@@ -270,13 +270,16 @@ private fun ColumnScope.AccessControlMenuContent(
   onUpdateShowSystemApps: (Boolean) -> Unit,
 ) {
   Column(modifier = Modifier.fillMaxWidth()) {
-    AccessControlMenuAction(text = stringResource(R.string.select_all), onClick = onSelectAll)
-    AccessControlMenuAction(text = stringResource(R.string.select_none), onClick = onSelectNone)
-    AccessControlMenuAction(text = stringResource(R.string.select_invert), onClick = onSelectInvert)
+    AccessControlMenuAction(text = stringResource(Res.string.select_all), onClick = onSelectAll)
+    AccessControlMenuAction(text = stringResource(Res.string.select_none), onClick = onSelectNone)
+    AccessControlMenuAction(
+      text = stringResource(Res.string.select_invert),
+      onClick = onSelectInvert,
+    )
 
     AccessControlMenuSectionTitle(text = stringResource(CommonR.string.filter))
     AccessControlMenuCheckAction(
-      text = stringResource(R.string.system_apps),
+      text = stringResource(Res.string.system_apps),
       checked = showSystemApps,
       onCheckedChange = onUpdateShowSystemApps,
     )
@@ -288,32 +291,35 @@ private fun ColumnScope.AccessControlMenuContent(
       onClick = { onUpdateSort(Label) },
     )
     AccessControlMenuSortAction(
-      text = stringResource(R.string.package_name),
+      text = stringResource(Res.string.package_name),
       checked = sort == PackageName,
       onClick = { onUpdateSort(PackageName) },
     )
     AccessControlMenuSortAction(
-      text = stringResource(R.string.install_time),
+      text = stringResource(Res.string.install_time),
       checked = sort == InstallTime,
       onClick = { onUpdateSort(InstallTime) },
     )
     AccessControlMenuSortAction(
-      text = stringResource(R.string.update_time),
+      text = stringResource(Res.string.update_time),
       checked = sort == UpdateTime,
       onClick = { onUpdateSort(UpdateTime) },
     )
     AccessControlMenuCheckAction(
-      text = stringResource(R.string.reverse),
+      text = stringResource(Res.string.reverse),
       checked = reverse,
       onCheckedChange = onUpdateReverse,
     )
 
     AccessControlMenuSectionTitle(text = stringResource(CommonR.string.external))
     AccessControlMenuAction(
-      text = stringResource(R.string.import_from_clipboard),
+      text = stringResource(Res.string.import_from_clipboard),
       onClick = onImport,
     )
-    AccessControlMenuAction(text = stringResource(R.string.export_to_clipboard), onClick = onExport)
+    AccessControlMenuAction(
+      text = stringResource(Res.string.export_to_clipboard),
+      onClick = onExport,
+    )
   }
 }
 

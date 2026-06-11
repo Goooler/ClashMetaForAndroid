@@ -29,7 +29,7 @@ import com.github.kr328.clash.glue.util.ValidatorAgeSecretKey
 import com.github.kr328.clash.glue.util.ValidatorAutoUpdateInterval
 import com.github.kr328.clash.glue.util.ValidatorHttpUrl
 import com.github.kr328.clash.glue.util.ValidatorNotBlank
-import com.github.kr328.clash.profile.R
+import com.github.kr328.clash.profile.Res
 import com.github.kr328.clash.profile.accept_http_content
 import com.github.kr328.clash.profile.age_secret_key
 import com.github.kr328.clash.profile.age_secret_key_hint
@@ -149,7 +149,7 @@ private fun PropertiesContent(
   TabbyScaffold(
     modifier = modifier,
     snackbarHostState = snackbarHostState,
-    title = stringResource(R.string.properties),
+    title = stringResource(Res.string.properties),
     onBack = onBack,
     actions = {
       if (processing) {
@@ -158,7 +158,7 @@ private fun PropertiesContent(
         IconButton(onClick = onCommit) {
           Icon(
             imageVector = TabbyIcons.BaselineSave,
-            contentDescription = stringResource(R.string.save),
+            contentDescription = stringResource(Res.string.save),
           )
         }
       }
@@ -168,8 +168,8 @@ private fun PropertiesContent(
       LazyColumn(modifier = Modifier.fillMaxSize(), contentPadding = innerPadding) {
         preference(
           key = "tips",
-          title = { Text(stringResource(R.string.properties)) },
-          summary = { Text(AnnotatedString.fromHtml(stringResource(R.string.tips_properties))) },
+          title = { Text(stringResource(Res.string.properties)) },
+          summary = { Text(AnnotatedString.fromHtml(stringResource(Res.string.tips_properties))) },
           icon = { Icon(imageVector = TabbyIcons.OutlineInfo, contentDescription = null) },
         )
         textFieldPreference(
@@ -183,7 +183,7 @@ private fun PropertiesContent(
           title = { Text(stringResource(CommonR.string.name)) },
           textToValue = { input -> if (ValidatorNotBlank(input)) input else null },
           icon = { Icon(imageVector = TabbyIcons.OutlineLabel, contentDescription = null) },
-          summary = { Text(profile.name.ifBlank { stringResource(R.string.profile_name) }) },
+          summary = { Text(profile.name.ifBlank { stringResource(Res.string.profile_name) }) },
         )
         textFieldPreference(
           key = "source",
@@ -198,7 +198,7 @@ private fun PropertiesContent(
           enabled = profile.type != File && profile.type != External,
           icon = { Icon(imageVector = TabbyIcons.OutlineInbox, contentDescription = null) },
           summary = {
-            Text(profile.source.ifBlank { stringResource(R.string.accept_http_content) })
+            Text(profile.source.ifBlank { stringResource(Res.string.accept_http_content) })
           },
         )
         textFieldPreference(
@@ -209,7 +209,7 @@ private fun PropertiesContent(
               onIntervalChanged(interval)
             }
           },
-          title = { Text(stringResource(R.string.auto_update)) },
+          title = { Text(stringResource(Res.string.auto_update)) },
           textToValue = { input ->
             if (!ValidatorAutoUpdateInterval(input)) {
               null
@@ -226,7 +226,7 @@ private fun PropertiesContent(
                 stringResource(CommonR.string.disabled)
               } else {
                 stringResource(
-                  R.string.format_minutes,
+                  Res.string.format_minutes,
                   profile.interval.milliseconds.inWholeMinutes,
                 )
               }
@@ -249,17 +249,17 @@ private fun PropertiesContent(
               onAgeSecretKeyChanged(key)
             }
           },
-          title = { Text(stringResource(R.string.age_secret_key)) },
+          title = { Text(stringResource(Res.string.age_secret_key)) },
           textToValue = { input -> if (ValidatorAgeSecretKey(input)) input else null },
           icon = { Icon(imageVector = TabbyIcons.BaselineKey, contentDescription = null) },
           summary = {
-            Text(profile.ageSecretKey ?: stringResource(R.string.age_secret_key_hint))
+            Text(profile.ageSecretKey ?: stringResource(Res.string.age_secret_key_hint))
           },
         )
         preference(
           key = "browse_files",
-          title = { Text(stringResource(R.string.browse_files)) },
-          summary = { Text(stringResource(R.string.browse_configuration_providers)) },
+          title = { Text(stringResource(Res.string.browse_files)) },
+          summary = { Text(stringResource(Res.string.browse_configuration_providers)) },
           icon = { Icon(imageVector = TabbyIcons.OutlineFolder, contentDescription = null) },
           onClick = onBrowseFiles,
         )
@@ -287,8 +287,8 @@ private fun PropertiesContent(
 private fun ExitWithoutSavingDialog(onConfirm: () -> Unit, onDismiss: () -> Unit) {
   AlertDialog(
     onDismissRequest = onDismiss,
-    title = { Text(text = stringResource(R.string.exit_without_save)) },
-    text = { Text(text = stringResource(R.string.exit_without_save_warning)) },
+    title = { Text(text = stringResource(Res.string.exit_without_save)) },
+    text = { Text(text = stringResource(Res.string.exit_without_save_warning)) },
     confirmButton = {
       TextButton(onClick = onConfirm) { Text(text = stringResource(CommonR.string.ok)) }
     },

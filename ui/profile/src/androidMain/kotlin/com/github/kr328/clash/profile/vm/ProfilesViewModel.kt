@@ -8,7 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.github.kr328.clash.common.R as CommonR
 import com.github.kr328.clash.glue.remote.Remote
 import com.github.kr328.clash.glue.util.withProfile
-import com.github.kr328.clash.profile.R
+import com.github.kr328.clash.profile.Res
 import com.github.kr328.clash.profile.active_unsaved_tips
 import com.github.kr328.clash.profile.toast_profile_updated_complete
 import com.github.kr328.clash.profile.toast_profile_updated_failed
@@ -84,7 +84,7 @@ internal class ProfilesViewModel(private val application: Application) :
       } else {
         eventState.value =
           EventState.ShowEditableMessage(
-            application.getString(R.string.active_unsaved_tips),
+            application.getString(Res.string.active_unsaved_tips),
             profile.uuid,
           )
       }
@@ -154,7 +154,7 @@ internal class ProfilesViewModel(private val application: Application) :
   private suspend fun showProfileUpdateCompleted(uuid: Uuid) {
     val name = withProfile { queryByUUID(uuid)?.name }
     eventState.value =
-      EventState.ShowMessage(application.getString(R.string.toast_profile_updated_complete, name))
+      EventState.ShowMessage(application.getString(Res.string.toast_profile_updated_complete, name))
   }
 
   private suspend fun showProfileUpdateFailed(uuid: Uuid, reason: String?) {
@@ -163,7 +163,7 @@ internal class ProfilesViewModel(private val application: Application) :
       reason?.takeUnless { it.isBlank() } ?: application.getString(CommonR.string.unknown)
     eventState.value =
       EventState.ShowEditableMessage(
-        application.getString(R.string.toast_profile_updated_failed, name, displayReason),
+        application.getString(Res.string.toast_profile_updated_failed, name, displayReason),
         uuid,
       )
   }

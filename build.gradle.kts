@@ -77,6 +77,7 @@ allprojects {
         compileSdk = 37
         minSdk = 28
         compilerOptions.jvmTarget = JvmTarget.fromTarget(libs.versions.jvmTarget.get())
+        androidResources.enable = true
       }
 
       extensions.configure<NamedDomainObjectContainer<KotlinSourceSet>> {
@@ -113,7 +114,6 @@ allprojects {
     extensions.configure<ComposeExtension> {
       extensions.configure<ResourcesExtension> {
         packageOfResClass = "com.github.kr328.clash.${project.name}"
-        nameOfResClass = "R"
         generateResClass = always
       }
     }

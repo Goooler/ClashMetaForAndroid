@@ -13,7 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.PreviewWrapper
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.github.kr328.clash.crash.R
+import com.github.kr328.clash.crash.Res
 import com.github.kr328.clash.crash.application_crashed
 import com.github.kr328.clash.crash.vm.AppCrashedViewModel
 import com.github.kr328.clash.ui.component.TabbyScaffold
@@ -34,7 +34,7 @@ internal fun AppCrashedScreen(
 
 @Composable
 private fun AppCrashedContent(modifier: Modifier = Modifier, logs: String) {
-  TabbyScaffold(modifier = modifier, title = stringResource(R.string.application_crashed)) {
+  TabbyScaffold(modifier = modifier, title = stringResource(Res.string.application_crashed)) {
     innerPadding ->
     SelectionContainer {
       Text(

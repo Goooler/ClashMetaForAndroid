@@ -32,7 +32,7 @@ import com.github.kr328.clash.common.R as CommonR
 import com.github.kr328.clash.core.model.Provider
 import com.github.kr328.clash.glue.util.elapsedIntervalString
 import com.github.kr328.clash.glue.util.type
-import com.github.kr328.clash.profile.R
+import com.github.kr328.clash.profile.Res
 import com.github.kr328.clash.profile.update
 import com.github.kr328.clash.profile.update_all
 import com.github.kr328.clash.profile.vm.ProvidersViewModel
@@ -95,7 +95,7 @@ private fun ProvidersContent(
       IconButton(onClick = onUpdateAll) {
         Icon(
           imageVector = TabbyIcons.BaselineSync,
-          contentDescription = stringResource(R.string.update_all),
+          contentDescription = stringResource(Res.string.update_all),
         )
       }
     },
@@ -156,7 +156,7 @@ private fun ProviderItem(state: ProviderItemState, currentTime: Long, onUpdate: 
         } else {
           Icon(
             imageVector = TabbyIcons.BaselineSwapVert,
-            contentDescription = stringResource(R.string.update),
+            contentDescription = stringResource(Res.string.update),
           )
         }
       }

@@ -10,7 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.PreviewWrapper
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.github.kr328.clash.glue.model.DarkMode
-import com.github.kr328.clash.settings.R
+import com.github.kr328.clash.settings.Res
 import com.github.kr328.clash.settings.allow_tabby_auto_restart
 import com.github.kr328.clash.settings.always_dark
 import com.github.kr328.clash.settings.always_light
@@ -75,24 +75,24 @@ private fun AppSettingsContent(
   onDynamicNotificationChange: (Boolean) -> Unit,
   modifier: Modifier = Modifier,
 ) {
-  TabbyScaffold(title = stringResource(R.string.app), modifier = modifier) { innerPadding ->
+  TabbyScaffold(title = stringResource(Res.string.app), modifier = modifier) { innerPadding ->
     ProvidePreferenceLocals {
       LazyColumn(modifier = Modifier.fillMaxSize(), contentPadding = innerPadding) {
         preferenceCategory(
           key = "cat_behavior",
-          title = { Text(stringResource(R.string.behavior)) },
+          title = { Text(stringResource(Res.string.behavior)) },
         )
         switchPreference(
           key = "auto_restart",
           value = uiState.autoRestart,
           onValueChange = onAutoRestartChange,
           icon = { Icon(imageVector = TabbyIcons.BaselineRestore, contentDescription = null) },
-          title = { Text(stringResource(R.string.auto_restart)) },
-          summary = { Text(stringResource(R.string.allow_tabby_auto_restart)) },
+          title = { Text(stringResource(Res.string.auto_restart)) },
+          summary = { Text(stringResource(Res.string.allow_tabby_auto_restart)) },
         )
         preferenceCategory(
           key = "cat_interface",
-          title = { Text(stringResource(R.string.interface_)) },
+          title = { Text(stringResource(Res.string.interface_)) },
         )
         listPreference(
           key = "dark_mode",
@@ -100,7 +100,7 @@ private fun AppSettingsContent(
           onValueChange = onDarkModeChange,
           values = listOf(DarkMode.Auto, DarkMode.ForceLight, DarkMode.ForceDark),
           icon = { Icon(imageVector = TabbyIcons.BaselineBrightness4, contentDescription = null) },
-          title = { Text(stringResource(R.string.dark_mode)) },
+          title = { Text(stringResource(Res.string.dark_mode)) },
           summary = { Text(stringResource(uiState.darkMode.summaryRes)) },
           valueToText = { androidx.compose.ui.text.AnnotatedString(stringResource(it.summaryRes)) },
         )
@@ -109,26 +109,29 @@ private fun AppSettingsContent(
           value = uiState.hideAppIcon,
           onValueChange = onHideAppIconChange,
           icon = { Icon(imageVector = TabbyIcons.BaselineHide, contentDescription = null) },
-          title = { Text(stringResource(R.string.hide_app_icon_title)) },
-          summary = { Text(stringResource(R.string.hide_app_icon_desc)) },
+          title = { Text(stringResource(Res.string.hide_app_icon_title)) },
+          summary = { Text(stringResource(Res.string.hide_app_icon_desc)) },
         )
         switchPreference(
           key = "hide_from_recents",
           value = uiState.hideFromRecents,
           onValueChange = onHideFromRecentsChange,
           icon = { Icon(imageVector = TabbyIcons.BaselineStack, contentDescription = null) },
-          title = { Text(stringResource(R.string.hide_from_recents_title)) },
-          summary = { Text(stringResource(R.string.hide_from_recents_desc)) },
+          title = { Text(stringResource(Res.string.hide_from_recents_title)) },
+          summary = { Text(stringResource(Res.string.hide_from_recents_desc)) },
         )
-        preferenceCategory(key = "cat_service", title = { Text(stringResource(R.string.service)) })
+        preferenceCategory(
+          key = "cat_service",
+          title = { Text(stringResource(Res.string.service)) },
+        )
         switchPreference(
           key = "show_traffic",
           value = uiState.dynamicNotification,
           onValueChange = onDynamicNotificationChange,
           enabled = !clashRunning,
           icon = { Icon(imageVector = TabbyIcons.BaselineDomain, contentDescription = null) },
-          title = { Text(stringResource(R.string.show_traffic)) },
-          summary = { Text(stringResource(R.string.show_traffic_summary)) },
+          title = { Text(stringResource(Res.string.show_traffic)) },
+          summary = { Text(stringResource(Res.string.show_traffic_summary)) },
         )
       }
     }
@@ -138,9 +141,9 @@ private fun AppSettingsContent(
 private val DarkMode.summaryRes: Any
   get() =
     when (this) {
-      Auto -> R.string.follow_system
-      ForceLight -> R.string.always_light
-      ForceDark -> R.string.always_dark
+      Auto -> Res.string.follow_system
+      ForceLight -> Res.string.always_light
+      ForceDark -> Res.string.always_dark
     }
 
 @PreviewWrapper(TabbyThemeWrapper::class)

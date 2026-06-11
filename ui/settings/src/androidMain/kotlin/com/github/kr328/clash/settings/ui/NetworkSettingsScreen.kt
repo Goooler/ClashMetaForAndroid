@@ -14,7 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.PreviewWrapper
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.github.kr328.clash.service.model.AccessControlMode
-import com.github.kr328.clash.settings.R
+import com.github.kr328.clash.settings.Res
 import com.github.kr328.clash.settings.access_control_mode
 import com.github.kr328.clash.settings.access_control_packages
 import com.github.kr328.clash.settings.access_control_packages_summary
@@ -95,7 +95,7 @@ private fun NetworkSettingsContent(
   modifier: Modifier = Modifier,
 ) {
   val snackbarHostState = remember { SnackbarHostState() }
-  val barMessage = stringResource(R.string.options_unavailable)
+  val barMessage = stringResource(Res.string.options_unavailable)
 
   LaunchedEffect(clashRunning) {
     if (clashRunning) {
@@ -111,7 +111,7 @@ private fun NetworkSettingsContent(
   val tunStackMode = TunStackMode.fromValue(uiState.tunStackMode)
 
   TabbyScaffold(
-    title = stringResource(R.string.network),
+    title = stringResource(Res.string.network),
     modifier = modifier,
     snackbarHostState = snackbarHostState,
   ) { innerPadding ->
@@ -123,44 +123,44 @@ private fun NetworkSettingsContent(
           onValueChange = onEnableVpnChange,
           enabled = !clashRunning,
           icon = { Icon(imageVector = TabbyIcons.BaselineVpnLock, contentDescription = null) },
-          title = { Text(stringResource(R.string.route_system_traffic)) },
-          summary = { Text(stringResource(R.string.routing_via_vpn_service)) },
+          title = { Text(stringResource(Res.string.route_system_traffic)) },
+          summary = { Text(stringResource(Res.string.routing_via_vpn_service)) },
         )
         preferenceCategory(
           key = "cat_vpn_service_options",
-          title = { Text(stringResource(R.string.vpn_service_options)) },
+          title = { Text(stringResource(Res.string.vpn_service_options)) },
         )
         switchPreference(
           key = "bypass_private_network",
           value = uiState.bypassPrivateNetwork,
           onValueChange = onBypassPrivateNetworkChange,
           enabled = vpnDependenciesEnabled,
-          title = { Text(stringResource(R.string.bypass_private_network)) },
-          summary = { Text(stringResource(R.string.bypass_private_network_summary)) },
+          title = { Text(stringResource(Res.string.bypass_private_network)) },
+          summary = { Text(stringResource(Res.string.bypass_private_network_summary)) },
         )
         switchPreference(
           key = "dns_hijacking",
           value = uiState.dnsHijacking,
           onValueChange = onDnsHijackingChange,
           enabled = vpnDependenciesEnabled,
-          title = { Text(stringResource(R.string.dns_hijacking)) },
-          summary = { Text(stringResource(R.string.dns_hijacking_summary)) },
+          title = { Text(stringResource(Res.string.dns_hijacking)) },
+          summary = { Text(stringResource(Res.string.dns_hijacking_summary)) },
         )
         switchPreference(
           key = "allow_bypass",
           value = uiState.allowBypass,
           onValueChange = onAllowBypassChange,
           enabled = vpnDependenciesEnabled,
-          title = { Text(stringResource(R.string.allow_bypass)) },
-          summary = { Text(stringResource(R.string.allow_bypass_summary)) },
+          title = { Text(stringResource(Res.string.allow_bypass)) },
+          summary = { Text(stringResource(Res.string.allow_bypass_summary)) },
         )
         switchPreference(
           key = "allow_ipv6",
           value = uiState.allowIpv6,
           onValueChange = onAllowIpv6Change,
           enabled = vpnDependenciesEnabled,
-          title = { Text(stringResource(R.string.allow_ipv6)) },
-          summary = { Text(stringResource(R.string.allow_ipv6_summary)) },
+          title = { Text(stringResource(Res.string.allow_ipv6)) },
+          summary = { Text(stringResource(Res.string.allow_ipv6_summary)) },
         )
         if (uiState.hasSystemProxyOption) {
           switchPreference(
@@ -168,8 +168,8 @@ private fun NetworkSettingsContent(
             value = uiState.systemProxy,
             onValueChange = onSystemProxyChange,
             enabled = vpnDependenciesEnabled,
-            title = { Text(stringResource(R.string.system_proxy)) },
-            summary = { Text(stringResource(R.string.system_proxy_summary)) },
+            title = { Text(stringResource(Res.string.system_proxy)) },
+            summary = { Text(stringResource(Res.string.system_proxy_summary)) },
           )
         }
         listPreference(
@@ -178,7 +178,7 @@ private fun NetworkSettingsContent(
           onValueChange = { onTunStackModeChange(it.persistedValue) },
           values = TunStackMode.entries,
           enabled = vpnDependenciesEnabled,
-          title = { Text(stringResource(R.string.tun_stack_mode)) },
+          title = { Text(stringResource(Res.string.tun_stack_mode)) },
           summary = { Text(stringResource(tunStackMode.summaryRes)) },
           valueToText = { androidx.compose.ui.text.AnnotatedString(stringResource(it.summaryRes)) },
         )
@@ -188,14 +188,14 @@ private fun NetworkSettingsContent(
           onValueChange = onAccessControlModeChange,
           values = listOf(AcceptAll, AcceptSelected, DenySelected),
           enabled = vpnDependenciesEnabled,
-          title = { Text(stringResource(R.string.access_control_mode)) },
+          title = { Text(stringResource(Res.string.access_control_mode)) },
           summary = { Text(stringResource(uiState.accessControlMode.summaryRes)) },
           valueToText = { androidx.compose.ui.text.AnnotatedString(stringResource(it.summaryRes)) },
         )
         preference(
           key = "access_control_packages",
-          title = { Text(stringResource(R.string.access_control_packages)) },
-          summary = { Text(stringResource(R.string.access_control_packages_summary)) },
+          title = { Text(stringResource(Res.string.access_control_packages)) },
+          summary = { Text(stringResource(Res.string.access_control_packages_summary)) },
           onClick = onAccessControlPackagesClick,
         )
       }
@@ -218,17 +218,17 @@ private enum class TunStackMode(val persistedValue: String) {
 private val TunStackMode.summaryRes: Any
   get() =
     when (this) {
-      TunStackMode.System -> R.string.tun_stack_system
-      Gvisor -> R.string.tun_stack_gvisor
-      Mixed -> R.string.tun_stack_mixed
+      TunStackMode.System -> Res.string.tun_stack_system
+      Gvisor -> Res.string.tun_stack_gvisor
+      Mixed -> Res.string.tun_stack_mixed
     }
 
 private val AccessControlMode.summaryRes: Any
   get() =
     when (this) {
-      AcceptAll -> R.string.allow_all_apps
-      AcceptSelected -> R.string.allow_selected_apps
-      DenySelected -> R.string.deny_selected_apps
+      AcceptAll -> Res.string.allow_all_apps
+      AcceptSelected -> Res.string.allow_selected_apps
+      DenySelected -> Res.string.deny_selected_apps
     }
 
 @PreviewWrapper(TabbyThemeWrapper::class)

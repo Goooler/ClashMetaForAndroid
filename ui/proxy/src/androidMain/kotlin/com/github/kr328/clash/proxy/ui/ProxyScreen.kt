@@ -62,7 +62,7 @@ import com.github.kr328.clash.common.R as CommonR
 import com.github.kr328.clash.core.model.Proxy
 import com.github.kr328.clash.core.model.ProxySort
 import com.github.kr328.clash.core.model.TunnelState
-import com.github.kr328.clash.proxy.R
+import com.github.kr328.clash.proxy.Res
 import com.github.kr328.clash.proxy.delay
 import com.github.kr328.clash.proxy.delay_test
 import com.github.kr328.clash.proxy.doubles
@@ -101,7 +101,7 @@ internal fun ProxyScreen(
   val selectedProxies by viewModel.selectedProxies.collectAsStateWithLifecycle()
   val eventState by viewModel.eventState.collectAsStateWithLifecycle()
   val snackbarHostState = remember { SnackbarHostState() }
-  val modeSwitchTips = stringResource(R.string.mode_switch_tips)
+  val modeSwitchTips = stringResource(Res.string.mode_switch_tips)
 
   LaunchedEffect(eventState) {
     when (eventState) {
@@ -232,7 +232,7 @@ private fun ProxyContent(
           IconButton(onClick = { onUrlTest(uiState.currentPage) }) {
             Icon(
               imageVector = TabbyIcons.BaselineFlashOn,
-              contentDescription = stringResource(R.string.delay_test),
+              contentDescription = stringResource(Res.string.delay_test),
             )
           }
         }
@@ -245,7 +245,7 @@ private fun ProxyContent(
         ) {
           Icon(
             imageVector = TabbyIcons.BaselineCircleCenter,
-            contentDescription = stringResource(R.string.scroll_selected_to_top),
+            contentDescription = stringResource(Res.string.scroll_selected_to_top),
           )
         }
       }
@@ -269,7 +269,7 @@ private fun ProxyContent(
         ) {
           Icon(
             imageVector = TabbyIcons.BaselineArrowUp,
-            contentDescription = stringResource(R.string.proxy_scroll_to_top),
+            contentDescription = stringResource(Res.string.proxy_scroll_to_top),
           )
         }
       }
@@ -279,7 +279,7 @@ private fun ProxyContent(
       if (uiState.groupNames.isEmpty()) {
         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
           Text(
-            text = stringResource(R.string.proxy_empty_tips),
+            text = stringResource(Res.string.proxy_empty_tips),
             style = MaterialTheme.typography.titleMedium,
           )
         }
@@ -483,7 +483,7 @@ private fun ColumnScope.ProxyMenuSheetContent(
 ) {
   ProxyMenuSection(title = stringResource(CommonR.string.filter)) {
     ProxyMenuCheckboxRow(
-      title = stringResource(R.string.not_selectable),
+      title = stringResource(Res.string.not_selectable),
       checked = excludeNotSelectable,
       onClick = { onExcludeNotSelectableChanged(!excludeNotSelectable) },
     )
@@ -512,19 +512,19 @@ private fun ColumnScope.ProxyMenuSheetContent(
     )
   }
 
-  ProxyMenuSection(title = stringResource(R.string.layout)) {
+  ProxyMenuSection(title = stringResource(Res.string.layout)) {
     ProxyMenuRadioRow(
-      title = stringResource(R.string.single),
+      title = stringResource(Res.string.single),
       selected = proxyLine == 1,
       onClick = { onProxyLineChanged(1) },
     )
     ProxyMenuRadioRow(
-      title = stringResource(R.string.doubles),
+      title = stringResource(Res.string.doubles),
       selected = proxyLine == 2,
       onClick = { onProxyLineChanged(2) },
     )
     ProxyMenuRadioRow(
-      title = stringResource(R.string.multiple),
+      title = stringResource(Res.string.multiple),
       selected = proxyLine == 3,
       onClick = { onProxyLineChanged(3) },
     )
@@ -542,7 +542,7 @@ private fun ColumnScope.ProxyMenuSheetContent(
       onClick = { onProxySortChanged(ProxySort.Title) },
     )
     ProxyMenuRadioRow(
-      title = stringResource(R.string.delay),
+      title = stringResource(Res.string.delay),
       selected = proxySort == ProxySort.Delay,
       onClick = { onProxySortChanged(ProxySort.Delay) },
     )

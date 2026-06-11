@@ -10,7 +10,7 @@ import com.github.kr328.clash.common.R as CommonR
 import com.github.kr328.clash.common.constants.Intents
 import com.github.kr328.clash.common.log.Log
 import com.github.kr328.clash.glue.util.withProfile
-import com.github.kr328.clash.profile.R
+import com.github.kr328.clash.profile.Res
 import com.github.kr328.clash.profile.import_from_qr_exception
 import com.github.kr328.clash.profile.import_from_qr_no_permission
 import com.github.kr328.clash.profile.model.ProfileProvider
@@ -89,10 +89,10 @@ internal class NewProfileViewModel(private val application: Application) : ViewM
       QRUserCanceled -> Unit
       QRMissingPermission ->
         eventState.value =
-          EventState.ShowMessage(application.getString(R.string.import_from_qr_no_permission))
+          EventState.ShowMessage(application.getString(Res.string.import_from_qr_no_permission))
       is QRError ->
         eventState.value =
-          EventState.ShowMessage(application.getString(R.string.import_from_qr_exception))
+          EventState.ShowMessage(application.getString(Res.string.import_from_qr_exception))
     }
   }
 

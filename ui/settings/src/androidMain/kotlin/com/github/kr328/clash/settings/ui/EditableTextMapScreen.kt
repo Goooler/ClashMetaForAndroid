@@ -34,7 +34,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation3.runtime.EntryProviderScope
 import androidx.navigation3.runtime.NavKey
 import com.github.kr328.clash.common.R as CommonR
-import com.github.kr328.clash.settings.R
+import com.github.kr328.clash.settings.Res
 import com.github.kr328.clash.settings.hosts
 import com.github.kr328.clash.settings.key
 import com.github.kr328.clash.settings.value
@@ -212,16 +212,16 @@ private fun MapEntryInputDialog(
         OutlinedTextField(
           value = keyText,
           onValueChange = { keyText = it },
-          label = { Text(stringResource(R.string.key)) },
-          placeholder = { Text(stringResource(R.string.key)) },
+          label = { Text(stringResource(Res.string.key)) },
+          placeholder = { Text(stringResource(Res.string.key)) },
           singleLine = true,
           modifier = Modifier.fillMaxWidth().focusRequester(focusRequester),
         )
         OutlinedTextField(
           value = valueText,
           onValueChange = { valueText = it },
-          label = { Text(stringResource(R.string.value)) },
-          placeholder = { Text(stringResource(R.string.value)) },
+          label = { Text(stringResource(Res.string.value)) },
+          placeholder = { Text(stringResource(Res.string.value)) },
           singleLine = true,
           modifier = Modifier.fillMaxWidth(),
         )
@@ -246,7 +246,7 @@ private fun MapEntryInputDialog(
 @Composable
 private fun EditableTextMapScreenPreview() {
   EditableTextMapScreen(
-    title = R.string.hosts,
+    title = Res.string.hosts,
     initialValues = mapOf("example.com" to "127.0.0.1", "test.com" to "192.168.1.1"),
     onDismiss = {},
     onApply = {},

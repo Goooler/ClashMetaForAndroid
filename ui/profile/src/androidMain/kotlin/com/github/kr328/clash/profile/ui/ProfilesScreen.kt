@@ -48,7 +48,7 @@ import com.github.kr328.clash.common.R as CommonR
 import com.github.kr328.clash.glue.util.elapsedIntervalString
 import com.github.kr328.clash.glue.util.toDateStr
 import com.github.kr328.clash.glue.util.toString
-import com.github.kr328.clash.profile.R
+import com.github.kr328.clash.profile.Res
 import com.github.kr328.clash.profile.duplicate
 import com.github.kr328.clash.profile.edit
 import com.github.kr328.clash.profile.format_type_unsaved
@@ -86,7 +86,7 @@ internal fun ProfilesScreen(
   val uiState by viewModel.uiState.collectAsStateWithLifecycle()
   val eventState by viewModel.eventState.collectAsStateWithLifecycle()
   val snackbarHostState = remember { SnackbarHostState() }
-  val editText = stringResource(R.string.edit)
+  val editText = stringResource(Res.string.edit)
 
   LaunchedEffect(eventState) {
     when (val event = eventState) {
@@ -155,7 +155,7 @@ private fun ProfilesContent(
       if (profile.imported && profile.type != File) {
         ProfilesMenuAction(
           icon = TabbyIcons.BaselineUpdate,
-          text = stringResource(R.string.update),
+          text = stringResource(Res.string.update),
           onClick = {
             menuProfile = null
             onUpdate(profile)
@@ -164,7 +164,7 @@ private fun ProfilesContent(
       }
       ProfilesMenuAction(
         icon = TabbyIcons.BaselineEdit,
-        text = stringResource(R.string.edit),
+        text = stringResource(Res.string.edit),
         onClick = {
           menuProfile = null
           onEdit(profile)
@@ -173,7 +173,7 @@ private fun ProfilesContent(
       if (profile.imported) {
         ProfilesMenuAction(
           icon = TabbyIcons.BaselineContentCopy,
-          text = stringResource(R.string.duplicate),
+          text = stringResource(Res.string.duplicate),
           onClick = {
             menuProfile = null
             onDuplicate(profile)
@@ -205,7 +205,7 @@ private fun ProfilesContent(
           } else {
             Icon(
               imageVector = TabbyIcons.BaselineSync,
-              contentDescription = stringResource(R.string.update_all),
+              contentDescription = stringResource(Res.string.update_all),
             )
           }
         }
@@ -250,7 +250,7 @@ private fun ProfileItem(
 
   val profileTypeText =
     if (profile.pending) {
-      stringResource(R.string.format_type_unsaved, profile.type.toString(context))
+      stringResource(Res.string.format_type_unsaved, profile.type.toString(context))
     } else {
       profile.type.toString(context)
     }

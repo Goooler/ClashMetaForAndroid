@@ -41,7 +41,7 @@ import androidx.navigation3.runtime.entryProvider
 import com.github.kr328.clash.common.R as CommonR
 import com.github.kr328.clash.core.Clash
 import com.github.kr328.clash.core.model.ConfigurationOverride
-import com.github.kr328.clash.settings.R
+import com.github.kr328.clash.settings.Res
 import com.github.kr328.clash.settings.age_key_category
 import com.github.kr328.clash.settings.age_key_copy
 import com.github.kr328.clash.settings.age_key_generate
@@ -134,8 +134,8 @@ internal fun MetaFeatureSettingsScreen(
           val configuration by viewModel.configuration.collectAsStateWithLifecycle()
           val importResult by viewModel.importResult.collectAsStateWithLifecycle()
           val snackbarHostState = remember { SnackbarHostState() }
-          val importedText = stringResource(R.string.geofile_imported)
-          val importFailedText = stringResource(R.string.geofile_import_failed)
+          val importedText = stringResource(Res.string.geofile_imported)
+          val importFailedText = stringResource(Res.string.geofile_import_failed)
           var pendingImportType by remember { mutableStateOf<ImportType?>(null) }
           var showUnsupportedFormatDialog by remember { mutableStateOf(false) }
           var validExtensionsSummary by remember { mutableStateOf("") }
@@ -210,10 +210,13 @@ internal fun MetaFeatureSettingsScreen(
           if (showUnsupportedFormatDialog) {
             AlertDialog(
               onDismissRequest = { showUnsupportedFormatDialog = false },
-              title = { Text(stringResource(R.string.geofile_unknown_db_format)) },
+              title = { Text(stringResource(Res.string.geofile_unknown_db_format)) },
               text = {
                 Text(
-                  stringResource(R.string.geofile_unknown_db_format_message, validExtensionsSummary)
+                  stringResource(
+                    Res.string.geofile_unknown_db_format_message,
+                    validExtensionsSummary,
+                  )
                 )
               },
               confirmButton = {
@@ -265,7 +268,7 @@ private fun MetaFeatureSettingsContent(
 ) {
   val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
   TabbyScaffold(
-    title = stringResource(R.string.meta_features),
+    title = stringResource(Res.string.meta_features),
     modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
     snackbarHostState = snackbarHostState,
     scrollBehavior = scrollBehavior,
@@ -307,18 +310,18 @@ private fun MetaFeatureSettingsContent(
 private fun LazyListScope.metaAgeKeyItems(onAgeKeyHelperRequested: (Boolean) -> Unit) {
   preferenceCategory(
     key = "cat_age_key",
-    title = { Text(stringResource(R.string.age_key_category)) },
+    title = { Text(stringResource(Res.string.age_key_category)) },
   )
   preference(
     key = "ageKeyX25519",
-    title = { Text(stringResource(R.string.age_key_type_x25519)) },
-    summary = { Text(stringResource(R.string.age_key_generate_summary)) },
+    title = { Text(stringResource(Res.string.age_key_type_x25519)) },
+    summary = { Text(stringResource(Res.string.age_key_generate_summary)) },
     onClick = { onAgeKeyHelperRequested(false) },
   )
   preference(
     key = "ageKeyHybrid",
-    title = { Text(stringResource(R.string.age_key_type_hybrid)) },
-    summary = { Text(stringResource(R.string.age_key_generate_summary)) },
+    title = { Text(stringResource(Res.string.age_key_type_hybrid)) },
+    summary = { Text(stringResource(Res.string.age_key_generate_summary)) },
     onClick = { onAgeKeyHelperRequested(true) },
   )
 }
@@ -327,13 +330,13 @@ private fun LazyListScope.metaBasicPreferenceItems(
   configuration: ConfigurationOverride,
   actions: MetaFeatureSettingsActions,
 ) {
-  preferenceCategory(key = "cat_general", title = { Text(stringResource(R.string.general)) })
+  preferenceCategory(key = "cat_general", title = { Text(stringResource(Res.string.general)) })
   listPreference(
     key = "unifiedDelay",
     value = configuration.unifiedDelay,
     onValueChange = actions::updateUnifiedDelay,
     values = booleanOptions,
-    title = { Text(stringResource(R.string.unified_delay)) },
+    title = { Text(stringResource(Res.string.unified_delay)) },
     summary = { Text(stringResource(configuration.unifiedDelay.textRes)) },
     valueToText = { AnnotatedString(stringResource(it.textRes)) },
   )
@@ -342,7 +345,7 @@ private fun LazyListScope.metaBasicPreferenceItems(
     value = configuration.geodataMode,
     onValueChange = actions::updateGeodataMode,
     values = booleanOptions,
-    title = { Text(stringResource(R.string.geodata_mode)) },
+    title = { Text(stringResource(Res.string.geodata_mode)) },
     summary = { Text(stringResource(configuration.geodataMode.textRes)) },
     valueToText = { AnnotatedString(stringResource(it.textRes)) },
   )
@@ -351,7 +354,7 @@ private fun LazyListScope.metaBasicPreferenceItems(
     value = configuration.tcpConcurrent,
     onValueChange = actions::updateTcpConcurrent,
     values = booleanOptions,
-    title = { Text(stringResource(R.string.tcp_concurrent)) },
+    title = { Text(stringResource(Res.string.tcp_concurrent)) },
     summary = { Text(stringResource(configuration.tcpConcurrent.textRes)) },
     valueToText = { AnnotatedString(stringResource(it.textRes)) },
   )
@@ -360,7 +363,7 @@ private fun LazyListScope.metaBasicPreferenceItems(
     value = configuration.findProcessMode,
     onValueChange = actions::updateFindProcessMode,
     values = ConfigurationOverride.FindProcessMode.entries,
-    title = { Text(stringResource(R.string.find_process_mode)) },
+    title = { Text(stringResource(Res.string.find_process_mode)) },
     summary = { Text(stringResource(configuration.findProcessMode.textRes)) },
     valueToText = { AnnotatedString(stringResource(it.textRes)) },
   )
@@ -374,25 +377,25 @@ private fun LazyListScope.metaSnifferPreferenceItems(
   val enabled = configuration.sniffer.enable != false
   preferenceCategory(
     key = "cat_sniffer",
-    title = { Text(stringResource(R.string.sniffer_setting)) },
+    title = { Text(stringResource(Res.string.sniffer_setting)) },
   )
   listPreference(
     key = "snifferEnable",
     value = configuration.sniffer.enable,
     onValueChange = actions::updateSnifferEnable,
     values = booleanOptions,
-    title = { Text(stringResource(R.string.strategy)) },
+    title = { Text(stringResource(Res.string.strategy)) },
     summary = { Text(stringResource(configuration.sniffer.enable.textRes)) },
     valueToText = { AnnotatedString(stringResource(it.textRes)) },
   )
   preference(
     key = "sniffHttpPorts",
-    title = { Text(stringResource(R.string.sniff_http_ports)) },
-    summary = { Text(configuration.sniffer.sniff.http.ports.listSummary(R.string.dont_modify)) },
+    title = { Text(stringResource(Res.string.sniff_http_ports)) },
+    summary = { Text(configuration.sniffer.sniff.http.ports.listSummary(Res.string.dont_modify)) },
     enabled = enabled,
     onClick = {
       onOpenEditableTextList(
-        R.string.sniff_http_ports,
+        Res.string.sniff_http_ports,
         configuration.sniffer.sniff.http.ports,
         actions::updateSniffHttpPorts,
       )
@@ -404,7 +407,7 @@ private fun LazyListScope.metaSnifferPreferenceItems(
     onValueChange = actions::updateSniffHttpOverrideDestination,
     values = booleanOptions,
     enabled = enabled,
-    title = { Text(stringResource(R.string.sniff_http_override_destination)) },
+    title = { Text(stringResource(Res.string.sniff_http_override_destination)) },
     summary = {
       Text(stringResource(configuration.sniffer.sniff.http.overrideDestination.textRes))
     },
@@ -412,12 +415,12 @@ private fun LazyListScope.metaSnifferPreferenceItems(
   )
   preference(
     key = "sniffTlsPorts",
-    title = { Text(stringResource(R.string.sniff_tls_ports)) },
-    summary = { Text(configuration.sniffer.sniff.tls.ports.listSummary(R.string.dont_modify)) },
+    title = { Text(stringResource(Res.string.sniff_tls_ports)) },
+    summary = { Text(configuration.sniffer.sniff.tls.ports.listSummary(Res.string.dont_modify)) },
     enabled = enabled,
     onClick = {
       onOpenEditableTextList(
-        R.string.sniff_tls_ports,
+        Res.string.sniff_tls_ports,
         configuration.sniffer.sniff.tls.ports,
         actions::updateSniffTlsPorts,
       )
@@ -429,18 +432,18 @@ private fun LazyListScope.metaSnifferPreferenceItems(
     onValueChange = actions::updateSniffTlsOverrideDestination,
     values = booleanOptions,
     enabled = enabled,
-    title = { Text(stringResource(R.string.sniff_tls_override_destination)) },
+    title = { Text(stringResource(Res.string.sniff_tls_override_destination)) },
     summary = { Text(stringResource(configuration.sniffer.sniff.tls.overrideDestination.textRes)) },
     valueToText = { AnnotatedString(stringResource(it.textRes)) },
   )
   preference(
     key = "sniffQuicPorts",
-    title = { Text(stringResource(R.string.sniff_quic_ports)) },
-    summary = { Text(configuration.sniffer.sniff.quic.ports.listSummary(R.string.dont_modify)) },
+    title = { Text(stringResource(Res.string.sniff_quic_ports)) },
+    summary = { Text(configuration.sniffer.sniff.quic.ports.listSummary(Res.string.dont_modify)) },
     enabled = enabled,
     onClick = {
       onOpenEditableTextList(
-        R.string.sniff_quic_ports,
+        Res.string.sniff_quic_ports,
         configuration.sniffer.sniff.quic.ports,
         actions::updateSniffQuicPorts,
       )
@@ -452,7 +455,7 @@ private fun LazyListScope.metaSnifferPreferenceItems(
     onValueChange = actions::updateSniffQuicOverrideDestination,
     values = booleanOptions,
     enabled = enabled,
-    title = { Text(stringResource(R.string.sniff_quic_override_destination)) },
+    title = { Text(stringResource(Res.string.sniff_quic_override_destination)) },
     summary = {
       Text(stringResource(configuration.sniffer.sniff.quic.overrideDestination.textRes))
     },
@@ -464,7 +467,7 @@ private fun LazyListScope.metaSnifferPreferenceItems(
     onValueChange = actions::updateForceDnsMapping,
     values = booleanOptions,
     enabled = enabled,
-    title = { Text(stringResource(R.string.force_dns_mapping)) },
+    title = { Text(stringResource(Res.string.force_dns_mapping)) },
     summary = { Text(stringResource(configuration.sniffer.forceDnsMapping.textRes)) },
     valueToText = { AnnotatedString(stringResource(it.textRes)) },
   )
@@ -474,7 +477,7 @@ private fun LazyListScope.metaSnifferPreferenceItems(
     onValueChange = actions::updateParsePureIp,
     values = booleanOptions,
     enabled = enabled,
-    title = { Text(stringResource(R.string.parse_pure_ip)) },
+    title = { Text(stringResource(Res.string.parse_pure_ip)) },
     summary = { Text(stringResource(configuration.sniffer.parsePureIp.textRes)) },
     valueToText = { AnnotatedString(stringResource(it.textRes)) },
   )
@@ -484,18 +487,18 @@ private fun LazyListScope.metaSnifferPreferenceItems(
     onValueChange = actions::updateOverrideDestination,
     values = booleanOptions,
     enabled = enabled,
-    title = { Text(stringResource(R.string.override_destination)) },
+    title = { Text(stringResource(Res.string.override_destination)) },
     summary = { Text(stringResource(configuration.sniffer.overrideDestination.textRes)) },
     valueToText = { AnnotatedString(stringResource(it.textRes)) },
   )
   preference(
     key = "forceDomain",
-    title = { Text(stringResource(R.string.force_domain)) },
-    summary = { Text(configuration.sniffer.forceDomain.listSummary(R.string.dont_modify)) },
+    title = { Text(stringResource(Res.string.force_domain)) },
+    summary = { Text(configuration.sniffer.forceDomain.listSummary(Res.string.dont_modify)) },
     enabled = enabled,
     onClick = {
       onOpenEditableTextList(
-        R.string.force_domain,
+        Res.string.force_domain,
         configuration.sniffer.forceDomain,
         actions::updateForceDomain,
       )
@@ -503,12 +506,12 @@ private fun LazyListScope.metaSnifferPreferenceItems(
   )
   preference(
     key = "skipDomain",
-    title = { Text(stringResource(R.string.skip_domain)) },
-    summary = { Text(configuration.sniffer.skipDomain.listSummary(R.string.dont_modify)) },
+    title = { Text(stringResource(Res.string.skip_domain)) },
+    summary = { Text(configuration.sniffer.skipDomain.listSummary(Res.string.dont_modify)) },
     enabled = enabled,
     onClick = {
       onOpenEditableTextList(
-        R.string.skip_domain,
+        Res.string.skip_domain,
         configuration.sniffer.skipDomain,
         actions::updateSkipDomain,
       )
@@ -516,12 +519,12 @@ private fun LazyListScope.metaSnifferPreferenceItems(
   )
   preference(
     key = "skipSrcAddress",
-    title = { Text(stringResource(R.string.skip_src_address)) },
-    summary = { Text(configuration.sniffer.skipSrcAddress.listSummary(R.string.dont_modify)) },
+    title = { Text(stringResource(Res.string.skip_src_address)) },
+    summary = { Text(configuration.sniffer.skipSrcAddress.listSummary(Res.string.dont_modify)) },
     enabled = enabled,
     onClick = {
       onOpenEditableTextList(
-        R.string.skip_src_address,
+        Res.string.skip_src_address,
         configuration.sniffer.skipSrcAddress,
         actions::updateSkipSrcAddress,
       )
@@ -529,12 +532,12 @@ private fun LazyListScope.metaSnifferPreferenceItems(
   )
   preference(
     key = "skipDstAddress",
-    title = { Text(stringResource(R.string.skip_dst_address)) },
-    summary = { Text(configuration.sniffer.skipDstAddress.listSummary(R.string.dont_modify)) },
+    title = { Text(stringResource(Res.string.skip_dst_address)) },
+    summary = { Text(configuration.sniffer.skipDstAddress.listSummary(Res.string.dont_modify)) },
     enabled = enabled,
     onClick = {
       onOpenEditableTextList(
-        R.string.skip_dst_address,
+        Res.string.skip_dst_address,
         configuration.sniffer.skipDstAddress,
         actions::updateSkipDstAddress,
       )
@@ -548,29 +551,29 @@ private fun LazyListScope.metaGeoFileItems(
   onImportCountry: () -> Unit,
   onImportASN: () -> Unit,
 ) {
-  preferenceCategory(key = "cat_geox", title = { Text(stringResource(R.string.geox_files)) })
+  preferenceCategory(key = "cat_geox", title = { Text(stringResource(Res.string.geox_files)) })
   preference(
     key = "importGeoIp",
-    title = { Text(stringResource(R.string.import_geoip_file)) },
-    summary = { Text(stringResource(R.string.press_to_import)) },
+    title = { Text(stringResource(Res.string.import_geoip_file)) },
+    summary = { Text(stringResource(Res.string.press_to_import)) },
     onClick = onImportGeoIp,
   )
   preference(
     key = "importGeoSite",
-    title = { Text(stringResource(R.string.import_geosite_file)) },
-    summary = { Text(stringResource(R.string.press_to_import)) },
+    title = { Text(stringResource(Res.string.import_geosite_file)) },
+    summary = { Text(stringResource(Res.string.press_to_import)) },
     onClick = onImportGeoSite,
   )
   preference(
     key = "importCountry",
-    title = { Text(stringResource(R.string.import_country_file)) },
-    summary = { Text(stringResource(R.string.press_to_import)) },
+    title = { Text(stringResource(Res.string.import_country_file)) },
+    summary = { Text(stringResource(Res.string.press_to_import)) },
     onClick = onImportCountry,
   )
   preference(
     key = "importASN",
-    title = { Text(stringResource(R.string.import_asn_file)) },
-    summary = { Text(stringResource(R.string.press_to_import)) },
+    title = { Text(stringResource(Res.string.import_asn_file)) },
+    summary = { Text(stringResource(Res.string.press_to_import)) },
     onClick = onImportASN,
   )
 }
@@ -578,10 +581,10 @@ private fun LazyListScope.metaGeoFileItems(
 private val ConfigurationOverride.FindProcessMode?.textRes: Any
   get() =
     when (this) {
-      Off -> R.string.off
-      Strict -> R.string.strict
-      Always -> R.string.always
-      null -> R.string.dont_modify
+      Off -> Res.string.off
+      Strict -> Res.string.strict
+      Always -> Res.string.always
+      null -> Res.string.dont_modify
     }
 
 interface MetaFeatureSettingsActions {
@@ -633,7 +636,7 @@ private fun AgeKeyHelperDialog(
   val clipboard = LocalClipboard.current
   val scope = rememberCoroutineScope()
   val copiedText = stringResource(CommonR.string.copied)
-  val genericError = stringResource(R.string.error)
+  val genericError = stringResource(Res.string.error)
   val secretInvalid =
     remember(secretKey) {
       secretKey.isNotBlank() &&
@@ -656,7 +659,9 @@ private fun AgeKeyHelperDialog(
     onDismissRequest = onDismiss,
     title = {
       Text(
-        stringResource(if (hybrid) R.string.age_key_type_hybrid else R.string.age_key_type_x25519)
+        stringResource(
+          if (hybrid) Res.string.age_key_type_hybrid else Res.string.age_key_type_x25519
+        )
       )
     },
     text = {
@@ -664,12 +669,12 @@ private fun AgeKeyHelperDialog(
         OutlinedTextField(
           value = secretKey,
           onValueChange = { secretKey = it },
-          label = { Text(stringResource(R.string.age_secret_key)) },
+          label = { Text(stringResource(Res.string.age_secret_key)) },
           singleLine = true,
           isError = secretInvalid,
           supportingText =
             if (secretInvalid) {
-              { Text(text = stringResource(R.string.age_secret_key_error)) }
+              { Text(text = stringResource(Res.string.age_secret_key_error)) }
             } else {
               null
             },
@@ -689,21 +694,21 @@ private fun AgeKeyHelperDialog(
                 .onFailure { scope.launch { onShowMessage(genericError) } }
             }
           ) {
-            Text(stringResource(R.string.age_key_generate))
+            Text(stringResource(Res.string.age_key_generate))
           }
           TextButton(onClick = { copy("age_secret_key", secretKey) }) {
-            Text(stringResource(R.string.age_key_copy))
+            Text(stringResource(Res.string.age_key_copy))
           }
         }
         OutlinedTextField(
           value = publicKey,
           onValueChange = { publicKey = it },
-          label = { Text(stringResource(R.string.age_public_key)) },
+          label = { Text(stringResource(Res.string.age_public_key)) },
           singleLine = true,
           isError = publicInvalid,
           supportingText =
             if (publicInvalid) {
-              { Text(text = stringResource(R.string.age_public_key_error)) }
+              { Text(text = stringResource(Res.string.age_public_key_error)) }
             } else {
               null
             },
@@ -718,10 +723,10 @@ private fun AgeKeyHelperDialog(
                 .onFailure { scope.launch { onShowMessage(genericError) } }
             }
           ) {
-            Text(stringResource(R.string.age_key_to_public))
+            Text(stringResource(Res.string.age_key_to_public))
           }
           TextButton(onClick = { copy("age_public_key", publicKey) }) {
-            Text(stringResource(R.string.age_key_copy))
+            Text(stringResource(Res.string.age_key_copy))
           }
         }
       }

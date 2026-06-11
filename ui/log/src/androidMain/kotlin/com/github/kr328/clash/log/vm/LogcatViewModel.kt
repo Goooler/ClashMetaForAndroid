@@ -16,7 +16,7 @@ import com.github.kr328.clash.common.util.intent
 import com.github.kr328.clash.core.model.LogMessage
 import com.github.kr328.clash.glue.util.logsDir
 import com.github.kr328.clash.log.LogcatService
-import com.github.kr328.clash.log.R
+import com.github.kr328.clash.log.Res
 import com.github.kr328.clash.log.file_exported
 import com.github.kr328.clash.log.model.LogFile
 import com.github.kr328.clash.log.util.LogcatFilter
@@ -109,7 +109,7 @@ internal class LogcatViewModel(private val application: Application) :
       eventState.value =
         try {
           writeLogTo(messages, file, uri)
-          EventState.ShowMessage(application.getString(R.string.file_exported))
+          EventState.ShowMessage(application.getString(Res.string.file_exported))
         } catch (e: Exception) {
           Log.e("Export log file failed: ${e.message}", e)
           EventState.ShowMessage(e.message ?: application.getString(CommonR.string.unknown))

@@ -37,7 +37,7 @@ import com.github.kr328.clash.common.R as CommonR
 import com.github.kr328.clash.core.model.ConfigurationOverride
 import com.github.kr328.clash.core.model.LogMessage
 import com.github.kr328.clash.core.model.TunnelState
-import com.github.kr328.clash.settings.R
+import com.github.kr328.clash.settings.Res
 import com.github.kr328.clash.settings.allow_lan
 import com.github.kr328.clash.settings.allow_origins
 import com.github.kr328.clash.settings.allow_private_network
@@ -195,7 +195,7 @@ private fun OverrideSettingsContent(
 ) {
   val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
   TabbyScaffold(
-    title = stringResource(R.string.override),
+    title = stringResource(Res.string.override),
     modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
     scrollBehavior = scrollBehavior,
     actions = {
@@ -242,11 +242,11 @@ private fun LazyListScope.generalPreferenceItems(
   onOpenEditableTextMap: (Any, Map<String, String>?, (Map<String, String>?) -> Unit) -> Unit,
   onOpenEditableTextList: (Any, List<String>?, (List<String>?) -> Unit) -> Unit,
 ) {
-  preferenceCategory(key = "cat_general", title = { Text(stringResource(R.string.general)) })
+  preferenceCategory(key = "cat_general", title = { Text(stringResource(Res.string.general)) })
   overrideEditTextPreferenceItem(
     key = "httpPort",
-    title = R.string.http_port,
-    placeholder = R.string.dont_modify,
+    title = Res.string.http_port,
+    placeholder = Res.string.dont_modify,
     emptyLabel = CommonR.string.disabled,
     value = portText(configuration.httpPort),
     onValueChange = { actions.updateHttpPort(parsePort(it)) },
@@ -254,8 +254,8 @@ private fun LazyListScope.generalPreferenceItems(
   )
   overrideEditTextPreferenceItem(
     key = "socksPort",
-    title = R.string.socks_port,
-    placeholder = R.string.dont_modify,
+    title = Res.string.socks_port,
+    placeholder = Res.string.dont_modify,
     emptyLabel = CommonR.string.disabled,
     value = portText(configuration.socksPort),
     onValueChange = { actions.updateSocksPort(parsePort(it)) },
@@ -263,8 +263,8 @@ private fun LazyListScope.generalPreferenceItems(
   )
   overrideEditTextPreferenceItem(
     key = "redirectPort",
-    title = R.string.redirect_port,
-    placeholder = R.string.dont_modify,
+    title = Res.string.redirect_port,
+    placeholder = Res.string.dont_modify,
     emptyLabel = CommonR.string.disabled,
     value = portText(configuration.redirectPort),
     onValueChange = { actions.updateRedirectPort(parsePort(it)) },
@@ -272,8 +272,8 @@ private fun LazyListScope.generalPreferenceItems(
   )
   overrideEditTextPreferenceItem(
     key = "tproxyPort",
-    title = R.string.tproxy_port,
-    placeholder = R.string.dont_modify,
+    title = Res.string.tproxy_port,
+    placeholder = Res.string.dont_modify,
     emptyLabel = CommonR.string.disabled,
     value = portText(configuration.tproxyPort),
     onValueChange = { actions.updateTproxyPort(parsePort(it)) },
@@ -281,8 +281,8 @@ private fun LazyListScope.generalPreferenceItems(
   )
   overrideEditTextPreferenceItem(
     key = "mixedPort",
-    title = R.string.mixed_port,
-    placeholder = R.string.dont_modify,
+    title = Res.string.mixed_port,
+    placeholder = Res.string.dont_modify,
     emptyLabel = CommonR.string.disabled,
     value = portText(configuration.mixedPort),
     onValueChange = { actions.updateMixedPort(parsePort(it)) },
@@ -290,11 +290,11 @@ private fun LazyListScope.generalPreferenceItems(
   )
   preference(
     key = "authentication",
-    title = { Text(stringResource(R.string.authentication)) },
-    summary = { Text(configuration.authentication.listSummary(R.string.dont_modify)) },
+    title = { Text(stringResource(Res.string.authentication)) },
+    summary = { Text(configuration.authentication.listSummary(Res.string.dont_modify)) },
     onClick = {
       onOpenEditableTextList(
-        R.string.authentication,
+        Res.string.authentication,
         configuration.authentication,
         actions::updateAuthentication,
       )
@@ -305,7 +305,7 @@ private fun LazyListScope.generalPreferenceItems(
     value = configuration.allowLan,
     onValueChange = actions::updateAllowLan,
     values = booleanOptions,
-    title = { Text(stringResource(R.string.allow_lan)) },
+    title = { Text(stringResource(Res.string.allow_lan)) },
     summary = { Text(stringResource(configuration.allowLan.textRes)) },
     valueToText = { AnnotatedString(stringResource(it.textRes)) },
   )
@@ -314,43 +314,43 @@ private fun LazyListScope.generalPreferenceItems(
     value = configuration.ipv6,
     onValueChange = actions::updateIpv6,
     values = booleanOptions,
-    title = { Text(stringResource(R.string.ipv6)) },
+    title = { Text(stringResource(Res.string.ipv6)) },
     summary = { Text(stringResource(configuration.ipv6.textRes)) },
     valueToText = { AnnotatedString(stringResource(it.textRes)) },
   )
   overrideEditTextPreferenceItem(
     key = "bindAddress",
-    title = R.string.bind_address,
-    placeholder = R.string.dont_modify,
+    title = Res.string.bind_address,
+    placeholder = Res.string.dont_modify,
     emptyLabel = CommonR.string.default_,
     value = configuration.bindAddress,
     onValueChange = actions::updateBindAddress,
   )
   overrideEditTextPreferenceItem(
     key = "externalController",
-    title = R.string.external_controller,
-    placeholder = R.string.dont_modify,
+    title = Res.string.external_controller,
+    placeholder = Res.string.dont_modify,
     emptyLabel = CommonR.string.default_,
     value = configuration.externalController,
     onValueChange = actions::updateExternalController,
   )
   overrideEditTextPreferenceItem(
     key = "externalControllerTls",
-    title = R.string.external_controller_tls,
-    placeholder = R.string.dont_modify,
+    title = Res.string.external_controller_tls,
+    placeholder = Res.string.dont_modify,
     emptyLabel = CommonR.string.default_,
     value = configuration.externalControllerTLS,
     onValueChange = actions::updateExternalControllerTls,
   )
   preference(
     key = "allowOrigins",
-    title = { Text(stringResource(R.string.allow_origins)) },
+    title = { Text(stringResource(Res.string.allow_origins)) },
     summary = {
-      Text(configuration.externalControllerCors.allowOrigins.listSummary(R.string.dont_modify))
+      Text(configuration.externalControllerCors.allowOrigins.listSummary(Res.string.dont_modify))
     },
     onClick = {
       onOpenEditableTextList(
-        R.string.allow_origins,
+        Res.string.allow_origins,
         configuration.externalControllerCors.allowOrigins,
         actions::updateAllowOrigins,
       )
@@ -361,7 +361,7 @@ private fun LazyListScope.generalPreferenceItems(
     value = configuration.externalControllerCors.allowPrivateNetwork,
     onValueChange = actions::updateAllowPrivateNetwork,
     values = booleanOptions,
-    title = { Text(stringResource(R.string.allow_private_network)) },
+    title = { Text(stringResource(Res.string.allow_private_network)) },
     summary = {
       Text(stringResource(configuration.externalControllerCors.allowPrivateNetwork.textRes))
     },
@@ -369,8 +369,8 @@ private fun LazyListScope.generalPreferenceItems(
   )
   overrideEditTextPreferenceItem(
     key = "secret",
-    title = R.string.secret,
-    placeholder = R.string.dont_modify,
+    title = Res.string.secret,
+    placeholder = Res.string.dont_modify,
     emptyLabel = CommonR.string.default_,
     value = configuration.secret,
     onValueChange = actions::updateSecret,
@@ -389,15 +389,17 @@ private fun LazyListScope.generalPreferenceItems(
     value = configuration.logLevel,
     onValueChange = actions::updateLogLevel,
     values = LogMessage.Level.entries,
-    title = { Text(stringResource(R.string.log_level)) },
+    title = { Text(stringResource(Res.string.log_level)) },
     summary = { Text(stringResource(configuration.logLevel.textRes)) },
     valueToText = { AnnotatedString(stringResource(it.textRes)) },
   )
   preference(
     key = "hosts",
-    title = { Text(stringResource(R.string.hosts)) },
-    summary = { Text(configuration.hosts.summary(R.string.dont_modify)) },
-    onClick = { onOpenEditableTextMap(R.string.hosts, configuration.hosts, actions::updateHosts) },
+    title = { Text(stringResource(Res.string.hosts)) },
+    summary = { Text(configuration.hosts.summary(Res.string.dont_modify)) },
+    onClick = {
+      onOpenEditableTextMap(Res.string.hosts, configuration.hosts, actions::updateHosts)
+    },
   )
 }
 
@@ -408,13 +410,13 @@ private fun LazyListScope.dnsPreferenceItems(
   onOpenEditableTextList: (Any, List<String>?, (List<String>?) -> Unit) -> Unit,
 ) {
   val enabled = configuration.dns.enable != false
-  preferenceCategory(key = "cat_dns", title = { Text(stringResource(R.string.dns)) })
+  preferenceCategory(key = "cat_dns", title = { Text(stringResource(Res.string.dns)) })
   listPreference(
     key = "dnsStrategy",
     value = enabled,
     onValueChange = actions::updateDnsEnable,
     values = booleanOptions,
-    title = { Text(stringResource(R.string.strategy)) },
+    title = { Text(stringResource(Res.string.strategy)) },
     summary = { Text(stringResource(configuration.dns.enable.dnsStrategyTextRes)) },
     valueToText = { AnnotatedString(stringResource(configuration.dns.enable.dnsStrategyTextRes)) },
   )
@@ -424,14 +426,14 @@ private fun LazyListScope.dnsPreferenceItems(
     onValueChange = actions::updateDnsPreferH3,
     values = booleanOptions,
     enabled = enabled,
-    title = { Text(stringResource(R.string.prefer_h3)) },
+    title = { Text(stringResource(Res.string.prefer_h3)) },
     summary = { Text(stringResource(configuration.dns.preferH3.textRes)) },
     valueToText = { AnnotatedString(stringResource(it.textRes)) },
   )
   overrideEditTextPreferenceItem(
     key = "dnsListen",
-    title = R.string.listen,
-    placeholder = R.string.dont_modify,
+    title = Res.string.listen,
+    placeholder = Res.string.dont_modify,
     emptyLabel = CommonR.string.disabled,
     value = configuration.dns.listen,
     onValueChange = actions::updateDnsListen,
@@ -443,7 +445,7 @@ private fun LazyListScope.dnsPreferenceItems(
     onValueChange = actions::updateAppendSystemDns,
     values = booleanOptions,
     enabled = enabled,
-    title = { Text(stringResource(R.string.append_system_dns)) },
+    title = { Text(stringResource(Res.string.append_system_dns)) },
     summary = { Text(stringResource(configuration.app.appendSystemDns.textRes)) },
     valueToText = { AnnotatedString(stringResource(it.textRes)) },
   )
@@ -453,7 +455,7 @@ private fun LazyListScope.dnsPreferenceItems(
     onValueChange = actions::updateDnsIpv6,
     values = booleanOptions,
     enabled = enabled,
-    title = { Text(stringResource(R.string.ipv6)) },
+    title = { Text(stringResource(Res.string.ipv6)) },
     summary = { Text(stringResource(configuration.dns.ipv6.textRes)) },
     valueToText = { AnnotatedString(stringResource(it.textRes)) },
   )
@@ -463,7 +465,7 @@ private fun LazyListScope.dnsPreferenceItems(
     onValueChange = actions::updateDnsUseHosts,
     values = booleanOptions,
     enabled = enabled,
-    title = { Text(stringResource(R.string.use_hosts)) },
+    title = { Text(stringResource(Res.string.use_hosts)) },
     summary = { Text(stringResource(configuration.dns.useHosts.textRes)) },
     valueToText = { AnnotatedString(stringResource(it.textRes)) },
   )
@@ -473,18 +475,18 @@ private fun LazyListScope.dnsPreferenceItems(
     onValueChange = actions::updateDnsEnhancedMode,
     values = ConfigurationOverride.DnsEnhancedMode.entries,
     enabled = enabled,
-    title = { Text(stringResource(R.string.enhanced_mode)) },
+    title = { Text(stringResource(Res.string.enhanced_mode)) },
     summary = { Text(stringResource(configuration.dns.enhancedMode.textRes)) },
     valueToText = { AnnotatedString(stringResource(it.textRes)) },
   )
   preference(
     key = "dnsNameServer",
-    title = { Text(stringResource(R.string.name_server)) },
-    summary = { Text(configuration.dns.nameServer.listSummary(R.string.dont_modify)) },
+    title = { Text(stringResource(Res.string.name_server)) },
+    summary = { Text(configuration.dns.nameServer.listSummary(Res.string.dont_modify)) },
     enabled = enabled,
     onClick = {
       onOpenEditableTextList(
-        R.string.name_server,
+        Res.string.name_server,
         configuration.dns.nameServer,
         actions::updateDnsNameServer,
       )
@@ -492,12 +494,12 @@ private fun LazyListScope.dnsPreferenceItems(
   )
   preference(
     key = "dnsFallback",
-    title = { Text(stringResource(R.string.fallback)) },
-    summary = { Text(configuration.dns.fallback.listSummary(R.string.dont_modify)) },
+    title = { Text(stringResource(Res.string.fallback)) },
+    summary = { Text(configuration.dns.fallback.listSummary(Res.string.dont_modify)) },
     enabled = enabled,
     onClick = {
       onOpenEditableTextList(
-        R.string.fallback,
+        Res.string.fallback,
         configuration.dns.fallback,
         actions::updateDnsFallback,
       )
@@ -505,12 +507,12 @@ private fun LazyListScope.dnsPreferenceItems(
   )
   preference(
     key = "dnsDefaultServer",
-    title = { Text(stringResource(R.string.default_name_server)) },
-    summary = { Text(configuration.dns.defaultServer.listSummary(R.string.dont_modify)) },
+    title = { Text(stringResource(Res.string.default_name_server)) },
+    summary = { Text(configuration.dns.defaultServer.listSummary(Res.string.dont_modify)) },
     enabled = enabled,
     onClick = {
       onOpenEditableTextList(
-        R.string.default_name_server,
+        Res.string.default_name_server,
         configuration.dns.defaultServer,
         actions::updateDnsDefaultServer,
       )
@@ -518,12 +520,12 @@ private fun LazyListScope.dnsPreferenceItems(
   )
   preference(
     key = "dnsFakeIpFilter",
-    title = { Text(stringResource(R.string.fakeip_filter)) },
-    summary = { Text(configuration.dns.fakeIpFilter.listSummary(R.string.dont_modify)) },
+    title = { Text(stringResource(Res.string.fakeip_filter)) },
+    summary = { Text(configuration.dns.fakeIpFilter.listSummary(Res.string.dont_modify)) },
     enabled = enabled,
     onClick = {
       onOpenEditableTextList(
-        R.string.fakeip_filter,
+        Res.string.fakeip_filter,
         configuration.dns.fakeIpFilter,
         actions::updateDnsFakeIpFilter,
       )
@@ -535,7 +537,7 @@ private fun LazyListScope.dnsPreferenceItems(
     onValueChange = actions::updateDnsFakeIpFilterMode,
     values = ConfigurationOverride.FilterMode.entries,
     enabled = enabled,
-    title = { Text(stringResource(R.string.fakeip_filter_mode)) },
+    title = { Text(stringResource(Res.string.fakeip_filter_mode)) },
     summary = { Text(stringResource(configuration.dns.fakeIPFilterMode.textRes)) },
     valueToText = { AnnotatedString(stringResource(it.textRes)) },
   )
@@ -545,27 +547,27 @@ private fun LazyListScope.dnsPreferenceItems(
     onValueChange = actions::updateDnsGeoIpFallback,
     values = booleanOptions,
     enabled = enabled,
-    title = { Text(stringResource(R.string.geoip_fallback)) },
+    title = { Text(stringResource(Res.string.geoip_fallback)) },
     summary = { Text(stringResource(configuration.dns.fallbackFilter.geoIp.textRes)) },
     valueToText = { AnnotatedString(stringResource(it.textRes)) },
   )
   overrideEditTextPreferenceItem(
     key = "dnsGeoIpCode",
-    title = R.string.geoip_fallback_code,
-    placeholder = R.string.dont_modify,
-    emptyLabel = R.string.raw_cn,
+    title = Res.string.geoip_fallback_code,
+    placeholder = Res.string.dont_modify,
+    emptyLabel = Res.string.raw_cn,
     value = configuration.dns.fallbackFilter.geoIpCode,
     onValueChange = actions::updateDnsGeoIpCode,
     enabled = enabled,
   )
   preference(
     key = "dnsDomainFallback",
-    title = { Text(stringResource(R.string.domain_fallback)) },
-    summary = { Text(configuration.dns.fallbackFilter.domain.listSummary(R.string.dont_modify)) },
+    title = { Text(stringResource(Res.string.domain_fallback)) },
+    summary = { Text(configuration.dns.fallbackFilter.domain.listSummary(Res.string.dont_modify)) },
     enabled = enabled,
     onClick = {
       onOpenEditableTextList(
-        R.string.domain_fallback,
+        Res.string.domain_fallback,
         configuration.dns.fallbackFilter.domain,
         actions::updateDnsDomainFallback,
       )
@@ -573,12 +575,12 @@ private fun LazyListScope.dnsPreferenceItems(
   )
   preference(
     key = "dnsIpcidrFallback",
-    title = { Text(stringResource(R.string.ipcidr_fallback)) },
-    summary = { Text(configuration.dns.fallbackFilter.ipcidr.listSummary(R.string.dont_modify)) },
+    title = { Text(stringResource(Res.string.ipcidr_fallback)) },
+    summary = { Text(configuration.dns.fallbackFilter.ipcidr.listSummary(Res.string.dont_modify)) },
     enabled = enabled,
     onClick = {
       onOpenEditableTextList(
-        R.string.ipcidr_fallback,
+        Res.string.ipcidr_fallback,
         configuration.dns.fallbackFilter.ipcidr,
         actions::updateDnsIpcidrFallback,
       )
@@ -586,12 +588,12 @@ private fun LazyListScope.dnsPreferenceItems(
   )
   preference(
     key = "dnsNameserverPolicy",
-    title = { Text(stringResource(R.string.name_server_policy)) },
-    summary = { Text(configuration.dns.nameserverPolicy.summary(R.string.dont_modify)) },
+    title = { Text(stringResource(Res.string.name_server_policy)) },
+    summary = { Text(configuration.dns.nameserverPolicy.summary(Res.string.dont_modify)) },
     enabled = enabled,
     onClick = {
       onOpenEditableTextMap(
-        R.string.name_server_policy,
+        Res.string.name_server_policy,
         configuration.dns.nameserverPolicy,
         actions::updateDnsNameserverPolicy,
       )
@@ -701,24 +703,24 @@ private fun TextFieldValue.filterDigits(): TextFieldValue {
 private fun Map<String, String>?.summary(placeholder: Any) =
   when {
     this == null -> stringResource(placeholder)
-    isEmpty() -> stringResource(R.string.empty)
+    isEmpty() -> stringResource(Res.string.empty)
     else -> stringResource(CommonR.string.format_elements, size)
   }
 
 internal val Boolean?.textRes: Any
   get() =
     when (this) {
-      true -> R.string.enabled
+      true -> Res.string.enabled
       false -> CommonR.string.disabled
-      null -> R.string.dont_modify
+      null -> Res.string.dont_modify
     }
 
 private val Boolean?.dnsStrategyTextRes: Any
   get() =
     when (this) {
-      true -> R.string.force_enable
-      false -> R.string.use_built_in
-      null -> R.string.dont_modify
+      true -> Res.string.force_enable
+      false -> Res.string.use_built_in
+      null -> Res.string.dont_modify
     }
 
 private val TunnelState.Mode?.textRes: Any
@@ -727,36 +729,36 @@ private val TunnelState.Mode?.textRes: Any
       Direct -> CommonR.string.direct_mode
       Global -> CommonR.string.global_mode
       Rule -> CommonR.string.rule_mode
-      null -> R.string.dont_modify
+      null -> Res.string.dont_modify
     }
 
 private val LogMessage.Level?.textRes: Any
   get() =
     when (this) {
-      Info -> R.string.info
-      Warning -> R.string.warning
-      LogMessage.Level.Error -> R.string.error
-      Debug -> R.string.debug
-      Silent -> R.string.silent
+      Info -> Res.string.info
+      Warning -> Res.string.warning
+      LogMessage.Level.Error -> Res.string.error
+      Debug -> Res.string.debug
+      Silent -> Res.string.silent
       Unknown -> CommonR.string.unknown
-      null -> R.string.dont_modify
+      null -> Res.string.dont_modify
     }
 
 private val ConfigurationOverride.DnsEnhancedMode?.textRes: Any
   get() =
     when (this) {
       None -> CommonR.string.disabled
-      FakeIp -> R.string.fakeip
-      Mapping -> R.string.mapping
-      null -> R.string.dont_modify
+      FakeIp -> Res.string.fakeip
+      Mapping -> Res.string.mapping
+      null -> Res.string.dont_modify
     }
 
 private val ConfigurationOverride.FilterMode?.textRes: Any
   get() =
     when (this) {
-      BlackList -> R.string.blacklist
-      WhiteList -> R.string.whitelist
-      null -> R.string.dont_modify
+      BlackList -> Res.string.blacklist
+      WhiteList -> Res.string.whitelist
+      null -> Res.string.dont_modify
     }
 
 internal val booleanOptions: List<Boolean?> = listOf(null, true, false)

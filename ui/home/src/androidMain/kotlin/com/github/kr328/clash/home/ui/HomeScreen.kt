@@ -38,7 +38,7 @@ import androidx.compose.ui.tooling.preview.PreviewWrapper
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.github.kr328.clash.common.R as CommonR
-import com.github.kr328.clash.home.R
+import com.github.kr328.clash.home.Res
 import com.github.kr328.clash.home.format_profile_activated
 import com.github.kr328.clash.home.format_traffic_forwarded
 import com.github.kr328.clash.home.help
@@ -82,7 +82,7 @@ internal fun HomeScreen(
   val eventState by viewModel.eventState.collectAsStateWithLifecycle()
   val snackbarHostState = remember { SnackbarHostState() }
 
-  val noProfileText = stringResource(R.string.no_profile_selected)
+  val noProfileText = stringResource(Res.string.no_profile_selected)
   val profilesActionText = stringResource(CommonR.string.profiles)
 
   val vpnLauncher =
@@ -202,7 +202,7 @@ private fun HomeContent(
           when {
             isTransitioning -> null
             clashRunning && forwarded != null ->
-              stringResource(R.string.format_traffic_forwarded, forwarded)
+              stringResource(Res.string.format_traffic_forwarded, forwarded)
             else -> stringResource(CommonR.string.tap_to_start)
           },
         backgroundColor =
@@ -231,9 +231,9 @@ private fun HomeContent(
       HomeActionCard(
         modifier = Modifier.padding(vertical = cardMarginVertical),
         icon = TabbyIcons.BaselineViewList,
-        text = stringResource(R.string.profile),
+        text = stringResource(Res.string.profile),
         subtext =
-          if (profileName != null) stringResource(R.string.format_profile_activated, profileName)
+          if (profileName != null) stringResource(Res.string.format_profile_activated, profileName)
           else stringResource(CommonR.string.not_selected),
         backgroundColor = MaterialTheme.colorScheme.surface,
         contentColor = MaterialTheme.colorScheme.onSurface,
@@ -264,7 +264,7 @@ private fun HomeContent(
       HomeActionLabel(
         modifier = Modifier.padding(vertical = labelMarginVertical),
         icon = TabbyIcons.BaselineHelpCenter,
-        text = stringResource(R.string.help),
+        text = stringResource(Res.string.help),
         onClick = onOpenHelp,
       )
     }

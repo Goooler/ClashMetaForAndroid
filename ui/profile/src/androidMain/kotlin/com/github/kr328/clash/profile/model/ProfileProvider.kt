@@ -4,7 +4,7 @@ import android.content.Context
 import android.content.Intent
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.github.kr328.clash.common.R as CommonR
-import com.github.kr328.clash.profile.R
+import com.github.kr328.clash.profile.Res
 import com.github.kr328.clash.profile.import_from_file
 import com.github.kr328.clash.profile.import_from_qr
 import com.github.kr328.clash.profile.import_from_url
@@ -21,7 +21,7 @@ internal sealed class ProfileProvider {
       get() = context.getString(CommonR.string.file)
 
     override val summary: String
-      get() = context.getString(R.string.import_from_file)
+      get() = context.getString(Res.string.import_from_file)
 
     override val icon: ImageVector = TabbyIcons.BaselineAttachFile
   }
@@ -31,17 +31,17 @@ internal sealed class ProfileProvider {
       get() = context.getString(CommonR.string.url)
 
     override val summary: String
-      get() = context.getString(R.string.import_from_url)
+      get() = context.getString(Res.string.import_from_url)
 
     override val icon: ImageVector = TabbyIcons.BaselineCloudDownload
   }
 
   class QR(private val context: Context) : ProfileProvider() {
     override val name: String
-      get() = context.getString(R.string.qr)
+      get() = context.getString(Res.string.qr)
 
     override val summary: String
-      get() = context.getString(R.string.import_from_qr)
+      get() = context.getString(Res.string.import_from_qr)
 
     override val icon: ImageVector = TabbyIcons.BaselineQrCodeScanner
   }

@@ -20,7 +20,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.PreviewWrapper
 import com.github.kr328.clash.common.R as CommonR
-import com.github.kr328.clash.settings.R
+import com.github.kr328.clash.settings.Res
 import com.github.kr328.clash.settings.app
 import com.github.kr328.clash.settings.meta_features
 import com.github.kr328.clash.settings.network
@@ -52,25 +52,25 @@ internal fun SettingsScreen(
     ) {
       SettingsEntryItem(
         icon = TabbyIcons.BaselineSettings,
-        titleRes = R.string.app,
+        titleRes = Res.string.app,
         onClick = onOpenAppSettings,
       )
 
       SettingsEntryItem(
         icon = TabbyIcons.BaselineDns,
-        titleRes = R.string.network,
+        titleRes = Res.string.network,
         onClick = onOpenNetworkSettings,
       )
 
       SettingsEntryItem(
         icon = TabbyIcons.BaselineExtension,
-        titleRes = R.string.override,
+        titleRes = Res.string.override,
         onClick = onOpenOverrideSettings,
       )
 
       SettingsEntryItem(
         icon = TabbyIcons.BaselineMihomo,
-        titleRes = R.string.meta_features,
+        titleRes = Res.string.meta_features,
         onClick = onOpenMetaFeatureSettings,
       )
     }
