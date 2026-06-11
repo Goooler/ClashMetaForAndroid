@@ -21,7 +21,6 @@ androidx-browser = "androidx.browser:browser:1.10.0"
 androidx-compose-ui = { module = "androidx.compose.ui:ui", version.ref = "compose" }
 androidx-compose-ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview", version.ref = "compose" }
 androidx-compose-ui-util = { module = "androidx.compose.ui:ui-util", version.ref = "compose" }
-androidx-compose-ui-tooling = { module = "androidx.compose.ui:ui-tooling", version.ref = "compose" }
 androidx-compose-animation = { module = "androidx.compose.animation:animation", version.ref = "compose" }
 androidx-compose-material3 = "androidx.compose.material3:material3:1.4.0"
 androidx-lifecycle-viewmodel-compose = { module = "androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "androidx-lifecycle" }
@@ -34,6 +33,7 @@ androidx-room-compiler = { module = "androidx.room3:room3-compiler", version.ref
 androidx-room-runtime = { module = "androidx.room3:room3-runtime", version.ref = "room" }
 
 jb-compose-resources = { module = "org.jetbrains.compose.components:components-resources", version.ref = "cmp" }
+androidx-compose-ui-tooling = { module = "org.jetbrains.compose.ui:ui-tooling", version.ref = "cmp" }
 
 kaidl-compiler = { module = "io.github.goooler.kaidl:kaidl-compiler", version.ref = "kaidl" }
 kaidl-runtime = { module = "io.github.goooler.kaidl:kaidl-runtime", version.ref = "kaidl" }
