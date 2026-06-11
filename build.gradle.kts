@@ -67,7 +67,6 @@ allprojects {
         compileSdk = 37
         minSdk = 28
         compilerOptions.jvmTarget = JvmTarget.fromTarget(libs.versions.jvmTarget.get())
-        androidResources.enable = true
       }
 
       extensions.configure<NamedDomainObjectContainer<KotlinSourceSet>> {
