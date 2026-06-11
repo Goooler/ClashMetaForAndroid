@@ -67,10 +67,7 @@ allprojects {
   }
 
   plugins.withId(rootProject.libs.plugins.android.multiplatform.get().pluginId) {
-    plugins.apply(libs.plugins.kotlin.compose.get().pluginId)
     plugins.apply(libs.plugins.kotlin.multiplatform.get().pluginId)
-    plugins.apply(libs.plugins.jb.compose.get().pluginId)
-
     extensions.configure<KotlinMultiplatformExtension> {
       extensions.configure<KotlinMultiplatformAndroidLibraryTarget> {
         namespace = "com.github.kr328.clash.${project.name}"
@@ -107,10 +104,12 @@ allprojects {
       )
     }
 
+    plugins.apply(libs.plugins.kotlin.compose.get().pluginId)
     extensions.configure<ComposeCompilerGradlePluginExtension> {
       stabilityConfigurationFiles.add(rootProject.layout.projectDirectory.file("stability.conf"))
     }
 
+    plugins.apply(libs.plugins.jb.compose.get().pluginId)
     extensions.configure<ComposeExtension> {
       extensions.configure<ResourcesExtension> {
         packageOfResClass = "com.github.kr328.clash.${project.name}"

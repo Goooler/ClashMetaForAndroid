@@ -71,10 +71,10 @@ internal class NewProfileViewModel(private val application: Application) : ViewM
   }
 
   fun onQRResult(result: QRResult) {
-    when (result) {
-      is QRSuccess -> {
-        val url = result.content.rawValue ?: result.content.rawBytes?.let { String(it) }.orEmpty()
-        viewModelScope.launch {
+    viewModelScope.launch {
+      when (result) {
+        is QRSuccess -> {
+          val url = result.content.rawValue ?: result.content.rawBytes?.let { String(it) }.orEmpty()
           try {
             val uuid = withProfile {
               create(type = Url, name = getString(CommonRes.string.new_profile), url)
@@ -86,17 +86,15 @@ internal class NewProfileViewModel(private val application: Application) : ViewM
               EventState.ShowMessage(e.message ?: getString(CommonRes.string.unknown))
           }
         }
-      }
-      QRUserCanceled -> Unit
-      QRMissingPermission ->
-        viewModelScope.launch {
+        QRUserCanceled -> Unit
+        QRMissingPermission -> {
           eventState.value =
             EventState.ShowMessage(getString(Res.string.import_from_qr_no_permission))
         }
-      is QRError ->
-        viewModelScope.launch {
+        is QRError -> {
           eventState.value = EventState.ShowMessage(getString(Res.string.import_from_qr_exception))
         }
+      }
     }
   }
 

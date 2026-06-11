@@ -4,6 +4,7 @@
   <string name="external_control_already_stopped">Tabby service is already stopped</string>
   <string name="external_control_started">Tabby service started</string>
   <string name="external_control_stopped">Tabby service stopped</string>
+  <string name="new_profile">New Profile</string>
   <string name="receive_broadcasts_of_tabby">Receive broadcasts of Tabby services</string>
   <string name="receive_tabby_broadcasts">Receive Tabby Broadcasts</string>
   <string name="shortcut_start_long">Start Tabby service</string>
@@ -12,4 +13,5 @@
   <string name="shortcut_stop_short">Stop Tabby</string>
   <string name="shortcut_toggle_long">Toggle Tabby service on/off</string>
   <string name="shortcut_toggle_short">Toggle Tabby</string>
+  <string name="unable_to_start_vpn">Unable to start VPN component</string>
 </resources>

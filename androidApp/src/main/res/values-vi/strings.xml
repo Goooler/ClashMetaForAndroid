@@ -4,6 +4,7 @@
   <string name="external_control_already_stopped">Dịch vụ Tabby đã dừng rồi</string>
   <string name="external_control_started">Dịch vụ Tabby đã bắt đầu</string>
   <string name="external_control_stopped">Dịch vụ Tabby đã dừng</string>
+  <string name="new_profile">Cấu hình mới</string>
   <string name="receive_broadcasts_of_tabby">Nhận thông báo của dịch vụ Tabby</string>
   <string name="receive_tabby_broadcasts">Nhận thông báo Tabby</string>
   <string name="shortcut_start_long">Bắt đầu dịch vụ Tabby</string>
@@ -12,4 +13,5 @@
   <string name="shortcut_stop_short">Dừng Tabby</string>
   <string name="shortcut_toggle_long">Bật/Tắt dịch vụ Tabby</string>
   <string name="shortcut_toggle_short">Bật/Tắt Tabby</string>
+  <string name="unable_to_start_vpn">Không thể khởi động thành phần VPN</string>
 </resources>

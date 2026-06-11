@@ -37,7 +37,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entryProvider
-import com.github.kr328.clash.common.R as CommonR
 import com.github.kr328.clash.common.constants.Intents
 import com.github.kr328.clash.common.model.DarkMode
 import com.github.kr328.clash.common.util.mainIntent
@@ -176,7 +175,7 @@ class MainActivity : ComponentActivity() {
   private fun startClash() {
     val vpnRequest = startClashService()
     if (vpnRequest != null) {
-      toast(CommonR.string.unable_to_start_vpn)
+      toast(R.string.unable_to_start_vpn)
       return
     }
     toast(R.string.external_control_started)
@@ -269,8 +268,7 @@ class MainActivity : ComponentActivity() {
               "file" -> Profile.Type.File
               else -> Profile.Type.Url
             }
-          val name =
-            uri.getQueryParameter("name") ?: application.getString(CommonR.string.new_profile)
+          val name = uri.getQueryParameter("name") ?: application.getString(R.string.new_profile)
           create(type, name).also { patch(it, name, url, 0) }
         }
         backStack.addIfNotLast(ProfilesRoute.Profiles(openPropertyUuid = uuid))
