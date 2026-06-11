@@ -42,13 +42,6 @@ allprojects {
     }
   }
 
-  plugins.withType<JavaBasePlugin>().configureEach {
-    extensions.configure<JavaPluginExtension> {
-      setSourceCompatibility(libs.versions.jvmTarget.get())
-      setTargetCompatibility(libs.versions.jvmTarget.get())
-    }
-  }
-
   tasks.withType<KotlinCompile>().configureEach {
     compilerOptions {
       allWarningsAsErrors = true
