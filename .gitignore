@@ -21,7 +21,7 @@ gradle-app.setting
 .idea
 
 # Ignore builtin geofiles
-app/src/main/assets
+androidApp/src/main/assets
 
 # clion cmake build
 cmake-build-*

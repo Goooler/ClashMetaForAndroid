@@ -1,0 +1,17 @@
+<resources>
+  <string name="external_control_activity">外部控制</string>
+  <string name="external_control_already_started">Tabby 服務正在運行中</string>
+  <string name="external_control_already_stopped">Tabby 服務已處於停止狀態</string>
+  <string name="external_control_started">Tabby 服務已啟動</string>
+  <string name="external_control_stopped">Tabby 服務已停止</string>
+  <string name="new_profile">新設定檔</string>
+  <string name="receive_broadcasts_of_tabby">接收 Tabby 服務的廣播</string>
+  <string name="receive_tabby_broadcasts">接收 Tabby 廣播</string>
+  <string name="shortcut_start_long">啟動 Tabby 服務</string>
+  <string name="shortcut_start_short">啟動 Tabby</string>
+  <string name="shortcut_stop_long">停止 Tabby 服務</string>
+  <string name="shortcut_stop_short">停止 Tabby</string>
+  <string name="shortcut_toggle_long">切換 Tabby 服務啟停</string>
+  <string name="shortcut_toggle_short">切換 Tabby</string>
+  <string name="unable_to_start_vpn">無法啟動 VPN 元件</string>
+</resources>

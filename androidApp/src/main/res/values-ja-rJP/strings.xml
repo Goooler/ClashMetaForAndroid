@@ -1,0 +1,17 @@
+<resources>
+  <string name="external_control_activity">外部制御</string>
+  <string name="external_control_already_started">Tabby サービスはすでに実行中です</string>
+  <string name="external_control_already_stopped">Tabby サービスはすでに停止しています</string>
+  <string name="external_control_started">Tabby サービスが開始されました</string>
+  <string name="external_control_stopped">Tabby サービスが停止されました</string>
+  <string name="new_profile">新しいプロファイル</string>
+  <string name="receive_broadcasts_of_tabby">Tabby サービスのブロードキャストを受信</string>
+  <string name="receive_tabby_broadcasts">Tabby ブロードキャストを受信</string>
+  <string name="shortcut_start_long">Tabby サービスを開始</string>
+  <string name="shortcut_start_short">Tabby を開始</string>
+  <string name="shortcut_stop_long">Tabby サービスを停止</string>
+  <string name="shortcut_stop_short">Tabby を停止</string>
+  <string name="shortcut_toggle_long">Tabby サービスのオン/オフを切り替え</string>
+  <string name="shortcut_toggle_short">Tabby を切り替え</string>
+  <string name="unable_to_start_vpn">VPNコンポーネントを起動できませんでした</string>
+</resources>

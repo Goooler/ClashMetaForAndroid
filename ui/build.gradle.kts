@@ -1,8 +1,11 @@
 plugins {
-  alias(libs.plugins.android.library)
-  alias(libs.plugins.kotlin.compose)
+  alias(libs.plugins.android.multiplatform)
 }
 
-dependencies {
-  implementation(projects.glue)
+kotlin {
+  sourceSets {
+    commonMain.dependencies {
+      implementation(projects.common)
+    }
+  }
 }

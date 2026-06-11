@@ -7,6 +7,9 @@ room = "3.0.0-alpha06"
 okhttp = "5.4.0"
 jvmTarget = "21"
 navigation3 = "1.1.2"
+cmp = "1.11.1"
+compose = "1.11.2"
+koin = "4.2.1"
 
 [libraries]
 kotlin-coroutine = "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.11.0"
@@ -15,13 +18,11 @@ kotlin-serialization-json = "org.jetbrains.kotlinx:kotlinx-serialization-json:1.
 
 androidx-activity-compose = "androidx.activity:activity-compose:1.13.0"
 androidx-browser = "androidx.browser:browser:1.10.0"
-androidx-compose-bom = "androidx.compose:compose-bom:2026.05.01"
-androidx-compose-ui = { module = "androidx.compose.ui:ui" }
-androidx-compose-ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview" }
-androidx-compose-ui-util = { module = "androidx.compose.ui:ui-util" }
-androidx-compose-ui-tooling = { module = "androidx.compose.ui:ui-tooling" }
-androidx-compose-animation = { module = "androidx.compose.animation:animation" }
-androidx-compose-material3 = { module = "androidx.compose.material3:material3" }
+androidx-compose-ui = { module = "androidx.compose.ui:ui", version.ref = "compose" }
+androidx-compose-ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview", version.ref = "compose" }
+androidx-compose-ui-util = { module = "androidx.compose.ui:ui-util", version.ref = "compose" }
+androidx-compose-animation = { module = "androidx.compose.animation:animation", version.ref = "compose" }
+androidx-compose-material3 = "androidx.compose.material3:material3:1.4.0"
 androidx-lifecycle-viewmodel-compose = { module = "androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "androidx-lifecycle" }
 androidx-lifecycle-viewmodel-navigation3 = { module = "androidx.lifecycle:lifecycle-viewmodel-navigation3", version.ref = "androidx-lifecycle" }
 androidx-navigation3-runtime = { module = "androidx.navigation3:navigation3-runtime", version.ref = "navigation3" }
@@ -30,6 +31,9 @@ androidx-navigation3-ui = { module = "androidx.navigation3:navigation3-ui", vers
 androidx-core = "androidx.core:core:1.19.0"
 androidx-room-compiler = { module = "androidx.room3:room3-compiler", version.ref = "room" }
 androidx-room-runtime = { module = "androidx.room3:room3-runtime", version.ref = "room" }
+
+jb-compose-resources = { module = "org.jetbrains.compose.components:components-resources", version.ref = "cmp" }
+androidx-compose-ui-tooling = { module = "org.jetbrains.compose.ui:ui-tooling", version.ref = "cmp" }
 
 kaidl-compiler = { module = "io.github.goooler.kaidl:kaidl-compiler", version.ref = "kaidl" }
 kaidl-runtime = { module = "io.github.goooler.kaidl:kaidl-runtime", version.ref = "kaidl" }
@@ -40,10 +44,9 @@ okhttp-interceptor = { module = "com.squareup.okhttp3:logging-interceptor", vers
 bytesize = "me.saket.bytesize:bytesize:2.2.1"
 semver = "net.swiftzer.semver:semver:2.1.0"
 
-koin-bom = "io.insert-koin:koin-bom:4.2.1"
-koin-core = { module = "io.insert-koin:koin-core" }
-koin-android = { module = "io.insert-koin:koin-android" }
-koin-viewModel = { module = "io.insert-koin:koin-compose-viewmodel" }
+koin-core = { module = "io.insert-koin:koin-core", version.ref = "koin" }
+koin-android = { module = "io.insert-koin:koin-android", version.ref = "koin" }
+koin-viewModel = { module = "io.insert-koin:koin-compose-viewmodel", version.ref = "koin" }
 
 composePreference = "me.zhanghai.compose.preference:preference:2.2.0"
 reorderable = "sh.calvin.reorderable:reorderable:3.1.0"
@@ -56,10 +59,13 @@ ktfmt = "com.facebook:ktfmt:0.63"
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
+android-multiplatform = { id = "com.android.kotlin.multiplatform.library", version.ref = "agp" }
 android-library = { id = "com.android.library", version.ref = "agp" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 kotlin-parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize", version.ref = "kotlin" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+jb-compose = { id = "org.jetbrains.compose", version.ref = "cmp" }
 ksp = "com.google.devtools.ksp:2.3.9"
 golang = "io.github.goooler.golang:0.3.0"
 download = "de.undercouch.download:5.7.0"
