@@ -52,6 +52,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -680,14 +681,4 @@ private fun ProxyContentPreview() {
     onProxySelected = { _, _ -> },
     onProxyDelayTest = { _, _ -> },
   )
-}
-
-@Composable
-internal fun stringResource(res: Any, vararg formatArgs: Any): String {
-  return when (res) {
-    is org.jetbrains.compose.resources.StringResource ->
-      org.jetbrains.compose.resources.stringResource(res, *formatArgs)
-    is Int -> androidx.compose.ui.res.stringResource(res, *formatArgs)
-    else -> throw IllegalArgumentException("Unsupported resource type: $res")
-  }
 }

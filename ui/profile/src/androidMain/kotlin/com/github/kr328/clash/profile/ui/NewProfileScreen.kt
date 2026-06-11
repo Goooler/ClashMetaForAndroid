@@ -46,7 +46,7 @@ import com.github.kr328.clash.ui.icon.TabbyIcons
 import com.github.kr328.clash.ui.theme.PreviewTabby
 import com.github.kr328.clash.ui.theme.TabbyThemeWrapper
 import com.github.kr328.clash.ui.theme.tabbyDimens
-import com.github.kr328.clash.ui.util.stringResource
+import com.github.kr328.clash.ui.util.stringResCompat
 import io.github.g00fy2.quickie.ScanQRCode
 import kotlin.math.roundToInt
 import kotlin.uuid.Uuid
@@ -110,7 +110,7 @@ private fun NewProfileContent(
   onDetail: (ProfileProvider.External) -> Unit,
 ) {
   TabbyScaffold(
-    title = stringResource(CommonR.string.new_profile),
+    title = stringResCompat(CommonR.string.new_profile),
     modifier = modifier,
     snackbarHostState = snackbarHostState,
   ) { innerPadding ->

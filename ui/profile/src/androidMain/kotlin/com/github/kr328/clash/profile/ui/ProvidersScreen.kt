@@ -46,7 +46,7 @@ import com.github.kr328.clash.ui.lifecycle.withLifecycle
 import com.github.kr328.clash.ui.theme.PreviewTabby
 import com.github.kr328.clash.ui.theme.TabbyThemeWrapper
 import com.github.kr328.clash.ui.theme.tabbyDimens
-import com.github.kr328.clash.ui.util.stringResource
+import com.github.kr328.clash.ui.util.stringResCompat
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -88,14 +88,14 @@ private fun ProvidersContent(
   onUpdate: (Int, Provider) -> Unit,
 ) {
   TabbyScaffold(
-    title = stringResource(CommonR.string.providers),
+    title = stringResCompat(CommonR.string.providers),
     modifier = modifier,
     snackbarHostState = snackbarHostState,
     actions = {
       IconButton(onClick = onUpdateAll) {
         Icon(
           imageVector = TabbyIcons.BaselineSync,
-          contentDescription = stringResource(Res.string.update_all),
+          contentDescription = stringResCompat(Res.string.update_all),
         )
       }
     },
@@ -156,7 +156,7 @@ private fun ProviderItem(state: ProviderItemState, currentTime: Long, onUpdate: 
         } else {
           Icon(
             imageVector = TabbyIcons.BaselineSwapVert,
-            contentDescription = stringResource(Res.string.update),
+            contentDescription = stringResCompat(Res.string.update),
           )
         }
       }

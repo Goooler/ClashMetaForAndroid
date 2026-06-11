@@ -37,6 +37,7 @@ import com.github.kr328.clash.ui.icon.BaselineStack
 import com.github.kr328.clash.ui.icon.TabbyIcons
 import com.github.kr328.clash.ui.theme.PreviewTabby
 import com.github.kr328.clash.ui.theme.TabbyThemeWrapper
+import com.github.kr328.clash.ui.util.stringResCompat
 import me.zhanghai.compose.preference.ProvidePreferenceLocals
 import me.zhanghai.compose.preference.listPreference
 import me.zhanghai.compose.preference.preferenceCategory
@@ -101,8 +102,10 @@ private fun AppSettingsContent(
           values = listOf(DarkMode.Auto, DarkMode.ForceLight, DarkMode.ForceDark),
           icon = { Icon(imageVector = TabbyIcons.BaselineBrightness4, contentDescription = null) },
           title = { Text(stringResource(Res.string.dark_mode)) },
-          summary = { Text(stringResource(uiState.darkMode.summaryRes)) },
-          valueToText = { androidx.compose.ui.text.AnnotatedString(stringResource(it.summaryRes)) },
+          summary = { Text(stringResCompat(uiState.darkMode.summaryRes)) },
+          valueToText = {
+            androidx.compose.ui.text.AnnotatedString(stringResCompat(it.summaryRes))
+          },
         )
         switchPreference(
           key = "hide_app_icon",

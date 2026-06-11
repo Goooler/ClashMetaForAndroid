@@ -152,13 +152,13 @@ internal class ProfilesViewModel(private val application: Application) :
   }
 
   private suspend fun showProfileUpdateCompleted(uuid: Uuid) {
-    val name = withProfile { queryByUUID(uuid)?.name }
+    val name = withProfile { queryByUUID(uuid)?.name.orEmpty() }
     eventState.value =
       EventState.ShowMessage(application.getString(Res.string.toast_profile_updated_complete, name))
   }
 
   private suspend fun showProfileUpdateFailed(uuid: Uuid, reason: String?) {
-    val name = withProfile { queryByUUID(uuid)?.name }
+    val name = withProfile { queryByUUID(uuid)?.name.orEmpty() }
     val displayReason =
       reason?.takeUnless { it.isBlank() } ?: application.getString(CommonR.string.unknown)
     eventState.value =

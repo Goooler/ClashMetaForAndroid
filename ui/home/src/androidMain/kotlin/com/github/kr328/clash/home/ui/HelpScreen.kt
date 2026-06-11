@@ -52,7 +52,7 @@ import com.github.kr328.clash.ui.icon.OutlineInfo
 import com.github.kr328.clash.ui.icon.TabbyIcons
 import com.github.kr328.clash.ui.theme.PreviewTabby
 import com.github.kr328.clash.ui.theme.TabbyThemeWrapper
-import com.github.kr328.clash.ui.util.stringResource
+import com.github.kr328.clash.ui.util.stringResCompat
 import kotlinx.coroutines.launch
 import me.zhanghai.compose.preference.ProvidePreferenceLocals
 import me.zhanghai.compose.preference.preference
@@ -65,8 +65,8 @@ internal fun HelpScreen(modifier: Modifier = Modifier, viewModel: HelpViewModel 
   val eventState by viewModel.eventState.collectAsStateWithLifecycle()
   val snackbarHostState = remember { SnackbarHostState() }
   val context = LocalContext.current
-  val updateAvailableText = stringResource(Res.string.update_available)
-  val openActionText = stringResource(Res.string.open)
+  val updateAvailableText = stringResCompat(Res.string.update_available)
+  val openActionText = stringResCompat(Res.string.open)
 
   LaunchedEffect(eventState) {
     when (val event = eventState) {
@@ -108,7 +108,7 @@ private fun HelpContent(
 ) {
   val clipboard = LocalClipboard.current
   val scope = rememberCoroutineScope()
-  val messageCopied = stringResource(CommonR.string.copied)
+  val messageCopied = stringResCompat(CommonR.string.copied)
 
   val onCopyVersion: (String) -> Unit = { version ->
     scope.launch {
@@ -119,7 +119,7 @@ private fun HelpContent(
   }
 
   TabbyScaffold(
-    title = stringResource(Res.string.help),
+    title = stringResCompat(Res.string.help),
     modifier = modifier,
     snackbarHostState = snackbarHostState,
   ) { innerPadding ->
@@ -128,39 +128,39 @@ private fun HelpContent(
         preference(
           key = "tips",
           title = {},
-          summary = { Text(AnnotatedString.fromHtml(stringResource(Res.string.tips_help))) },
+          summary = { Text(AnnotatedString.fromHtml(stringResCompat(Res.string.tips_help))) },
           icon = { Icon(imageVector = TabbyIcons.OutlineInfo, contentDescription = null) },
         )
         preferenceCategory(
           key = "cat_document",
-          title = { Text(stringResource(Res.string.document)) },
+          title = { Text(stringResCompat(Res.string.document)) },
         )
         preference(
           key = "mihomo_wiki",
-          title = { Text(stringResource(Res.string.mihomo_wiki)) },
+          title = { Text(stringResCompat(Res.string.mihomo_wiki)) },
           summary = { Text(MIHOMO_WIKI) },
           onClick = { onOpenLink(MIHOMO_WIKI) },
         )
         preferenceCategory(
           key = "cat_sources",
-          title = { Text(stringResource(Res.string.sources)) },
+          title = { Text(stringResCompat(Res.string.sources)) },
         )
         preference(
           key = "mihomo_core",
-          title = { Text(stringResource(Res.string.mihomo_core)) },
+          title = { Text(stringResCompat(Res.string.mihomo_core)) },
           summary = { Text(MIHOMO_CORE) },
           onClick = { onOpenLink(MIHOMO_CORE) },
         )
         preference(
           key = "tabby",
-          title = { Text(stringResource(CommonR.string.tabby)) },
+          title = { Text(stringResCompat(CommonR.string.tabby)) },
           summary = { Text(TABBY_GITHUB) },
           onClick = { onOpenLink(TABBY_GITHUB) },
         )
-        preferenceCategory(key = "cat_update", title = { Text(stringResource(Res.string.about)) })
+        preferenceCategory(key = "cat_update", title = { Text(stringResCompat(Res.string.about)) })
         preference(
           key = "app_version",
-          title = { Text(stringResource(Res.string.app_version)) },
+          title = { Text(stringResCompat(Res.string.app_version)) },
           summary = { Text(uiState.appVersion) },
           icon = {
             Icon(
@@ -176,7 +176,7 @@ private fun HelpContent(
         )
         preference(
           key = "core_version",
-          title = { Text(stringResource(Res.string.core_version)) },
+          title = { Text(stringResCompat(Res.string.core_version)) },
           summary = { Text(uiState.coreVersion) },
           icon = {
             Icon(
@@ -192,7 +192,7 @@ private fun HelpContent(
         )
         preference(
           key = "check_for_updates",
-          title = { Text(stringResource(Res.string.check_for_updates)) },
+          title = { Text(stringResCompat(Res.string.check_for_updates)) },
           icon = {
             if (uiState.checkingForUpdates) {
               CircularProgressIndicator(modifier = Modifier.size(24.dp))

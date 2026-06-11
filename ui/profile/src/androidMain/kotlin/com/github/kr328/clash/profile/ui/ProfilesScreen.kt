@@ -70,7 +70,7 @@ import com.github.kr328.clash.ui.lifecycle.withLifecycle
 import com.github.kr328.clash.ui.theme.PreviewTabby
 import com.github.kr328.clash.ui.theme.TabbyThemeWrapper
 import com.github.kr328.clash.ui.theme.tabbyDimens
-import com.github.kr328.clash.ui.util.stringResource
+import com.github.kr328.clash.ui.util.stringResCompat
 import kotlin.time.Duration.Companion.minutes
 import kotlin.uuid.Uuid
 import me.saket.bytesize.binaryBytes
@@ -86,7 +86,7 @@ internal fun ProfilesScreen(
   val uiState by viewModel.uiState.collectAsStateWithLifecycle()
   val eventState by viewModel.eventState.collectAsStateWithLifecycle()
   val snackbarHostState = remember { SnackbarHostState() }
-  val editText = stringResource(Res.string.edit)
+  val editText = stringResCompat(Res.string.edit)
 
   LaunchedEffect(eventState) {
     when (val event = eventState) {
@@ -155,7 +155,7 @@ private fun ProfilesContent(
       if (profile.imported && profile.type != File) {
         ProfilesMenuAction(
           icon = TabbyIcons.BaselineUpdate,
-          text = stringResource(Res.string.update),
+          text = stringResCompat(Res.string.update),
           onClick = {
             menuProfile = null
             onUpdate(profile)
@@ -164,7 +164,7 @@ private fun ProfilesContent(
       }
       ProfilesMenuAction(
         icon = TabbyIcons.BaselineEdit,
-        text = stringResource(Res.string.edit),
+        text = stringResCompat(Res.string.edit),
         onClick = {
           menuProfile = null
           onEdit(profile)
@@ -173,7 +173,7 @@ private fun ProfilesContent(
       if (profile.imported) {
         ProfilesMenuAction(
           icon = TabbyIcons.BaselineContentCopy,
-          text = stringResource(Res.string.duplicate),
+          text = stringResCompat(Res.string.duplicate),
           onClick = {
             menuProfile = null
             onDuplicate(profile)
@@ -182,7 +182,7 @@ private fun ProfilesContent(
       }
       ProfilesMenuAction(
         icon = TabbyIcons.OutlineDelete,
-        text = stringResource(CommonR.string.delete),
+        text = stringResCompat(CommonR.string.delete),
         tint = MaterialTheme.colorScheme.error,
         onClick = {
           menuProfile = null
@@ -194,7 +194,7 @@ private fun ProfilesContent(
   }
 
   TabbyScaffold(
-    title = stringResource(CommonR.string.profiles),
+    title = stringResCompat(CommonR.string.profiles),
     modifier = modifier,
     snackbarHostState = snackbarHostState,
     actions = {
@@ -205,7 +205,7 @@ private fun ProfilesContent(
           } else {
             Icon(
               imageVector = TabbyIcons.BaselineSync,
-              contentDescription = stringResource(Res.string.update_all),
+              contentDescription = stringResCompat(Res.string.update_all),
             )
           }
         }
@@ -213,7 +213,7 @@ private fun ProfilesContent(
       IconButton(onClick = onCreate) {
         Icon(
           imageVector = TabbyIcons.BaselineAdd,
-          contentDescription = stringResource(CommonR.string.new_profile),
+          contentDescription = stringResCompat(CommonR.string.new_profile),
         )
       }
     },
@@ -250,7 +250,7 @@ private fun ProfileItem(
 
   val profileTypeText =
     if (profile.pending) {
-      stringResource(Res.string.format_type_unsaved, profile.type.toString(context))
+      stringResCompat(Res.string.format_type_unsaved, profile.type.toString(context))
     } else {
       profile.type.toString(context)
     }
@@ -320,7 +320,7 @@ private fun ProfileItem(
       IconButton(onClick = onMenuClick, modifier = Modifier.padding(horizontal = 4.dp)) {
         Icon(
           imageVector = TabbyIcons.BaselineMoreVert,
-          contentDescription = stringResource(CommonR.string.more),
+          contentDescription = stringResCompat(CommonR.string.more),
         )
       }
     }

@@ -76,7 +76,7 @@ import com.github.kr328.clash.ui.icon.TabbyIcons
 import com.github.kr328.clash.ui.lifecycle.withLifecycle
 import com.github.kr328.clash.ui.theme.PreviewTabby
 import com.github.kr328.clash.ui.theme.TabbyThemeWrapper
-import com.github.kr328.clash.ui.util.stringResource
+import com.github.kr328.clash.ui.util.stringResCompat
 import kotlin.time.Duration.Companion.minutes
 import kotlin.uuid.Uuid
 import kotlinx.coroutines.delay
@@ -181,7 +181,7 @@ private fun FilesContent(
       if (!file.isDirectory && (!currentInBaseDir || configurationEditable)) {
         FilesMenuAction(
           icon = TabbyIcons.BaselineGetApp,
-          text = stringResource(Res.string.import_),
+          text = stringResCompat(Res.string.import_),
           onClick = {
             menuConfigFile = null
             onImport(file)
@@ -191,7 +191,7 @@ private fun FilesContent(
       if (!file.isDirectory && file.size > 0) {
         FilesMenuAction(
           icon = TabbyIcons.BaselineSave,
-          text = stringResource(CommonR.string.export),
+          text = stringResCompat(CommonR.string.export),
           onClick = {
             menuConfigFile = null
             onExport(file)
@@ -201,7 +201,7 @@ private fun FilesContent(
       if (!currentInBaseDir) {
         FilesMenuAction(
           icon = TabbyIcons.BaselineEdit,
-          text = stringResource(Res.string.rename),
+          text = stringResCompat(Res.string.rename),
           onClick = {
             menuConfigFile = null
             renameConfigFile = file
@@ -209,7 +209,7 @@ private fun FilesContent(
         )
         FilesMenuAction(
           icon = TabbyIcons.OutlineDelete,
-          text = stringResource(CommonR.string.delete),
+          text = stringResCompat(CommonR.string.delete),
           tint = MaterialTheme.colorScheme.error,
           onClick = {
             menuConfigFile = null
@@ -226,14 +226,14 @@ private fun FilesContent(
   TabbyScaffold(
     modifier = modifier,
     snackbarHostState = snackbarHostState,
-    title = stringResource(Res.string.files),
+    title = stringResCompat(Res.string.files),
     onBack = onBack,
     actions = {
       if (!currentInBaseDir) {
         IconButton(onClick = onNew) {
           Icon(
             imageVector = TabbyIcons.BaselineAdd,
-            contentDescription = stringResource(CommonR.string._new),
+            contentDescription = stringResCompat(CommonR.string._new),
           )
         }
       }
@@ -265,10 +265,10 @@ private fun FilesContent(
 
   if (renameConfigFile != null) {
     TextInputDialog(
-      title = stringResource(Res.string.file_name),
+      title = stringResCompat(Res.string.file_name),
       initialValue = renameConfigFile!!.name,
-      hint = stringResource(Res.string.file_name),
-      error = stringResource(Res.string.invalid_file_name),
+      hint = stringResCompat(Res.string.file_name),
+      error = stringResCompat(Res.string.invalid_file_name),
       validator = ValidatorFileName,
       onDismiss = { renameConfigFile = null },
       onConfirm = { newName ->
@@ -331,11 +331,11 @@ private fun TextInputDialog(
     },
     confirmButton = {
       TextButton(onClick = { onConfirm(inputText.text) }, enabled = isValidInput) {
-        Text(stringResource(CommonR.string.ok))
+        Text(stringResCompat(CommonR.string.ok))
       }
     },
     dismissButton = {
-      TextButton(onClick = onDismiss) { Text(stringResource(CommonR.string.cancel)) }
+      TextButton(onClick = onDismiss) { Text(stringResCompat(CommonR.string.cancel)) }
     },
   )
 }
@@ -390,7 +390,7 @@ private fun FileItem(
     IconButton(onClick = onMore) {
       Icon(
         imageVector = TabbyIcons.BaselineMoreVert,
-        contentDescription = stringResource(CommonR.string.more),
+        contentDescription = stringResCompat(CommonR.string.more),
       )
     }
   }

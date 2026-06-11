@@ -25,6 +25,7 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.KeyboardType
@@ -98,6 +99,7 @@ import com.github.kr328.clash.ui.nav.addIfNotLast
 import com.github.kr328.clash.ui.nav.rememberNavBackStackBuilder
 import com.github.kr328.clash.ui.theme.PreviewTabby
 import com.github.kr328.clash.ui.theme.TabbyThemeWrapper
+import com.github.kr328.clash.ui.util.stringResCompat
 import kotlinx.serialization.Serializable
 import me.zhanghai.compose.preference.Preference
 import me.zhanghai.compose.preference.ProvidePreferenceLocals
@@ -306,8 +308,8 @@ private fun LazyListScope.generalPreferenceItems(
     onValueChange = actions::updateAllowLan,
     values = booleanOptions,
     title = { Text(stringResource(Res.string.allow_lan)) },
-    summary = { Text(stringResource(configuration.allowLan.textRes)) },
-    valueToText = { AnnotatedString(stringResource(it.textRes)) },
+    summary = { Text(stringResCompat(configuration.allowLan.textRes)) },
+    valueToText = { AnnotatedString(stringResCompat(it.textRes)) },
   )
   listPreference(
     key = "ipv6",
@@ -315,8 +317,8 @@ private fun LazyListScope.generalPreferenceItems(
     onValueChange = actions::updateIpv6,
     values = booleanOptions,
     title = { Text(stringResource(Res.string.ipv6)) },
-    summary = { Text(stringResource(configuration.ipv6.textRes)) },
-    valueToText = { AnnotatedString(stringResource(it.textRes)) },
+    summary = { Text(stringResCompat(configuration.ipv6.textRes)) },
+    valueToText = { AnnotatedString(stringResCompat(it.textRes)) },
   )
   overrideEditTextPreferenceItem(
     key = "bindAddress",
@@ -363,9 +365,9 @@ private fun LazyListScope.generalPreferenceItems(
     values = booleanOptions,
     title = { Text(stringResource(Res.string.allow_private_network)) },
     summary = {
-      Text(stringResource(configuration.externalControllerCors.allowPrivateNetwork.textRes))
+      Text(stringResCompat(configuration.externalControllerCors.allowPrivateNetwork.textRes))
     },
-    valueToText = { AnnotatedString(stringResource(it.textRes)) },
+    valueToText = { AnnotatedString(stringResCompat(it.textRes)) },
   )
   overrideEditTextPreferenceItem(
     key = "secret",
@@ -381,8 +383,8 @@ private fun LazyListScope.generalPreferenceItems(
     onValueChange = actions::updateMode,
     values = TunnelState.Mode.entries,
     title = { Text(stringResource(CommonR.string.mode)) },
-    summary = { Text(stringResource(configuration.mode.textRes)) },
-    valueToText = { AnnotatedString(stringResource(it.textRes)) },
+    summary = { Text(stringResCompat(configuration.mode.textRes)) },
+    valueToText = { AnnotatedString(stringResCompat(it.textRes)) },
   )
   listPreference(
     key = "logLevel",
@@ -390,8 +392,8 @@ private fun LazyListScope.generalPreferenceItems(
     onValueChange = actions::updateLogLevel,
     values = LogMessage.Level.entries,
     title = { Text(stringResource(Res.string.log_level)) },
-    summary = { Text(stringResource(configuration.logLevel.textRes)) },
-    valueToText = { AnnotatedString(stringResource(it.textRes)) },
+    summary = { Text(stringResCompat(configuration.logLevel.textRes)) },
+    valueToText = { AnnotatedString(stringResCompat(it.textRes)) },
   )
   preference(
     key = "hosts",
@@ -417,8 +419,8 @@ private fun LazyListScope.dnsPreferenceItems(
     onValueChange = actions::updateDnsEnable,
     values = booleanOptions,
     title = { Text(stringResource(Res.string.strategy)) },
-    summary = { Text(stringResource(configuration.dns.enable.dnsStrategyTextRes)) },
-    valueToText = { AnnotatedString(stringResource(configuration.dns.enable.dnsStrategyTextRes)) },
+    summary = { Text(stringResCompat(configuration.dns.enable.dnsStrategyTextRes)) },
+    valueToText = { AnnotatedString(stringResCompat(configuration.dns.enable.dnsStrategyTextRes)) },
   )
   listPreference(
     key = "dnsPreferH3",
@@ -427,8 +429,8 @@ private fun LazyListScope.dnsPreferenceItems(
     values = booleanOptions,
     enabled = enabled,
     title = { Text(stringResource(Res.string.prefer_h3)) },
-    summary = { Text(stringResource(configuration.dns.preferH3.textRes)) },
-    valueToText = { AnnotatedString(stringResource(it.textRes)) },
+    summary = { Text(stringResCompat(configuration.dns.preferH3.textRes)) },
+    valueToText = { AnnotatedString(stringResCompat(it.textRes)) },
   )
   overrideEditTextPreferenceItem(
     key = "dnsListen",
@@ -446,8 +448,8 @@ private fun LazyListScope.dnsPreferenceItems(
     values = booleanOptions,
     enabled = enabled,
     title = { Text(stringResource(Res.string.append_system_dns)) },
-    summary = { Text(stringResource(configuration.app.appendSystemDns.textRes)) },
-    valueToText = { AnnotatedString(stringResource(it.textRes)) },
+    summary = { Text(stringResCompat(configuration.app.appendSystemDns.textRes)) },
+    valueToText = { AnnotatedString(stringResCompat(it.textRes)) },
   )
   listPreference(
     key = "dnsIpv6",
@@ -456,8 +458,8 @@ private fun LazyListScope.dnsPreferenceItems(
     values = booleanOptions,
     enabled = enabled,
     title = { Text(stringResource(Res.string.ipv6)) },
-    summary = { Text(stringResource(configuration.dns.ipv6.textRes)) },
-    valueToText = { AnnotatedString(stringResource(it.textRes)) },
+    summary = { Text(stringResCompat(configuration.dns.ipv6.textRes)) },
+    valueToText = { AnnotatedString(stringResCompat(it.textRes)) },
   )
   listPreference(
     key = "dnsUseHosts",
@@ -466,8 +468,8 @@ private fun LazyListScope.dnsPreferenceItems(
     values = booleanOptions,
     enabled = enabled,
     title = { Text(stringResource(Res.string.use_hosts)) },
-    summary = { Text(stringResource(configuration.dns.useHosts.textRes)) },
-    valueToText = { AnnotatedString(stringResource(it.textRes)) },
+    summary = { Text(stringResCompat(configuration.dns.useHosts.textRes)) },
+    valueToText = { AnnotatedString(stringResCompat(it.textRes)) },
   )
   listPreference(
     key = "dnsEnhancedMode",
@@ -476,8 +478,8 @@ private fun LazyListScope.dnsPreferenceItems(
     values = ConfigurationOverride.DnsEnhancedMode.entries,
     enabled = enabled,
     title = { Text(stringResource(Res.string.enhanced_mode)) },
-    summary = { Text(stringResource(configuration.dns.enhancedMode.textRes)) },
-    valueToText = { AnnotatedString(stringResource(it.textRes)) },
+    summary = { Text(stringResCompat(configuration.dns.enhancedMode.textRes)) },
+    valueToText = { AnnotatedString(stringResCompat(it.textRes)) },
   )
   preference(
     key = "dnsNameServer",
@@ -538,8 +540,8 @@ private fun LazyListScope.dnsPreferenceItems(
     values = ConfigurationOverride.FilterMode.entries,
     enabled = enabled,
     title = { Text(stringResource(Res.string.fakeip_filter_mode)) },
-    summary = { Text(stringResource(configuration.dns.fakeIPFilterMode.textRes)) },
-    valueToText = { AnnotatedString(stringResource(it.textRes)) },
+    summary = { Text(stringResCompat(configuration.dns.fakeIPFilterMode.textRes)) },
+    valueToText = { AnnotatedString(stringResCompat(it.textRes)) },
   )
   listPreference(
     key = "dnsGeoIpFallback",
@@ -548,8 +550,8 @@ private fun LazyListScope.dnsPreferenceItems(
     values = booleanOptions,
     enabled = enabled,
     title = { Text(stringResource(Res.string.geoip_fallback)) },
-    summary = { Text(stringResource(configuration.dns.fallbackFilter.geoIp.textRes)) },
-    valueToText = { AnnotatedString(stringResource(it.textRes)) },
+    summary = { Text(stringResCompat(configuration.dns.fallbackFilter.geoIp.textRes)) },
+    valueToText = { AnnotatedString(stringResCompat(it.textRes)) },
   )
   overrideEditTextPreferenceItem(
     key = "dnsGeoIpCode",
@@ -615,12 +617,12 @@ private fun LazyListScope.overrideEditTextPreferenceItem(
     var showDialog by remember { mutableStateOf(false) }
     val summary =
       when {
-        value == null -> stringResource(placeholder)
-        value.isEmpty() -> stringResource(emptyLabel)
+        value == null -> stringResCompat(placeholder)
+        value.isEmpty() -> stringResCompat(emptyLabel)
         else -> value
       }
     Preference(
-      title = { Text(stringResource(title)) },
+      title = { Text(stringResCompat(title)) },
       summary = { Text(summary) },
       enabled = enabled,
       onClick = { showDialog = true },
@@ -640,7 +642,7 @@ private fun LazyListScope.overrideEditTextPreferenceItem(
       }
       AlertDialog(
         onDismissRequest = { showDialog = false },
-        title = { Text(stringResource(title)) },
+        title = { Text(stringResCompat(title)) },
         text = {
           OutlinedTextField(
             value = inputText,
@@ -702,9 +704,9 @@ private fun TextFieldValue.filterDigits(): TextFieldValue {
 @Composable
 private fun Map<String, String>?.summary(placeholder: Any) =
   when {
-    this == null -> stringResource(placeholder)
-    isEmpty() -> stringResource(Res.string.empty)
-    else -> stringResource(CommonR.string.format_elements, size)
+    this == null -> stringResCompat(placeholder)
+    isEmpty() -> stringResCompat(Res.string.empty)
+    else -> stringResCompat(CommonR.string.format_elements, size)
   }
 
 internal val Boolean?.textRes: Any

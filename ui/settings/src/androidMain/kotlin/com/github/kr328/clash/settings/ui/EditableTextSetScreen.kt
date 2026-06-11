@@ -29,6 +29,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.PreviewWrapper
 import androidx.compose.ui.unit.dp
 import androidx.navigation3.runtime.EntryProviderScope
@@ -43,6 +44,7 @@ import com.github.kr328.clash.ui.icon.OutlineDelete
 import com.github.kr328.clash.ui.icon.TabbyIcons
 import com.github.kr328.clash.ui.theme.PreviewTabby
 import com.github.kr328.clash.ui.theme.TabbyThemeWrapper
+import com.github.kr328.clash.ui.util.stringResCompat
 import kotlinx.serialization.Serializable
 import org.jetbrains.compose.resources.stringResource
 import sh.calvin.reorderable.ReorderableItem
@@ -82,7 +84,7 @@ private fun EditableTextSetScreen(
     }
 
   TabbyScaffold(
-    title = stringResource(title),
+    title = stringResCompat(title),
     onBack = onDismiss,
     actions = {
       IconButton(onClick = { showAddDialog = true }) {
@@ -189,7 +191,7 @@ private fun SingleTextInputDialog(
 
   AlertDialog(
     onDismissRequest = onDismiss,
-    title = { Text(stringResource(title)) },
+    title = { Text(stringResCompat(title)) },
     text = {
       OutlinedTextField(
         value = inputText,

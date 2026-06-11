@@ -11,6 +11,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.tooling.preview.PreviewWrapper
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.github.kr328.clash.service.model.AccessControlMode
@@ -46,6 +47,7 @@ import com.github.kr328.clash.ui.icon.BaselineVpnLock
 import com.github.kr328.clash.ui.icon.TabbyIcons
 import com.github.kr328.clash.ui.theme.PreviewTabby
 import com.github.kr328.clash.ui.theme.TabbyThemeWrapper
+import com.github.kr328.clash.ui.util.stringResCompat
 import me.zhanghai.compose.preference.ProvidePreferenceLocals
 import me.zhanghai.compose.preference.listPreference
 import me.zhanghai.compose.preference.preference
@@ -179,8 +181,8 @@ private fun NetworkSettingsContent(
           values = TunStackMode.entries,
           enabled = vpnDependenciesEnabled,
           title = { Text(stringResource(Res.string.tun_stack_mode)) },
-          summary = { Text(stringResource(tunStackMode.summaryRes)) },
-          valueToText = { androidx.compose.ui.text.AnnotatedString(stringResource(it.summaryRes)) },
+          summary = { Text(stringResCompat(tunStackMode.summaryRes)) },
+          valueToText = { AnnotatedString(stringResCompat(it.summaryRes)) },
         )
         listPreference(
           key = "access_control_mode",
@@ -189,8 +191,8 @@ private fun NetworkSettingsContent(
           values = listOf(AcceptAll, AcceptSelected, DenySelected),
           enabled = vpnDependenciesEnabled,
           title = { Text(stringResource(Res.string.access_control_mode)) },
-          summary = { Text(stringResource(uiState.accessControlMode.summaryRes)) },
-          valueToText = { androidx.compose.ui.text.AnnotatedString(stringResource(it.summaryRes)) },
+          summary = { Text(stringResCompat(uiState.accessControlMode.summaryRes)) },
+          valueToText = { AnnotatedString(stringResCompat(it.summaryRes)) },
         )
         preference(
           key = "access_control_packages",

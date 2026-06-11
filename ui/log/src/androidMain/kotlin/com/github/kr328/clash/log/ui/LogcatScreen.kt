@@ -52,7 +52,7 @@ import com.github.kr328.clash.ui.lifecycle.withLifecycle
 import com.github.kr328.clash.ui.theme.PreviewTabby
 import com.github.kr328.clash.ui.theme.TabbyThemeWrapper
 import com.github.kr328.clash.ui.theme.tabbyDimens
-import com.github.kr328.clash.ui.util.stringResource
+import com.github.kr328.clash.ui.util.stringResCompat
 import java.util.Date
 import kotlinx.coroutines.launch
 import org.koin.compose.viewmodel.koinViewModel
@@ -72,8 +72,8 @@ internal fun LogcatScreen(
   val listState = rememberLazyListState()
   val snackbarHostState = remember { SnackbarHostState() }
   val scope = rememberCoroutineScope()
-  val messageCopied = stringResource(Res.string.copied)
-  val invalidFileTip = stringResource(Res.string.invalid_log_file)
+  val messageCopied = stringResCompat(Res.string.copied)
+  val invalidFileTip = stringResCompat(Res.string.invalid_log_file)
 
   LaunchedEffect(fileName, viewModel) { viewModel.init(fileName) }
 
@@ -150,7 +150,7 @@ private fun LogcatContent(
   modifier: Modifier = Modifier,
 ) {
   TabbyScaffold(
-    title = stringResource(Res.string.tabby_logcat),
+    title = stringResCompat(Res.string.tabby_logcat),
     modifier = modifier,
     snackbarHostState = snackbarHostState,
     actions = {
@@ -158,20 +158,20 @@ private fun LogcatContent(
         IconButton(onClick = onClose) {
           Icon(
             imageVector = TabbyIcons.BaselineStop,
-            contentDescription = stringResource(CommonR.string.close),
+            contentDescription = stringResCompat(CommonR.string.close),
           )
         }
       } else {
         IconButton(onClick = onDelete) {
           Icon(
             imageVector = TabbyIcons.BaselineDelete,
-            contentDescription = stringResource(CommonR.string.delete),
+            contentDescription = stringResCompat(CommonR.string.delete),
           )
         }
         IconButton(onClick = onExport) {
           Icon(
             imageVector = TabbyIcons.BaselineSave,
-            contentDescription = stringResource(CommonR.string.export),
+            contentDescription = stringResCompat(CommonR.string.export),
           )
         }
       }
