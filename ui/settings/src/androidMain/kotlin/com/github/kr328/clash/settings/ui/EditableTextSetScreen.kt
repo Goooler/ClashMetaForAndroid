@@ -28,6 +28,7 @@ import androidx.compose.runtime.toMutableStateList
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.PreviewWrapper
@@ -41,8 +42,6 @@ import com.github.kr328.clash.common.delete
 import com.github.kr328.clash.common.ok
 import com.github.kr328.clash.common.reorder
 import com.github.kr328.clash.common.reset
-import com.github.kr328.clash.settings.Res
-import com.github.kr328.clash.settings.sniff_http_ports
 import com.github.kr328.clash.ui.component.TabbyScaffold
 import com.github.kr328.clash.ui.icon.BaselineAdd
 import com.github.kr328.clash.ui.icon.BaselineDragHandle
@@ -50,14 +49,13 @@ import com.github.kr328.clash.ui.icon.OutlineDelete
 import com.github.kr328.clash.ui.icon.TabbyIcons
 import com.github.kr328.clash.ui.theme.PreviewTabby
 import com.github.kr328.clash.ui.theme.TabbyThemeWrapper
-import com.github.kr328.clash.ui.util.stringResCompat
 import kotlinx.serialization.Serializable
 import org.jetbrains.compose.resources.stringResource
 import sh.calvin.reorderable.ReorderableItem
 import sh.calvin.reorderable.rememberReorderableLazyListState
 
 @Serializable
-internal data class EditableTextList(val title: Int, val initialValues: Set<String>?) : NavKey
+internal data class EditableTextList(val titleKey: String, val initialValues: Set<String>?) : NavKey
 
 internal fun EntryProviderScope<NavKey>.editableTextSetScreenEntry(
   onDismiss: () -> Unit,
@@ -65,7 +63,7 @@ internal fun EntryProviderScope<NavKey>.editableTextSetScreenEntry(
 ) {
   entry<EditableTextList> { key ->
     EditableTextSetScreen(
-      title = key.title,
+      titleKey = key.titleKey,
       initialValues = key.initialValues,
       onDismiss = onDismiss,
       onApply = onApply,
@@ -75,11 +73,18 @@ internal fun EntryProviderScope<NavKey>.editableTextSetScreenEntry(
 
 @Composable
 private fun EditableTextSetScreen(
-  title: Any,
+  titleKey: String,
   initialValues: Set<String>?,
   onDismiss: () -> Unit,
   onApply: (Set<String>?) -> Unit,
 ) {
+  val context = LocalContext.current
+  val id =
+    remember(titleKey) {
+      context.resources.getIdentifier(titleKey, "string", context.packageName)
+    }
+  val title = androidx.compose.ui.res.stringResource(id)
+
   val values = remember(initialValues) { initialValues.orEmpty().toMutableStateList() }
   var showAddDialog by remember { mutableStateOf(false) }
   var editingValue by remember { mutableStateOf<String?>(null) }
@@ -90,7 +95,7 @@ private fun EditableTextSetScreen(
     }
 
   TabbyScaffold(
-    title = stringResCompat(title),
+    title = title,
     onBack = onDismiss,
     actions = {
       IconButton(onClick = { showAddDialog = true }) {
@@ -181,7 +186,7 @@ private fun EditableTextSetScreen(
 
 @Composable
 private fun SingleTextInputDialog(
-  title: Any,
+  title: String,
   initialText: String,
   onDismiss: () -> Unit,
   onConfirm: (String) -> Unit,
@@ -197,7 +202,7 @@ private fun SingleTextInputDialog(
 
   AlertDialog(
     onDismissRequest = onDismiss,
-    title = { Text(stringResCompat(title)) },
+    title = { Text(title) },
     text = {
       OutlinedTextField(
         value = inputText,
@@ -222,7 +227,7 @@ private fun SingleTextInputDialog(
 @Composable
 private fun EditableTextSetScreenPreview() {
   EditableTextSetScreen(
-    title = Res.string.sniff_http_ports,
+    titleKey = "sniff_http_ports",
     initialValues = setOf("80", "8080"),
     onDismiss = {},
     onApply = {},

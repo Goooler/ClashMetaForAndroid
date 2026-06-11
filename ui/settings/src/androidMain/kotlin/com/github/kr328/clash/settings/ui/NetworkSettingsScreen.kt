@@ -47,7 +47,6 @@ import com.github.kr328.clash.ui.icon.BaselineVpnLock
 import com.github.kr328.clash.ui.icon.TabbyIcons
 import com.github.kr328.clash.ui.theme.PreviewTabby
 import com.github.kr328.clash.ui.theme.TabbyThemeWrapper
-import com.github.kr328.clash.ui.util.stringResCompat
 import me.zhanghai.compose.preference.ProvidePreferenceLocals
 import me.zhanghai.compose.preference.listPreference
 import me.zhanghai.compose.preference.preference
@@ -181,8 +180,8 @@ private fun NetworkSettingsContent(
           values = TunStackMode.entries,
           enabled = vpnDependenciesEnabled,
           title = { Text(stringResource(Res.string.tun_stack_mode)) },
-          summary = { Text(stringResCompat(tunStackMode.summaryRes)) },
-          valueToText = { AnnotatedString(stringResCompat(it.summaryRes)) },
+          summary = { Text(stringResource(tunStackMode.summaryRes)) },
+          valueToText = { AnnotatedString(stringResource(it.summaryRes)) },
         )
         listPreference(
           key = "access_control_mode",
@@ -191,8 +190,8 @@ private fun NetworkSettingsContent(
           values = listOf(AcceptAll, AcceptSelected, DenySelected),
           enabled = vpnDependenciesEnabled,
           title = { Text(stringResource(Res.string.access_control_mode)) },
-          summary = { Text(stringResCompat(uiState.accessControlMode.summaryRes)) },
-          valueToText = { AnnotatedString(stringResCompat(it.summaryRes)) },
+          summary = { Text(stringResource(uiState.accessControlMode.summaryRes)) },
+          valueToText = { AnnotatedString(stringResource(it.summaryRes)) },
         )
         preference(
           key = "access_control_packages",
@@ -217,7 +216,7 @@ private enum class TunStackMode(val persistedValue: String) {
   }
 }
 
-private val TunStackMode.summaryRes: Any
+private val TunStackMode.summaryRes: org.jetbrains.compose.resources.StringResource
   get() =
     when (this) {
       TunStackMode.System -> Res.string.tun_stack_system
@@ -225,7 +224,7 @@ private val TunStackMode.summaryRes: Any
       Mixed -> Res.string.tun_stack_mixed
     }
 
-private val AccessControlMode.summaryRes: Any
+private val AccessControlMode.summaryRes: org.jetbrains.compose.resources.StringResource
   get() =
     when (this) {
       AcceptAll -> Res.string.allow_all_apps

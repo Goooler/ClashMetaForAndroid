@@ -36,7 +36,6 @@ import com.github.kr328.clash.ui.icon.TabbyIcons
 import com.github.kr328.clash.ui.theme.PreviewTabby
 import com.github.kr328.clash.ui.theme.TabbyThemeWrapper
 import com.github.kr328.clash.ui.theme.tabbyDimens
-import com.github.kr328.clash.ui.util.stringResCompat
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
@@ -82,7 +81,7 @@ internal fun SettingsScreen(
 @Composable
 private fun SettingsEntryItem(
   icon: ImageVector,
-  titleRes: Any,
+  titleRes: org.jetbrains.compose.resources.StringResource,
   onClick: () -> Unit,
   modifier: Modifier = Modifier,
 ) {
@@ -107,7 +106,7 @@ private fun SettingsEntryItem(
       modifier = Modifier.size(dimens.itemHeaderComponentSize),
     )
     Spacer(dimens.itemHeaderMargin)
-    Text(text = stringResCompat(titleRes), style = MaterialTheme.typography.bodyLarge)
+    Text(text = stringResource(titleRes), style = MaterialTheme.typography.bodyLarge)
   }
 }
 

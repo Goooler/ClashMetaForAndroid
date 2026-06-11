@@ -63,13 +63,13 @@ import com.github.kr328.clash.ui.icon.TabbyIcons
 import com.github.kr328.clash.ui.lifecycle.withLifecycle
 import com.github.kr328.clash.ui.theme.PreviewTabby
 import com.github.kr328.clash.ui.theme.TabbyThemeWrapper
-import com.github.kr328.clash.ui.util.stringResCompat
 import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.minutes
 import kotlin.uuid.Uuid
 import me.zhanghai.compose.preference.ProvidePreferenceLocals
 import me.zhanghai.compose.preference.preference
 import me.zhanghai.compose.preference.textFieldPreference
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -154,7 +154,7 @@ private fun PropertiesContent(
   TabbyScaffold(
     modifier = modifier,
     snackbarHostState = snackbarHostState,
-    title = stringResCompat(Res.string.properties),
+    title = stringResource(Res.string.properties),
     onBack = onBack,
     actions = {
       if (processing) {
@@ -163,7 +163,7 @@ private fun PropertiesContent(
         IconButton(onClick = onCommit) {
           Icon(
             imageVector = TabbyIcons.BaselineSave,
-            contentDescription = stringResCompat(Res.string.save),
+            contentDescription = stringResource(Res.string.save),
           )
         }
       }
@@ -173,8 +173,8 @@ private fun PropertiesContent(
       LazyColumn(modifier = Modifier.fillMaxSize(), contentPadding = innerPadding) {
         preference(
           key = "tips",
-          title = { Text(stringResCompat(Res.string.properties)) },
-          summary = { Text(AnnotatedString.fromHtml(stringResCompat(Res.string.tips_properties))) },
+          title = { Text(stringResource(Res.string.properties)) },
+          summary = { Text(AnnotatedString.fromHtml(stringResource(Res.string.tips_properties))) },
           icon = { Icon(imageVector = TabbyIcons.OutlineInfo, contentDescription = null) },
         )
         textFieldPreference(
@@ -185,10 +185,10 @@ private fun PropertiesContent(
               onNameChanged(newName)
             }
           },
-          title = { Text(stringResCompat(CommonRes.string.name)) },
+          title = { Text(stringResource(CommonRes.string.name)) },
           textToValue = { input -> if (ValidatorNotBlank(input)) input else null },
           icon = { Icon(imageVector = TabbyIcons.OutlineLabel, contentDescription = null) },
-          summary = { Text(profile.name.ifBlank { stringResCompat(Res.string.profile_name) }) },
+          summary = { Text(profile.name.ifBlank { stringResource(Res.string.profile_name) }) },
         )
         textFieldPreference(
           key = "source",
@@ -198,12 +198,12 @@ private fun PropertiesContent(
               onUrlChanged(newUrl)
             }
           },
-          title = { Text(stringResCompat(CommonRes.string.url)) },
+          title = { Text(stringResource(CommonRes.string.url)) },
           textToValue = { input -> if (ValidatorHttpUrl(input)) input else null },
           enabled = profile.type != File && profile.type != External,
           icon = { Icon(imageVector = TabbyIcons.OutlineInbox, contentDescription = null) },
           summary = {
-            Text(profile.source.ifBlank { stringResCompat(Res.string.accept_http_content) })
+            Text(profile.source.ifBlank { stringResource(Res.string.accept_http_content) })
           },
         )
         textFieldPreference(
@@ -214,7 +214,7 @@ private fun PropertiesContent(
               onIntervalChanged(interval)
             }
           },
-          title = { Text(stringResCompat(Res.string.auto_update)) },
+          title = { Text(stringResource(Res.string.auto_update)) },
           textToValue = { input ->
             if (!ValidatorAutoUpdateInterval(input)) {
               null
@@ -228,9 +228,9 @@ private fun PropertiesContent(
           summary = {
             val intervalSummary =
               if (profile.interval == 0L) {
-                stringResCompat(CommonRes.string.disabled)
+                stringResource(CommonRes.string.disabled)
               } else {
-                stringResCompat(
+                stringResource(
                   Res.string.format_minutes,
                   profile.interval.milliseconds.inWholeMinutes,
                 )
@@ -254,17 +254,17 @@ private fun PropertiesContent(
               onAgeSecretKeyChanged(key)
             }
           },
-          title = { Text(stringResCompat(Res.string.age_secret_key)) },
+          title = { Text(stringResource(Res.string.age_secret_key)) },
           textToValue = { input -> if (ValidatorAgeSecretKey(input)) input else null },
           icon = { Icon(imageVector = TabbyIcons.BaselineKey, contentDescription = null) },
           summary = {
-            Text(profile.ageSecretKey ?: stringResCompat(Res.string.age_secret_key_hint))
+            Text(profile.ageSecretKey ?: stringResource(Res.string.age_secret_key_hint))
           },
         )
         preference(
           key = "browse_files",
-          title = { Text(stringResCompat(Res.string.browse_files)) },
-          summary = { Text(stringResCompat(Res.string.browse_configuration_providers)) },
+          title = { Text(stringResource(Res.string.browse_files)) },
+          summary = { Text(stringResource(Res.string.browse_configuration_providers)) },
           icon = { Icon(imageVector = TabbyIcons.OutlineFolder, contentDescription = null) },
           onClick = onBrowseFiles,
         )
@@ -292,13 +292,13 @@ private fun PropertiesContent(
 private fun ExitWithoutSavingDialog(onConfirm: () -> Unit, onDismiss: () -> Unit) {
   AlertDialog(
     onDismissRequest = onDismiss,
-    title = { Text(text = stringResCompat(Res.string.exit_without_save)) },
-    text = { Text(text = stringResCompat(Res.string.exit_without_save_warning)) },
+    title = { Text(text = stringResource(Res.string.exit_without_save)) },
+    text = { Text(text = stringResource(Res.string.exit_without_save_warning)) },
     confirmButton = {
-      TextButton(onClick = onConfirm) { Text(text = stringResCompat(CommonRes.string.ok)) }
+      TextButton(onClick = onConfirm) { Text(text = stringResource(CommonRes.string.ok)) }
     },
     dismissButton = {
-      TextButton(onClick = onDismiss) { Text(text = stringResCompat(CommonRes.string.cancel)) }
+      TextButton(onClick = onDismiss) { Text(text = stringResource(CommonRes.string.cancel)) }
     },
   )
 }

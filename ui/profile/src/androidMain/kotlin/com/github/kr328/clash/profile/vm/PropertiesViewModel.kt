@@ -18,7 +18,6 @@ import com.github.kr328.clash.profile.initializing
 import com.github.kr328.clash.profile.invalid_url
 import com.github.kr328.clash.profile.verifying
 import com.github.kr328.clash.service.model.Profile
-import com.github.kr328.clash.ui.util.getString
 import kotlin.uuid.Uuid
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -28,6 +27,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.jetbrains.compose.resources.getString
 
 internal class PropertiesViewModel(
   private val application: Application,
@@ -150,17 +150,17 @@ internal class PropertiesViewModel(
   fun onCommit() {
     val profile = uiState.value.profile ?: return
 
-    if (profile.name.isBlank()) {
-      eventState.value = EventState.ShowMessage(application.getString(Res.string.empty_name))
-      return
-    }
-
-    if (profile.type != File && profile.source.isBlank()) {
-      eventState.value = EventState.ShowMessage(application.getString(Res.string.invalid_url))
-      return
-    }
-
     viewModelScope.launch {
+      if (profile.name.isBlank()) {
+        eventState.value = EventState.ShowMessage(getString(Res.string.empty_name))
+        return@launch
+      }
+
+      if (profile.type != File && profile.source.isBlank()) {
+        eventState.value = EventState.ShowMessage(getString(Res.string.invalid_url))
+        return@launch
+      }
+
       try {
         withProcessing { updateStatus ->
           withProfile {
@@ -178,8 +178,7 @@ internal class PropertiesViewModel(
         eventState.value = EventState.Finish(true)
       } catch (e: Exception) {
         Log.e("Commit profile failed: ${e.message}", e)
-        eventState.value =
-          EventState.ShowMessage(e.message ?: application.getString(CommonRes.string.unknown))
+        eventState.value = EventState.ShowMessage(e.message ?: getString(CommonRes.string.unknown))
       }
     }
   }
@@ -194,7 +193,7 @@ internal class PropertiesViewModel(
               ProgressState(
                 visible = true,
                 isIndeterminate = true,
-                text = application.getString(Res.string.initializing),
+                text = getString(Res.string.initializing),
                 progress = 0,
                 max = 0,
               ),
@@ -212,14 +211,14 @@ internal class PropertiesViewModel(
     }
   }
 
-  private fun applyProgressStatus(status: FetchStatus) {
+  private suspend fun applyProgressStatus(status: FetchStatus) {
     uiState.update { current ->
       val newProgress =
         when (status.action) {
           FetchConfiguration -> {
             current.progress.copy(
               text =
-                application.getString(
+                getString(
                   Res.string.format_fetching_configuration,
                   status.args.getOrNull(0).orEmpty(),
                 ),
@@ -229,7 +228,7 @@ internal class PropertiesViewModel(
           FetchProviders -> {
             current.progress.copy(
               text =
-                application.getString(
+                getString(
                   Res.string.format_fetching_provider,
                   status.args.getOrNull(0).orEmpty(),
                 ),
@@ -240,7 +239,7 @@ internal class PropertiesViewModel(
           }
           Verifying -> {
             current.progress.copy(
-              text = application.getString(Res.string.verifying),
+              text = getString(Res.string.verifying),
               isIndeterminate = false,
               max = status.max,
               progress = status.progress,

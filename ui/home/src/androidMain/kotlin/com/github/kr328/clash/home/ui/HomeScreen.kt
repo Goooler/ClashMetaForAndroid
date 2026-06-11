@@ -75,7 +75,7 @@ import com.github.kr328.clash.ui.theme.TabbyDarkSurface
 import com.github.kr328.clash.ui.theme.TabbyLightStopped
 import com.github.kr328.clash.ui.theme.TabbyOnPrimary
 import com.github.kr328.clash.ui.theme.TabbyThemeWrapper
-import com.github.kr328.clash.ui.util.stringResCompat
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -94,8 +94,8 @@ internal fun HomeScreen(
   val eventState by viewModel.eventState.collectAsStateWithLifecycle()
   val snackbarHostState = remember { SnackbarHostState() }
 
-  val noProfileText = stringResCompat(Res.string.no_profile_selected)
-  val profilesActionText = stringResCompat(CommonRes.string.profiles)
+  val noProfileText = stringResource(Res.string.no_profile_selected)
+  val profilesActionText = stringResource(CommonRes.string.profiles)
 
   val vpnLauncher =
     rememberLauncherForActivityResult(StartActivityForResult()) { result ->
@@ -191,7 +191,7 @@ private fun HomeContent(
         )
         Spacer(10.dp)
         Text(
-          text = stringResCompat(CommonRes.string.tabby),
+          text = stringResource(CommonRes.string.tabby),
           style = MaterialTheme.typography.headlineLarge,
         )
       }
@@ -206,16 +206,16 @@ private fun HomeContent(
           },
         text =
           when {
-            isTransitioning -> stringResCompat(CommonRes.string.loading)
-            clashRunning -> stringResCompat(CommonRes.string.running)
-            else -> stringResCompat(CommonRes.string.stopped)
+            isTransitioning -> stringResource(CommonRes.string.loading)
+            clashRunning -> stringResource(CommonRes.string.running)
+            else -> stringResource(CommonRes.string.stopped)
           },
         subtext =
           when {
             isTransitioning -> null
             clashRunning && forwarded != null ->
-              stringResCompat(Res.string.format_traffic_forwarded, forwarded)
-            else -> stringResCompat(CommonRes.string.tap_to_start)
+              stringResource(Res.string.format_traffic_forwarded, forwarded)
+            else -> stringResource(CommonRes.string.tap_to_start)
           },
         backgroundColor =
           when {
@@ -232,7 +232,7 @@ private fun HomeContent(
         HomeActionCard(
           modifier = Modifier.padding(vertical = cardMarginVertical),
           icon = TabbyIcons.BaselineApps,
-          text = stringResCompat(CommonRes.string.proxy),
+          text = stringResource(CommonRes.string.proxy),
           subtext = mode,
           backgroundColor = MaterialTheme.colorScheme.surface,
           contentColor = MaterialTheme.colorScheme.onSurface,
@@ -243,10 +243,10 @@ private fun HomeContent(
       HomeActionCard(
         modifier = Modifier.padding(vertical = cardMarginVertical),
         icon = TabbyIcons.BaselineViewList,
-        text = stringResCompat(Res.string.profile),
+        text = stringResource(Res.string.profile),
         subtext =
-          if (profileName != null) stringResCompat(Res.string.format_profile_activated, profileName)
-          else stringResCompat(CommonRes.string.not_selected),
+          if (profileName != null) stringResource(Res.string.format_profile_activated, profileName)
+          else stringResource(CommonRes.string.not_selected),
         backgroundColor = MaterialTheme.colorScheme.surface,
         contentColor = MaterialTheme.colorScheme.onSurface,
         onClick = onOpenProfiles,
@@ -256,7 +256,7 @@ private fun HomeContent(
         HomeActionLabel(
           modifier = Modifier.padding(vertical = labelMarginVertical),
           icon = TabbyIcons.BaselineSwapVerticalCircle,
-          text = stringResCompat(CommonRes.string.providers),
+          text = stringResource(CommonRes.string.providers),
           onClick = onOpenProviders,
         )
       }
@@ -264,19 +264,19 @@ private fun HomeContent(
       HomeActionLabel(
         modifier = Modifier.padding(vertical = labelMarginVertical),
         icon = TabbyIcons.BaselineAssignment,
-        text = stringResCompat(CommonRes.string.logs),
+        text = stringResource(CommonRes.string.logs),
         onClick = onOpenLogs,
       )
       HomeActionLabel(
         modifier = Modifier.padding(vertical = labelMarginVertical),
         icon = TabbyIcons.BaselineSettings,
-        text = stringResCompat(CommonRes.string.settings),
+        text = stringResource(CommonRes.string.settings),
         onClick = onOpenSettings,
       )
       HomeActionLabel(
         modifier = Modifier.padding(vertical = labelMarginVertical),
         icon = TabbyIcons.BaselineHelpCenter,
-        text = stringResCompat(Res.string.help),
+        text = stringResource(Res.string.help),
         onClick = onOpenHelp,
       )
     }

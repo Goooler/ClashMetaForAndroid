@@ -47,10 +47,11 @@ import com.github.kr328.clash.ui.icon.TabbyIcons
 import com.github.kr328.clash.ui.theme.PreviewTabby
 import com.github.kr328.clash.ui.theme.TabbyThemeWrapper
 import com.github.kr328.clash.ui.theme.tabbyDimens
-import com.github.kr328.clash.ui.util.stringResCompat
 import io.github.g00fy2.quickie.ScanQRCode
 import kotlin.math.roundToInt
 import kotlin.uuid.Uuid
+import org.jetbrains.compose.resources.StringResource
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -111,7 +112,7 @@ private fun NewProfileContent(
   onDetail: (ProfileProvider.External) -> Unit,
 ) {
   TabbyScaffold(
-    title = stringResCompat(CommonRes.string.new_profile),
+    title = stringResource(CommonRes.string.new_profile),
     modifier = modifier,
     snackbarHostState = snackbarHostState,
   ) { innerPadding ->
@@ -169,9 +170,21 @@ private fun ProfileProviderItem(
     }
     Spacer(headerMargin)
     Column {
-      Text(text = provider.name, style = MaterialTheme.typography.bodyLarge)
+      val nameText =
+        when (val name = provider.name) {
+          is StringResource -> stringResource(name)
+          is String -> name
+          else -> ""
+        }
+      val summaryText =
+        when (val summary = provider.summary) {
+          is StringResource -> stringResource(summary)
+          is String -> summary
+          else -> ""
+        }
+      Text(text = nameText, style = MaterialTheme.typography.bodyLarge)
       Text(
-        text = provider.summary,
+        text = summaryText,
         style = MaterialTheme.typography.bodyMedium,
         modifier = Modifier.padding(top = textMargin),
       )
@@ -183,12 +196,11 @@ private fun ProfileProviderItem(
 @PreviewTabby
 @Composable
 private fun NewProfileContentPreview() {
-  val context = LocalContext.current
   val providers =
     listOf(
-      ProfileProvider.File(context),
-      ProfileProvider.Url(context),
-      ProfileProvider.QR(context),
+      ProfileProvider.File,
+      ProfileProvider.Url,
+      ProfileProvider.QR,
       ProfileProvider.External(
         name = "External Provider",
         summary = "Import from external app",

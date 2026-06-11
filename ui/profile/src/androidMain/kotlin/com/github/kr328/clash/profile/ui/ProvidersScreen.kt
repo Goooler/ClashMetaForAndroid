@@ -47,7 +47,7 @@ import com.github.kr328.clash.ui.theme.PreviewTabby
 import com.github.kr328.clash.ui.theme.TabbyThemeWrapper
 import com.github.kr328.clash.ui.theme.tabbyDimens
 import com.github.kr328.clash.ui.util.elapsedIntervalString
-import com.github.kr328.clash.ui.util.stringResCompat
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -89,14 +89,14 @@ private fun ProvidersContent(
   onUpdate: (Int, Provider) -> Unit,
 ) {
   TabbyScaffold(
-    title = stringResCompat(CommonRes.string.providers),
+    title = stringResource(CommonRes.string.providers),
     modifier = modifier,
     snackbarHostState = snackbarHostState,
     actions = {
       IconButton(onClick = onUpdateAll) {
         Icon(
           imageVector = TabbyIcons.BaselineSync,
-          contentDescription = stringResCompat(Res.string.update_all),
+          contentDescription = stringResource(Res.string.update_all),
         )
       }
     },
@@ -134,12 +134,12 @@ private fun ProviderItem(state: ProviderItemState, currentTime: Long, onUpdate: 
     Column(modifier = Modifier.weight(1f)) {
       Text(text = state.provider.name, maxLines = 1, overflow = TextOverflow.Ellipsis)
       Spacer(itemTextMargin)
-      Text(text = state.provider.type(context), style = MaterialTheme.typography.bodyMedium)
+      Text(text = state.provider.type(), style = MaterialTheme.typography.bodyMedium)
     }
 
     if (canUpdate) {
       Text(
-        text = (currentTime - state.updatedAt).elapsedIntervalString(context),
+        text = (currentTime - state.updatedAt).elapsedIntervalString(),
         modifier = Modifier.padding(end = 10.dp),
       )
       Box(
@@ -157,7 +157,7 @@ private fun ProviderItem(state: ProviderItemState, currentTime: Long, onUpdate: 
         } else {
           Icon(
             imageVector = TabbyIcons.BaselineSwapVert,
-            contentDescription = stringResCompat(Res.string.update),
+            contentDescription = stringResource(Res.string.update),
           )
         }
       }

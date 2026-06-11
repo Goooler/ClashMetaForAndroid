@@ -29,7 +29,6 @@ import com.github.kr328.clash.service.RemoteService
 import com.github.kr328.clash.service.remote.ILogObserver
 import com.github.kr328.clash.service.remote.IRemoteService
 import com.github.kr328.clash.service.remote.unwrap
-import com.github.kr328.clash.ui.util.getString
 import java.io.IOException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -40,7 +39,9 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
+import org.jetbrains.compose.resources.getString
 
 internal class LogcatService :
   Service(), CoroutineScope by CoroutineScope(Dispatchers.Default), IInterface {
@@ -143,7 +144,7 @@ internal class LogcatService :
     NotificationManagerCompat.from(this)
       .createNotificationChannel(
         NotificationChannelCompat.Builder(CHANNEL_ID, NotificationManagerCompat.IMPORTANCE_DEFAULT)
-          .setName(getString(Res.string.tabby_logcat))
+          .setName(runBlocking { getString(Res.string.tabby_logcat) })
           .build()
       )
   }
@@ -154,8 +155,8 @@ internal class LogcatService :
       NotificationCompat.Builder(this, CHANNEL_ID)
         .setSmallIcon(CommonR.drawable.ic_tabby_small)
         .setColor(getColorCompat(CommonR.color.color_tabby_light))
-        .setContentTitle(getString(Res.string.tabby_logcat))
-        .setContentText(getString(CommonRes.string.running))
+        .setContentTitle(runBlocking { getString(Res.string.tabby_logcat) })
+        .setContentText(runBlocking { getString(CommonRes.string.running) })
         .setContentIntent(
           PendingIntent.getActivity(
             this,

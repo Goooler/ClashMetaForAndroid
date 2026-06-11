@@ -37,7 +37,6 @@ import com.github.kr328.clash.ui.icon.BaselineStack
 import com.github.kr328.clash.ui.icon.TabbyIcons
 import com.github.kr328.clash.ui.theme.PreviewTabby
 import com.github.kr328.clash.ui.theme.TabbyThemeWrapper
-import com.github.kr328.clash.ui.util.stringResCompat
 import me.zhanghai.compose.preference.ProvidePreferenceLocals
 import me.zhanghai.compose.preference.listPreference
 import me.zhanghai.compose.preference.preferenceCategory
@@ -102,9 +101,9 @@ private fun AppSettingsContent(
           values = listOf(DarkMode.Auto, DarkMode.ForceLight, DarkMode.ForceDark),
           icon = { Icon(imageVector = TabbyIcons.BaselineBrightness4, contentDescription = null) },
           title = { Text(stringResource(Res.string.dark_mode)) },
-          summary = { Text(stringResCompat(uiState.darkMode.summaryRes)) },
+          summary = { Text(stringResource(uiState.darkMode.summaryRes)) },
           valueToText = {
-            androidx.compose.ui.text.AnnotatedString(stringResCompat(it.summaryRes))
+            androidx.compose.ui.text.AnnotatedString(stringResource(it.summaryRes))
           },
         )
         switchPreference(
@@ -141,7 +140,7 @@ private fun AppSettingsContent(
   }
 }
 
-private val DarkMode.summaryRes: Any
+private val DarkMode.summaryRes: org.jetbrains.compose.resources.StringResource
   get() =
     when (this) {
       Auto -> Res.string.follow_system

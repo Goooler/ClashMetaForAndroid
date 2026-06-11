@@ -12,7 +12,7 @@ import com.github.kr328.clash.common.Res as CommonRes
 import com.github.kr328.clash.common.format_elements
 import com.github.kr328.clash.settings.Res
 import com.github.kr328.clash.settings.empty
-import com.github.kr328.clash.ui.util.stringResCompat
+import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
@@ -23,26 +23,12 @@ internal fun EmptyEditorContent(modifier: Modifier = Modifier) {
 }
 
 @Composable
-internal fun List<String>?.listSummary(placeholder: Any) =
+internal fun List<String>?.listSummary(placeholder: StringResource) =
   when {
-    this == null -> stringResCompat(placeholder)
-    isEmpty() -> stringResCompat(Res.string.empty)
-    else -> stringResCompat(CommonRes.string.format_elements, size)
+    this == null -> stringResource(placeholder)
+    isEmpty() -> stringResource(Res.string.empty)
+    else -> stringResource(CommonRes.string.format_elements, size)
   }
 
 internal fun initialTextFieldValue(text: String) =
   TextFieldValue(text = text, selection = TextRange(text.length))
-
-internal fun android.content.Context.getStringId(res: Any): Int {
-  return when (res) {
-    is Int -> res
-    is org.jetbrains.compose.resources.StringResource -> {
-      val id = resources.getIdentifier(res.key, "string", packageName)
-      if (id == 0) {
-        throw IllegalArgumentException("Resource not found for key: ${res.key}")
-      }
-      id
-    }
-    else -> throw IllegalArgumentException("Unsupported resource type: $res")
-  }
-}

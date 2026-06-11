@@ -104,13 +104,13 @@ import com.github.kr328.clash.ui.nav.addIfNotLast
 import com.github.kr328.clash.ui.nav.rememberNavBackStackBuilder
 import com.github.kr328.clash.ui.theme.PreviewTabby
 import com.github.kr328.clash.ui.theme.TabbyThemeWrapper
-import com.github.kr328.clash.ui.util.stringResCompat
 import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
 import me.zhanghai.compose.preference.ProvidePreferenceLocals
 import me.zhanghai.compose.preference.listPreference
 import me.zhanghai.compose.preference.preference
 import me.zhanghai.compose.preference.preferenceCategory
+import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -202,9 +202,7 @@ internal fun MetaFeatureSettingsScreen(
             },
             onOpenEditableTextList = { title, initialValues, onApply ->
               currentEditableTextListOnApply = onApply
-              backStack.addIfNotLast(
-                EditableTextList(context.getStringId(title), initialValues?.toSet())
-              )
+              backStack.addIfNotLast(EditableTextList(title.key, initialValues?.toSet()))
             },
             onAgeKeyHelperRequested = { hybrid ->
               ageKeyHelperHybrid = hybrid
@@ -268,7 +266,7 @@ private fun MetaFeatureSettingsContent(
   onImportGeoSite: () -> Unit,
   onImportCountry: () -> Unit,
   onImportASN: () -> Unit,
-  onOpenEditableTextList: (Any, List<String>?, (List<String>?) -> Unit) -> Unit,
+  onOpenEditableTextList: (StringResource, List<String>?, (List<String>?) -> Unit) -> Unit,
   onAgeKeyHelperRequested: (Boolean) -> Unit,
 ) {
   val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
@@ -342,8 +340,8 @@ private fun LazyListScope.metaBasicPreferenceItems(
     onValueChange = actions::updateUnifiedDelay,
     values = booleanOptions,
     title = { Text(stringResource(Res.string.unified_delay)) },
-    summary = { Text(stringResCompat(configuration.unifiedDelay.textRes)) },
-    valueToText = { AnnotatedString(stringResCompat(it.textRes)) },
+    summary = { Text(stringResource(configuration.unifiedDelay.textRes)) },
+    valueToText = { AnnotatedString(stringResource(it.textRes)) },
   )
   listPreference(
     key = "geodataMode",
@@ -351,8 +349,8 @@ private fun LazyListScope.metaBasicPreferenceItems(
     onValueChange = actions::updateGeodataMode,
     values = booleanOptions,
     title = { Text(stringResource(Res.string.geodata_mode)) },
-    summary = { Text(stringResCompat(configuration.geodataMode.textRes)) },
-    valueToText = { AnnotatedString(stringResCompat(it.textRes)) },
+    summary = { Text(stringResource(configuration.geodataMode.textRes)) },
+    valueToText = { AnnotatedString(stringResource(it.textRes)) },
   )
   listPreference(
     key = "tcpConcurrent",
@@ -360,8 +358,8 @@ private fun LazyListScope.metaBasicPreferenceItems(
     onValueChange = actions::updateTcpConcurrent,
     values = booleanOptions,
     title = { Text(stringResource(Res.string.tcp_concurrent)) },
-    summary = { Text(stringResCompat(configuration.tcpConcurrent.textRes)) },
-    valueToText = { AnnotatedString(stringResCompat(it.textRes)) },
+    summary = { Text(stringResource(configuration.tcpConcurrent.textRes)) },
+    valueToText = { AnnotatedString(stringResource(it.textRes)) },
   )
   listPreference(
     key = "findProcessMode",
@@ -369,15 +367,15 @@ private fun LazyListScope.metaBasicPreferenceItems(
     onValueChange = actions::updateFindProcessMode,
     values = ConfigurationOverride.FindProcessMode.entries,
     title = { Text(stringResource(Res.string.find_process_mode)) },
-    summary = { Text(stringResCompat(configuration.findProcessMode.textRes)) },
-    valueToText = { AnnotatedString(stringResCompat(it.textRes)) },
+    summary = { Text(stringResource(configuration.findProcessMode.textRes)) },
+    valueToText = { AnnotatedString(stringResource(it.textRes)) },
   )
 }
 
 private fun LazyListScope.metaSnifferPreferenceItems(
   configuration: ConfigurationOverride,
   actions: MetaFeatureSettingsActions,
-  onOpenEditableTextList: (Any, List<String>?, (List<String>?) -> Unit) -> Unit,
+  onOpenEditableTextList: (StringResource, List<String>?, (List<String>?) -> Unit) -> Unit,
 ) {
   val enabled = configuration.sniffer.enable != false
   preferenceCategory(
@@ -390,8 +388,8 @@ private fun LazyListScope.metaSnifferPreferenceItems(
     onValueChange = actions::updateSnifferEnable,
     values = booleanOptions,
     title = { Text(stringResource(Res.string.strategy)) },
-    summary = { Text(stringResCompat(configuration.sniffer.enable.textRes)) },
-    valueToText = { AnnotatedString(stringResCompat(it.textRes)) },
+    summary = { Text(stringResource(configuration.sniffer.enable.textRes)) },
+    valueToText = { AnnotatedString(stringResource(it.textRes)) },
   )
   preference(
     key = "sniffHttpPorts",
@@ -414,9 +412,9 @@ private fun LazyListScope.metaSnifferPreferenceItems(
     enabled = enabled,
     title = { Text(stringResource(Res.string.sniff_http_override_destination)) },
     summary = {
-      Text(stringResCompat(configuration.sniffer.sniff.http.overrideDestination.textRes))
+      Text(stringResource(configuration.sniffer.sniff.http.overrideDestination.textRes))
     },
-    valueToText = { AnnotatedString(stringResCompat(it.textRes)) },
+    valueToText = { AnnotatedString(stringResource(it.textRes)) },
   )
   preference(
     key = "sniffTlsPorts",
@@ -439,9 +437,9 @@ private fun LazyListScope.metaSnifferPreferenceItems(
     enabled = enabled,
     title = { Text(stringResource(Res.string.sniff_tls_override_destination)) },
     summary = {
-      Text(stringResCompat(configuration.sniffer.sniff.tls.overrideDestination.textRes))
+      Text(stringResource(configuration.sniffer.sniff.tls.overrideDestination.textRes))
     },
-    valueToText = { AnnotatedString(stringResCompat(it.textRes)) },
+    valueToText = { AnnotatedString(stringResource(it.textRes)) },
   )
   preference(
     key = "sniffQuicPorts",
@@ -464,9 +462,9 @@ private fun LazyListScope.metaSnifferPreferenceItems(
     enabled = enabled,
     title = { Text(stringResource(Res.string.sniff_quic_override_destination)) },
     summary = {
-      Text(stringResCompat(configuration.sniffer.sniff.quic.overrideDestination.textRes))
+      Text(stringResource(configuration.sniffer.sniff.quic.overrideDestination.textRes))
     },
-    valueToText = { AnnotatedString(stringResCompat(it.textRes)) },
+    valueToText = { AnnotatedString(stringResource(it.textRes)) },
   )
   listPreference(
     key = "forceDnsMapping",
@@ -475,8 +473,8 @@ private fun LazyListScope.metaSnifferPreferenceItems(
     values = booleanOptions,
     enabled = enabled,
     title = { Text(stringResource(Res.string.force_dns_mapping)) },
-    summary = { Text(stringResCompat(configuration.sniffer.forceDnsMapping.textRes)) },
-    valueToText = { AnnotatedString(stringResCompat(it.textRes)) },
+    summary = { Text(stringResource(configuration.sniffer.forceDnsMapping.textRes)) },
+    valueToText = { AnnotatedString(stringResource(it.textRes)) },
   )
   listPreference(
     key = "parsePureIp",
@@ -485,8 +483,8 @@ private fun LazyListScope.metaSnifferPreferenceItems(
     values = booleanOptions,
     enabled = enabled,
     title = { Text(stringResource(Res.string.parse_pure_ip)) },
-    summary = { Text(stringResCompat(configuration.sniffer.parsePureIp.textRes)) },
-    valueToText = { AnnotatedString(stringResCompat(it.textRes)) },
+    summary = { Text(stringResource(configuration.sniffer.parsePureIp.textRes)) },
+    valueToText = { AnnotatedString(stringResource(it.textRes)) },
   )
   listPreference(
     key = "overrideDestination",
@@ -495,8 +493,8 @@ private fun LazyListScope.metaSnifferPreferenceItems(
     values = booleanOptions,
     enabled = enabled,
     title = { Text(stringResource(Res.string.override_destination)) },
-    summary = { Text(stringResCompat(configuration.sniffer.overrideDestination.textRes)) },
-    valueToText = { AnnotatedString(stringResCompat(it.textRes)) },
+    summary = { Text(stringResource(configuration.sniffer.overrideDestination.textRes)) },
+    valueToText = { AnnotatedString(stringResource(it.textRes)) },
   )
   preference(
     key = "forceDomain",
@@ -585,7 +583,7 @@ private fun LazyListScope.metaGeoFileItems(
   )
 }
 
-private val ConfigurationOverride.FindProcessMode?.textRes: Any
+private val ConfigurationOverride.FindProcessMode?.textRes: StringResource
   get() =
     when (this) {
       Off -> Res.string.off

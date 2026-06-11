@@ -1,6 +1,6 @@
 package com.github.kr328.clash.profile.util
 
-import android.content.Context
+import androidx.compose.runtime.Composable
 import com.github.kr328.clash.common.Res as CommonRes
 import com.github.kr328.clash.common.compatible
 import com.github.kr328.clash.common.file
@@ -16,22 +16,23 @@ import com.github.kr328.clash.core.model.Provider.VehicleType.Compatible
 import com.github.kr328.clash.core.model.Provider.VehicleType.File
 import com.github.kr328.clash.core.model.Provider.VehicleType.HTTP
 import com.github.kr328.clash.core.model.Provider.VehicleType.Inline
-import com.github.kr328.clash.ui.util.getString
+import org.jetbrains.compose.resources.stringResource
 
-internal fun Provider.type(context: Context): String {
+@Composable
+internal fun Provider.type(): String {
   val type =
     when (type) {
-      Proxy -> context.getString(CommonRes.string.proxy)
-      Rule -> context.getString(CommonRes.string.rule)
+      Proxy -> stringResource(CommonRes.string.proxy)
+      Rule -> stringResource(CommonRes.string.rule)
     }
 
   val vehicle =
     when (vehicleType) {
-      HTTP -> context.getString(CommonRes.string.http)
-      File -> context.getString(CommonRes.string.file)
-      Inline -> context.getString(CommonRes.string.inline)
-      Compatible -> context.getString(CommonRes.string.compatible)
+      HTTP -> stringResource(CommonRes.string.http)
+      File -> stringResource(CommonRes.string.file)
+      Inline -> stringResource(CommonRes.string.inline)
+      Compatible -> stringResource(CommonRes.string.compatible)
     }
 
-  return context.getString(CommonRes.string.format_provider_type, type, vehicle)
+  return stringResource(CommonRes.string.format_provider_type, type, vehicle)
 }

@@ -14,7 +14,6 @@ import com.github.kr328.clash.profile.active_unsaved_tips
 import com.github.kr328.clash.profile.toast_profile_updated_complete
 import com.github.kr328.clash.profile.toast_profile_updated_failed
 import com.github.kr328.clash.service.model.Profile
-import com.github.kr328.clash.ui.util.getString
 import kotlin.time.Duration.Companion.minutes
 import kotlin.uuid.Uuid
 import kotlinx.coroutines.Dispatchers
@@ -26,6 +25,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.jetbrains.compose.resources.getString
 
 internal class ProfilesViewModel(private val application: Application) :
   ViewModel(), DefaultLifecycleObserver {
@@ -85,7 +85,7 @@ internal class ProfilesViewModel(private val application: Application) :
       } else {
         eventState.value =
           EventState.ShowEditableMessage(
-            application.getString(Res.string.active_unsaved_tips),
+            getString(Res.string.active_unsaved_tips),
             profile.uuid,
           )
       }
@@ -155,16 +155,15 @@ internal class ProfilesViewModel(private val application: Application) :
   private suspend fun showProfileUpdateCompleted(uuid: Uuid) {
     val name = withProfile { queryByUUID(uuid)?.name.orEmpty() }
     eventState.value =
-      EventState.ShowMessage(application.getString(Res.string.toast_profile_updated_complete, name))
+      EventState.ShowMessage(getString(Res.string.toast_profile_updated_complete, name))
   }
 
   private suspend fun showProfileUpdateFailed(uuid: Uuid, reason: String?) {
     val name = withProfile { queryByUUID(uuid)?.name.orEmpty() }
-    val displayReason =
-      reason?.takeUnless { it.isBlank() } ?: application.getString(CommonRes.string.unknown)
+    val displayReason = reason?.takeUnless { it.isBlank() } ?: getString(CommonRes.string.unknown)
     eventState.value =
       EventState.ShowEditableMessage(
-        application.getString(Res.string.toast_profile_updated_failed, name, displayReason),
+        getString(Res.string.toast_profile_updated_failed, name, displayReason),
         uuid,
       )
   }

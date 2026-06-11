@@ -55,9 +55,9 @@ import com.github.kr328.clash.ui.lifecycle.withLifecycle
 import com.github.kr328.clash.ui.theme.PreviewTabby
 import com.github.kr328.clash.ui.theme.TabbyThemeWrapper
 import com.github.kr328.clash.ui.theme.tabbyDimens
-import com.github.kr328.clash.ui.util.stringResCompat
 import java.util.Date
 import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -75,8 +75,8 @@ internal fun LogcatScreen(
   val listState = rememberLazyListState()
   val snackbarHostState = remember { SnackbarHostState() }
   val scope = rememberCoroutineScope()
-  val messageCopied = stringResCompat(Res.string.copied)
-  val invalidFileTip = stringResCompat(Res.string.invalid_log_file)
+  val messageCopied = stringResource(Res.string.copied)
+  val invalidFileTip = stringResource(Res.string.invalid_log_file)
 
   LaunchedEffect(fileName, viewModel) { viewModel.init(fileName) }
 
@@ -153,7 +153,7 @@ private fun LogcatContent(
   modifier: Modifier = Modifier,
 ) {
   TabbyScaffold(
-    title = stringResCompat(Res.string.tabby_logcat),
+    title = stringResource(Res.string.tabby_logcat),
     modifier = modifier,
     snackbarHostState = snackbarHostState,
     actions = {
@@ -161,20 +161,20 @@ private fun LogcatContent(
         IconButton(onClick = onClose) {
           Icon(
             imageVector = TabbyIcons.BaselineStop,
-            contentDescription = stringResCompat(CommonRes.string.close),
+            contentDescription = stringResource(CommonRes.string.close),
           )
         }
       } else {
         IconButton(onClick = onDelete) {
           Icon(
             imageVector = TabbyIcons.BaselineDelete,
-            contentDescription = stringResCompat(CommonRes.string.delete),
+            contentDescription = stringResource(CommonRes.string.delete),
           )
         }
         IconButton(onClick = onExport) {
           Icon(
             imageVector = TabbyIcons.BaselineSave,
-            contentDescription = stringResCompat(CommonRes.string.export),
+            contentDescription = stringResource(CommonRes.string.export),
           )
         }
       }

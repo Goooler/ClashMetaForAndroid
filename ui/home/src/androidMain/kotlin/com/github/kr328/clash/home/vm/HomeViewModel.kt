@@ -21,7 +21,6 @@ import com.github.kr328.clash.glue.util.startClashService
 import com.github.kr328.clash.glue.util.stopClashService
 import com.github.kr328.clash.glue.util.withClash
 import com.github.kr328.clash.glue.util.withProfile
-import com.github.kr328.clash.ui.util.getString
 import kotlin.time.Duration.Companion.seconds
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -31,6 +30,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.getString
 
 internal class HomeViewModel(private val dependencies: Dependencies) :
   ViewModel(), DefaultLifecycleObserver {
@@ -262,9 +262,9 @@ internal class HomeViewModel(private val dependencies: Dependencies) :
 
     suspend fun queryTrafficTotal(): Traffic
 
-    fun modeText(mode: TunnelState.Mode): String
+    suspend fun modeText(mode: TunnelState.Mode): String
 
-    fun unableToStartVpnText(): String
+    suspend fun unableToStartVpnText(): String
 
     fun startClashService(): Intent?
 
@@ -290,16 +290,16 @@ internal class AndroidDependencies(private val application: Application) :
 
   override suspend fun queryTrafficTotal(): Traffic = withClash { queryTrafficTotal() }
 
-  override fun modeText(mode: TunnelState.Mode): String {
+  override suspend fun modeText(mode: TunnelState.Mode): String {
     return when (mode) {
-      Direct -> application.getString(CommonRes.string.direct_mode)
-      Global -> application.getString(CommonRes.string.global_mode)
-      Rule -> application.getString(CommonRes.string.rule_mode)
+      Direct -> getString(CommonRes.string.direct_mode)
+      Global -> getString(CommonRes.string.global_mode)
+      Rule -> getString(CommonRes.string.rule_mode)
     }
   }
 
-  override fun unableToStartVpnText(): String {
-    return application.getString(CommonRes.string.unable_to_start_vpn)
+  override suspend fun unableToStartVpnText(): String {
+    return getString(CommonRes.string.unable_to_start_vpn)
   }
 
   override fun startClashService(): Intent? = application.startClashService()

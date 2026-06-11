@@ -11,7 +11,6 @@ import com.github.kr328.clash.home.Res
 import com.github.kr328.clash.home.already_up_to_date
 import com.github.kr328.clash.home.api.HelpApi
 import com.github.kr328.clash.home.check_update_failed
-import com.github.kr328.clash.ui.util.getString
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -19,6 +18,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import net.swiftzer.semver.SemVer
+import org.jetbrains.compose.resources.getString
 
 internal class HelpViewModel(
   private val application: Application,
@@ -46,7 +46,7 @@ internal class HelpViewModel(
 
         if (latestTag == null) {
           eventState.update {
-            EventState.ShowMessage(application.getString(Res.string.check_update_failed))
+            EventState.ShowMessage(getString(Res.string.check_update_failed))
           }
           return@launch
         }
@@ -57,13 +57,13 @@ internal class HelpViewModel(
           eventState.update { EventState.UpdateAvailable(TABBY_RELEASES_LATEST) }
         } else {
           eventState.update {
-            EventState.ShowMessage(application.getString(Res.string.already_up_to_date))
+            EventState.ShowMessage(getString(Res.string.already_up_to_date))
           }
         }
       } catch (e: Exception) {
         Log.e("Check for updates failed: ${e.message}", e)
         eventState.update {
-          EventState.ShowMessage(application.getString(Res.string.check_update_failed))
+          EventState.ShowMessage(getString(Res.string.check_update_failed))
         }
       } finally {
         uiState.update { it.copy(checkingForUpdates = false) }

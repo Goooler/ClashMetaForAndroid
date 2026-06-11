@@ -51,8 +51,8 @@ import com.github.kr328.clash.ui.icon.TabbyIcons
 import com.github.kr328.clash.ui.theme.PreviewTabby
 import com.github.kr328.clash.ui.theme.TabbyThemeWrapper
 import com.github.kr328.clash.ui.theme.tabbyDimens
-import com.github.kr328.clash.ui.util.stringResCompat
 import java.util.Date
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -66,8 +66,8 @@ internal fun LogsScreen(
   if (showDeleteAllDialog) {
     AlertDialog(
       onDismissRequest = { showDeleteAllDialog = false },
-      title = { Text(text = stringResCompat(Res.string.delete_all_logs)) },
-      text = { Text(text = stringResCompat(Res.string.delete_all_logs_warn)) },
+      title = { Text(text = stringResource(Res.string.delete_all_logs)) },
+      text = { Text(text = stringResource(Res.string.delete_all_logs_warn)) },
       confirmButton = {
         TextButton(
           onClick = {
@@ -75,12 +75,12 @@ internal fun LogsScreen(
             viewModel.deleteAll()
           }
         ) {
-          Text(text = stringResCompat(CommonRes.string.ok))
+          Text(text = stringResource(CommonRes.string.ok))
         }
       },
       dismissButton = {
         TextButton(onClick = { showDeleteAllDialog = false }) {
-          Text(text = stringResCompat(CommonRes.string.cancel))
+          Text(text = stringResource(CommonRes.string.cancel))
         }
       },
     )
@@ -107,12 +107,12 @@ private fun LogsContent(
 ) {
   TabbyScaffold(
     modifier = modifier,
-    title = stringResCompat(CommonRes.string.logs),
+    title = stringResource(CommonRes.string.logs),
     actions = {
       IconButton(onClick = onDeleteAllConfirm) {
         Icon(
           imageVector = TabbyIcons.BaselineClearAll,
-          contentDescription = stringResCompat(Res.string.delete_all_logs),
+          contentDescription = stringResource(Res.string.delete_all_logs),
         )
       }
     },
@@ -123,8 +123,8 @@ private fun LogsContent(
     LazyColumn(modifier = Modifier.fillMaxSize().padding(innerPadding)) {
       item {
         LogsActionItem(
-          title = stringResCompat(Res.string.tabby_logcat),
-          summary = stringResCompat(CommonRes.string.tap_to_start),
+          title = stringResource(Res.string.tabby_logcat),
+          summary = stringResource(CommonRes.string.tap_to_start),
           icon = TabbyIcons.BaselineAdb,
           onClick = onStartLogcat,
         )
@@ -132,7 +132,7 @@ private fun LogsContent(
       item { HorizontalDivider() }
       item {
         Text(
-          text = stringResCompat(Res.string.history),
+          text = stringResource(Res.string.history),
           color = MaterialTheme.colorScheme.primary,
           modifier =
             Modifier.fillMaxWidth()

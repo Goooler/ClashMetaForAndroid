@@ -22,7 +22,6 @@ import com.github.kr328.clash.log.file_exported
 import com.github.kr328.clash.log.model.LogFile
 import com.github.kr328.clash.log.util.LogcatFilter
 import com.github.kr328.clash.log.util.LogcatReader
-import com.github.kr328.clash.ui.util.getString
 import java.io.OutputStreamWriter
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
@@ -37,6 +36,7 @@ import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
+import org.jetbrains.compose.resources.getString
 
 internal class LogcatViewModel(private val application: Application) :
   ViewModel(), DefaultLifecycleObserver {
@@ -110,10 +110,10 @@ internal class LogcatViewModel(private val application: Application) :
       eventState.value =
         try {
           writeLogTo(messages, file, uri)
-          EventState.ShowMessage(application.getString(Res.string.file_exported))
+          EventState.ShowMessage(getString(Res.string.file_exported))
         } catch (e: Exception) {
           Log.e("Export log file failed: ${e.message}", e)
-          EventState.ShowMessage(e.message ?: application.getString(CommonRes.string.unknown))
+          EventState.ShowMessage(e.message ?: getString(CommonRes.string.unknown))
         }
     }
   }

@@ -11,7 +11,6 @@ import com.github.kr328.clash.glue.remote.Remote
 import com.github.kr328.clash.glue.util.withClash
 import com.github.kr328.clash.profile.Res
 import com.github.kr328.clash.profile.format_update_provider_failure
-import com.github.kr328.clash.ui.util.getString
 import kotlin.time.Duration.Companion.minutes
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -20,6 +19,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.getString
 
 internal class ProvidersViewModel(private val application: Application) :
   ViewModel(), DefaultLifecycleObserver {
@@ -81,7 +81,7 @@ internal class ProvidersViewModel(private val application: Application) :
         val errorMessage = e.localizedMessage ?: e.message ?: e.toString()
         eventState.value =
           EventState.ShowMessage(
-            application.getString(
+            getString(
               Res.string.format_update_provider_failure,
               provider.name,
               errorMessage,
