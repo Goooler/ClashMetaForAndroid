@@ -1,4 +1,4 @@
-<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="PluralsCandidate">
+<resources>
 
   <string name="_new">Новый</string>
   <string name="cancel">Отмена</string>

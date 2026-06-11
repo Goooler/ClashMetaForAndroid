@@ -1,4 +1,4 @@
-<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="PluralsCandidate">
+<resources>
 
   <string name="external_control_activity">Внешнее управление</string>
   <string name="external_control_already_started">Сервис Tabby уже запущен</string>

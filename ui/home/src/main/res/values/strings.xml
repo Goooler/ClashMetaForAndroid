@@ -1,4 +1,4 @@
-<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="PluralsCandidate">
+<resources>
 
   <string name="about">About</string>
   <string name="already_up_to_date">Already up to date</string>

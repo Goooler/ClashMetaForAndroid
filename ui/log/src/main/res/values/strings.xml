@@ -1,4 +1,4 @@
-<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="PluralsCandidate">
+<resources>
 
   <string name="tabby_logcat">Tabby Logcat</string>
   <string name="copied">Copied</string>

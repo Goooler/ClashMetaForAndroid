@@ -1,4 +1,4 @@
-<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="PluralsCandidate">
+<resources>
 
   <string name="access_control_mode">Режим контроля доступа</string>
   <string name="access_control_packages">Приложения с контролируемым доступом</string>
