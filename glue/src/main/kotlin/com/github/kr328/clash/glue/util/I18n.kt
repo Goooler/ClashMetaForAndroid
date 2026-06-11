@@ -38,7 +38,6 @@ fun Provider.type(context: Context): String {
   return context.getString(CommonR.string.format_provider_type, type, vehicle)
 }
 
-@JvmOverloads
 fun Date.format(
   context: Context,
   includeDate: Boolean = true,
