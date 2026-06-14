@@ -123,14 +123,13 @@ object ProfileProcessor {
               context.importedDir.resolve(snapshot.uuid.toString())
             )
 
-            val upload = subscriptionInfo?.subUpload
-            if (upload != null) {
+            if (subscriptionInfo != null && subscriptionInfo.subTotal > 0) {
               ImportedDao().update(
                 imported.copy(
-                  upload = upload,
-                  download = subscriptionInfo.subDownload ?: 0,
-                  total = subscriptionInfo.subTotal ?: 0,
-                  expire = subscriptionInfo.subExpire ?: 0,
+                  upload = subscriptionInfo.subUpload,
+                  download = subscriptionInfo.subDownload,
+                  total = subscriptionInfo.subTotal,
+                  expire = subscriptionInfo.subExpire,
                 )
               )
             }
