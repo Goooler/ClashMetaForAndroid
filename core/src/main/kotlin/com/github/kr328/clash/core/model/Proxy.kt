@@ -1,6 +1,7 @@
 package com.github.kr328.clash.core.model
 
 import android.os.Parcelable
+import kotlin.jvm.JvmInline
 import kotlinx.parcelize.Parcelize
 import kotlinx.serialization.Serializable
 
@@ -12,37 +13,16 @@ data class Proxy(
   val subtitle: String,
   val type: Type,
   val delay: Int,
+  val isGroup: Boolean,
 ) : Parcelable {
-  enum class Type(val group: Boolean) {
-    Direct(false),
-    Reject(false),
-    RejectDrop(false),
-    Compatible(false),
-    Pass(false),
-    Shadowsocks(false),
-    ShadowsocksR(false),
-    Snell(false),
-    Socks5(false),
-    Http(false),
-    Vmess(false),
-    Vless(false),
-    Trojan(false),
-    Hysteria(false),
-    Hysteria2(false),
-    Tuic(false),
-    WireGuard(false),
-    Dns(false),
-    Ssh(false),
-    Mieru(false),
-    AnyTLS(false),
-    Sudoku(false),
-    Masque(false),
-    TrustTunnel(false),
-    Relay(true),
-    Selector(true),
-    Fallback(true),
-    URLTest(true),
-    LoadBalance(true),
-    Unknown(false),
+  @JvmInline
+  @Serializable
+  @Parcelize
+  value class Type(val name: String) : Parcelable {
+    companion object {
+      val Selector: Type = Type("Selector")
+      val URLTest: Type = Type("URLTest")
+      val Unknown: Type = Type("Unknown")
+    }
   }
 }

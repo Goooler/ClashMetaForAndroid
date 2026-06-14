@@ -218,7 +218,7 @@ internal class ProxyViewModel(private val uiStore: UiStore) :
           group.proxies.map { proxy ->
             UiState.ProxyItemSource(
               proxy = proxy,
-              linkIndex = if (proxy.type.group) nameIndexMap[proxy.name] ?: -1 else -1,
+              linkIndex = if (proxy.isGroup) nameIndexMap[proxy.name] ?: -1 else -1,
             )
           }
         }
@@ -287,9 +287,9 @@ internal class ProxyViewModel(private val uiStore: UiStore) :
             unselectedBackground
           }
         val controls = if (selected) selectedControl else unselectedControl
-        val title = if (proxy.type.group) proxy.name else proxy.title
+        val title = if (proxy.isGroup) proxy.name else proxy.title
         val subtitle =
-          if (proxy.type.group) {
+          if (proxy.isGroup) {
             if (linkNow == null) {
               proxy.type.name
             } else {
