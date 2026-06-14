@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.github.kr328.clash.core.Clash
 import com.github.kr328.clash.core.model.Proxy
 import com.github.kr328.clash.core.model.ProxySort
+import com.github.kr328.clash.core.model.ProxyType
 import com.github.kr328.clash.core.model.TunnelState
 import com.github.kr328.clash.glue.remote.Remote
 import com.github.kr328.clash.glue.store.UiStore
@@ -225,7 +226,7 @@ internal class ProxyViewModel(private val uiStore: UiStore) :
 
       updateGroupState(index) {
         it.copy(
-          selectable = group.type.name == "Selector",
+          selectable = group.type == ProxyType.Selector,
           urlTesting = false,
           sources = sources,
           delayTestingKeys =
