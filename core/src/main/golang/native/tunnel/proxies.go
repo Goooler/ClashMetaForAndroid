@@ -172,9 +172,10 @@ func convertProxies(proxies []C.Proxy, uiSubtitlePattern *regexp2.Regexp) []*Pro
 		name := p.Name()
 		title := name
 		subtitle := p.Type().String()
+		_, isGroup := p.Adapter().(outboundgroup.ProxyGroup)
 
 		if uiSubtitlePattern != nil {
-			if _, ok := p.Adapter().(outboundgroup.ProxyGroup); !ok {
+			if !isGroup {
 				runes := []rune(name)
 				match, err := uiSubtitlePattern.FindRunesMatch(runes)
 				if err == nil && match != nil {
@@ -190,7 +191,6 @@ func convertProxies(proxies []C.Proxy, uiSubtitlePattern *regexp2.Regexp) []*Pro
 				break
 			}
 		}
-		_, isGroup := p.Adapter().(outboundgroup.ProxyGroup)
 
 		result = append(result, &Proxy{
 			Name:     name,
@@ -212,9 +212,10 @@ func collectProviders(providers []provider.ProxyProvider, uiSubtitlePattern *reg
 			name := px.Name()
 			title := name
 			subtitle := px.Type().String()
+			_, isGroup := px.Adapter().(outboundgroup.ProxyGroup)
 
 			if uiSubtitlePattern != nil {
-				if _, ok := px.Adapter().(outboundgroup.ProxyGroup); !ok {
+				if !isGroup {
 					runes := []rune(name)
 					match, err := uiSubtitlePattern.FindRunesMatch(runes)
 					if err == nil && match != nil {
@@ -231,7 +232,6 @@ func collectProviders(providers []provider.ProxyProvider, uiSubtitlePattern *reg
 					break
 				}
 			}
-			_, isGroup := px.Adapter().(outboundgroup.ProxyGroup)
 
 			result = append(result, &Proxy{
 				Name:     name,
