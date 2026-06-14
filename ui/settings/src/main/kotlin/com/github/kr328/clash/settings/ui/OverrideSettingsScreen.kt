@@ -709,6 +709,7 @@ private val ConfigurationOverride.FilterMode?.textRes: Int
     when (this) {
       BlackList -> R.string.blacklist
       WhiteList -> R.string.whitelist
+      Rule -> CommonR.string.rule
       null -> R.string.dont_modify
     }
 

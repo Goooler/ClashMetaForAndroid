@@ -86,6 +86,7 @@ data class ConfigurationOverride(
   enum class FilterMode {
     @SerialName("blacklist") BlackList,
     @SerialName("whitelist") WhiteList,
+    @SerialName("rule") Rule,
   }
 
   @Serializable
