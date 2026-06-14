@@ -19,10 +19,10 @@
   <string name="exit_without_save_warning">Все изменения будут ПОТЕРЯНЫ</string>
   <string name="file_name">Название файла</string>
   <string name="files">Файлы</string>
-  <string name="format_fetching_configuration">Загрузка настроек из \'%s\'</string>
-  <string name="format_fetching_provider">Загрузка провайдера из \'%s\'</string>
-  <string name="format_minutes">%d мин.</string>
-  <string name="format_type_unsaved">%s (не сохранён)</string>
+  <string name="format_fetching_configuration">Загрузка настроек из \'%1$s\'</string>
+  <string name="format_fetching_provider">Загрузка провайдера из \'%1$s\'</string>
+  <string name="format_minutes">%1$d мин.</string>
+  <string name="format_type_unsaved">%1$s (не сохранён)</string>
   <string name="format_update_provider_failure">Обновление %1$s: %2$s</string>
   <string name="import_">Импорт</string>
   <string name="import_from_file">Импорт из файла</string>
@@ -40,7 +40,7 @@
   <string name="save">Сохранить</string>
   <string name="should_not_be_blank">Не должно быть пустым</string>
   <string name="tips_properties"><![CDATA[Принимается только <strong>конфиг Tabby</strong> (включая <strong>Прокси</strong>/<strong>Правила</strong>)]]></string>
-  <string name="toast_profile_updated_complete">Update profile %s completed</string>
+  <string name="toast_profile_updated_complete">Update profile %1$s completed</string>
   <string name="toast_profile_updated_failed">Update profile %1$s failed: %2$s</string>
   <string name="update">Обновить</string>
   <string name="update_all">Обновить всё</string>

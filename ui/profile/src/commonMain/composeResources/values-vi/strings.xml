@@ -19,10 +19,10 @@
   <string name="exit_without_save_warning">Tất cả thay đổi sẽ *MẤT*</string>
   <string name="file_name">Tên tệp</string>
   <string name="files">Tệp</string>
-  <string name="format_fetching_configuration">Tìm nạp cấu hình từ \'%s\'</string>
-  <string name="format_fetching_provider">Nhà cung cấp tìm nạp \'%s\'</string>
-  <string name="format_minutes">%d phút</string>
-  <string name="format_type_unsaved">%s (Chưa lưu)</string>
+  <string name="format_fetching_configuration">Tìm nạp cấu hình từ \'%1$s\'</string>
+  <string name="format_fetching_provider">Nhà cung cấp tìm nạp \'%1$s\'</string>
+  <string name="format_minutes">%1$d phút</string>
+  <string name="format_type_unsaved">%1$s (Chưa lưu)</string>
   <string name="format_update_provider_failure">Cập nhật %1$s: %2$s</string>
   <string name="import_">Nhập</string>
   <string name="import_from_file">Nhập từ tệp</string>
@@ -40,7 +40,7 @@
   <string name="save">Lưu</string>
   <string name="should_not_be_blank">Không được để trống</string>
   <string name="tips_properties">Chỉ chấp nhận cấu hình Tabby bao gồm Proxy và Quy tắc</string>
-  <string name="toast_profile_updated_complete">Cập nhật thành công %s</string>
+  <string name="toast_profile_updated_complete">Cập nhật thành công %1$s</string>
   <string name="toast_profile_updated_failed">Cập nhật không thành công %1$s %2$s</string>
   <string name="update">Cập nhật</string>
   <string name="update_all">Cập nhật tất cả</string>

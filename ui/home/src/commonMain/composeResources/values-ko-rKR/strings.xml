@@ -9,8 +9,8 @@
   <string name="document">문서</string>
   <string name="donate">기부</string>
   <string name="feedback">피드백</string>
-  <string name="format_profile_activated">%s 활성화됨</string>
-  <string name="format_traffic_forwarded">%s 전송됨</string>
+  <string name="format_profile_activated">%1$s 활성화됨</string>
+  <string name="format_traffic_forwarded">%1$s 전송됨</string>
   <string name="github_issues">GitHub Issues</string>
   <string name="google_play">Google Play</string>
   <string name="help">도움</string>
