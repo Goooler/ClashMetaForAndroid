@@ -225,7 +225,7 @@ internal class ProxyViewModel(private val uiStore: UiStore) :
 
       updateGroupState(index) {
         it.copy(
-          selectable = group.type == "Selector",
+          selectable = group.type.name == "Selector",
           urlTesting = false,
           sources = sources,
           delayTestingKeys =
@@ -291,9 +291,9 @@ internal class ProxyViewModel(private val uiStore: UiStore) :
         val subtitle =
           if (proxy.isGroup) {
             if (linkNow == null) {
-              proxy.type
+              proxy.type.name
             } else {
-              "%s(%s)".format(proxy.type, linkNow.name.ifEmpty { "*" })
+              "%s(%s)".format(proxy.type.name, linkNow.name.ifEmpty { "*" })
             }
           } else {
             proxy.subtitle

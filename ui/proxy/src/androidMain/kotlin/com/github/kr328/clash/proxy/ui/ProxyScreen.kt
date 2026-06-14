@@ -72,6 +72,7 @@ import com.github.kr328.clash.common.rule_mode
 import com.github.kr328.clash.common.sort
 import com.github.kr328.clash.core.model.Proxy
 import com.github.kr328.clash.core.model.ProxySort
+import com.github.kr328.clash.core.model.ProxyType
 import com.github.kr328.clash.core.model.TunnelState
 import com.github.kr328.clash.proxy.Res
 import com.github.kr328.clash.proxy.delay
@@ -647,7 +648,7 @@ private fun ProxyContentPreview() {
                   name = "auto",
                   title = "Auto",
                   subtitle = "",
-                  type = "URLTest",
+                  type = ProxyType("URLTest"),
                   delay = 48,
                   isGroup = true,
                 ),
@@ -659,7 +660,7 @@ private fun ProxyContentPreview() {
                   name = "hk-01",
                   title = "Hong Kong 01",
                   subtitle = "BGP | 1.2x",
-                  type = "Shadowsocks",
+                  type = ProxyType("Shadowsocks"),
                   delay = 62,
                   isGroup = false,
                 ),

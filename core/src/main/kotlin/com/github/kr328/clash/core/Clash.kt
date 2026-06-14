@@ -11,9 +11,9 @@ import com.github.kr328.clash.core.model.ConfigurationOverride
 import com.github.kr328.clash.core.model.FetchStatus
 import com.github.kr328.clash.core.model.LogMessage
 import com.github.kr328.clash.core.model.Provider
-import com.github.kr328.clash.core.model.Proxy
 import com.github.kr328.clash.core.model.ProxyGroup
 import com.github.kr328.clash.core.model.ProxySort
+import com.github.kr328.clash.core.model.ProxyType
 import com.github.kr328.clash.core.model.Traffic
 import com.github.kr328.clash.core.model.TunnelState
 import com.github.kr328.clash.core.model.UiConfiguration
@@ -131,7 +131,7 @@ object Clash {
 
   fun queryGroup(name: String, sort: ProxySort): ProxyGroup {
     return Bridge.nativeQueryGroup(name, sort.name)?.let { json.decodeFromString(it) }
-      ?: ProxyGroup("Unknown", emptyList(), "")
+      ?: ProxyGroup(ProxyType("Unknown"), emptyList(), "")
   }
 
   fun healthCheck(name: String): CompletableDeferred<Unit> {
