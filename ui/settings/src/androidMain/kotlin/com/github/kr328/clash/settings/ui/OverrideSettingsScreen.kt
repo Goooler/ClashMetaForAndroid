@@ -43,6 +43,7 @@ import com.github.kr328.clash.common.global_mode
 import com.github.kr328.clash.common.mode
 import com.github.kr328.clash.common.ok
 import com.github.kr328.clash.common.reset
+import com.github.kr328.clash.common.rule
 import com.github.kr328.clash.common.rule_mode
 import com.github.kr328.clash.common.unknown
 import com.github.kr328.clash.core.model.ConfigurationOverride
@@ -777,6 +778,7 @@ private val ConfigurationOverride.FilterMode?.textRes: StringResource
     when (this) {
       BlackList -> Res.string.blacklist
       WhiteList -> Res.string.whitelist
+      Rule -> CommonRes.string.rule
       null -> Res.string.dont_modify
     }
 
