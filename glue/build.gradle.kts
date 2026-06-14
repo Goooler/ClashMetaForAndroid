@@ -1,4 +1,6 @@
-plugins { alias(libs.plugins.android.library) }
+plugins {
+  alias(libs.plugins.android.library)
+}
 
 dependencies {
   api(projects.core)

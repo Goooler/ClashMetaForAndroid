@@ -1,4 +1,6 @@
-plugins { alias(libs.plugins.android.multiplatform) }
+plugins {
+  alias(libs.plugins.android.multiplatform)
+}
 
 kotlin {
   sourceSets {
