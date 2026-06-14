@@ -15,8 +15,6 @@ dependencies {
   implementation(libs.androidx.room.runtime)
   implementation(libs.kaidl.runtime)
   implementation(libs.rikkax.multiprocess)
-  implementation(libs.okhttp.client)
-  implementation(libs.okhttp.interceptor)
 
   ksp(libs.kaidl.compiler)
   ksp(libs.androidx.room.compiler)
