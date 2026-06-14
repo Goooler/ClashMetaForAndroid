@@ -12,7 +12,6 @@ import com.github.kr328.clash.service.remote.IFetchObserver
 import com.github.kr328.clash.service.remote.IProfileManager
 import com.github.kr328.clash.service.store.ServiceStore
 import com.github.kr328.clash.service.util.directoryLastModified
-import com.github.kr328.clash.service.util.fetchSubscriptionUserInfo
 import com.github.kr328.clash.service.util.generateProfileUUID
 import com.github.kr328.clash.service.util.importedDir
 import com.github.kr328.clash.service.util.pendingDir
@@ -146,38 +145,6 @@ class ProfileManager(private val context: Context) :
 
   override suspend fun update(uuid: Uuid) {
     scheduleUpdate(uuid, true)
-    ImportedDao().queryByUUID(uuid)?.let {
-      if (it.type == Profile.Type.Url && it.source.startsWith("https://", true)) {
-        updateFlow(it)
-      }
-    }
-  }
-
-  suspend fun updateFlow(old: Imported) {
-    try {
-      val userInfo = context.fetchSubscriptionUserInfo(old.source) ?: return
-      val new =
-        Imported(
-          old.uuid,
-          old.name,
-          old.type,
-          old.source,
-          old.interval,
-          userInfo.upload,
-          userInfo.download,
-          userInfo.total,
-          userInfo.expire,
-          old.createdAt,
-          ageSecretKey = old.ageSecretKey,
-        )
-
-      ImportedDao().update(new)
-
-      PendingDao().remove(new.uuid)
-      context.sendProfileChanged(new.uuid)
-    } catch (e: Exception) {
-      Log.e("Update profile flow failed: ${e.message}", e)
-    }
   }
 
   override suspend fun commit(uuid: Uuid, callback: IFetchObserver?) {

@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.core.net.toUri
 import com.github.kr328.clash.common.log.Log
 import com.github.kr328.clash.core.Clash
+import com.github.kr328.clash.core.model.FetchStatus
 import com.github.kr328.clash.service.data.Imported
 import com.github.kr328.clash.service.data.ImportedDao
 import com.github.kr328.clash.service.data.Pending
@@ -11,7 +12,6 @@ import com.github.kr328.clash.service.data.PendingDao
 import com.github.kr328.clash.service.model.Profile
 import com.github.kr328.clash.service.remote.IFetchObserver
 import com.github.kr328.clash.service.store.ServiceStore
-import com.github.kr328.clash.service.util.fetchSubscriptionUserInfo
 import com.github.kr328.clash.service.util.importedDir
 import com.github.kr328.clash.service.util.pendingDir
 import com.github.kr328.clash.service.util.processingDir
@@ -49,22 +49,7 @@ object ProfileProcessor {
         }
 
         val force = snapshot.type != Profile.Type.File
-        var cb = callback
-
-        Clash.fetchAndValid(
-          context.processingDir,
-          snapshot.source,
-          force,
-          snapshot.ageSecretKey?.takeIf { it.isNotBlank() },
-        ) {
-          try {
-            cb?.updateStatus(it)
-          } catch (e: Exception) {
-            cb = null
-
-            Log.w("Report fetch status: $e", e)
-          }
-        }
+        val subscriptionInfo = fetchProfile(context, snapshot.source, force, snapshot.ageSecretKey, callback)
 
         profileLock.withLock {
           if (PendingDao().queryByUUID(snapshot.uuid) == snapshot) {
@@ -74,65 +59,36 @@ object ProfileProcessor {
             )
 
             val old = ImportedDao().queryByUUID(snapshot.uuid)
-            if (snapshot.type == Profile.Type.Url) {
-              val userInfo =
-                if (snapshot.source.startsWith("https://", true)) {
-                  context.fetchSubscriptionUserInfo(snapshot.source)
-                } else {
-                  null
-                }
-              val new =
-                Imported(
-                  snapshot.uuid,
-                  snapshot.name,
-                  snapshot.type,
-                  snapshot.source,
-                  snapshot.interval,
-                  userInfo?.upload ?: 0,
-                  userInfo?.download ?: 0,
-                  userInfo?.total ?: 0,
-                  userInfo?.expire ?: 0,
-                  old?.createdAt ?: System.currentTimeMillis(),
-                  ageSecretKey = snapshot.ageSecretKey,
-                )
-              if (old != null) {
-                ImportedDao().update(new)
-              } else {
-                ImportedDao().insert(new)
-              }
+            val updateInterval = subscriptionInfo?.subUpdateInterval
+              ?.takeIf { old == null && snapshot.interval == 0L }
+              ?: snapshot.interval
 
-              PendingDao().remove(snapshot.uuid)
+            val new =
+              Imported(
+                snapshot.uuid,
+                snapshot.name,
+                snapshot.type,
+                snapshot.source,
+                updateInterval,
+                subscriptionInfo?.subUpload ?: 0,
+                subscriptionInfo?.subDownload ?: 0,
+                subscriptionInfo?.subTotal ?: 0,
+                subscriptionInfo?.subExpire ?: 0,
+                old?.createdAt ?: System.currentTimeMillis(),
+                ageSecretKey = snapshot.ageSecretKey,
+              )
 
-              context.pendingDir.resolve(snapshot.uuid.toString()).deleteRecursively()
-
-              context.sendProfileChanged(snapshot.uuid)
-            } else if (snapshot.type == Profile.Type.File) {
-              val new =
-                Imported(
-                  snapshot.uuid,
-                  snapshot.name,
-                  snapshot.type,
-                  snapshot.source,
-                  snapshot.interval,
-                  0,
-                  0,
-                  0,
-                  0,
-                  old?.createdAt ?: System.currentTimeMillis(),
-                  ageSecretKey = snapshot.ageSecretKey,
-                )
-              if (old != null) {
-                ImportedDao().update(new)
-              } else {
-                ImportedDao().insert(new)
-              }
-
-              PendingDao().remove(snapshot.uuid)
-
-              context.pendingDir.resolve(snapshot.uuid.toString()).deleteRecursively()
-
-              context.sendProfileChanged(snapshot.uuid)
+            if (old != null) {
+              ImportedDao().update(new)
+            } else {
+              ImportedDao().insert(new)
             }
+
+            PendingDao().remove(snapshot.uuid)
+
+            context.pendingDir.resolve(snapshot.uuid.toString()).deleteRecursively()
+
+            context.sendProfileChanged(snapshot.uuid)
           }
         }
       }
@@ -157,35 +113,66 @@ object ProfileProcessor {
           imported
         }
 
-        var cb = callback
-
-        Clash.fetchAndValid(
-          context.processingDir,
-          snapshot.source,
-          true,
-          snapshot.ageSecretKey?.takeIf { it.isNotBlank() },
-        ) {
-          try {
-            cb?.updateStatus(it)
-          } catch (e: Exception) {
-            cb = null
-
-            Log.w("Report fetch status: $e", e)
-          }
-        }
+        val subscriptionInfo = fetchProfile(context, snapshot.source, true, snapshot.ageSecretKey, callback)
 
         profileLock.withLock {
-          if (ImportedDao().exists(snapshot.uuid)) {
+          val imported = ImportedDao().queryByUUID(snapshot.uuid)
+          if (imported != null) {
             context.importedDir.resolve(snapshot.uuid.toString()).deleteRecursively()
             context.processingDir.copyRecursively(
               context.importedDir.resolve(snapshot.uuid.toString())
             )
+
+            val upload = subscriptionInfo?.subUpload
+            if (upload != null) {
+              ImportedDao().update(
+                imported.copy(
+                  upload = upload,
+                  download = subscriptionInfo.subDownload ?: 0,
+                  total = subscriptionInfo.subTotal ?: 0,
+                  expire = subscriptionInfo.subExpire ?: 0,
+                )
+              )
+            }
 
             context.sendProfileChanged(snapshot.uuid)
           }
         }
       }
     }
+  }
+
+  private suspend fun fetchProfile(
+    context: Context,
+    source: String,
+    force: Boolean,
+    ageSecretKey: String?,
+    callback: IFetchObserver?,
+  ): FetchStatus? {
+    var subscriptionInfo: FetchStatus? = null
+    var cb = callback
+
+    Clash.fetchAndValid(
+      context.processingDir,
+      source,
+      force,
+      ageSecretKey?.takeIf { it.isNotBlank() },
+    ) {
+      if (it.action == FetchStatus.Action.SubscriptionInfo) {
+        subscriptionInfo = it
+        return@fetchAndValid
+      }
+
+      try {
+        cb?.updateStatus(it)
+      } catch (e: Exception) {
+        cb = null
+
+        Log.w("Report fetch status: $e", e)
+      }
+    }
+
+    return subscriptionInfo
   }
 
   suspend fun delete(context: Context, uuid: Uuid) {

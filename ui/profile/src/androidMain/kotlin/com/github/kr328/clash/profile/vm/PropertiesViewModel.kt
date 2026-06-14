@@ -245,6 +245,7 @@ internal class PropertiesViewModel(
               progress = status.progress,
             )
           }
+          SubscriptionInfo -> current.progress
         }
       current.copy(progress = newProgress)
     }
