@@ -99,6 +99,7 @@ func writeFile(file string, reader io.Reader) error {
 	return err
 }
 
+// parseProfileUpdateInterval parses the profile update interval (in hours) from the header.
 func parseProfileUpdateInterval(value string) (int64, bool) {
 	hours, err := strconv.ParseInt(strings.TrimSpace(value), 10, 64)
 	if err != nil {
@@ -110,9 +111,6 @@ func parseProfileUpdateInterval(value string) (int64, bool) {
 	}
 
 	interval := time.Duration(hours) * time.Hour
-	if interval < 15*time.Minute {
-		interval = 15 * time.Minute
-	}
 
 	return int64(interval / time.Millisecond), true
 }
