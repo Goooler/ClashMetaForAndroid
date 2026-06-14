@@ -13,7 +13,7 @@ import kotlinx.serialization.Serializable
 @Parcelize
 @TypeParceler<List<Proxy>, ProxyGroupListParceler>
 @Serializable
-data class ProxyGroup(val type: ProxyType, val proxies: List<Proxy>, val now: String) : Parcelable
+data class ProxyGroup(val type: Proxy.Type, val proxies: List<Proxy>, val now: String) : Parcelable
 
 private object ProxyGroupListParceler : Parceler<List<Proxy>> {
   override fun create(parcel: Parcel): List<Proxy> {
