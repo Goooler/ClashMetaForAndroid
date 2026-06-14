@@ -218,14 +218,14 @@ internal class ProxyViewModel(private val uiStore: UiStore) :
           group.proxies.map { proxy ->
             UiState.ProxyItemSource(
               proxy = proxy,
-              linkIndex = if (proxy.type.group) nameIndexMap[proxy.name] ?: -1 else -1,
+              linkIndex = if (proxy.isGroup) nameIndexMap[proxy.name] ?: -1 else -1,
             )
           }
         }
 
       updateGroupState(index) {
         it.copy(
-          selectable = group.type == Proxy.Type.Selector,
+          selectable = group.type == "Selector",
           urlTesting = false,
           sources = sources,
           delayTestingKeys =
@@ -287,13 +287,13 @@ internal class ProxyViewModel(private val uiStore: UiStore) :
             unselectedBackground
           }
         val controls = if (selected) selectedControl else unselectedControl
-        val title = if (proxy.type.group) proxy.name else proxy.title
+        val title = if (proxy.isGroup) proxy.name else proxy.title
         val subtitle =
-          if (proxy.type.group) {
+          if (proxy.isGroup) {
             if (linkNow == null) {
-              proxy.type.name
+              proxy.type
             } else {
-              "%s(%s)".format(proxy.type.name, linkNow.name.ifEmpty { "*" })
+              "%s(%s)".format(proxy.type, linkNow.name.ifEmpty { "*" })
             }
           } else {
             proxy.subtitle
