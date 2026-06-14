@@ -1,9 +1,7 @@
 package com.github.kr328.clash.service
 
 import android.content.Context
-import com.github.kr328.clash.common.log.Log
 import com.github.kr328.clash.service.data.Database
-import com.github.kr328.clash.service.data.Imported
 import com.github.kr328.clash.service.data.ImportedDao
 import com.github.kr328.clash.service.data.Pending
 import com.github.kr328.clash.service.data.PendingDao
@@ -15,7 +13,6 @@ import com.github.kr328.clash.service.util.directoryLastModified
 import com.github.kr328.clash.service.util.generateProfileUUID
 import com.github.kr328.clash.service.util.importedDir
 import com.github.kr328.clash.service.util.pendingDir
-import com.github.kr328.clash.service.util.sendProfileChanged
 import java.io.FileNotFoundException
 import kotlin.uuid.Uuid
 import kotlinx.coroutines.CoroutineScope

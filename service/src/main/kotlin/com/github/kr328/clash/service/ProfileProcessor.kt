@@ -49,7 +49,8 @@ object ProfileProcessor {
         }
 
         val force = snapshot.type != Profile.Type.File
-        val subscriptionInfo = fetchProfile(context, snapshot.source, force, snapshot.ageSecretKey, callback)
+        val subscriptionInfo =
+          fetchProfile(context, snapshot.source, force, snapshot.ageSecretKey, callback)
 
         profileLock.withLock {
           if (PendingDao().queryByUUID(snapshot.uuid) == snapshot) {
@@ -59,9 +60,9 @@ object ProfileProcessor {
             )
 
             val old = ImportedDao().queryByUUID(snapshot.uuid)
-            val updateInterval = subscriptionInfo?.subUpdateInterval
-              ?.takeIf { old == null && snapshot.interval == 0L }
-              ?: snapshot.interval
+            val updateInterval =
+              subscriptionInfo?.subUpdateInterval?.takeIf { old == null && snapshot.interval == 0L }
+                ?: snapshot.interval
 
             val new =
               Imported(
@@ -113,7 +114,8 @@ object ProfileProcessor {
           imported
         }
 
-        val subscriptionInfo = fetchProfile(context, snapshot.source, true, snapshot.ageSecretKey, callback)
+        val subscriptionInfo =
+          fetchProfile(context, snapshot.source, true, snapshot.ageSecretKey, callback)
 
         profileLock.withLock {
           val imported = ImportedDao().queryByUUID(snapshot.uuid)
@@ -124,14 +126,15 @@ object ProfileProcessor {
             )
 
             if (subscriptionInfo != null && subscriptionInfo.subTotal > 0) {
-              ImportedDao().update(
-                imported.copy(
-                  upload = subscriptionInfo.subUpload,
-                  download = subscriptionInfo.subDownload,
-                  total = subscriptionInfo.subTotal,
-                  expire = subscriptionInfo.subExpire,
+              ImportedDao()
+                .update(
+                  imported.copy(
+                    upload = subscriptionInfo.subUpload,
+                    download = subscriptionInfo.subDownload,
+                    total = subscriptionInfo.subTotal,
+                    expire = subscriptionInfo.subExpire,
+                  )
                 )
-              )
             }
 
             context.sendProfileChanged(snapshot.uuid)
