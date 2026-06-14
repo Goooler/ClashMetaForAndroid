@@ -9,8 +9,8 @@
   <string name="document">Document</string>
   <string name="donate">Donate</string>
   <string name="feedback">Feedback</string>
-  <string name="format_profile_activated">%s Activated</string>
-  <string name="format_traffic_forwarded">%s Forwarded</string>
+  <string name="format_profile_activated">%1$s Activated</string>
+  <string name="format_traffic_forwarded">%1$s Forwarded</string>
   <string name="github_issues">GitHub Issues</string>
   <string name="google_play">Google Play</string>
   <string name="help">Help</string>
