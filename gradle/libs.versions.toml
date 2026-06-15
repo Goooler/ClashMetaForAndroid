@@ -9,7 +9,7 @@ jvmTarget = "21"
 navigation3 = "1.1.2"
 cmp = "1.11.1"
 compose = "1.11.2"
-koin = "4.2.1"
+koin = "4.2.2"
 
 [libraries]
 kotlin-coroutine = "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.11.0"
