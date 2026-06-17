@@ -1,14 +1,12 @@
 [versions]
 agp = "9.2.1"
 kotlin = "2.4.0"
-androidx-lifecycle = "2.11.0-rc01"
+lifecycle = "2.11.0-beta02"
 kaidl = "0.2.0"
 room = "3.0.0-alpha06"
 okhttp = "5.4.0"
 jvmTarget = "21"
-navigation3 = "1.1.2"
 cmp = "1.11.1"
-compose = "1.11.2"
 koin = "4.2.2"
 
 [libraries]
@@ -18,22 +16,22 @@ kotlin-serialization-json = "org.jetbrains.kotlinx:kotlinx-serialization-json:1.
 
 androidx-activity-compose = "androidx.activity:activity-compose:1.13.0"
 androidx-browser = "androidx.browser:browser:1.10.0"
-androidx-compose-ui = { module = "androidx.compose.ui:ui", version.ref = "compose" }
-androidx-compose-ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview", version.ref = "compose" }
-androidx-compose-ui-util = { module = "androidx.compose.ui:ui-util", version.ref = "compose" }
-androidx-compose-animation = { module = "androidx.compose.animation:animation", version.ref = "compose" }
-androidx-compose-material3 = "androidx.compose.material3:material3:1.4.0"
-androidx-lifecycle-viewmodel-compose = { module = "androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "androidx-lifecycle" }
-androidx-lifecycle-viewmodel-navigation3 = { module = "androidx.lifecycle:lifecycle-viewmodel-navigation3", version.ref = "androidx-lifecycle" }
-androidx-navigation3-runtime = { module = "androidx.navigation3:navigation3-runtime", version.ref = "navigation3" }
-androidx-navigation3-ui = { module = "androidx.navigation3:navigation3-ui", version.ref = "navigation3" }
+
+jetbrains-compose-ui = { module = "org.jetbrains.compose.ui:ui", version.ref = "cmp" }
+jetbrains-compose-uiTooling = { module = "org.jetbrains.compose.ui:ui-tooling", version.ref = "cmp" }
+jetbrains-compose-uiToolingPreview = { module = "org.jetbrains.compose.ui:ui-tooling-preview", version.ref = "cmp" }
+jetbrains-compose-runtime = { module = "org.jetbrains.compose.runtime:runtime", version.ref = "cmp" }
+jetbrains-compose-foundation = { module = "org.jetbrains.compose.foundation:foundation", version.ref = "cmp" }
+jetbrains-compose-components-resources = { module = "org.jetbrains.compose.components:components-resources", version.ref = "cmp" }
+jetbrains-compose-material3 = "org.jetbrains.compose.material3:material3:1.11.0-alpha07"
+jetbrains-androidx-lifecycle-viewmodelCompose = { module = "org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "lifecycle" }
+jetbrains-androidx-lifecycle-runtimeCompose = { module = "org.jetbrains.androidx.lifecycle:lifecycle-runtime-compose", version.ref = "lifecycle" }
+jetbrains-androidx-lifecycle-viewmodelNavigation3 = { module = "org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-navigation3", version.ref = "lifecycle" }
+jetbrains-androidx-navigation3-ui = "org.jetbrains.androidx.navigation3:navigation3-ui:1.1.1"
 
 androidx-core = "androidx.core:core:1.19.0"
 androidx-room-compiler = { module = "androidx.room3:room3-compiler", version.ref = "room" }
 androidx-room-runtime = { module = "androidx.room3:room3-runtime", version.ref = "room" }
-
-jb-compose-resources = { module = "org.jetbrains.compose.components:components-resources", version.ref = "cmp" }
-androidx-compose-ui-tooling = { module = "org.jetbrains.compose.ui:ui-tooling", version.ref = "cmp" }
 
 kaidl-compiler = { module = "io.github.goooler.kaidl:kaidl-compiler", version.ref = "kaidl" }
 kaidl-runtime = { module = "io.github.goooler.kaidl:kaidl-runtime", version.ref = "kaidl" }

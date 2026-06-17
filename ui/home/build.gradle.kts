@@ -9,13 +9,14 @@ kotlin {
       implementation(projects.ui)
 
       implementation(libs.composePreference)
+
+      implementation(libs.semver)
+      implementation(libs.kotlin.serialization.json)
     }
     androidMain.dependencies {
       implementation(projects.glue)
 
       implementation(libs.okhttp.client)
-      implementation(libs.kotlin.serialization.json)
-      implementation(libs.semver)
     }
     androidUnitTest.dependencies {
       implementation(libs.junit)
