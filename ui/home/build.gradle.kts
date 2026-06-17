@@ -11,12 +11,14 @@ kotlin {
       implementation(libs.composePreference)
 
       implementation(libs.semver)
+      implementation(libs.ktor.client.core)
+      implementation(libs.ktor.client.cio)
+      implementation(libs.ktor.client.content.negotiation)
+      implementation(libs.ktor.client.serialization.json)
       implementation(libs.kotlin.serialization.json)
     }
     androidMain.dependencies {
       implementation(projects.glue)
-
-      implementation(libs.okhttp.client)
     }
     androidUnitTest.dependencies {
       implementation(libs.junit)
