@@ -14,7 +14,7 @@ android {
   namespace = "com.github.kr328.clash.app"
   defaultConfig {
     applicationId = "io.github.goooler.tabby"
-    targetSdk = 36
+    targetSdk = 37
     versionName = "3.3.1"
     versionCode = checkNotNull(versionName).toVersionCode()
   }
