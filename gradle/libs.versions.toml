@@ -4,7 +4,7 @@ kotlin = "2.4.0"
 lifecycle = "2.11.0-beta02"
 kaidl = "0.2.0"
 room = "3.0.0-alpha06"
-okhttp = "5.4.0"
+ktor = "3.5.0"
 jvmTarget = "21"
 cmp = "1.11.1"
 koin = "4.2.2"
@@ -37,8 +37,10 @@ kaidl-compiler = { module = "io.github.goooler.kaidl:kaidl-compiler", version.re
 kaidl-runtime = { module = "io.github.goooler.kaidl:kaidl-runtime", version.ref = "kaidl" }
 rikkax-multiprocess = "dev.rikka.rikkax.preference:multiprocess:1.0.0"
 quickie-bundled = "io.github.g00fy2.quickie:quickie-bundled:1.12.0"
-okhttp-client = { module = "com.squareup.okhttp3:okhttp", version.ref = "okhttp" }
-okhttp-interceptor = { module = "com.squareup.okhttp3:logging-interceptor", version.ref = "okhttp" }
+ktor-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor" }
+ktor-client-cio = { module = "io.ktor:ktor-client-cio", version.ref = "ktor" }
+ktor-client-content-negotiation = { module = "io.ktor:ktor-client-content-negotiation", version.ref = "ktor" }
+ktor-client-serialization-json = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor" }
 bytesize = "me.saket.bytesize:bytesize:2.2.1"
 semver = "net.swiftzer.semver:semver:2.1.0"
 
