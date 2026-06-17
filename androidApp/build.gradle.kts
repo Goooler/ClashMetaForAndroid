@@ -87,10 +87,10 @@ dependencies {
   implementation(libs.androidx.core)
   implementation(libs.androidx.activity.compose)
 
-  implementation(libs.androidx.compose.ui)
-  implementation(libs.androidx.compose.ui.util)
-  implementation(libs.androidx.navigation3.runtime)
-  implementation(libs.androidx.navigation3.ui)
+  implementation(libs.jetbrains.compose.uiToolingPreview)
+  debugImplementation(libs.jetbrains.compose.uiTooling)
+
+  implementation(libs.jetbrains.androidx.navigation3.ui)
 
   implementation(libs.koin.android)
 }

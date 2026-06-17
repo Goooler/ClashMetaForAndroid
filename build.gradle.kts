@@ -72,22 +72,17 @@ allprojects {
 
       extensions.configure<NamedDomainObjectContainer<KotlinSourceSet>> {
         commonMain.dependencies {
-          implementation(libs.jb.compose.resources)
-        }
-        project.dependencies {
-          "androidRuntimeClasspath"(libs.androidx.compose.ui.tooling)
-        }
-        androidMain.dependencies {
-          implementation(libs.androidx.compose.ui)
-          implementation(libs.androidx.compose.ui.tooling.preview)
-          implementation(libs.androidx.compose.ui.util)
-          implementation(libs.androidx.compose.animation)
-          implementation(libs.androidx.compose.material3)
-          implementation(libs.androidx.lifecycle.viewmodel.compose)
-          implementation(libs.androidx.lifecycle.viewmodel.navigation3)
-          implementation(libs.androidx.navigation3.runtime)
-          implementation(libs.androidx.navigation3.ui)
-
+          implementation(libs.jetbrains.compose.ui)
+          implementation(libs.jetbrains.compose.uiTooling)
+          implementation(libs.jetbrains.compose.uiToolingPreview)
+          implementation(libs.jetbrains.compose.runtime)
+          implementation(libs.jetbrains.compose.foundation)
+          implementation(libs.jetbrains.compose.material3)
+          implementation(libs.jetbrains.compose.components.resources)
+          implementation(libs.jetbrains.androidx.lifecycle.viewmodelCompose)
+          implementation(libs.jetbrains.androidx.lifecycle.runtimeCompose)
+          implementation(libs.jetbrains.androidx.lifecycle.viewmodelNavigation3)
+          implementation(libs.jetbrains.androidx.navigation3.ui)
           implementation(libs.koin.viewModel)
         }
       }
