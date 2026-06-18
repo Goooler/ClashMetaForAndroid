@@ -9,7 +9,6 @@ import androidx.room3.TypeConverters
 import androidx.room3.migration.Migration
 import androidx.sqlite.execSQL
 import com.github.kr328.clash.common.util.application
-import com.github.kr328.clash.service.model.Profile
 import kotlin.uuid.Uuid
 
 @DB(
@@ -42,6 +41,7 @@ abstract class Database : RoomDatabase() {
   }
 }
 
+// TODO: https://issuetracker.google.com/issues/525093264
 object RoomTypeConverters {
   @TypeConverter
   fun fromUUID(uuid: Uuid): String {
@@ -51,15 +51,5 @@ object RoomTypeConverters {
   @TypeConverter
   fun toUUID(uuid: String): Uuid {
     return Uuid.parse(uuid)
-  }
-
-  @TypeConverter
-  fun fromProfileType(type: Profile.Type): String {
-    return type.name
-  }
-
-  @TypeConverter
-  fun toProfileType(type: String): Profile.Type {
-    return Profile.Type.valueOf(type)
   }
 }
