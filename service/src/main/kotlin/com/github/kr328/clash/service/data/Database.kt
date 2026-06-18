@@ -41,6 +41,7 @@ abstract class Database : RoomDatabase() {
   }
 }
 
+// TODO: https://issuetracker.google.com/issues/525093264
 object RoomTypeConverters {
   @TypeConverter
   fun fromUUID(uuid: Uuid): String {
