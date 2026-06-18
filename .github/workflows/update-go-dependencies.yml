@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     if: github.repository_owner == 'Goooler'
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         with:
           submodules: recursive
       - uses: actions/setup-go@v6
