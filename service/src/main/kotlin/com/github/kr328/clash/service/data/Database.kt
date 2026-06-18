@@ -1,11 +1,11 @@
 package com.github.kr328.clash.service.data
 
 import android.content.Context
+import androidx.room3.ColumnTypeConverter
+import androidx.room3.ColumnTypeConverters
 import androidx.room3.Database as DB
 import androidx.room3.Room
 import androidx.room3.RoomDatabase
-import androidx.room3.TypeConverter
-import androidx.room3.TypeConverters
 import androidx.room3.migration.Migration
 import androidx.sqlite.execSQL
 import com.github.kr328.clash.common.util.application
@@ -16,7 +16,7 @@ import kotlin.uuid.Uuid
   entities = [Imported::class, Pending::class, Selection::class],
   exportSchema = false,
 )
-@TypeConverters(RoomTypeConverters::class)
+@ColumnTypeConverters(RoomTypeConverters::class)
 abstract class Database : RoomDatabase() {
   abstract fun importedDao(): ImportedDao
 
@@ -43,12 +43,12 @@ abstract class Database : RoomDatabase() {
 
 // TODO: https://issuetracker.google.com/issues/525093264
 object RoomTypeConverters {
-  @TypeConverter
+  @ColumnTypeConverter
   fun fromUUID(uuid: Uuid): String {
     return uuid.toString()
   }
 
-  @TypeConverter
+  @ColumnTypeConverter
   fun toUUID(uuid: String): Uuid {
     return Uuid.parse(uuid)
   }
