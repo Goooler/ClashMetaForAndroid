@@ -95,8 +95,8 @@ dependencies {
   implementation(libs.koin.android)
 }
 
-val downloadGeoFiles by
-  tasks.registering(Download::class) {
+val downloadGeoFiles =
+  tasks.register<Download>("downloadGeoFiles") {
     src(
       // https://github.com/MetaCubeX/meta-rules-dat
       listOf(
