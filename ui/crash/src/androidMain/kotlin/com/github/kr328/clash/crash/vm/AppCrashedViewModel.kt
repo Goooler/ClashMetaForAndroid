@@ -12,24 +12,21 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.withContext
 
 internal class AppCrashedViewModel(private val application: Application) : ViewModel() {
-  val logs: StateFlow<String> =
-    flow {
-        val log =
-          runCatching {
-              val packageInfo =
-                application.packageManager.getPackageInfo(application.packageName, 0)
-              Log.i(
-                "App version: versionName = ${packageInfo.versionName} versionCode = ${packageInfo.longVersionCode}"
-              )
-              dumpCrash()
-            }
-            .getOrElse { e ->
-              Log.e("Failed to load crash logs", e)
-              "Failed to load crash logs: ${e.stackTraceToString()}"
-            }
-        emit(log)
+  val logs: StateFlow<String> = flow {
+    val log = runCatching {
+      val packageInfo = application.packageManager.getPackageInfo(application.packageName, 0)
+      Log.i(
+        "App version: versionName = ${packageInfo.versionName} versionCode = ${packageInfo.longVersionCode}"
+      )
+      dumpCrash()
+    }
+      .getOrElse { e ->
+        Log.e("Failed to load crash logs", e)
+        "Failed to load crash logs: ${e.stackTraceToString()}"
       }
-      .stateIn(viewModelScope, SharingStarted.Lazily, "")
+    emit(log)
+  }
+    .stateIn(viewModelScope, SharingStarted.Lazily, "")
 
   private suspend fun dumpCrash(): String =
     withContext(Dispatchers.IO) {

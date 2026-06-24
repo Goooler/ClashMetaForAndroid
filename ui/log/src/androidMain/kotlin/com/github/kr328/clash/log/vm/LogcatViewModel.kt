@@ -200,10 +200,10 @@ internal class LogcatViewModel(private val application: Application) :
                     return
                   }
                   runCatching {
-                      continuation.resumeWithException(
-                        IllegalStateException("Logcat service returned a null binder")
-                      )
-                    }
+                    continuation.resumeWithException(
+                      IllegalStateException("Logcat service returned a null binder")
+                    )
+                  }
                     .onFailure {
                       Log.e("Resume bind failure: ${it.message}", it)
                       runCatching { application.unbindService(this) }

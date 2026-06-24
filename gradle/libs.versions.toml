@@ -55,7 +55,7 @@ junit = "junit:junit:4.13.2"
 assertk = "com.willowtreeapps.assertk:assertk:0.28.1"
 
 # Dummy to get renovate updates, the version is used in rootProject build.gradle with spotless.
-ktfmt = "com.facebook:ktfmt:0.63"
+ktfmt = "com.facebook:ktfmt:0.64"
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
