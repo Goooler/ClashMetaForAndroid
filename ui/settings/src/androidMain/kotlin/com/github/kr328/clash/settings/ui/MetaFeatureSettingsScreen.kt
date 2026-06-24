@@ -691,8 +691,8 @@ private fun AgeKeyHelperDialog(
           TextButton(
             onClick = {
               runCatching {
-                  if (hybrid) Clash.genHybridKeyPair() else Clash.genX25519KeyPair()
-                }
+                if (hybrid) Clash.genHybridKeyPair() else Clash.genX25519KeyPair()
+              }
                 .onSuccess {
                   secretKey = it.secretKey
                   publicKey = it.publicKey

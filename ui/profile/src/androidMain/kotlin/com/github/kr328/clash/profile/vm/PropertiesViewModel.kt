@@ -65,16 +65,16 @@ internal class PropertiesViewModel(
       val profile = uiState.value.profile ?: return
       viewModelScope.launch {
         runCatching {
-            withProfile {
-              patch(
-                profile.uuid,
-                profile.name,
-                profile.source,
-                profile.interval,
-                profile.ageSecretKey,
-              )
-            }
+          withProfile {
+            patch(
+              profile.uuid,
+              profile.name,
+              profile.source,
+              profile.interval,
+              profile.ageSecretKey,
+            )
           }
+        }
           .onFailure { e -> Log.e("Auto save profile failed: ${e.message}", e) }
           .onSuccess {
             uiState.update { state ->
