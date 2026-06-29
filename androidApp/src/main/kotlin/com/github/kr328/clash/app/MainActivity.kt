@@ -38,9 +38,9 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entryProvider
 import com.github.kr328.clash.common.constants.Intents
-import com.github.kr328.clash.common.model.DarkMode
 import com.github.kr328.clash.common.util.mainIntent
 import com.github.kr328.clash.common.util.uuid
+import com.github.kr328.clash.core.model.DarkMode
 import com.github.kr328.clash.crash.CrashRoute
 import com.github.kr328.clash.crash.crashEntries
 import com.github.kr328.clash.glue.remote.Remote

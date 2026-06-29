@@ -3,9 +3,9 @@ package com.github.kr328.clash.settings.vm
 import android.app.Application
 import android.os.Build
 import androidx.lifecycle.ViewModel
+import com.github.kr328.clash.core.model.AccessControlMode
 import com.github.kr328.clash.glue.remote.Remote
 import com.github.kr328.clash.glue.store.UiStore
-import com.github.kr328.clash.service.model.AccessControlMode
 import com.github.kr328.clash.service.store.ServiceStore
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
