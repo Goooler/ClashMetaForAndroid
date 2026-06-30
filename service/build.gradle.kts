@@ -6,6 +6,8 @@ plugins {
 }
 
 dependencies {
+  implementation(projects.core.model)
+
   implementation(projects.core)
   implementation(projects.common)
 

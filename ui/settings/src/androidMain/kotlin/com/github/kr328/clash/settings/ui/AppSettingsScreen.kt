@@ -10,7 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.tooling.preview.PreviewWrapper
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.github.kr328.clash.common.model.DarkMode
+import com.github.kr328.clash.core.model.DarkMode
 import com.github.kr328.clash.settings.Res
 import com.github.kr328.clash.settings.allow_tabby_auto_restart
 import com.github.kr328.clash.settings.always_dark

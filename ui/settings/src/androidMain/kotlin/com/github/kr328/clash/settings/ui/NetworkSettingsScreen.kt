@@ -14,7 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.tooling.preview.PreviewWrapper
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.github.kr328.clash.service.model.AccessControlMode
+import com.github.kr328.clash.core.model.AccessControlMode
 import com.github.kr328.clash.settings.Res
 import com.github.kr328.clash.settings.access_control_mode
 import com.github.kr328.clash.settings.access_control_packages

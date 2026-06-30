@@ -4,8 +4,8 @@ import android.app.Application
 import android.content.pm.PackageManager
 import androidx.lifecycle.ViewModel
 import com.github.kr328.clash.common.di.AppInfoProvider
-import com.github.kr328.clash.common.model.DarkMode
 import com.github.kr328.clash.common.util.componentName
+import com.github.kr328.clash.core.model.DarkMode
 import com.github.kr328.clash.glue.remote.Remote
 import com.github.kr328.clash.glue.store.UiStore
 import com.github.kr328.clash.glue.util.ApplicationObserver
