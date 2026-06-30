@@ -62,6 +62,8 @@ allprojects {
   plugins.withId(rootProject.libs.plugins.android.multiplatform.get().pluginId) {
     plugins.apply(libs.plugins.kotlin.multiplatform.get().pluginId)
     extensions.configure<KotlinMultiplatformExtension> {
+      jvm()
+
       extensions.configure<KotlinMultiplatformAndroidLibraryTarget> {
         namespace = "com.github.kr328.clash.${project.name}"
         compileSdk = 37
