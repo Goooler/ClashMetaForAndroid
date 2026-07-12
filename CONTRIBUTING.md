@@ -67,7 +67,7 @@ app → ui/*
 1. Fork this repository and create a branch from `trunk`.
 2. Clone with submodules (or initialize them after clone):
    ```bash
-   git clone --recurse-submodules https://github.com/Goooler/Tabby.git
+   git clone --recurse-submodules https://github.com/Goooler/Tabby
    # or after a plain clone:
    git submodule update --init --recursive
    ```
