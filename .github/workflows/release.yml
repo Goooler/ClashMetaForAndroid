@@ -17,7 +17,7 @@ jobs:
       # TODO: https://github.com/actions/checkout/issues/435
       - name: Get the submodule tag for CMake build
         run: git submodule foreach --recursive 'git fetch --tags --force'
-      - uses: actions/setup-go@v6
+      - uses: actions/setup-go@v7
         with:
           go-version: "1.26"
           check-latest: true
