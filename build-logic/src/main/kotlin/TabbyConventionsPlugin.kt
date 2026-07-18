@@ -88,19 +88,19 @@ class TabbyConventionsPlugin : Plugin<Project> {
         extensions.configure<NamedDomainObjectContainer<KotlinSourceSet>> {
           getByName("commonMain").dependencies {
             listOf(
-                "jetbrains-compose-ui",
-                "jetbrains-compose-uiTooling",
-                "jetbrains-compose-uiToolingPreview",
-                "jetbrains-compose-runtime",
-                "jetbrains-compose-foundation",
-                "jetbrains-compose-material3",
-                "jetbrains-compose-components-resources",
-                "jetbrains-androidx-lifecycle-viewmodelCompose",
-                "jetbrains-androidx-lifecycle-runtimeCompose",
-                "jetbrains-androidx-lifecycle-viewmodelNavigation3",
-                "jetbrains-androidx-navigation3-ui",
-                "koin-viewModel",
-              )
+              "jetbrains-compose-ui",
+              "jetbrains-compose-uiTooling",
+              "jetbrains-compose-uiToolingPreview",
+              "jetbrains-compose-runtime",
+              "jetbrains-compose-foundation",
+              "jetbrains-compose-material3",
+              "jetbrains-compose-components-resources",
+              "jetbrains-androidx-lifecycle-viewmodelCompose",
+              "jetbrains-androidx-lifecycle-runtimeCompose",
+              "jetbrains-androidx-lifecycle-viewmodelNavigation3",
+              "jetbrains-androidx-navigation3-ui",
+              "koin-viewModel",
+            )
               .forEach { implementation(libs.findLibrary(it).get()) }
           }
         }
@@ -126,5 +126,6 @@ class TabbyConventionsPlugin : Plugin<Project> {
     }
   }
 
-  private fun VersionCatalog.requiredVersion(alias: String) = findVersion(alias).get().requiredVersion
+  private fun VersionCatalog.requiredVersion(alias: String) =
+    findVersion(alias).get().requiredVersion
 }

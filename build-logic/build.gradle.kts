@@ -1,13 +1,7 @@
-buildscript {
-  repositories { mavenCentral() }
-  dependencies { classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:2.3.20") }
-}
-
 plugins {
+  alias(libs.plugins.kotlin.jvm)
   `java-gradle-plugin`
 }
-
-apply(plugin = "org.jetbrains.kotlin.jvm")
 
 dependencies {
   implementation(gradleKotlinDsl())
