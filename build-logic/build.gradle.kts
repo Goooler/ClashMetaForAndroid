@@ -4,7 +4,6 @@ plugins {
 }
 
 dependencies {
-  implementation(gradleKotlinDsl())
   implementation(libs.gradlePlugin.android)
   implementation(libs.gradlePlugin.compose)
   implementation(libs.gradlePlugin.kotlin)
