@@ -15,15 +15,18 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask
 import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
 
 class TabbyConventionsPlugin : Plugin<Project> {
+  private lateinit var libs: LibrariesForLibs
+
   override fun apply(target: Project) =
     with(target) {
-      configureAndroid(libs)
-      configureKotlin(libs)
-      configureSpotless(libs)
-      configureMultiplatformAndroid(libs)
+      libs = extensions.getByType(LibrariesForLibs::class.java)
+      configureAndroid()
+      configureKotlin()
+      configureSpotless()
+      configureMultiplatformAndroid()
     }
 
-  private fun Project.configureAndroid(libs: LibrariesForLibs) {
+  private fun Project.configureAndroid() {
     plugins.withType(AndroidBasePlugin::class.java).configureEach {
       extensions.configure(CommonExtension::class.java) { android ->
         android.namespace = "com.github.kr328.clash.${project.name}"
@@ -42,7 +45,7 @@ class TabbyConventionsPlugin : Plugin<Project> {
     }
   }
 
-  private fun Project.configureKotlin(libs: LibrariesForLibs) {
+  private fun Project.configureKotlin() {
     tasks.withType(KotlinJvmCompile::class.java).configureEach { task ->
       (task as KotlinCompilationTask<KotlinJvmCompilerOptions>).compilerOptions.apply {
         allWarningsAsErrors.set(true)
@@ -52,7 +55,7 @@ class TabbyConventionsPlugin : Plugin<Project> {
     }
   }
 
-  private fun Project.configureSpotless(libs: LibrariesForLibs) {
+  private fun Project.configureSpotless() {
     pluginManager.apply(libs.plugins.spotless.get().pluginId)
     extensions.configure(SpotlessExtension::class.java) { spotless ->
       spotless.kotlin { format ->
@@ -65,7 +68,7 @@ class TabbyConventionsPlugin : Plugin<Project> {
     }
   }
 
-  private fun Project.configureMultiplatformAndroid(libs: LibrariesForLibs) {
+  private fun Project.configureMultiplatformAndroid() {
     pluginManager.withPlugin(libs.plugins.android.multiplatform.get().pluginId) {
       pluginManager.apply(libs.plugins.kotlin.multiplatform.get().pluginId)
       extensions.configure(KotlinMultiplatformExtension::class.java) { kotlin ->
@@ -74,7 +77,7 @@ class TabbyConventionsPlugin : Plugin<Project> {
           android.compileSdk = 37
           android.minSdk = 28
           android.compilerOptions.jvmTarget.set(
-              JvmTarget.fromTarget(libs.versions.jvmTarget.get()),
+            JvmTarget.fromTarget(libs.versions.jvmTarget.get()),
           )
           android.androidResources.enable = true
         }
@@ -105,7 +108,7 @@ class TabbyConventionsPlugin : Plugin<Project> {
       pluginManager.apply(libs.plugins.kotlin.compose.get().pluginId)
       extensions.configure(ComposeCompilerGradlePluginExtension::class.java) { composeCompiler ->
         composeCompiler.stabilityConfigurationFiles.add(
-            rootProject.layout.projectDirectory.file("stability.conf"),
+          rootProject.layout.projectDirectory.file("stability.conf"),
         )
       }
 
@@ -118,6 +121,4 @@ class TabbyConventionsPlugin : Plugin<Project> {
       }
     }
   }
-
-  private val Project.libs: LibrariesForLibs get() = extensions.getByType(LibrariesForLibs::class.java)
 }
