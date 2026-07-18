@@ -1,4 +1,5 @@
 plugins {
+  id("tabby.conventions")
   alias(libs.plugins.android.multiplatform)
   alias(libs.plugins.kotlin.serialization)
 }

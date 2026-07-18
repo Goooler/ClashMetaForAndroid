@@ -3,6 +3,7 @@ import de.undercouch.gradle.tasks.download.Download
 import java.util.Properties
 
 plugins {
+  id("tabby.conventions")
   alias(libs.plugins.android.application)
   alias(libs.plugins.kotlin.compose)
   alias(libs.plugins.kotlin.serialization)

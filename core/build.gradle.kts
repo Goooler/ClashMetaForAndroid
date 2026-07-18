@@ -1,6 +1,7 @@
 import io.github.goooler.golang.tasks.GoCompile.Companion.baseOutputDir as goBaseOutputDir
 
 plugins {
+  id("tabby.conventions")
   alias(libs.plugins.android.library)
   alias(libs.plugins.kotlin.parcelize)
   alias(libs.plugins.kotlin.serialization)
