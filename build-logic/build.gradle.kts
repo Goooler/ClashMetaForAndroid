@@ -1,8 +1,16 @@
-plugins {
-  `groovy-gradle-plugin`
+buildscript {
+  repositories { mavenCentral() }
+  dependencies { classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:2.3.20") }
 }
 
+plugins {
+  `java-gradle-plugin`
+}
+
+apply(plugin = "org.jetbrains.kotlin.jvm")
+
 dependencies {
+  implementation(gradleKotlinDsl())
   implementation("com.android.tools.build:gradle:${libs.versions.agp.get()}")
   implementation("com.diffplug.spotless:spotless-plugin-gradle:${libs.plugins.spotless.get().version}")
   implementation("org.jetbrains.compose:compose-gradle-plugin:${libs.versions.cmp.get()}")
