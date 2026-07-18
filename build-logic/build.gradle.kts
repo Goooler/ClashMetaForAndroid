@@ -9,6 +9,9 @@ dependencies {
   implementation(libs.gradlePlugin.kotlin)
   implementation(libs.gradlePlugin.kotlin.composeCompiler)
   implementation(libs.gradlePlugin.spotless)
+
+  // TODO: https://github.com/gradle/gradle/issues/15383
+  implementation(files(libs.javaClass.superclass.protectionDomain.codeSource.location))
 }
 
 gradlePlugin {
