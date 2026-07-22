@@ -1,7 +1,6 @@
 package com.github.kr328.clash.home.vm
 
 import android.app.Application
-import android.content.Intent
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModel
@@ -21,6 +20,7 @@ import com.github.kr328.clash.glue.util.startClashService
 import com.github.kr328.clash.glue.util.stopClashService
 import com.github.kr328.clash.glue.util.withClash
 import com.github.kr328.clash.glue.util.withProfile
+import com.github.kr328.clash.home.ui.VpnPermissionRequest
 import kotlin.time.Duration.Companion.seconds
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -238,7 +238,7 @@ internal class HomeViewModel(private val dependencies: Dependencies) :
   sealed interface EventState {
     data object Idle : EventState
 
-    data class RequestVpnPermission(val intent: Intent) : EventState
+    data class RequestVpnPermission(val request: VpnPermissionRequest) : EventState
 
     data object ShowNoProfileMessage : EventState
 
@@ -266,7 +266,7 @@ internal class HomeViewModel(private val dependencies: Dependencies) :
 
     suspend fun unableToStartVpnText(): String
 
-    fun startClashService(): Intent?
+    fun startClashService(): VpnPermissionRequest?
 
     fun stopClashService()
   }
@@ -302,7 +302,8 @@ internal class AndroidDependencies(private val application: Application) :
     return getString(CommonRes.string.unable_to_start_vpn)
   }
 
-  override fun startClashService(): Intent? = application.startClashService()
+  override fun startClashService(): VpnPermissionRequest? =
+    application.startClashService()?.let(::VpnPermissionRequest)
 
   override fun stopClashService() {
     application.stopClashService()

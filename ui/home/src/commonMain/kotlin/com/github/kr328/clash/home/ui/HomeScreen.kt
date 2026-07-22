@@ -1,8 +1,5 @@
 package com.github.kr328.clash.home.ui
 
-import android.app.Activity
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -97,18 +94,18 @@ internal fun HomeScreen(
   val noProfileText = stringResource(Res.string.no_profile_selected)
   val profilesActionText = stringResource(CommonRes.string.profiles)
 
-  val vpnLauncher =
-    rememberLauncherForActivityResult(StartActivityForResult()) { result ->
-      when (result.resultCode) {
-        Activity.RESULT_OK -> viewModel.onVpnPermissionGranted()
-        else -> viewModel.onVpnPermissionDenied()
-      }
+  val vpnLauncher = rememberVpnPermissionLauncher { granted ->
+    if (granted) {
+      viewModel.onVpnPermissionGranted()
+    } else {
+      viewModel.onVpnPermissionDenied()
     }
+  }
 
   LaunchedEffect(eventState) {
     when (val event = eventState) {
       Idle -> Unit
-      is RequestVpnPermission -> vpnLauncher.launch(event.intent)
+      is RequestVpnPermission -> vpnLauncher(event.request)
       ShowNoProfileMessage -> {
         val result =
           snackbarHostState.showSnackbar(
