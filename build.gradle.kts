@@ -46,7 +46,7 @@ allprojects {
     compilerOptions {
       allWarningsAsErrors = true
       jvmTarget = JvmTarget.fromTarget(libs.versions.jvmTarget.get())
-      freeCompilerArgs.addAll("-Xcontext-sensitive-resolution")
+      freeCompilerArgs.addAll("-Xcontext-sensitive-resolution", "-Xexpect-actual-classes")
     }
   }
 

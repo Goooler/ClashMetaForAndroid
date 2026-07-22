@@ -51,9 +51,7 @@ internal class HelpViewModel(
           return@launch
         }
 
-        val localVersion =
-          application.packageManager.getPackageInfo(application.packageName, 0).versionName ?: ""
-        if (SemVer.parse(latestTag) > SemVer.parse(localVersion)) {
+        if (SemVer.parse(latestTag) > SemVer.parse(appInfoProvider.versionName)) {
           eventState.update { EventState.UpdateAvailable(TABBY_RELEASES_LATEST) }
         } else {
           eventState.update {
@@ -79,8 +77,8 @@ internal class HelpViewModel(
     viewModelScope.launch {
       val (appVersion, coreVersion) =
         withContext(Dispatchers.IO) {
-          val pkgInfo = application.packageManager.getPackageInfo(application.packageName, 0)
-          "${pkgInfo.versionName} - ${appInfoProvider.buildCommit}" to Bridge.nativeCoreVersion()
+          "${appInfoProvider.versionName} - ${appInfoProvider.buildCommit}" to
+            Bridge.nativeCoreVersion()
         }
 
       uiState.update { it.copy(appVersion = appVersion, coreVersion = coreVersion) }
