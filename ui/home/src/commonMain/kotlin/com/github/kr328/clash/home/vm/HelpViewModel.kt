@@ -1,6 +1,5 @@
 package com.github.kr328.clash.home.vm
 
-import android.app.Application
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.github.kr328.clash.common.di.AppInfoProvider
@@ -20,10 +19,7 @@ import kotlinx.coroutines.withContext
 import net.swiftzer.semver.SemVer
 import org.jetbrains.compose.resources.getString
 
-internal class HelpViewModel(
-  private val application: Application,
-  private val appInfoProvider: AppInfoProvider,
-) : ViewModel() {
+internal class HelpViewModel(private val appInfoProvider: AppInfoProvider) : ViewModel() {
   private val api = HelpApi()
 
   val uiState: StateFlow<UiState>
