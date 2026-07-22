@@ -74,6 +74,9 @@ allprojects {
 
       extensions.configure<NamedDomainObjectContainer<KotlinSourceSet>> {
         commonMain.dependencies {
+          if (project.path != projects.common.path) {
+            implementation(projects.common)
+          }
           implementation(libs.jetbrains.compose.ui)
           implementation(libs.jetbrains.compose.uiTooling)
           implementation(libs.jetbrains.compose.uiToolingPreview)
