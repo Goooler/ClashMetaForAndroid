@@ -7,9 +7,7 @@ import assertk.assertions.isEqualTo
 import assertk.assertions.isNull
 import com.github.kr328.clash.core.model.Traffic
 import com.github.kr328.clash.core.model.TunnelState
-import com.github.kr328.clash.glue.remote.Broadcasts
 import com.github.kr328.clash.home.ui.VpnPermissionRequest
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.test.runTest
@@ -58,7 +56,7 @@ class HomeViewModelTest : KoinComponent {
 
     try {
       viewModel.onStart(UnusedLifecycleOwner)
-      dependencies.eventsFlow.emit(Broadcasts.Event.Started)
+      dependencies.eventsFlow.emit(Event.Started)
 
       assertThat(viewModel.uiState.value.mode).isNull()
       assertThat(dependencies.queryModeCalls).isEqualTo(0)
@@ -103,7 +101,7 @@ class HomeViewModelTest : KoinComponent {
       assertThat(viewModel.uiState.value.mode).isEqualTo("Rule Mode")
 
       dependencies.mode = TunnelState.Mode.Global
-      dependencies.eventsFlow.emit(Broadcasts.Event.ProfileLoaded)
+      dependencies.eventsFlow.emit(Event.ProfileLoaded)
 
       assertThat(viewModel.uiState.value.mode).isEqualTo("Global Mode")
     } finally {
@@ -183,10 +181,15 @@ class HomeViewModelTest : KoinComponent {
   }
 
   private class TestHomeDependencies : HomeViewModel.Dependencies {
-    override val clashRunning = MutableStateFlow(false)
-    override val profileLoaded = MutableStateFlow(false)
-    val eventsFlow = MutableSharedFlow<Broadcasts.Event>(extraBufferCapacity = 16)
-    override val events: Flow<Broadcasts.Event> = eventsFlow
+    val clashRunning = MutableStateFlow(false)
+    val profileLoaded = MutableStateFlow(false)
+    val eventsFlow = MutableSharedFlow<Event>(extraBufferCapacity = 16)
+    override val broadcasts =
+      object : Broadcasts {
+        override val clashRunning = this@TestHomeDependencies.clashRunning
+        override val profileLoaded = this@TestHomeDependencies.profileLoaded
+        override val events = eventsFlow
+      }
 
     var mode: TunnelState.Mode = TunnelState.Mode.Rule
     var queryModeCalls = 0

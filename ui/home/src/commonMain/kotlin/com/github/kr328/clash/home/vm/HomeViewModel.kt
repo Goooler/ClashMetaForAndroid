@@ -14,8 +14,6 @@ import com.github.kr328.clash.common.util.Log
 import com.github.kr328.clash.core.model.Traffic
 import com.github.kr328.clash.core.model.TunnelState
 import com.github.kr328.clash.core.util.trafficTotal
-import com.github.kr328.clash.glue.remote.Broadcasts
-import com.github.kr328.clash.glue.remote.Remote
 import com.github.kr328.clash.glue.util.startClashService
 import com.github.kr328.clash.glue.util.stopClashService
 import com.github.kr328.clash.glue.util.withClash
@@ -24,7 +22,6 @@ import com.github.kr328.clash.home.ui.VpnPermissionRequest
 import kotlin.time.Duration.Companion.seconds
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
@@ -42,7 +39,7 @@ internal class HomeViewModel(private val dependencies: Dependencies) :
   private var transitionTimeoutJob: Job? = null
   private var lastClashRunning: Boolean? = null
 
-  val clashRunning: StateFlow<Boolean> = dependencies.clashRunning
+  val clashRunning: StateFlow<Boolean> = dependencies.broadcasts.clashRunning
 
   val uiState: StateFlow<UiState>
     field = MutableStateFlow(UiState())
@@ -53,7 +50,7 @@ internal class HomeViewModel(private val dependencies: Dependencies) :
   override fun onStart(owner: LifecycleOwner) {
     clashRunningJob?.cancel()
     clashRunningJob = viewModelScope.launch {
-      dependencies.clashRunning.collect { running ->
+      dependencies.broadcasts.clashRunning.collect { running ->
         val last = lastClashRunning
         lastClashRunning = running
         if (last != null && last != running) {
@@ -67,7 +64,7 @@ internal class HomeViewModel(private val dependencies: Dependencies) :
     }
     broadcastEventsJob?.cancel()
     broadcastEventsJob = viewModelScope.launch {
-      dependencies.events.collect { event ->
+      dependencies.broadcasts.events.collect { event ->
         when (event) {
           ServiceRecreated,
           Started,
@@ -84,7 +81,7 @@ internal class HomeViewModel(private val dependencies: Dependencies) :
     }
     profileLoadedJob?.cancel()
     profileLoadedJob = viewModelScope.launch {
-      dependencies.profileLoaded.collect { loaded ->
+      dependencies.broadcasts.profileLoaded.collect { loaded ->
         if (loaded) fetch() else clearRuntimeState()
       }
     }
@@ -134,7 +131,7 @@ internal class HomeViewModel(private val dependencies: Dependencies) :
     fetchJob = viewModelScope.launch {
       val profileName = dependencies.queryActiveProfileName()
 
-      if (!clashRunning.value || !dependencies.profileLoaded.value) {
+      if (!clashRunning.value || !dependencies.broadcasts.profileLoaded.value) {
         uiState.update {
           it.copy(
             mode = null,
@@ -148,7 +145,7 @@ internal class HomeViewModel(private val dependencies: Dependencies) :
       val mode = dependencies.modeText(dependencies.queryMode())
       val hasProviders = dependencies.queryHasProviders()
 
-      if (!clashRunning.value || !dependencies.profileLoaded.value) {
+      if (!clashRunning.value || !dependencies.broadcasts.profileLoaded.value) {
         uiState.update {
           it.copy(
             mode = null,
@@ -246,11 +243,7 @@ internal class HomeViewModel(private val dependencies: Dependencies) :
   }
 
   interface Dependencies {
-    val clashRunning: StateFlow<Boolean>
-
-    val profileLoaded: StateFlow<Boolean>
-
-    val events: Flow<Broadcasts.Event>
+    val broadcasts: Broadcasts
 
     suspend fun queryActiveProfileName(): String?
 
@@ -274,9 +267,7 @@ internal class HomeViewModel(private val dependencies: Dependencies) :
 
 internal class AndroidDependencies(private val application: Application) :
   HomeViewModel.Dependencies {
-  override val clashRunning: StateFlow<Boolean> = Remote.broadcasts.clashRunningFlow
-  override val profileLoaded: StateFlow<Boolean> = Remote.broadcasts.profileLoadedFlow
-  override val events: Flow<Broadcasts.Event> = Remote.broadcasts.event
+  override val broadcasts: Broadcasts = platformBroadcasts
 
   override suspend fun queryActiveProfileName(): String? = withProfile { queryActive()?.name }
 
