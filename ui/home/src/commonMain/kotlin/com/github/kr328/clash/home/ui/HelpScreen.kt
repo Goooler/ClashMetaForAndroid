@@ -30,10 +30,10 @@ import com.github.kr328.clash.common.R as CommonR
 import com.github.kr328.clash.common.Res as CommonRes
 import com.github.kr328.clash.common.copied
 import com.github.kr328.clash.common.tabby
-import com.github.kr328.clash.glue.util.MIHOMO_CORE
-import com.github.kr328.clash.glue.util.MIHOMO_WIKI
-import com.github.kr328.clash.glue.util.TABBY_GITHUB
-import com.github.kr328.clash.glue.util.openLink
+import com.github.kr328.clash.common.util.MIHOMO_CORE
+import com.github.kr328.clash.common.util.MIHOMO_WIKI
+import com.github.kr328.clash.common.util.TABBY_GITHUB
+import com.github.kr328.clash.common.util.openLink
 import com.github.kr328.clash.home.Res
 import com.github.kr328.clash.home.about
 import com.github.kr328.clash.home.app_version

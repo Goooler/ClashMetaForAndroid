@@ -1,6 +1,6 @@
 package com.github.kr328.clash.home.api
 
-import com.github.kr328.clash.glue.util.TABBY_REPO
+import com.github.kr328.clash.common.util.TABBY_REPO
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.engine.cio.CIO

@@ -8,6 +8,5 @@ dependencies {
   api(projects.common)
 
   implementation(libs.kotlin.coroutine)
-  implementation(libs.androidx.browser)
   implementation(libs.androidx.core)
 }
