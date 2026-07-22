@@ -25,6 +25,8 @@ android {
 }
 
 dependencies {
+  implementation(projects.core.model)
+
   implementation(projects.common)
 
   implementation(libs.androidx.core)

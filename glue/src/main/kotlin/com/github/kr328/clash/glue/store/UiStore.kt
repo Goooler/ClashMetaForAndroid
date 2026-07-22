@@ -5,9 +5,9 @@ import android.content.Context
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener
 import android.content.pm.PackageManager
 import com.github.kr328.clash.common.di.AppInfoProvider
-import com.github.kr328.clash.common.model.DarkMode
 import com.github.kr328.clash.common.store.Store
 import com.github.kr328.clash.common.store.asStoreProvider
+import com.github.kr328.clash.core.model.DarkMode
 import com.github.kr328.clash.core.model.ProxySort
 import com.github.kr328.clash.glue.model.AppInfo
 import kotlin.LazyThreadSafetyMode.NONE
