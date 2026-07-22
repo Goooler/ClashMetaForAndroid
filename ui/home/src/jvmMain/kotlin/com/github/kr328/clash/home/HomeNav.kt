@@ -2,19 +2,12 @@ package com.github.kr328.clash.home
 
 import androidx.navigation3.runtime.EntryProviderScope
 import androidx.navigation3.runtime.NavKey
-import kotlinx.serialization.Serializable
 
-sealed interface HomeRoute : NavKey {
-  @Serializable data object Home : HomeRoute
-
-  @Serializable data object Help : HomeRoute
-}
-
-expect fun EntryProviderScope<NavKey>.homeEntries(
+actual fun EntryProviderScope<NavKey>.homeEntries(
   onOpenProxy: () -> Unit,
   onOpenProfiles: () -> Unit,
   onOpenProviders: () -> Unit,
   onOpenLogs: () -> Unit,
   onOpenSettings: () -> Unit,
   onOpenHelp: () -> Unit,
-)
+) = Unit
