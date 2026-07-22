@@ -8,9 +8,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.github.kr328.clash.common.Res as CommonRes
 import com.github.kr328.clash.common.constants.Intents
-import com.github.kr328.clash.common.log.Log
 import com.github.kr328.clash.common.new_profile
 import com.github.kr328.clash.common.unknown
+import com.github.kr328.clash.common.util.Log
 import com.github.kr328.clash.glue.util.withProfile
 import com.github.kr328.clash.profile.Res
 import com.github.kr328.clash.profile.import_from_qr_exception

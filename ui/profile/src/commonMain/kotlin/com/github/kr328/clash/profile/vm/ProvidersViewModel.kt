@@ -5,7 +5,7 @@ import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.github.kr328.clash.common.log.Log
+import com.github.kr328.clash.common.util.Log
 import com.github.kr328.clash.core.model.Provider
 import com.github.kr328.clash.glue.remote.Remote
 import com.github.kr328.clash.glue.util.withClash

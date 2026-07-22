@@ -8,7 +8,7 @@ import android.provider.DocumentsContract.Document as D
 import android.provider.DocumentsContract.Root
 import android.provider.DocumentsProvider
 import com.github.kr328.clash.common.R as CommonR
-import com.github.kr328.clash.common.log.Log
+import com.github.kr328.clash.common.util.Log
 import com.github.kr328.clash.common.util.PatternFileName
 import com.github.kr328.clash.service.document.Document
 import com.github.kr328.clash.service.document.FileDocument

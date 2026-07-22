@@ -3,7 +3,7 @@ package com.github.kr328.clash.service
 import android.content.Intent
 import android.os.Binder
 import android.os.IBinder
-import com.github.kr328.clash.common.log.Log
+import com.github.kr328.clash.common.util.Log
 import com.github.kr328.clash.service.clash.clashRuntime
 import com.github.kr328.clash.service.clash.module.AppListCacheModule
 import com.github.kr328.clash.service.clash.module.CloseModule

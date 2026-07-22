@@ -4,7 +4,7 @@ import android.app.Service
 import android.content.Intent
 import android.os.PowerManager
 import androidx.core.content.getSystemService
-import com.github.kr328.clash.common.log.Log
+import com.github.kr328.clash.common.util.Log
 import com.github.kr328.clash.core.Clash
 import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.channels.Channel

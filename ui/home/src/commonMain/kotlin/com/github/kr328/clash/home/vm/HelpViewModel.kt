@@ -4,7 +4,7 @@ import android.app.Application
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.github.kr328.clash.common.di.AppInfoProvider
-import com.github.kr328.clash.common.log.Log
+import com.github.kr328.clash.common.util.Log
 import com.github.kr328.clash.common.util.TABBY_RELEASES_LATEST
 import com.github.kr328.clash.home.Res
 import com.github.kr328.clash.home.already_up_to_date

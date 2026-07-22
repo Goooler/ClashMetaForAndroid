@@ -9,9 +9,9 @@ import androidx.lifecycle.viewModelScope
 import com.github.kr328.clash.common.Res as CommonRes
 import com.github.kr328.clash.common.direct_mode
 import com.github.kr328.clash.common.global_mode
-import com.github.kr328.clash.common.log.Log
 import com.github.kr328.clash.common.rule_mode
 import com.github.kr328.clash.common.unable_to_start_vpn
+import com.github.kr328.clash.common.util.Log
 import com.github.kr328.clash.core.model.Traffic
 import com.github.kr328.clash.core.model.TunnelState
 import com.github.kr328.clash.core.util.trafficTotal

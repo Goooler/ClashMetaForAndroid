@@ -7,7 +7,7 @@ import android.content.Intent
 import android.content.IntentFilter
 import com.github.kr328.clash.common.compat.registerReceiverCompat
 import com.github.kr328.clash.common.constants.Intents
-import com.github.kr328.clash.common.log.Log
+import com.github.kr328.clash.common.util.Log
 import com.github.kr328.clash.common.util.getSerializableCompat
 import kotlin.uuid.Uuid
 import kotlinx.coroutines.flow.MutableSharedFlow

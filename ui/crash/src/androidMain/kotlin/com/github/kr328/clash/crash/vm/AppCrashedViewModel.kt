@@ -3,7 +3,7 @@ package com.github.kr328.clash.crash.vm
 import android.app.Application
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.github.kr328.clash.common.log.Log
+import com.github.kr328.clash.common.util.Log
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
