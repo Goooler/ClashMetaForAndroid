@@ -51,7 +51,6 @@ enableFeaturePreview("STABLE_CONFIGURATION_CACHE")
 include(
   ":androidApp",
   ":core",
-  ":core:model",
   ":service",
   ":common",
   ":glue",

@@ -1,4 +1,4 @@
-package com.github.kr328.clash.core.model
+package com.github.kr328.clash.common.model
 
 enum class DarkMode {
   Auto,

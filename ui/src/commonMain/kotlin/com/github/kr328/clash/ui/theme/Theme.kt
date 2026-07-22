@@ -14,7 +14,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewWrapperProvider
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.github.kr328.clash.core.model.DarkMode
+import com.github.kr328.clash.common.model.DarkMode
 
 private val DarkColorScheme =
   darkColorScheme(

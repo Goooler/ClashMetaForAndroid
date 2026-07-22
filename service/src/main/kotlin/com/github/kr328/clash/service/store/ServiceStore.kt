@@ -3,8 +3,8 @@ package com.github.kr328.clash.service.store
 import android.content.Context
 import com.github.kr328.clash.common.store.Store
 import com.github.kr328.clash.common.store.asStoreProvider
-import com.github.kr328.clash.core.model.AccessControlMode
 import com.github.kr328.clash.service.PreferenceProvider
+import com.github.kr328.clash.service.model.AccessControlMode
 import kotlin.uuid.Uuid
 
 class ServiceStore(context: Context) {

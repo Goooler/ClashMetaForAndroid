@@ -4,7 +4,6 @@ plugins {
 
 dependencies {
   api(projects.core)
-  api(projects.core.model)
   api(projects.service)
   api(projects.common)
 
