@@ -6,11 +6,11 @@ import androidx.lifecycle.viewModelScope
 import com.github.kr328.clash.common.di.AppInfoProvider
 import com.github.kr328.clash.common.log.Log
 import com.github.kr328.clash.common.util.TABBY_RELEASES_LATEST
-import com.github.kr328.clash.core.bridge.Bridge
 import com.github.kr328.clash.home.Res
 import com.github.kr328.clash.home.already_up_to_date
 import com.github.kr328.clash.home.api.HelpApi
 import com.github.kr328.clash.home.check_update_failed
+import com.github.kr328.clash.home.util.nativeCoreVersion
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -77,8 +77,7 @@ internal class HelpViewModel(
     viewModelScope.launch {
       val (appVersion, coreVersion) =
         withContext(Dispatchers.IO) {
-          "${appInfoProvider.versionName} - ${appInfoProvider.buildCommit}" to
-            Bridge.nativeCoreVersion()
+          "${appInfoProvider.versionName} - ${appInfoProvider.buildCommit}" to nativeCoreVersion
         }
 
       uiState.update { it.copy(appVersion = appVersion, coreVersion = coreVersion) }
