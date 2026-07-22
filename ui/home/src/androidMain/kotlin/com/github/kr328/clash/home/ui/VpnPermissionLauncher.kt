@@ -7,7 +7,7 @@ import androidx.activity.result.contract.ActivityResultContracts.StartActivityFo
 import androidx.compose.runtime.Composable
 
 @Composable
-internal actual fun rememberVpnPermissionLauncher(
+internal actual fun rememberRequestVpnPermission(
   onResult: (granted: Boolean) -> Unit
 ): (VpnPermissionRequest) -> Unit {
   val launcher =

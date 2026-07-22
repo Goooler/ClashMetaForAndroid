@@ -94,7 +94,7 @@ internal fun HomeScreen(
   val noProfileText = stringResource(Res.string.no_profile_selected)
   val profilesActionText = stringResource(CommonRes.string.profiles)
 
-  val vpnLauncher = rememberVpnPermissionLauncher { granted ->
+  val vpnLauncher = rememberRequestVpnPermission { granted ->
     if (granted) {
       viewModel.onVpnPermissionGranted()
     } else {

@@ -5,6 +5,6 @@ import androidx.compose.runtime.Composable
 internal class VpnPermissionRequest(internal val value: Any)
 
 @Composable
-internal expect fun rememberVpnPermissionLauncher(
+internal expect fun rememberRequestVpnPermission(
   onResult: (granted: Boolean) -> Unit
 ): (VpnPermissionRequest) -> Unit
