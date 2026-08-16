@@ -8,11 +8,6 @@ on:
       - .github/workflows/update-go-dependencies.yml
       - core/src/main/golang/go.mod
       - core/src/foss/golang/clash
-  pull_request:
-    paths:
-      - .github/workflows/update-go-dependencies.yml
-      - core/src/main/golang/go.mod
-      - core/src/foss/golang/clash
   workflow_dispatch:
 
 jobs:
