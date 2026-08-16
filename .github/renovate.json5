@@ -7,7 +7,17 @@
     'Update',
   ],
   automerge: true,
-  "git-submodules": {
-    "enabled": true,
+  'git-submodules': {
+    enabled: true,
   },
+  packageRules: [
+    {
+      groupName: 'Mihomo',
+      matchPackageNames: [
+        'github.com/metacubex/mihomo',
+        'core/src/foss/golang/clash',
+        'https://github.com/MetaCubeX/mihomo',
+      ],
+    },
+  ],
 }
