@@ -11,8 +11,8 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.github.kr328.clash.common.Res as CommonRes
-import com.github.kr328.clash.common.log.Log
 import com.github.kr328.clash.common.unknown
+import com.github.kr328.clash.common.util.Log
 import com.github.kr328.clash.common.util.intent
 import com.github.kr328.clash.core.model.LogMessage
 import com.github.kr328.clash.glue.util.logsDir

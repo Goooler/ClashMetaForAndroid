@@ -8,7 +8,7 @@ import android.content.Intent
 import androidx.core.content.getSystemService
 import com.github.kr328.clash.common.compat.pendingIntentFlags
 import com.github.kr328.clash.common.constants.Intents
-import com.github.kr328.clash.common.log.Log
+import com.github.kr328.clash.common.util.Log
 import com.github.kr328.clash.common.util.componentName
 import com.github.kr328.clash.common.util.setUUID
 import com.github.kr328.clash.service.data.Imported

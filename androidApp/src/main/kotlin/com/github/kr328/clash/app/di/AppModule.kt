@@ -23,6 +23,8 @@ val appModule = module {
 }
 
 private class AppInfoProviderImpl(application: Application) : AppInfoProvider {
+  override val versionName: String =
+    checkNotNull(application.packageManager.getPackageInfo(application.packageName, 0).versionName)
   override val packageName: String = application.packageName
   override val buildCommit: String = BuildConfig.COMMIT
   override val receiveBroadcastsPermission: String = "${packageName}.permission.RECEIVE_BROADCASTS"

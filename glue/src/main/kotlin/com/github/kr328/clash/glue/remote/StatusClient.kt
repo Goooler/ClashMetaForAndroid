@@ -3,7 +3,7 @@ package com.github.kr328.clash.glue.remote
 import android.content.Context
 import android.net.Uri
 import com.github.kr328.clash.common.constants.Authorities
-import com.github.kr328.clash.common.log.Log
+import com.github.kr328.clash.common.util.Log
 import com.github.kr328.clash.service.StatusProvider
 
 class StatusClient(private val context: Context) {

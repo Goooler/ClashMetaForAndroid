@@ -7,7 +7,7 @@ import android.content.Intent
 import android.content.IntentFilter
 import com.github.kr328.clash.common.compat.registerReceiverCompat
 import com.github.kr328.clash.common.di.AppInfoProvider.Companion.appInfoProvider
-import com.github.kr328.clash.common.log.Log
+import com.github.kr328.clash.common.util.Log
 import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.ReceiveChannel

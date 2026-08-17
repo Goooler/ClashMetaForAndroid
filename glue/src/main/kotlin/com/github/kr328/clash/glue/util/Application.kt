@@ -5,7 +5,7 @@ import android.app.Application
 import android.content.Context
 import android.os.Build
 import android.os.Bundle
-import com.github.kr328.clash.common.log.Log
+import com.github.kr328.clash.common.util.Log
 import java.io.File
 import java.util.zip.ZipFile
 

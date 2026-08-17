@@ -2,7 +2,7 @@ package com.github.kr328.clash.service.clash.module
 
 import android.app.Service
 import com.github.kr328.clash.common.constants.Intents
-import com.github.kr328.clash.common.log.Log
+import com.github.kr328.clash.common.util.Log
 import com.github.kr328.clash.common.util.getSerializableCompat
 import com.github.kr328.clash.core.Clash
 import com.github.kr328.clash.service.StatusProvider

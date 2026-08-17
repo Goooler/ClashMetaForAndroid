@@ -4,7 +4,7 @@ import android.app.Service
 import android.content.Intent
 import android.content.pm.PackageInfo
 import com.github.kr328.clash.common.compat.getInstalledPackagesCompat
-import com.github.kr328.clash.common.log.Log
+import com.github.kr328.clash.common.util.Log
 import com.github.kr328.clash.core.Clash
 import kotlin.time.Duration.Companion.seconds
 import kotlinx.coroutines.channels.Channel

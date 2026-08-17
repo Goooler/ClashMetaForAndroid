@@ -46,7 +46,7 @@ allprojects {
     compilerOptions {
       allWarningsAsErrors = true
       jvmTarget = JvmTarget.fromTarget(libs.versions.jvmTarget.get())
-      freeCompilerArgs.addAll("-Xcontext-sensitive-resolution")
+      freeCompilerArgs.addAll("-Xcontext-sensitive-resolution", "-Xexpect-actual-classes")
     }
   }
 
@@ -62,6 +62,8 @@ allprojects {
   plugins.withId(rootProject.libs.plugins.android.multiplatform.get().pluginId) {
     plugins.apply(libs.plugins.kotlin.multiplatform.get().pluginId)
     extensions.configure<KotlinMultiplatformExtension> {
+      jvm()
+
       extensions.configure<KotlinMultiplatformAndroidLibraryTarget> {
         namespace = "com.github.kr328.clash.${project.name}"
         compileSdk = 37
@@ -72,6 +74,9 @@ allprojects {
 
       extensions.configure<NamedDomainObjectContainer<KotlinSourceSet>> {
         commonMain.dependencies {
+          if (project.path != projects.common.path) {
+            implementation(projects.common)
+          }
           implementation(libs.jetbrains.compose.ui)
           implementation(libs.jetbrains.compose.uiTooling)
           implementation(libs.jetbrains.compose.uiToolingPreview)

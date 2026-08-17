@@ -8,7 +8,7 @@ import android.net.NetworkCapabilities
 import android.net.NetworkRequest
 import android.os.Build
 import androidx.core.content.getSystemService
-import com.github.kr328.clash.common.log.Log
+import com.github.kr328.clash.common.util.Log
 import com.github.kr328.clash.core.Clash
 import com.github.kr328.clash.service.util.asSocketAddressText
 import java.net.InetAddress

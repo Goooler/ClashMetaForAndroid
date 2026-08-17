@@ -1,7 +1,7 @@
 package com.github.kr328.clash.glue.util
 
 import android.os.DeadObjectException
-import com.github.kr328.clash.common.log.Log
+import com.github.kr328.clash.common.util.Log
 import com.github.kr328.clash.glue.remote.Remote
 import com.github.kr328.clash.service.remote.IClashManager
 import com.github.kr328.clash.service.remote.IProfileManager

@@ -1,6 +1,5 @@
 package com.github.kr328.clash.home.vm
 
-import android.content.Intent
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LifecycleRegistry
 import assertk.assertThat
@@ -9,6 +8,7 @@ import assertk.assertions.isNull
 import com.github.kr328.clash.core.model.Traffic
 import com.github.kr328.clash.core.model.TunnelState
 import com.github.kr328.clash.glue.remote.Broadcasts
+import com.github.kr328.clash.home.ui.VpnPermissionRequest
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -214,7 +214,7 @@ class HomeViewModelTest : KoinComponent {
 
     override fun unableToStartVpnText(): String = "Unable to start VPN"
 
-    override fun startClashService(): Intent? = null
+    override fun startClashService(): VpnPermissionRequest? = null
 
     override fun stopClashService() = Unit
   }

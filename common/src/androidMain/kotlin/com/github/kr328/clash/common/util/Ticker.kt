@@ -1,6 +1,5 @@
 package com.github.kr328.clash.common.util
 
-import com.github.kr328.clash.common.log.Log
 import kotlin.time.Duration
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
