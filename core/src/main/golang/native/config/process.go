@@ -127,7 +127,7 @@ func validConfig(cfg *config.RawConfig, _ string) error {
 		return errors.New("profile does not contain `proxies` or `proxy-providers`")
 	}
 
-	if _, err := regexp2.Compile(cfg.ClashForAndroid.UiSubtitlePattern); err != nil {
+	if _, err := regexp2.Compile(cfg.ClashForAndroid.UiSubtitlePattern, regexp2.IgnoreCase); err != nil {
 		return fmt.Errorf("compile ui-subtitle-pattern: %s", err.Error())
 	}
 
