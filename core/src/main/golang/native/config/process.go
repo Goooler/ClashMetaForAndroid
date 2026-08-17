@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/dlclark/regexp2"
+	"github.com/dlclark/regexp2/v2"
 
 	"cfa/native/common"
 
@@ -127,7 +127,7 @@ func validConfig(cfg *config.RawConfig, _ string) error {
 		return errors.New("profile does not contain `proxies` or `proxy-providers`")
 	}
 
-	if _, err := regexp2.Compile(cfg.ClashForAndroid.UiSubtitlePattern, 0); err != nil {
+	if _, err := regexp2.Compile(cfg.ClashForAndroid.UiSubtitlePattern); err != nil {
 		return fmt.Errorf("compile ui-subtitle-pattern: %s", err.Error())
 	}
 
