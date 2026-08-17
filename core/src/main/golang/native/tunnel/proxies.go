@@ -4,7 +4,7 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/dlclark/regexp2"
+	"github.com/dlclark/regexp2/v2"
 
 	"github.com/metacubex/mihomo/adapter/outboundgroup"
 	C "github.com/metacubex/mihomo/constant"
@@ -179,8 +179,8 @@ func convertProxies(proxies []C.Proxy, uiSubtitlePattern *regexp2.Regexp) []*Pro
 				runes := []rune(name)
 				match, err := uiSubtitlePattern.FindRunesMatch(runes)
 				if err == nil && match != nil {
-					title = string(runes[:match.Index]) + string(runes[match.Index+match.Length:])
-					subtitle = string(runes[match.Index : match.Index+match.Length])
+					title = string(runes[:match.RuneIndex]) + string(runes[match.RuneIndex+match.RuneLength:])
+					subtitle = string(runes[match.RuneIndex : match.RuneIndex+match.RuneLength])
 				}
 			}
 		}
@@ -219,8 +219,8 @@ func collectProviders(providers []provider.ProxyProvider, uiSubtitlePattern *reg
 					runes := []rune(name)
 					match, err := uiSubtitlePattern.FindRunesMatch(runes)
 					if err == nil && match != nil {
-						title = string(runes[:match.Index]) + string(runes[match.Index+match.Length:])
-						subtitle = string(runes[match.Index : match.Index+match.Length])
+						title = string(runes[:match.RuneIndex]) + string(runes[match.RuneIndex+match.RuneLength:])
+						subtitle = string(runes[match.RuneIndex : match.RuneIndex+match.RuneLength])
 					}
 				}
 			}

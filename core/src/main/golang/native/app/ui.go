@@ -1,7 +1,7 @@
 package app
 
 import (
-	"github.com/dlclark/regexp2"
+	"github.com/dlclark/regexp2/v2"
 
 	"github.com/metacubex/mihomo/log"
 )
@@ -19,7 +19,7 @@ func ApplySubtitlePattern(pattern string) {
 		return
 	}
 
-	reg, err := regexp2.Compile(pattern, regexp2.IgnoreCase|regexp2.Compiled)
+	reg, err := regexp2.Compile(pattern, regexp2.IgnoreCase)
 	if err == nil {
 		uiSubtitlePattern = reg
 	} else {

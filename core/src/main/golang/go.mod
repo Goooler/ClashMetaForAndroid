@@ -3,7 +3,7 @@ module cfa
 go 1.25.0
 
 require (
-	github.com/dlclark/regexp2 v1.12.0
+	github.com/dlclark/regexp2/v2 v2.7.1
 	github.com/metacubex/mihomo v1.19.30
 	golang.org/x/sync v0.22.0
 )
@@ -21,6 +21,7 @@ require (
 	github.com/bodgit/windows v1.0.1 // indirect
 	github.com/coder/websocket v1.8.12 // indirect
 	github.com/coreos/go-iptables v0.8.0 // indirect
+	github.com/dlclark/regexp2 v1.12.0 // indirect
 	github.com/dunglas/httpsfv v1.0.2 // indirect
 	github.com/enfein/mieru/v3 v3.35.0 // indirect
 	github.com/ericlagergren/aegis v0.0.0-20250325060835-cd0defd64358 // indirect
