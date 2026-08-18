@@ -116,10 +116,10 @@ internal fun ProxyScreen(
   LaunchedEffect(viewModel) {
     viewModel.eventState.collect { event ->
       when (event) {
-        ProxyViewModel.EventState.ReLaunch -> {
+        ReLaunch -> {
           onReLaunch()
         }
-        ProxyViewModel.EventState.ShowModeSwitchTips -> {
+        ShowModeSwitchTips -> {
           snackbarHostState.showSnackbar(message = modeSwitchTips)
         }
       }

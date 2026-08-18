@@ -66,7 +66,7 @@ internal fun ProvidersScreen(
   LaunchedEffect(viewModel) {
     viewModel.eventState.collect { event ->
       when (event) {
-        is ProvidersViewModel.EventState.ShowMessage -> {
+        is ShowMessage -> {
           snackbarHostState.showSnackbar(message = event.message)
         }
       }

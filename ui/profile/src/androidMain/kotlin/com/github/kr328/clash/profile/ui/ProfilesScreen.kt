@@ -95,12 +95,12 @@ internal fun ProfilesScreen(
   LaunchedEffect(viewModel) {
     viewModel.eventState.collect { event ->
       when (event) {
-        ProfilesViewModel.EventState.OpenCreate -> onOpenCreate()
-        is ProfilesViewModel.EventState.OpenEdit -> onOpenEdit(event.uuid)
-        is ProfilesViewModel.EventState.ShowMessage -> {
+        OpenCreate -> onOpenCreate()
+        is OpenEdit -> onOpenEdit(event.uuid)
+        is ShowMessage -> {
           snackbarHostState.showSnackbar(message = event.message)
         }
-        is ProfilesViewModel.EventState.ShowEditableMessage -> {
+        is ShowEditableMessage -> {
           val result =
             snackbarHostState.showSnackbar(
               message = event.message,

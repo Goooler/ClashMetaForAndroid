@@ -121,23 +121,23 @@ internal fun FilesScreen(
   LaunchedEffect(viewModel) {
     viewModel.eventState.collect { event ->
       when (event) {
-        FilesViewModel.EventState.Finish -> {
+        Finish -> {
           onFinish()
         }
-        is FilesViewModel.EventState.OpenFile -> {
+        is OpenFile -> {
           openFileLauncher.launch(
             Intent(Intent.ACTION_VIEW).setDataAndType(event.uri, "text/plain").grantPermissions()
           )
         }
-        is FilesViewModel.EventState.RequestImport -> {
+        is RequestImport -> {
           pendingImportTarget = event.targetConfigFile
           importLauncher.launch("*/*")
         }
-        is FilesViewModel.EventState.RequestExport -> {
+        is RequestExport -> {
           pendingExportSource = event.sourceConfigFile
           exportLauncher.launch(event.sourceConfigFile.name)
         }
-        is FilesViewModel.EventState.ShowMessage -> {
+        is ShowMessage -> {
           snackbarHostState.showSnackbar(message = event.message)
         }
       }
