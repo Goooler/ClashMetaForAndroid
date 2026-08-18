@@ -11,8 +11,6 @@ import android.graphics.drawable.AdaptiveIconDrawable
 import android.graphics.drawable.Drawable
 import android.os.Process
 import androidx.core.content.getSystemService
-import androidx.lifecycle.DefaultLifecycleObserver
-import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.github.kr328.clash.common.compat.getInstalledPackagesCompat
@@ -39,7 +37,7 @@ internal class AccessControlViewModel(
   private val application: Application,
   private val scope: CoroutineScope,
   private val uiStore: UiStore,
-) : ViewModel(), AccessControlActions, DefaultLifecycleObserver {
+) : ViewModel(), AccessControlActions {
   private val serviceStore = ServiceStore(application)
   private var reloadAppsJob: Job? = null
 
@@ -65,7 +63,7 @@ internal class AccessControlViewModel(
     }
   }
 
-  override fun onStop(owner: LifecycleOwner) {
+  fun persist() {
     // Intended to use non-viewModel scope as we need the action to be called on disposed.
     scope.launch {
       val selected = uiState.value.selected

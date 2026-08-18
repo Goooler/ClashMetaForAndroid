@@ -2,8 +2,6 @@ package com.github.kr328.clash.profile.vm
 
 import android.app.Application
 import android.net.Uri
-import androidx.lifecycle.DefaultLifecycleObserver
-import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.github.kr328.clash.common.log.Log
@@ -20,8 +18,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-internal class FilesViewModel(private val application: Application) :
-  ViewModel(), DefaultLifecycleObserver {
+internal class FilesViewModel(private val application: Application) : ViewModel() {
   private val client = FilesClient(application)
   private val stack = ArrayDeque<String>()
   private var root: String = ""
@@ -48,7 +45,7 @@ internal class FilesViewModel(private val application: Application) :
     }
   }
 
-  override fun onStart(owner: LifecycleOwner) {
+  fun resume() {
     if (root.isNotEmpty()) {
       fetch()
     }
@@ -136,7 +133,7 @@ internal class FilesViewModel(private val application: Application) :
     }
   }
 
-  private fun fetch() {
+  fun fetch() {
     fetchJob?.cancel()
     val documentId = stack.lastOrNull() ?: root
     if (root.isEmpty()) return

@@ -33,6 +33,7 @@ import androidx.compose.ui.platform.toClipEntry
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.PreviewWrapper
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.LifecycleStartEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.github.kr328.clash.common.Res as CommonRes
 import com.github.kr328.clash.common.close
@@ -51,7 +52,6 @@ import com.github.kr328.clash.ui.icon.BaselineDelete
 import com.github.kr328.clash.ui.icon.BaselineSave
 import com.github.kr328.clash.ui.icon.BaselineStop
 import com.github.kr328.clash.ui.icon.TabbyIcons
-import com.github.kr328.clash.ui.lifecycle.withLifecycle
 import com.github.kr328.clash.ui.theme.PreviewTabby
 import com.github.kr328.clash.ui.theme.TabbyThemeWrapper
 import com.github.kr328.clash.ui.theme.tabbyDimens
@@ -64,7 +64,7 @@ import org.koin.compose.viewmodel.koinViewModel
 internal fun LogcatScreen(
   fileName: String?,
   modifier: Modifier = Modifier,
-  viewModel: LogcatViewModel = koinViewModel<LogcatViewModel>().withLifecycle(),
+  viewModel: LogcatViewModel = koinViewModel<LogcatViewModel>(),
   onOpenLogs: () -> Unit,
   onInvalidFile: () -> Unit,
   onClose: () -> Unit,
@@ -77,12 +77,12 @@ internal fun LogcatScreen(
   val messageCopied = stringResource(Res.string.copied)
   val invalidFileTip = stringResource(Res.string.invalid_log_file)
 
-  LaunchedEffect(fileName, viewModel) { viewModel.init(fileName) }
-
   val exportLauncher =
     rememberLauncherForActivityResult(CreateDocument("text/plain")) { uri ->
       viewModel.exportTo(uri)
     }
+
+  LaunchedEffect(fileName, viewModel) { viewModel.init(fileName) }
 
   LaunchedEffect(viewModel) {
     viewModel.eventState.collect { event ->
@@ -110,6 +110,13 @@ internal fun LogcatScreen(
           listState.animateScrollToItem(size - 1)
         }
       }
+  }
+
+  LifecycleStartEffect(viewModel) {
+    viewModel.resumePolling()
+    onStopOrDispose {
+      viewModel.pausePolling()
+    }
   }
 
   LogcatContent(

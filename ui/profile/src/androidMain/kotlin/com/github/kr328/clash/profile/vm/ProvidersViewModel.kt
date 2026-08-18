@@ -1,8 +1,6 @@
 package com.github.kr328.clash.profile.vm
 
 import android.app.Application
-import androidx.lifecycle.DefaultLifecycleObserver
-import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.github.kr328.clash.common.log.Log
@@ -23,9 +21,7 @@ import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.getString
 
-internal class ProvidersViewModel(private val application: Application) :
-  ViewModel(), DefaultLifecycleObserver {
-  private var broadcastEventsJob: Job? = null
+internal class ProvidersViewModel(private val application: Application) : ViewModel() {
   private var elapsedJob: Job? = null
   private var fetchJob: Job? = null
 
@@ -35,9 +31,8 @@ internal class ProvidersViewModel(private val application: Application) :
   val eventState: SharedFlow<EventState>
     field = MutableSharedFlow(extraBufferCapacity = 64)
 
-  override fun onStart(owner: LifecycleOwner) {
-    broadcastEventsJob?.cancel()
-    broadcastEventsJob = viewModelScope.launch {
+  init {
+    viewModelScope.launch {
       Remote.broadcasts.event.collect { event ->
         when (event) {
           ProfileLoaded -> fetch()
@@ -45,14 +40,14 @@ internal class ProvidersViewModel(private val application: Application) :
         }
       }
     }
+  }
 
+  fun resume() {
     startElapsedTicker()
     fetch()
   }
 
-  override fun onStop(owner: LifecycleOwner) {
-    broadcastEventsJob?.cancel()
-    broadcastEventsJob = null
+  fun pause() {
     elapsedJob?.cancel()
     elapsedJob = null
   }
@@ -110,7 +105,7 @@ internal class ProvidersViewModel(private val application: Application) :
     }
   }
 
-  private fun fetch() {
+  fun fetch() {
     fetchJob?.cancel()
     fetchJob = viewModelScope.launch {
       val providers = withClash { queryProviders().sorted() }

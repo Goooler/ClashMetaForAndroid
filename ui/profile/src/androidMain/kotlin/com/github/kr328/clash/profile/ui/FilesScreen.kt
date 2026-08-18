@@ -48,6 +48,7 @@ import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.PreviewWrapper
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.LifecycleStartEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.github.kr328.clash.common.Res as CommonRes
 import com.github.kr328.clash.common._new
@@ -79,7 +80,6 @@ import com.github.kr328.clash.ui.icon.OutlineArticle
 import com.github.kr328.clash.ui.icon.OutlineDelete
 import com.github.kr328.clash.ui.icon.OutlineFolder
 import com.github.kr328.clash.ui.icon.TabbyIcons
-import com.github.kr328.clash.ui.lifecycle.withLifecycle
 import com.github.kr328.clash.ui.theme.PreviewTabby
 import com.github.kr328.clash.ui.theme.TabbyThemeWrapper
 import kotlin.time.Duration.Companion.minutes
@@ -93,7 +93,7 @@ import org.koin.compose.viewmodel.koinViewModel
 internal fun FilesScreen(
   uuid: Uuid,
   modifier: Modifier = Modifier,
-  viewModel: FilesViewModel = koinViewModel<FilesViewModel>().withLifecycle(),
+  viewModel: FilesViewModel = koinViewModel<FilesViewModel>(),
   onFinish: () -> Unit,
 ) {
   val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -142,6 +142,11 @@ internal fun FilesScreen(
         }
       }
     }
+  }
+
+  LifecycleStartEffect(viewModel) {
+    viewModel.resume()
+    onStopOrDispose {}
   }
 
   FilesContent(

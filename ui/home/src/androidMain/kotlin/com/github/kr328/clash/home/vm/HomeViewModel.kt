@@ -2,8 +2,6 @@ package com.github.kr328.clash.home.vm
 
 import android.app.Application
 import android.content.Intent
-import androidx.lifecycle.DefaultLifecycleObserver
-import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.github.kr328.clash.common.Res as CommonRes
@@ -34,13 +32,9 @@ import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.getString
 
-internal class HomeViewModel(private val dependencies: Dependencies) :
-  ViewModel(), DefaultLifecycleObserver {
-  private var broadcastEventsJob: Job? = null
-  private var profileLoadedJob: Job? = null
+internal class HomeViewModel(private val dependencies: Dependencies) : ViewModel() {
   private var trafficPollingJob: Job? = null
   private var fetchJob: Job? = null
-  private var clashRunningJob: Job? = null
   private var transitionTimeoutJob: Job? = null
   private var lastClashRunning: Boolean? = null
 
@@ -52,9 +46,8 @@ internal class HomeViewModel(private val dependencies: Dependencies) :
   val eventState: SharedFlow<EventState>
     field = MutableSharedFlow(extraBufferCapacity = 64)
 
-  override fun onStart(owner: LifecycleOwner) {
-    clashRunningJob?.cancel()
-    clashRunningJob = viewModelScope.launch {
+  init {
+    viewModelScope.launch {
       dependencies.clashRunning.collect { running ->
         val last = lastClashRunning
         lastClashRunning = running
@@ -64,11 +57,7 @@ internal class HomeViewModel(private val dependencies: Dependencies) :
         }
       }
     }
-    if (uiState.value.isTransitioning) {
-      startTransitionTimeout()
-    }
-    broadcastEventsJob?.cancel()
-    broadcastEventsJob = viewModelScope.launch {
+    viewModelScope.launch {
       dependencies.events.collect { broadcastEvent ->
         when (broadcastEvent) {
           ServiceRecreated,
@@ -86,24 +75,19 @@ internal class HomeViewModel(private val dependencies: Dependencies) :
         }
       }
     }
-    profileLoadedJob?.cancel()
-    profileLoadedJob = viewModelScope.launch {
+    viewModelScope.launch {
       dependencies.profileLoaded.collect { loaded ->
         if (loaded) fetch() else clearRuntimeState()
       }
     }
-    startTrafficPolling()
     fetch()
   }
 
-  override fun onStop(owner: LifecycleOwner) {
-    clashRunningJob?.cancel()
-    clashRunningJob = null
-    cancelTransitionTimeout()
-    broadcastEventsJob?.cancel()
-    broadcastEventsJob = null
-    profileLoadedJob?.cancel()
-    profileLoadedJob = null
+  fun resume() {
+    startTrafficPolling()
+  }
+
+  fun pause() {
     trafficPollingJob?.cancel()
     trafficPollingJob = null
   }
@@ -129,7 +113,7 @@ internal class HomeViewModel(private val dependencies: Dependencies) :
     cancelTransitionTimeout()
   }
 
-  private fun fetch() {
+  fun fetch() {
     fetchJob?.cancel()
     fetchJob = viewModelScope.launch {
       val profileName = dependencies.queryActiveProfileName()

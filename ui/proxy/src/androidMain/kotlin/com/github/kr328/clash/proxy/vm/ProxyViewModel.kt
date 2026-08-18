@@ -1,8 +1,6 @@
 package com.github.kr328.clash.proxy.vm
 
 import androidx.compose.ui.graphics.Color
-import androidx.lifecycle.DefaultLifecycleObserver
-import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.github.kr328.clash.core.Clash
@@ -24,9 +22,7 @@ import kotlinx.coroutines.sync.Semaphore
 import kotlinx.coroutines.sync.withPermit
 import kotlinx.coroutines.withContext
 
-internal class ProxyViewModel(private val uiStore: UiStore) :
-  ViewModel(), DefaultLifecycleObserver {
-  private var broadcastEventsJob: Job? = null
+internal class ProxyViewModel(private val uiStore: UiStore) : ViewModel() {
   private var fetchInitialStateJob: Job? = null
   @Volatile private var initialized = false
   // Allow up to 10 concurrent group queries to avoid overwhelming the service
@@ -49,11 +45,8 @@ internal class ProxyViewModel(private val uiStore: UiStore) :
         proxySort = uiStore.proxySort,
       )
     }
-  }
 
-  override fun onStart(owner: LifecycleOwner) {
-    broadcastEventsJob?.cancel()
-    broadcastEventsJob = viewModelScope.launch {
+    viewModelScope.launch {
       Remote.broadcasts.event.collect { event ->
         when (event) {
           ProfileLoaded -> {
@@ -67,16 +60,11 @@ internal class ProxyViewModel(private val uiStore: UiStore) :
         }
       }
     }
-
-    fetchInitialStateJob?.cancel()
-    fetchInitialStateJob = viewModelScope.launch { fetchInitialState() }
   }
 
-  override fun onStop(owner: LifecycleOwner) {
-    broadcastEventsJob?.cancel()
-    broadcastEventsJob = null
+  fun refresh() {
     fetchInitialStateJob?.cancel()
-    fetchInitialStateJob = null
+    fetchInitialStateJob = viewModelScope.launch { fetchInitialState() }
   }
 
   private suspend fun fetchInitialState() {

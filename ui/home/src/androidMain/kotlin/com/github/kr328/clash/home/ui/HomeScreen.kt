@@ -36,6 +36,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.PreviewWrapper
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.LifecycleStartEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.github.kr328.clash.common.R as CommonR
 import com.github.kr328.clash.common.Res as CommonRes
@@ -69,7 +70,6 @@ import com.github.kr328.clash.ui.icon.BaselineViewList
 import com.github.kr328.clash.ui.icon.OutlineCheckCircle
 import com.github.kr328.clash.ui.icon.OutlineNotInterested
 import com.github.kr328.clash.ui.icon.TabbyIcons
-import com.github.kr328.clash.ui.lifecycle.withLifecycle
 import com.github.kr328.clash.ui.theme.PreviewTabby
 import com.github.kr328.clash.ui.theme.TabbyDarkSurface
 import com.github.kr328.clash.ui.theme.TabbyLightStopped
@@ -81,7 +81,7 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 internal fun HomeScreen(
   modifier: Modifier = Modifier,
-  viewModel: HomeViewModel = koinViewModel<HomeViewModel>().withLifecycle(),
+  viewModel: HomeViewModel = koinViewModel<HomeViewModel>(),
   onOpenProxy: () -> Unit,
   onOpenProfiles: () -> Unit,
   onOpenProviders: () -> Unit,
@@ -123,6 +123,11 @@ internal fun HomeScreen(
         }
       }
     }
+  }
+
+  LifecycleStartEffect(viewModel) {
+    viewModel.resume()
+    onStopOrDispose { viewModel.pause() }
   }
 
   HomeContent(

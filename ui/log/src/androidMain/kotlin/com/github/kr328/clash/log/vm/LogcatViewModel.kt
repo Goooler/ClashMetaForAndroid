@@ -6,8 +6,6 @@ import android.content.Context
 import android.content.ServiceConnection
 import android.net.Uri
 import android.os.IBinder
-import androidx.lifecycle.DefaultLifecycleObserver
-import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.github.kr328.clash.common.Res as CommonRes
@@ -40,8 +38,7 @@ import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
 import org.jetbrains.compose.resources.getString
 
-internal class LogcatViewModel(private val application: Application) :
-  ViewModel(), DefaultLifecycleObserver {
+internal class LogcatViewModel(private val application: Application) : ViewModel() {
   private var conn: ServiceConnection? = null
   @Suppress("StaticFieldLeak") private var logcat: LogcatService? = null
   private var pollJob: Job? = null
@@ -122,11 +119,11 @@ internal class LogcatViewModel(private val application: Application) :
     }
   }
 
-  override fun onStart(owner: LifecycleOwner) {
+  fun resumePolling() {
     started = true
   }
 
-  override fun onStop(owner: LifecycleOwner) {
+  fun pausePolling() {
     started = false
   }
 

@@ -1,8 +1,6 @@
 package com.github.kr328.clash.profile.vm
 
 import android.app.Application
-import androidx.lifecycle.DefaultLifecycleObserver
-import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.github.kr328.clash.common.Res as CommonRes
@@ -34,7 +32,7 @@ import org.jetbrains.compose.resources.getString
 internal class PropertiesViewModel(
   private val application: Application,
   private val scope: CoroutineScope,
-) : ViewModel(), DefaultLifecycleObserver {
+) : ViewModel() {
   private var rootUuid: Uuid? = null
   private var canceled = false
 
@@ -58,7 +56,7 @@ internal class PropertiesViewModel(
     }
   }
 
-  override fun onStop(owner: LifecycleOwner) {
+  fun persist() {
     if (!canceled && uiState.value.hasUnsavedChanges) {
       val profile = uiState.value.profile ?: return
       viewModelScope.launch {

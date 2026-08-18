@@ -46,6 +46,7 @@ import androidx.compose.ui.tooling.preview.PreviewWrapper
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.graphics.drawable.toDrawable
+import androidx.lifecycle.compose.LifecycleStartEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.github.kr328.clash.common.Res as CommonRes
 import com.github.kr328.clash.common.external
@@ -74,7 +75,6 @@ import com.github.kr328.clash.ui.component.TabbyScaffold
 import com.github.kr328.clash.ui.icon.BaselineMoreVert
 import com.github.kr328.clash.ui.icon.BaselineSearch
 import com.github.kr328.clash.ui.icon.TabbyIcons
-import com.github.kr328.clash.ui.lifecycle.withLifecycle
 import com.github.kr328.clash.ui.theme.PreviewTabby
 import com.github.kr328.clash.ui.theme.TabbyThemeWrapper
 import com.github.kr328.clash.ui.theme.tabbyDimens
@@ -92,9 +92,15 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 internal fun AccessControlScreen(
   modifier: Modifier = Modifier,
-  viewModel: AccessControlViewModel = koinViewModel<AccessControlViewModel>().withLifecycle(),
+  viewModel: AccessControlViewModel = koinViewModel<AccessControlViewModel>(),
 ) {
   val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
+  LifecycleStartEffect(viewModel) {
+    onStopOrDispose {
+      viewModel.persist()
+    }
+  }
 
   AccessControlContent(
     apps = uiState.apps,

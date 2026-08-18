@@ -57,6 +57,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.PreviewWrapper
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.LifecycleStartEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.github.kr328.clash.common.Res as CommonRes
 import com.github.kr328.clash.common.default_
@@ -95,7 +96,6 @@ import com.github.kr328.clash.ui.icon.BaselineCircleCenter
 import com.github.kr328.clash.ui.icon.BaselineFlashOn
 import com.github.kr328.clash.ui.icon.BaselineMoreVert
 import com.github.kr328.clash.ui.icon.TabbyIcons
-import com.github.kr328.clash.ui.lifecycle.withLifecycle
 import com.github.kr328.clash.ui.theme.PreviewTabby
 import com.github.kr328.clash.ui.theme.TabbyThemeWrapper
 import kotlinx.coroutines.launch
@@ -105,7 +105,7 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 internal fun ProxyScreen(
   modifier: Modifier = Modifier,
-  viewModel: ProxyViewModel = koinViewModel<ProxyViewModel>().withLifecycle(),
+  viewModel: ProxyViewModel = koinViewModel<ProxyViewModel>(),
   onReLaunch: () -> Unit,
 ) {
   val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -124,6 +124,11 @@ internal fun ProxyScreen(
         }
       }
     }
+  }
+
+  LifecycleStartEffect(viewModel) {
+    viewModel.refresh()
+    onStopOrDispose {}
   }
 
   ProxyContent(
