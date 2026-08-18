@@ -91,7 +91,6 @@ internal fun HomeScreen(
 ) {
   val clashRunning by viewModel.clashRunning.collectAsStateWithLifecycle()
   val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-  val eventState by viewModel.eventState.collectAsStateWithLifecycle()
   val snackbarHostState = remember { SnackbarHostState() }
 
   val noProfileText = stringResource(Res.string.no_profile_selected)
@@ -105,25 +104,25 @@ internal fun HomeScreen(
       }
     }
 
-  LaunchedEffect(eventState) {
-    when (val event = eventState) {
-      Idle -> Unit
-      is RequestVpnPermission -> vpnLauncher.launch(event.intent)
-      ShowNoProfileMessage -> {
-        val result =
-          snackbarHostState.showSnackbar(
-            message = noProfileText,
-            actionLabel = profilesActionText,
-            duration = SnackbarDuration.Long,
-          )
+  LaunchedEffect(viewModel) {
+    viewModel.event.collect { event ->
+      when (event) {
+        is HomeViewModel.Event.RequestVpnPermission -> vpnLauncher.launch(event.intent)
+        HomeViewModel.Event.ShowNoProfileMessage -> {
+          val result =
+            snackbarHostState.showSnackbar(
+              message = noProfileText,
+              actionLabel = profilesActionText,
+              duration = SnackbarDuration.Long,
+            )
 
-        if (result == SnackbarResult.ActionPerformed) onOpenProfiles()
-      }
-      is ShowMessage -> {
-        snackbarHostState.showSnackbar(message = event.message)
+          if (result == SnackbarResult.ActionPerformed) onOpenProfiles()
+        }
+        is HomeViewModel.Event.ShowMessage -> {
+          snackbarHostState.showSnackbar(message = event.message)
+        }
       }
     }
-    viewModel.consumeEvent()
   }
 
   HomeContent(

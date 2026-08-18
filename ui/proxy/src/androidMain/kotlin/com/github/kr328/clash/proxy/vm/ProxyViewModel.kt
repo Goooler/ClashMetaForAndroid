@@ -14,7 +14,9 @@ import com.github.kr328.clash.glue.store.UiStore
 import com.github.kr328.clash.glue.util.withClash
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -33,8 +35,8 @@ internal class ProxyViewModel(private val uiStore: UiStore) :
   val uiState: StateFlow<UiState>
     field = MutableStateFlow(UiState())
 
-  val eventState: StateFlow<EventState>
-    field = MutableStateFlow<EventState>(EventState.Idle)
+  val event: SharedFlow<Event>
+    field = MutableSharedFlow(extraBufferCapacity = 64)
 
   val selectedProxies: StateFlow<List<SelectedProxy>>
     field = MutableStateFlow(emptyList())
@@ -58,7 +60,7 @@ internal class ProxyViewModel(private val uiStore: UiStore) :
             if (!initialized) return@collect
             val newNames = withClash { queryProxyGroupNames(uiStore.proxyExcludeNotSelectable) }
             if (newNames != uiState.value.groupNames) {
-              eventState.value = EventState.ReLaunch
+              this@ProxyViewModel.event.tryEmit(Event.ReLaunch)
             }
           }
           else -> Unit
@@ -75,10 +77,6 @@ internal class ProxyViewModel(private val uiStore: UiStore) :
     broadcastEventsJob = null
     fetchInitialStateJob?.cancel()
     fetchInitialStateJob = null
-  }
-
-  fun consumeEvent() {
-    eventState.value = EventState.Idle
   }
 
   private suspend fun fetchInitialState() {
@@ -115,7 +113,7 @@ internal class ProxyViewModel(private val uiStore: UiStore) :
   fun onExcludeNotSelectableChanged(enabled: Boolean) {
     uiStore.proxyExcludeNotSelectable = enabled
     uiState.update { it.copy(excludeNotSelectable = enabled) }
-    eventState.value = EventState.ReLaunch
+    event.tryEmit(Event.ReLaunch)
   }
 
   fun onProxyLineChanged(line: Int) {
@@ -136,7 +134,7 @@ internal class ProxyViewModel(private val uiStore: UiStore) :
 
   fun onOverrideModeSelected(mode: TunnelState.Mode?) {
     uiState.update { it.copy(overrideMode = mode) }
-    eventState.value = EventState.ShowModeSwitchTips
+    event.tryEmit(Event.ShowModeSwitchTips)
     viewModelScope.launch {
       withClash {
         val o = queryOverride(Clash.OverrideSlot.Session)
@@ -331,11 +329,9 @@ internal class ProxyViewModel(private val uiStore: UiStore) :
 
   @JvmInline value class SelectedProxy(val name: String)
 
-  sealed interface EventState {
-    data object Idle : EventState
+  sealed interface Event {
+    data object ReLaunch : Event
 
-    data object ReLaunch : EventState
-
-    data object ShowModeSwitchTips : EventState
+    data object ShowModeSwitchTips : Event
   }
 }

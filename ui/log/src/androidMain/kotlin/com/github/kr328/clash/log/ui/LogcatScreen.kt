@@ -71,7 +71,6 @@ internal fun LogcatScreen(
 ) {
   val clipboard = LocalClipboard.current
   val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-  val evenState by viewModel.eventState.collectAsStateWithLifecycle()
   val listState = rememberLazyListState()
   val snackbarHostState = remember { SnackbarHostState() }
   val scope = rememberCoroutineScope()
@@ -85,21 +84,21 @@ internal fun LogcatScreen(
       viewModel.exportTo(uri)
     }
 
-  LaunchedEffect(evenState) {
-    when (val event = evenState) {
-      Idle -> Unit
-      Close -> onClose()
-      InvalidFile -> {
-        snackbarHostState.showSnackbar(message = invalidFileTip)
-        onInvalidFile()
-      }
-      OpenLogs -> onOpenLogs()
-      is RequestExport -> exportLauncher.launch(event.fileName)
-      is ShowMessage -> {
-        snackbarHostState.showSnackbar(message = event.message, withDismissAction = true)
+  LaunchedEffect(viewModel) {
+    viewModel.event.collect { event ->
+      when (event) {
+        LogcatViewModel.Event.Close -> onClose()
+        LogcatViewModel.Event.InvalidFile -> {
+          snackbarHostState.showSnackbar(message = invalidFileTip)
+          onInvalidFile()
+        }
+        LogcatViewModel.Event.OpenLogs -> onOpenLogs()
+        is LogcatViewModel.Event.RequestExport -> exportLauncher.launch(event.fileName)
+        is LogcatViewModel.Event.ShowMessage -> {
+          snackbarHostState.showSnackbar(message = event.message, withDismissAction = true)
+        }
       }
     }
-    viewModel.consumeEvent()
   }
 
   LaunchedEffect(listState, uiState.streaming) {

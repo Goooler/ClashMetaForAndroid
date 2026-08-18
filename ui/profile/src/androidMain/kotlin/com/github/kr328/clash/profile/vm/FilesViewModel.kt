@@ -13,7 +13,9 @@ import com.github.kr328.clash.glue.util.fileName
 import com.github.kr328.clash.glue.util.withProfile
 import kotlin.uuid.Uuid
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -28,8 +30,8 @@ internal class FilesViewModel(private val application: Application) :
   val uiState: StateFlow<UiState>
     field = MutableStateFlow(UiState())
 
-  val eventState: StateFlow<EventState>
-    field = MutableStateFlow<EventState>(EventState.Idle)
+  val event: SharedFlow<Event>
+    field = MutableSharedFlow(extraBufferCapacity = 64)
 
   fun init(uuid: Uuid) {
     if (root.isNotEmpty()) return
@@ -38,16 +40,12 @@ internal class FilesViewModel(private val application: Application) :
     viewModelScope.launch {
       val profile = withProfile { queryByUUID(uuid) }
       if (profile == null) {
-        eventState.value = EventState.Finish
+        event.tryEmit(Event.Finish)
         return@launch
       }
       uiState.update { it.copy(configurationEditable = profile.type == Url) }
       fetch()
     }
-  }
-
-  fun consumeEvent() {
-    eventState.value = EventState.Idle
   }
 
   override fun onStart(owner: LifecycleOwner) {
@@ -58,7 +56,7 @@ internal class FilesViewModel(private val application: Application) :
 
   fun onBack() {
     if (stack.isEmpty()) {
-      eventState.value = EventState.Finish
+      event.tryEmit(Event.Finish)
     } else {
       stack.removeLast()
       fetch()
@@ -71,7 +69,7 @@ internal class FilesViewModel(private val application: Application) :
       fetch()
     } else {
       val uri = client.buildDocumentUri(configFile.id)
-      eventState.value = EventState.OpenFile(uri)
+      event.tryEmit(Event.OpenFile(uri))
     }
   }
 
@@ -81,7 +79,7 @@ internal class FilesViewModel(private val application: Application) :
         client.deleteDocument(configFile.id)
       } catch (e: Exception) {
         Log.e("Delete file failed: ${e.message}", e)
-        eventState.value = EventState.ShowMessage(e.message ?: "Unknown error")
+        event.tryEmit(Event.ShowMessage(e.message ?: "Unknown error"))
       }
       fetch()
     }
@@ -93,14 +91,14 @@ internal class FilesViewModel(private val application: Application) :
         client.renameDocument(configFile.id, newName)
       } catch (e: Exception) {
         Log.e("Rename file failed: ${e.message}", e)
-        eventState.value = EventState.ShowMessage(e.message ?: "Unknown error")
+        event.tryEmit(Event.ShowMessage(e.message ?: "Unknown error"))
       }
       fetch()
     }
   }
 
   fun onRequestImport(configFile: ConfigFile?) {
-    eventState.value = EventState.RequestImport(configFile)
+    event.tryEmit(Event.RequestImport(configFile))
   }
 
   fun onImportResult(uri: Uri?, targetConfigFile: ConfigFile?) {
@@ -115,14 +113,14 @@ internal class FilesViewModel(private val application: Application) :
         }
       } catch (e: Exception) {
         Log.e("Import file failed: ${e.message}", e)
-        eventState.value = EventState.ShowMessage(e.message ?: "Unknown error")
+        event.tryEmit(Event.ShowMessage(e.message ?: "Unknown error"))
       }
       fetch()
     }
   }
 
   fun onRequestExport(configFile: ConfigFile) {
-    eventState.value = EventState.RequestExport(configFile)
+    event.tryEmit(Event.RequestExport(configFile))
   }
 
   fun onExportResult(uri: Uri?, sourceConfigFile: ConfigFile?) {
@@ -132,7 +130,7 @@ internal class FilesViewModel(private val application: Application) :
         client.copyDocument(uri, sourceConfigFile.id)
       } catch (e: Exception) {
         Log.e("Export file failed: ${e.message}", e)
-        eventState.value = EventState.ShowMessage(e.message ?: "Unknown error")
+        event.tryEmit(Event.ShowMessage(e.message ?: "Unknown error"))
       }
       fetch()
     }
@@ -157,7 +155,7 @@ internal class FilesViewModel(private val application: Application) :
         uiState.update { it.copy(configFiles = files, currentInBaseDir = inBaseDir) }
       } catch (e: Exception) {
         Log.e("List files failed: ${e.message}", e)
-        eventState.value = EventState.ShowMessage(e.message ?: "Unknown error")
+        event.tryEmit(Event.ShowMessage(e.message ?: "Unknown error"))
       }
     }
   }
@@ -168,17 +166,15 @@ internal class FilesViewModel(private val application: Application) :
     val configurationEditable: Boolean = false,
   )
 
-  sealed interface EventState {
-    data object Idle : EventState
+  sealed interface Event {
+    data object Finish : Event
 
-    data object Finish : EventState
+    data class OpenFile(val uri: Uri) : Event
 
-    data class OpenFile(val uri: Uri) : EventState
+    data class RequestImport(val targetConfigFile: ConfigFile?) : Event
 
-    data class RequestImport(val targetConfigFile: ConfigFile?) : EventState
+    data class RequestExport(val sourceConfigFile: ConfigFile) : Event
 
-    data class RequestExport(val sourceConfigFile: ConfigFile) : EventState
-
-    data class ShowMessage(val message: String) : EventState
+    data class ShowMessage(val message: String) : Event
   }
 }

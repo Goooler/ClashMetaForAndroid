@@ -19,7 +19,9 @@ import kotlin.uuid.Uuid
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.isActive
@@ -36,8 +38,8 @@ internal class ProfilesViewModel(private val application: Application) :
   val uiState: StateFlow<UiState>
     field = MutableStateFlow(UiState())
 
-  val eventState: StateFlow<EventState>
-    field = MutableStateFlow<EventState>(EventState.Idle)
+  val event: SharedFlow<Event>
+    field = MutableSharedFlow(extraBufferCapacity = 64)
 
   override fun onStart(owner: LifecycleOwner) {
     broadcastEventsJob?.cancel()
@@ -70,12 +72,8 @@ internal class ProfilesViewModel(private val application: Application) :
     elapsedJob = null
   }
 
-  fun consumeEvent() {
-    eventState.value = EventState.Idle
-  }
-
   fun onOpenCreate() {
-    eventState.value = EventState.OpenCreate
+    event.tryEmit(Event.OpenCreate)
   }
 
   fun onActivate(profile: Profile) {
@@ -83,11 +81,12 @@ internal class ProfilesViewModel(private val application: Application) :
       if (profile.imported) {
         withProfile { setActive(profile) }
       } else {
-        eventState.value =
-          EventState.ShowEditableMessage(
+        event.tryEmit(
+          Event.ShowEditableMessage(
             getString(Res.string.active_unsaved_tips),
             profile.uuid,
           )
+        )
       }
     }
   }
@@ -116,13 +115,13 @@ internal class ProfilesViewModel(private val application: Application) :
   }
 
   fun onEdit(profile: Profile) {
-    eventState.value = EventState.OpenEdit(profile.uuid)
+    event.tryEmit(Event.OpenEdit(profile.uuid))
   }
 
   fun onDuplicate(profile: Profile) {
     viewModelScope.launch {
       val uuid = withProfile { clone(profile.uuid) }
-      eventState.value = EventState.OpenEdit(uuid)
+      event.tryEmit(Event.OpenEdit(uuid))
     }
   }
 
@@ -154,18 +153,18 @@ internal class ProfilesViewModel(private val application: Application) :
 
   private suspend fun showProfileUpdateCompleted(uuid: Uuid) {
     val name = withProfile { queryByUUID(uuid)?.name.orEmpty() }
-    eventState.value =
-      EventState.ShowMessage(getString(Res.string.toast_profile_updated_complete, name))
+    event.tryEmit(Event.ShowMessage(getString(Res.string.toast_profile_updated_complete, name)))
   }
 
   private suspend fun showProfileUpdateFailed(uuid: Uuid, reason: String?) {
     val name = withProfile { queryByUUID(uuid)?.name.orEmpty() }
     val displayReason = reason?.takeUnless { it.isBlank() } ?: getString(CommonRes.string.unknown)
-    eventState.value =
-      EventState.ShowEditableMessage(
+    event.tryEmit(
+      Event.ShowEditableMessage(
         getString(Res.string.toast_profile_updated_failed, name, displayReason),
         uuid,
       )
+    )
   }
 
   data class UiState(
@@ -175,15 +174,13 @@ internal class ProfilesViewModel(private val application: Application) :
     val currentTime: Long = System.currentTimeMillis(),
   )
 
-  sealed interface EventState {
-    data object Idle : EventState
+  sealed interface Event {
+    data object OpenCreate : Event
 
-    data object OpenCreate : EventState
+    data class OpenEdit(val uuid: Uuid) : Event
 
-    data class OpenEdit(val uuid: Uuid) : EventState
+    data class ShowMessage(val message: String) : Event
 
-    data class ShowMessage(val message: String) : EventState
-
-    data class ShowEditableMessage(val message: String, val uuid: Uuid) : EventState
+    data class ShowEditableMessage(val message: String, val uuid: Uuid) : Event
   }
 }

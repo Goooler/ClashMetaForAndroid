@@ -81,25 +81,24 @@ internal fun PropertiesScreen(
   onFinish: (Boolean) -> Unit,
 ) {
   val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-  val eventState by viewModel.eventState.collectAsStateWithLifecycle()
   val snackbarHostState = remember { SnackbarHostState() }
 
   LaunchedEffect(uuid) { viewModel.init(uuid = uuid) }
 
-  LaunchedEffect(eventState) {
-    when (val event = eventState) {
-      Idle -> Unit
-      is BrowseFiles -> {
-        onBrowseFiles(event.uuid)
-      }
-      is Finish -> {
-        onFinish(event.success)
-      }
-      is ShowMessage -> {
-        snackbarHostState.showSnackbar(message = event.message)
+  LaunchedEffect(viewModel) {
+    viewModel.event.collect { event ->
+      when (event) {
+        is PropertiesViewModel.Event.BrowseFiles -> {
+          onBrowseFiles(event.uuid)
+        }
+        is PropertiesViewModel.Event.Finish -> {
+          onFinish(event.success)
+        }
+        is PropertiesViewModel.Event.ShowMessage -> {
+          snackbarHostState.showSnackbar(message = event.message)
+        }
       }
     }
-    viewModel.consumeEvent()
   }
 
   val profile = uiState.profile

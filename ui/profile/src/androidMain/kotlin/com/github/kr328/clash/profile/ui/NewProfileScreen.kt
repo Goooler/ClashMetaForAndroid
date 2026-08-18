@@ -63,7 +63,6 @@ internal fun NewProfileScreen(
 ) {
   val context = LocalContext.current
   val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-  val eventState by viewModel.eventState.collectAsStateWithLifecycle()
   val snackbarHostState = remember { SnackbarHostState() }
 
   val qrLauncher =
@@ -78,20 +77,22 @@ internal fun NewProfileScreen(
       }
     }
 
-  LaunchedEffect(eventState) {
-    when (val event = eventState) {
-      Idle -> Unit
-      LaunchQRScanner -> qrLauncher.launch(null)
-      is LaunchExternalProvider -> externalProviderLauncher.launch(event.intent)
-      is LaunchProperties -> onProperties(event.uuid)
-      is OpenAppSettings ->
-        context.startActivity(
-          Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).setData(event.uri)
-        )
-      is ShowMessage -> snackbarHostState.showSnackbar(message = event.message)
-      Finish -> onFinish()
+  LaunchedEffect(viewModel) {
+    viewModel.event.collect { event ->
+      when (event) {
+        NewProfileViewModel.Event.LaunchQRScanner -> qrLauncher.launch(null)
+        is NewProfileViewModel.Event.LaunchExternalProvider ->
+          externalProviderLauncher.launch(event.intent)
+        is NewProfileViewModel.Event.LaunchProperties -> onProperties(event.uuid)
+        is NewProfileViewModel.Event.OpenAppSettings ->
+          context.startActivity(
+            Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).setData(event.uri)
+          )
+        is NewProfileViewModel.Event.ShowMessage ->
+          snackbarHostState.showSnackbar(message = event.message)
+        NewProfileViewModel.Event.Finish -> onFinish()
+      }
     }
-    viewModel.consumeEvent()
   }
 
   NewProfileContent(

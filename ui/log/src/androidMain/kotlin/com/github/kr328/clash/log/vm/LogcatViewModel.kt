@@ -29,7 +29,9 @@ import kotlin.time.Duration.Companion.milliseconds
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.isActive
@@ -51,8 +53,8 @@ internal class LogcatViewModel(private val application: Application) :
   val uiState: StateFlow<UiState>
     field = MutableStateFlow(UiState())
 
-  val eventState: StateFlow<EventState>
-    field = MutableStateFlow<EventState>(EventState.Idle)
+  val event: SharedFlow<Event>
+    field = MutableSharedFlow(extraBufferCapacity = 64)
 
   fun init(fileName: String?) {
     if (initialized) return
@@ -61,7 +63,7 @@ internal class LogcatViewModel(private val application: Application) :
     val file = fileName?.let(LogFile::parse)
 
     if (fileName != null && file == null) {
-      eventState.value = EventState.InvalidFile
+      event.tryEmit(Event.InvalidFile)
       return
     }
 
@@ -77,13 +79,14 @@ internal class LogcatViewModel(private val application: Application) :
   }
 
   fun close() {
-    eventState.value =
+    val e =
       if (uiState.value.streaming) {
         application.stopService(LogcatService::class.intent)
-        EventState.OpenLogs
+        Event.OpenLogs
       } else {
-        EventState.Close
+        Event.Close
       }
+    event.tryEmit(e)
   }
 
   fun delete() {
@@ -91,13 +94,13 @@ internal class LogcatViewModel(private val application: Application) :
 
     viewModelScope.launch {
       withContext(Dispatchers.IO) { application.logsDir.resolve(file.fileName).delete() }
-      eventState.value = EventState.Close
+      event.tryEmit(Event.Close)
     }
   }
 
   fun requestExport() {
     val file = currentFile ?: return
-    eventState.value = EventState.RequestExport(file.fileName)
+    event.tryEmit(Event.RequestExport(file.fileName))
   }
 
   fun exportTo(uri: Uri?) {
@@ -107,19 +110,16 @@ internal class LogcatViewModel(private val application: Application) :
     viewModelScope.launch {
       val messages = uiState.value.messages
 
-      eventState.value =
+      val e =
         try {
           writeLogTo(messages, file, uri)
-          EventState.ShowMessage(getString(Res.string.file_exported))
-        } catch (e: Exception) {
-          Log.e("Export log file failed: ${e.message}", e)
-          EventState.ShowMessage(e.message ?: getString(CommonRes.string.unknown))
+          Event.ShowMessage(getString(Res.string.file_exported))
+        } catch (ex: Exception) {
+          Log.e("Export log file failed: ${ex.message}", ex)
+          Event.ShowMessage(ex.message ?: getString(CommonRes.string.unknown))
         }
+      event.tryEmit(e)
     }
-  }
-
-  fun consumeEvent() {
-    eventState.value = EventState.Idle
   }
 
   override fun onStart(owner: LifecycleOwner) {
@@ -142,7 +142,7 @@ internal class LogcatViewModel(private val application: Application) :
           LogcatReader(application, file).use { it.readAll() }
         } catch (e: Exception) {
           Log.e("Fail to read log file ${file.fileName}: ${e.message}", e)
-          eventState.value = EventState.InvalidFile
+          event.tryEmit(Event.InvalidFile)
           return@launch
         }
 
@@ -162,7 +162,7 @@ internal class LogcatViewModel(private val application: Application) :
         runCatching { application.stopService(LogcatService::class.intent) }
           .onFailure { ex -> Log.e("Stop logcat service failed: ${ex.message}", ex) }
         reset()
-        eventState.value = EventState.OpenLogs
+        event.tryEmit(Event.OpenLogs)
       }
     }
   }
@@ -327,17 +327,15 @@ internal class LogcatViewModel(private val application: Application) :
     val max: Int = 0,
   )
 
-  sealed interface EventState {
-    data object Idle : EventState
+  sealed interface Event {
+    data object Close : Event
 
-    data object Close : EventState
+    data object InvalidFile : Event
 
-    data object InvalidFile : EventState
+    data object OpenLogs : Event
 
-    data object OpenLogs : EventState
+    data class RequestExport(val fileName: String) : Event
 
-    data class RequestExport(val fileName: String) : EventState
-
-    data class ShowMessage(val message: String) : EventState
+    data class ShowMessage(val message: String) : Event
   }
 }
