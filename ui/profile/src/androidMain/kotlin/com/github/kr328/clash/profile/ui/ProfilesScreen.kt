@@ -93,14 +93,14 @@ internal fun ProfilesScreen(
   val editText = stringResource(Res.string.edit)
 
   LaunchedEffect(viewModel) {
-    viewModel.event.collect { event ->
+    viewModel.eventState.collect { event ->
       when (event) {
-        ProfilesViewModel.Event.OpenCreate -> onOpenCreate()
-        is ProfilesViewModel.Event.OpenEdit -> onOpenEdit(event.uuid)
-        is ProfilesViewModel.Event.ShowMessage -> {
+        ProfilesViewModel.EventState.OpenCreate -> onOpenCreate()
+        is ProfilesViewModel.EventState.OpenEdit -> onOpenEdit(event.uuid)
+        is ProfilesViewModel.EventState.ShowMessage -> {
           snackbarHostState.showSnackbar(message = event.message)
         }
-        is ProfilesViewModel.Event.ShowEditableMessage -> {
+        is ProfilesViewModel.EventState.ShowEditableMessage -> {
           val result =
             snackbarHostState.showSnackbar(
               message = event.message,

@@ -30,7 +30,7 @@ internal class FilesViewModel(private val application: Application) :
   val uiState: StateFlow<UiState>
     field = MutableStateFlow(UiState())
 
-  val event: SharedFlow<Event>
+  val eventState: SharedFlow<EventState>
     field = MutableSharedFlow(extraBufferCapacity = 64)
 
   fun init(uuid: Uuid) {
@@ -40,7 +40,7 @@ internal class FilesViewModel(private val application: Application) :
     viewModelScope.launch {
       val profile = withProfile { queryByUUID(uuid) }
       if (profile == null) {
-        event.tryEmit(Event.Finish)
+        eventState.tryEmit(EventState.Finish)
         return@launch
       }
       uiState.update { it.copy(configurationEditable = profile.type == Url) }
@@ -56,7 +56,7 @@ internal class FilesViewModel(private val application: Application) :
 
   fun onBack() {
     if (stack.isEmpty()) {
-      event.tryEmit(Event.Finish)
+      eventState.tryEmit(EventState.Finish)
     } else {
       stack.removeLast()
       fetch()
@@ -69,7 +69,7 @@ internal class FilesViewModel(private val application: Application) :
       fetch()
     } else {
       val uri = client.buildDocumentUri(configFile.id)
-      event.tryEmit(Event.OpenFile(uri))
+      eventState.tryEmit(EventState.OpenFile(uri))
     }
   }
 
@@ -79,7 +79,7 @@ internal class FilesViewModel(private val application: Application) :
         client.deleteDocument(configFile.id)
       } catch (e: Exception) {
         Log.e("Delete file failed: ${e.message}", e)
-        event.tryEmit(Event.ShowMessage(e.message ?: "Unknown error"))
+        eventState.tryEmit(EventState.ShowMessage(e.message ?: "Unknown error"))
       }
       fetch()
     }
@@ -91,14 +91,14 @@ internal class FilesViewModel(private val application: Application) :
         client.renameDocument(configFile.id, newName)
       } catch (e: Exception) {
         Log.e("Rename file failed: ${e.message}", e)
-        event.tryEmit(Event.ShowMessage(e.message ?: "Unknown error"))
+        eventState.tryEmit(EventState.ShowMessage(e.message ?: "Unknown error"))
       }
       fetch()
     }
   }
 
   fun onRequestImport(configFile: ConfigFile?) {
-    event.tryEmit(Event.RequestImport(configFile))
+    eventState.tryEmit(EventState.RequestImport(configFile))
   }
 
   fun onImportResult(uri: Uri?, targetConfigFile: ConfigFile?) {
@@ -113,14 +113,14 @@ internal class FilesViewModel(private val application: Application) :
         }
       } catch (e: Exception) {
         Log.e("Import file failed: ${e.message}", e)
-        event.tryEmit(Event.ShowMessage(e.message ?: "Unknown error"))
+        eventState.tryEmit(EventState.ShowMessage(e.message ?: "Unknown error"))
       }
       fetch()
     }
   }
 
   fun onRequestExport(configFile: ConfigFile) {
-    event.tryEmit(Event.RequestExport(configFile))
+    eventState.tryEmit(EventState.RequestExport(configFile))
   }
 
   fun onExportResult(uri: Uri?, sourceConfigFile: ConfigFile?) {
@@ -130,7 +130,7 @@ internal class FilesViewModel(private val application: Application) :
         client.copyDocument(uri, sourceConfigFile.id)
       } catch (e: Exception) {
         Log.e("Export file failed: ${e.message}", e)
-        event.tryEmit(Event.ShowMessage(e.message ?: "Unknown error"))
+        eventState.tryEmit(EventState.ShowMessage(e.message ?: "Unknown error"))
       }
       fetch()
     }
@@ -155,7 +155,7 @@ internal class FilesViewModel(private val application: Application) :
         uiState.update { it.copy(configFiles = files, currentInBaseDir = inBaseDir) }
       } catch (e: Exception) {
         Log.e("List files failed: ${e.message}", e)
-        event.tryEmit(Event.ShowMessage(e.message ?: "Unknown error"))
+        eventState.tryEmit(EventState.ShowMessage(e.message ?: "Unknown error"))
       }
     }
   }
@@ -166,15 +166,15 @@ internal class FilesViewModel(private val application: Application) :
     val configurationEditable: Boolean = false,
   )
 
-  sealed interface Event {
-    data object Finish : Event
+  sealed interface EventState {
+    data object Finish : EventState
 
-    data class OpenFile(val uri: Uri) : Event
+    data class OpenFile(val uri: Uri) : EventState
 
-    data class RequestImport(val targetConfigFile: ConfigFile?) : Event
+    data class RequestImport(val targetConfigFile: ConfigFile?) : EventState
 
-    data class RequestExport(val sourceConfigFile: ConfigFile) : Event
+    data class RequestExport(val sourceConfigFile: ConfigFile) : EventState
 
-    data class ShowMessage(val message: String) : Event
+    data class ShowMessage(val message: String) : EventState
   }
 }

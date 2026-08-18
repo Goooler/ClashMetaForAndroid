@@ -53,7 +53,7 @@ internal class LogcatViewModel(private val application: Application) :
   val uiState: StateFlow<UiState>
     field = MutableStateFlow(UiState())
 
-  val event: SharedFlow<Event>
+  val eventState: SharedFlow<EventState>
     field = MutableSharedFlow(extraBufferCapacity = 64)
 
   fun init(fileName: String?) {
@@ -63,7 +63,7 @@ internal class LogcatViewModel(private val application: Application) :
     val file = fileName?.let(LogFile::parse)
 
     if (fileName != null && file == null) {
-      event.tryEmit(Event.InvalidFile)
+      eventState.tryEmit(EventState.InvalidFile)
       return
     }
 
@@ -82,11 +82,11 @@ internal class LogcatViewModel(private val application: Application) :
     val e =
       if (uiState.value.streaming) {
         application.stopService(LogcatService::class.intent)
-        Event.OpenLogs
+        EventState.OpenLogs
       } else {
-        Event.Close
+        EventState.Close
       }
-    event.tryEmit(e)
+    eventState.tryEmit(e)
   }
 
   fun delete() {
@@ -94,13 +94,13 @@ internal class LogcatViewModel(private val application: Application) :
 
     viewModelScope.launch {
       withContext(Dispatchers.IO) { application.logsDir.resolve(file.fileName).delete() }
-      event.tryEmit(Event.Close)
+      eventState.tryEmit(EventState.Close)
     }
   }
 
   fun requestExport() {
     val file = currentFile ?: return
-    event.tryEmit(Event.RequestExport(file.fileName))
+    eventState.tryEmit(EventState.RequestExport(file.fileName))
   }
 
   fun exportTo(uri: Uri?) {
@@ -113,12 +113,12 @@ internal class LogcatViewModel(private val application: Application) :
       val e =
         try {
           writeLogTo(messages, file, uri)
-          Event.ShowMessage(getString(Res.string.file_exported))
+          EventState.ShowMessage(getString(Res.string.file_exported))
         } catch (ex: Exception) {
           Log.e("Export log file failed: ${ex.message}", ex)
-          Event.ShowMessage(ex.message ?: getString(CommonRes.string.unknown))
+          EventState.ShowMessage(ex.message ?: getString(CommonRes.string.unknown))
         }
-      event.tryEmit(e)
+      eventState.tryEmit(e)
     }
   }
 
@@ -142,7 +142,7 @@ internal class LogcatViewModel(private val application: Application) :
           LogcatReader(application, file).use { it.readAll() }
         } catch (e: Exception) {
           Log.e("Fail to read log file ${file.fileName}: ${e.message}", e)
-          event.tryEmit(Event.InvalidFile)
+          eventState.tryEmit(EventState.InvalidFile)
           return@launch
         }
 
@@ -162,7 +162,7 @@ internal class LogcatViewModel(private val application: Application) :
         runCatching { application.stopService(LogcatService::class.intent) }
           .onFailure { ex -> Log.e("Stop logcat service failed: ${ex.message}", ex) }
         reset()
-        event.tryEmit(Event.OpenLogs)
+        eventState.tryEmit(EventState.OpenLogs)
       }
     }
   }
@@ -327,15 +327,15 @@ internal class LogcatViewModel(private val application: Application) :
     val max: Int = 0,
   )
 
-  sealed interface Event {
-    data object Close : Event
+  sealed interface EventState {
+    data object Close : EventState
 
-    data object InvalidFile : Event
+    data object InvalidFile : EventState
 
-    data object OpenLogs : Event
+    data object OpenLogs : EventState
 
-    data class RequestExport(val fileName: String) : Event
+    data class RequestExport(val fileName: String) : EventState
 
-    data class ShowMessage(val message: String) : Event
+    data class ShowMessage(val message: String) : EventState
   }
 }

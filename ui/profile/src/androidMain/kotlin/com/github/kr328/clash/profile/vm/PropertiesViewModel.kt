@@ -41,7 +41,7 @@ internal class PropertiesViewModel(
   val uiState: StateFlow<UiState>
     field = MutableStateFlow(UiState())
 
-  val event: SharedFlow<Event>
+  val eventState: SharedFlow<EventState>
     field = MutableSharedFlow(extraBufferCapacity = 64)
 
   fun init(uuid: Uuid) {
@@ -51,7 +51,7 @@ internal class PropertiesViewModel(
     viewModelScope.launch {
       val profile = withProfile { queryByUUID(uuid) }
       if (profile == null) {
-        event.tryEmit(Event.Finish(false))
+        eventState.tryEmit(EventState.Finish(false))
         return@launch
       }
       uiState.update { it.copy(profile = profile, originalProfile = profile.copy()) }
@@ -137,12 +137,12 @@ internal class PropertiesViewModel(
 
   fun onBrowseFiles() {
     val uuid = rootUuid ?: return
-    event.tryEmit(Event.BrowseFiles(uuid))
+    eventState.tryEmit(EventState.BrowseFiles(uuid))
   }
 
   fun onRequestClose() {
     canceled = true
-    event.tryEmit(Event.Finish(false))
+    eventState.tryEmit(EventState.Finish(false))
   }
 
   fun onCommit() {
@@ -150,12 +150,12 @@ internal class PropertiesViewModel(
 
     viewModelScope.launch {
       if (profile.name.isBlank()) {
-        event.tryEmit(Event.ShowMessage(getString(Res.string.empty_name)))
+        eventState.tryEmit(EventState.ShowMessage(getString(Res.string.empty_name)))
         return@launch
       }
 
       if (profile.type != File && profile.source.isBlank()) {
-        event.tryEmit(Event.ShowMessage(getString(Res.string.invalid_url)))
+        eventState.tryEmit(EventState.ShowMessage(getString(Res.string.invalid_url)))
         return@launch
       }
 
@@ -173,10 +173,10 @@ internal class PropertiesViewModel(
           }
         }
         canceled = true
-        event.tryEmit(Event.Finish(true))
+        eventState.tryEmit(EventState.Finish(true))
       } catch (e: Exception) {
         Log.e("Commit profile failed: ${e.message}", e)
-        event.tryEmit(Event.ShowMessage(e.message ?: getString(CommonRes.string.unknown)))
+        eventState.tryEmit(EventState.ShowMessage(e.message ?: getString(CommonRes.string.unknown)))
       }
     }
   }
@@ -273,11 +273,11 @@ internal class PropertiesViewModel(
     val max: Int = 0,
   )
 
-  sealed interface Event {
-    data class Finish(val success: Boolean) : Event
+  sealed interface EventState {
+    data class Finish(val success: Boolean) : EventState
 
-    data class BrowseFiles(val uuid: Uuid) : Event
+    data class BrowseFiles(val uuid: Uuid) : EventState
 
-    data class ShowMessage(val message: String) : Event
+    data class ShowMessage(val message: String) : EventState
   }
 }

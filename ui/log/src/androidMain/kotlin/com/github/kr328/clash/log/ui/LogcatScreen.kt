@@ -85,16 +85,16 @@ internal fun LogcatScreen(
     }
 
   LaunchedEffect(viewModel) {
-    viewModel.event.collect { event ->
+    viewModel.eventState.collect { event ->
       when (event) {
-        LogcatViewModel.Event.Close -> onClose()
-        LogcatViewModel.Event.InvalidFile -> {
+        LogcatViewModel.EventState.Close -> onClose()
+        LogcatViewModel.EventState.InvalidFile -> {
           snackbarHostState.showSnackbar(message = invalidFileTip)
           onInvalidFile()
         }
-        LogcatViewModel.Event.OpenLogs -> onOpenLogs()
-        is LogcatViewModel.Event.RequestExport -> exportLauncher.launch(event.fileName)
-        is LogcatViewModel.Event.ShowMessage -> {
+        LogcatViewModel.EventState.OpenLogs -> onOpenLogs()
+        is LogcatViewModel.EventState.RequestExport -> exportLauncher.launch(event.fileName)
+        is LogcatViewModel.EventState.ShowMessage -> {
           snackbarHostState.showSnackbar(message = event.message, withDismissAction = true)
         }
       }

@@ -33,7 +33,7 @@ internal class NewProfileViewModel(private val application: Application) : ViewM
   val uiState: StateFlow<UiState>
     field = MutableStateFlow(UiState())
 
-  val event: SharedFlow<Event>
+  val eventState: SharedFlow<EventState>
     field = MutableSharedFlow(extraBufferCapacity = 64)
 
   init {
@@ -42,8 +42,8 @@ internal class NewProfileViewModel(private val application: Application) : ViewM
 
   fun onCreate(provider: ProfileProvider) {
     when (provider) {
-      QR -> event.tryEmit(Event.LaunchQRScanner)
-      is External -> event.tryEmit(Event.LaunchExternalProvider(provider.intent))
+      QR -> eventState.tryEmit(EventState.LaunchQRScanner)
+      is External -> eventState.tryEmit(EventState.LaunchExternalProvider(provider.intent))
       File -> createProfile(File)
       Url -> createProfile(Url)
     }
@@ -52,7 +52,7 @@ internal class NewProfileViewModel(private val application: Application) : ViewM
   fun onDetail(provider: ProfileProvider.External) {
     val packageName = provider.intent.component?.packageName ?: return
     val uri = Uri.fromParts("package", packageName, null)
-    event.tryEmit(Event.OpenAppSettings(uri))
+    eventState.tryEmit(EventState.OpenAppSettings(uri))
   }
 
   fun onExternalProviderResult(uri: Uri, name: String?) {
@@ -60,10 +60,10 @@ internal class NewProfileViewModel(private val application: Application) : ViewM
       try {
         val profileName = getString(CommonRes.string.new_profile)
         val uuid = withProfile { create(External, name ?: profileName, uri.toString()) }
-        event.tryEmit(Event.LaunchProperties(uuid))
+        eventState.tryEmit(EventState.LaunchProperties(uuid))
       } catch (e: Exception) {
         Log.e("Create external profile failed: ${e.message}", e)
-        event.tryEmit(Event.ShowMessage(e.message ?: getString(CommonRes.string.unknown)))
+        eventState.tryEmit(EventState.ShowMessage(e.message ?: getString(CommonRes.string.unknown)))
       }
     }
   }
@@ -77,18 +77,22 @@ internal class NewProfileViewModel(private val application: Application) : ViewM
             val uuid = withProfile {
               create(type = Url, name = getString(CommonRes.string.new_profile), url)
             }
-            event.tryEmit(Event.LaunchProperties(uuid))
+            eventState.tryEmit(EventState.LaunchProperties(uuid))
           } catch (e: Exception) {
             Log.e("Create QR profile failed: ${e.message}", e)
-            event.tryEmit(Event.ShowMessage(e.message ?: getString(CommonRes.string.unknown)))
+            eventState.tryEmit(
+              EventState.ShowMessage(e.message ?: getString(CommonRes.string.unknown))
+            )
           }
         }
         QRUserCanceled -> Unit
         QRMissingPermission -> {
-          event.tryEmit(Event.ShowMessage(getString(Res.string.import_from_qr_no_permission)))
+          eventState.tryEmit(
+            EventState.ShowMessage(getString(Res.string.import_from_qr_no_permission))
+          )
         }
         is QRError -> {
-          event.tryEmit(Event.ShowMessage(getString(Res.string.import_from_qr_exception)))
+          eventState.tryEmit(EventState.ShowMessage(getString(Res.string.import_from_qr_exception)))
         }
       }
     }
@@ -99,10 +103,10 @@ internal class NewProfileViewModel(private val application: Application) : ViewM
       try {
         val name = getString(CommonRes.string.new_profile)
         val uuid = withProfile { create(type, name) }
-        event.tryEmit(Event.LaunchProperties(uuid))
+        eventState.tryEmit(EventState.LaunchProperties(uuid))
       } catch (e: Exception) {
         Log.e("Create profile failed: ${e.message}", e)
-        event.tryEmit(Event.ShowMessage(e.message ?: getString(CommonRes.string.unknown)))
+        eventState.tryEmit(EventState.ShowMessage(e.message ?: getString(CommonRes.string.unknown)))
       }
     }
   }
@@ -137,17 +141,17 @@ internal class NewProfileViewModel(private val application: Application) : ViewM
 
   data class UiState(val providers: List<ProfileProvider> = emptyList())
 
-  sealed interface Event {
-    data object LaunchQRScanner : Event
+  sealed interface EventState {
+    data object LaunchQRScanner : EventState
 
-    data class LaunchExternalProvider(val intent: Intent) : Event
+    data class LaunchExternalProvider(val intent: Intent) : EventState
 
-    data class LaunchProperties(val uuid: Uuid) : Event
+    data class LaunchProperties(val uuid: Uuid) : EventState
 
-    data class OpenAppSettings(val uri: Uri) : Event
+    data class OpenAppSettings(val uri: Uri) : EventState
 
-    data class ShowMessage(val message: String) : Event
+    data class ShowMessage(val message: String) : EventState
 
-    data object Finish : Event
+    data object Finish : EventState
   }
 }

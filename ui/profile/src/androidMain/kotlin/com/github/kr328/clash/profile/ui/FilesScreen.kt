@@ -119,25 +119,25 @@ internal fun FilesScreen(
   LaunchedEffect(uuid) { viewModel.init(uuid = uuid) }
 
   LaunchedEffect(viewModel) {
-    viewModel.event.collect { event ->
+    viewModel.eventState.collect { event ->
       when (event) {
-        FilesViewModel.Event.Finish -> {
+        FilesViewModel.EventState.Finish -> {
           onFinish()
         }
-        is FilesViewModel.Event.OpenFile -> {
+        is FilesViewModel.EventState.OpenFile -> {
           openFileLauncher.launch(
             Intent(Intent.ACTION_VIEW).setDataAndType(event.uri, "text/plain").grantPermissions()
           )
         }
-        is FilesViewModel.Event.RequestImport -> {
+        is FilesViewModel.EventState.RequestImport -> {
           pendingImportTarget = event.targetConfigFile
           importLauncher.launch("*/*")
         }
-        is FilesViewModel.Event.RequestExport -> {
+        is FilesViewModel.EventState.RequestExport -> {
           pendingExportSource = event.sourceConfigFile
           exportLauncher.launch(event.sourceConfigFile.name)
         }
-        is FilesViewModel.Event.ShowMessage -> {
+        is FilesViewModel.EventState.ShowMessage -> {
           snackbarHostState.showSnackbar(message = event.message)
         }
       }

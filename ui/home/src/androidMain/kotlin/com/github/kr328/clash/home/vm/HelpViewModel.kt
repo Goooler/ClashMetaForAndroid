@@ -31,7 +31,7 @@ internal class HelpViewModel(
   val uiState: StateFlow<UiState>
     field = MutableStateFlow(UiState())
 
-  val event: SharedFlow<Event>
+  val eventState: SharedFlow<EventState>
     field = MutableSharedFlow(extraBufferCapacity = 64)
 
   init {
@@ -47,20 +47,20 @@ internal class HelpViewModel(
         val latestTag = api.getLatestRelease()
 
         if (latestTag == null) {
-          event.tryEmit(Event.ShowMessage(getString(Res.string.check_update_failed)))
+          eventState.tryEmit(EventState.ShowMessage(getString(Res.string.check_update_failed)))
           return@launch
         }
 
         val localVersion =
           application.packageManager.getPackageInfo(application.packageName, 0).versionName ?: ""
         if (SemVer.parse(latestTag) > SemVer.parse(localVersion)) {
-          event.tryEmit(Event.UpdateAvailable(TABBY_RELEASES_LATEST))
+          eventState.tryEmit(EventState.UpdateAvailable(TABBY_RELEASES_LATEST))
         } else {
-          event.tryEmit(Event.ShowMessage(getString(Res.string.already_up_to_date)))
+          eventState.tryEmit(EventState.ShowMessage(getString(Res.string.already_up_to_date)))
         }
       } catch (e: Exception) {
         Log.e("Check for updates failed: ${e.message}", e)
-        event.tryEmit(Event.ShowMessage(getString(Res.string.check_update_failed)))
+        eventState.tryEmit(EventState.ShowMessage(getString(Res.string.check_update_failed)))
       } finally {
         uiState.update { it.copy(checkingForUpdates = false) }
       }
@@ -85,9 +85,9 @@ internal class HelpViewModel(
     val coreVersion: String = "",
   )
 
-  sealed interface Event {
-    data class ShowMessage(val message: String) : Event
+  sealed interface EventState {
+    data class ShowMessage(val message: String) : EventState
 
-    data class UpdateAvailable(val releasesUrl: String) : Event
+    data class UpdateAvailable(val releasesUrl: String) : EventState
   }
 }

@@ -49,7 +49,7 @@ internal class HomeViewModel(private val dependencies: Dependencies) :
   val uiState: StateFlow<UiState>
     field = MutableStateFlow(UiState())
 
-  val event: SharedFlow<Event>
+  val eventState: SharedFlow<EventState>
     field = MutableSharedFlow(extraBufferCapacity = 64)
 
   override fun onStart(owner: LifecycleOwner) {
@@ -76,7 +76,9 @@ internal class HomeViewModel(private val dependencies: Dependencies) :
           ProfileChanged -> fetch()
           ProfileLoaded -> fetch()
           is Stopped -> {
-            broadcastEvent.cause?.let { message -> event.tryEmit(Event.ShowMessage(message)) }
+            broadcastEvent.cause?.let { message ->
+              eventState.tryEmit(EventState.ShowMessage(message))
+            }
             fetch()
           }
           is ProfileUpdateCompleted,
@@ -192,7 +194,7 @@ internal class HomeViewModel(private val dependencies: Dependencies) :
   private fun startClash() {
     viewModelScope.launch {
       if (!dependencies.hasImportedActiveProfile()) {
-        event.tryEmit(Event.ShowNoProfileMessage)
+        eventState.tryEmit(EventState.ShowNoProfileMessage)
         uiState.update { it.copy(isTransitioning = false) }
         cancelTransitionTimeout()
         return@launch
@@ -201,11 +203,11 @@ internal class HomeViewModel(private val dependencies: Dependencies) :
       try {
         val vpnRequest = dependencies.startClashService()
         if (vpnRequest != null) {
-          event.tryEmit(Event.RequestVpnPermission(vpnRequest))
+          eventState.tryEmit(EventState.RequestVpnPermission(vpnRequest))
         }
       } catch (e: Exception) {
         Log.e("Start clash service failed: ${e.message}", e)
-        event.tryEmit(Event.ShowMessage(dependencies.unableToStartVpnText()))
+        eventState.tryEmit(EventState.ShowMessage(dependencies.unableToStartVpnText()))
         uiState.update { it.copy(isTransitioning = false) }
         cancelTransitionTimeout()
       }
@@ -233,12 +235,12 @@ internal class HomeViewModel(private val dependencies: Dependencies) :
     val isTransitioning: Boolean = false,
   )
 
-  sealed interface Event {
-    data class RequestVpnPermission(val intent: Intent) : Event
+  sealed interface EventState {
+    data class RequestVpnPermission(val intent: Intent) : EventState
 
-    data object ShowNoProfileMessage : Event
+    data object ShowNoProfileMessage : EventState
 
-    data class ShowMessage(val message: String) : Event
+    data class ShowMessage(val message: String) : EventState
   }
 
   interface Dependencies {

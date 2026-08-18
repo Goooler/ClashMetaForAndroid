@@ -105,10 +105,10 @@ internal fun HomeScreen(
     }
 
   LaunchedEffect(viewModel) {
-    viewModel.event.collect { event ->
+    viewModel.eventState.collect { event ->
       when (event) {
-        is HomeViewModel.Event.RequestVpnPermission -> vpnLauncher.launch(event.intent)
-        HomeViewModel.Event.ShowNoProfileMessage -> {
+        is HomeViewModel.EventState.RequestVpnPermission -> vpnLauncher.launch(event.intent)
+        HomeViewModel.EventState.ShowNoProfileMessage -> {
           val result =
             snackbarHostState.showSnackbar(
               message = noProfileText,
@@ -118,7 +118,7 @@ internal fun HomeScreen(
 
           if (result == SnackbarResult.ActionPerformed) onOpenProfiles()
         }
-        is HomeViewModel.Event.ShowMessage -> {
+        is HomeViewModel.EventState.ShowMessage -> {
           snackbarHostState.showSnackbar(message = event.message)
         }
       }

@@ -71,12 +71,12 @@ internal fun HelpScreen(modifier: Modifier = Modifier, viewModel: HelpViewModel 
   val openActionText = stringResource(Res.string.open)
 
   LaunchedEffect(viewModel) {
-    viewModel.event.collect { event ->
+    viewModel.eventState.collect { event ->
       when (event) {
-        is HelpViewModel.Event.ShowMessage -> {
+        is HelpViewModel.EventState.ShowMessage -> {
           snackbarHostState.showSnackbar(message = event.message)
         }
-        is HelpViewModel.Event.UpdateAvailable -> {
+        is HelpViewModel.EventState.UpdateAvailable -> {
           val result =
             snackbarHostState.showSnackbar(
               message = updateAvailableText,

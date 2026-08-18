@@ -86,15 +86,11 @@ internal fun PropertiesScreen(
   LaunchedEffect(uuid) { viewModel.init(uuid = uuid) }
 
   LaunchedEffect(viewModel) {
-    viewModel.event.collect { event ->
+    viewModel.eventState.collect { event ->
       when (event) {
-        is PropertiesViewModel.Event.BrowseFiles -> {
-          onBrowseFiles(event.uuid)
-        }
-        is PropertiesViewModel.Event.Finish -> {
-          onFinish(event.success)
-        }
-        is PropertiesViewModel.Event.ShowMessage -> {
+        is PropertiesViewModel.EventState.Finish -> onFinish(event.success)
+        is PropertiesViewModel.EventState.BrowseFiles -> onBrowseFiles(event.uuid)
+        is PropertiesViewModel.EventState.ShowMessage -> {
           snackbarHostState.showSnackbar(message = event.message)
         }
       }

@@ -35,7 +35,7 @@ internal class ProxyViewModel(private val uiStore: UiStore) :
   val uiState: StateFlow<UiState>
     field = MutableStateFlow(UiState())
 
-  val event: SharedFlow<Event>
+  val eventState: SharedFlow<EventState>
     field = MutableSharedFlow(extraBufferCapacity = 64)
 
   val selectedProxies: StateFlow<List<SelectedProxy>>
@@ -60,7 +60,7 @@ internal class ProxyViewModel(private val uiStore: UiStore) :
             if (!initialized) return@collect
             val newNames = withClash { queryProxyGroupNames(uiStore.proxyExcludeNotSelectable) }
             if (newNames != uiState.value.groupNames) {
-              this@ProxyViewModel.event.tryEmit(Event.ReLaunch)
+              this@ProxyViewModel.eventState.tryEmit(EventState.ReLaunch)
             }
           }
           else -> Unit
@@ -113,7 +113,7 @@ internal class ProxyViewModel(private val uiStore: UiStore) :
   fun onExcludeNotSelectableChanged(enabled: Boolean) {
     uiStore.proxyExcludeNotSelectable = enabled
     uiState.update { it.copy(excludeNotSelectable = enabled) }
-    event.tryEmit(Event.ReLaunch)
+    eventState.tryEmit(EventState.ReLaunch)
   }
 
   fun onProxyLineChanged(line: Int) {
@@ -134,7 +134,7 @@ internal class ProxyViewModel(private val uiStore: UiStore) :
 
   fun onOverrideModeSelected(mode: TunnelState.Mode?) {
     uiState.update { it.copy(overrideMode = mode) }
-    event.tryEmit(Event.ShowModeSwitchTips)
+    eventState.tryEmit(EventState.ShowModeSwitchTips)
     viewModelScope.launch {
       withClash {
         val o = queryOverride(Clash.OverrideSlot.Session)
@@ -329,9 +329,9 @@ internal class ProxyViewModel(private val uiStore: UiStore) :
 
   @JvmInline value class SelectedProxy(val name: String)
 
-  sealed interface Event {
-    data object ReLaunch : Event
+  sealed interface EventState {
+    data object ReLaunch : EventState
 
-    data object ShowModeSwitchTips : Event
+    data object ShowModeSwitchTips : EventState
   }
 }

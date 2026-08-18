@@ -32,7 +32,7 @@ internal class ProvidersViewModel(private val application: Application) :
   val uiState: StateFlow<UiState>
     field = MutableStateFlow(UiState())
 
-  val event: SharedFlow<Event>
+  val eventState: SharedFlow<EventState>
     field = MutableSharedFlow(extraBufferCapacity = 64)
 
   override fun onStart(owner: LifecycleOwner) {
@@ -77,8 +77,8 @@ internal class ProvidersViewModel(private val application: Application) :
         Log.e("Update provider ${provider.name} failed: ${e.message}", e)
         updateProviderState(provider) { it.copy(updating = false) }
         val errorMessage = e.localizedMessage ?: e.message ?: e.toString()
-        event.tryEmit(
-          Event.ShowMessage(
+        eventState.tryEmit(
+          EventState.ShowMessage(
             getString(
               Res.string.format_update_provider_failure,
               provider.name,
@@ -154,7 +154,7 @@ internal class ProvidersViewModel(private val application: Application) :
     data class ProviderItemState(val provider: Provider, val updatedAt: Long, val updating: Boolean)
   }
 
-  sealed interface Event {
-    data class ShowMessage(val message: String) : Event
+  sealed interface EventState {
+    data class ShowMessage(val message: String) : EventState
   }
 }

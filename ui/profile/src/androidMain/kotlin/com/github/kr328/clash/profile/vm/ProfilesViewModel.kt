@@ -38,7 +38,7 @@ internal class ProfilesViewModel(private val application: Application) :
   val uiState: StateFlow<UiState>
     field = MutableStateFlow(UiState())
 
-  val event: SharedFlow<Event>
+  val eventState: SharedFlow<EventState>
     field = MutableSharedFlow(extraBufferCapacity = 64)
 
   override fun onStart(owner: LifecycleOwner) {
@@ -73,7 +73,7 @@ internal class ProfilesViewModel(private val application: Application) :
   }
 
   fun onOpenCreate() {
-    event.tryEmit(Event.OpenCreate)
+    eventState.tryEmit(EventState.OpenCreate)
   }
 
   fun onActivate(profile: Profile) {
@@ -81,8 +81,8 @@ internal class ProfilesViewModel(private val application: Application) :
       if (profile.imported) {
         withProfile { setActive(profile) }
       } else {
-        event.tryEmit(
-          Event.ShowEditableMessage(
+        eventState.tryEmit(
+          EventState.ShowEditableMessage(
             getString(Res.string.active_unsaved_tips),
             profile.uuid,
           )
@@ -115,13 +115,13 @@ internal class ProfilesViewModel(private val application: Application) :
   }
 
   fun onEdit(profile: Profile) {
-    event.tryEmit(Event.OpenEdit(profile.uuid))
+    eventState.tryEmit(EventState.OpenEdit(profile.uuid))
   }
 
   fun onDuplicate(profile: Profile) {
     viewModelScope.launch {
       val uuid = withProfile { clone(profile.uuid) }
-      event.tryEmit(Event.OpenEdit(uuid))
+      eventState.tryEmit(EventState.OpenEdit(uuid))
     }
   }
 
@@ -153,14 +153,16 @@ internal class ProfilesViewModel(private val application: Application) :
 
   private suspend fun showProfileUpdateCompleted(uuid: Uuid) {
     val name = withProfile { queryByUUID(uuid)?.name.orEmpty() }
-    event.tryEmit(Event.ShowMessage(getString(Res.string.toast_profile_updated_complete, name)))
+    eventState.tryEmit(
+      EventState.ShowMessage(getString(Res.string.toast_profile_updated_complete, name))
+    )
   }
 
   private suspend fun showProfileUpdateFailed(uuid: Uuid, reason: String?) {
     val name = withProfile { queryByUUID(uuid)?.name.orEmpty() }
     val displayReason = reason?.takeUnless { it.isBlank() } ?: getString(CommonRes.string.unknown)
-    event.tryEmit(
-      Event.ShowEditableMessage(
+    eventState.tryEmit(
+      EventState.ShowEditableMessage(
         getString(Res.string.toast_profile_updated_failed, name, displayReason),
         uuid,
       )
@@ -174,13 +176,13 @@ internal class ProfilesViewModel(private val application: Application) :
     val currentTime: Long = System.currentTimeMillis(),
   )
 
-  sealed interface Event {
-    data object OpenCreate : Event
+  sealed interface EventState {
+    data object OpenCreate : EventState
 
-    data class OpenEdit(val uuid: Uuid) : Event
+    data class OpenEdit(val uuid: Uuid) : EventState
 
-    data class ShowMessage(val message: String) : Event
+    data class ShowMessage(val message: String) : EventState
 
-    data class ShowEditableMessage(val message: String, val uuid: Uuid) : Event
+    data class ShowEditableMessage(val message: String, val uuid: Uuid) : EventState
   }
 }

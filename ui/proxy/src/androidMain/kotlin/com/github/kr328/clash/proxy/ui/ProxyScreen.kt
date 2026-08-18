@@ -114,12 +114,12 @@ internal fun ProxyScreen(
   val modeSwitchTips = stringResource(Res.string.mode_switch_tips)
 
   LaunchedEffect(viewModel) {
-    viewModel.event.collect { event ->
+    viewModel.eventState.collect { event ->
       when (event) {
-        ProxyViewModel.Event.ReLaunch -> {
+        ProxyViewModel.EventState.ReLaunch -> {
           onReLaunch()
         }
-        ProxyViewModel.Event.ShowModeSwitchTips -> {
+        ProxyViewModel.EventState.ShowModeSwitchTips -> {
           snackbarHostState.showSnackbar(message = modeSwitchTips)
         }
       }
