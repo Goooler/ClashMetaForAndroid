@@ -61,17 +61,16 @@ internal fun ProvidersScreen(
   viewModel: ProvidersViewModel = koinViewModel<ProvidersViewModel>().withLifecycle(),
 ) {
   val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-  val eventState by viewModel.eventState.collectAsStateWithLifecycle()
   val snackbarHostState = remember { SnackbarHostState() }
 
-  LaunchedEffect(eventState) {
-    when (val event = eventState) {
-      Idle -> Unit
-      is ShowMessage -> {
-        snackbarHostState.showSnackbar(message = event.message)
+  LaunchedEffect(viewModel) {
+    viewModel.eventState.collect { event ->
+      when (event) {
+        is ShowMessage -> {
+          snackbarHostState.showSnackbar(message = event.message)
+        }
       }
     }
-    viewModel.consumeEvent()
   }
 
   ProvidersContent(

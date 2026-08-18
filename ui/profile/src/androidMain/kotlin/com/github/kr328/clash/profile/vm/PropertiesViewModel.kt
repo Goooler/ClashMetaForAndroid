@@ -22,7 +22,9 @@ import kotlin.uuid.Uuid
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -39,8 +41,8 @@ internal class PropertiesViewModel(
   val uiState: StateFlow<UiState>
     field = MutableStateFlow(UiState())
 
-  val eventState: StateFlow<EventState>
-    field = MutableStateFlow<EventState>(EventState.Idle)
+  val eventState: SharedFlow<EventState>
+    field = MutableSharedFlow(extraBufferCapacity = 64)
 
   fun init(uuid: Uuid) {
     if (rootUuid != null) return
@@ -49,15 +51,11 @@ internal class PropertiesViewModel(
     viewModelScope.launch {
       val profile = withProfile { queryByUUID(uuid) }
       if (profile == null) {
-        eventState.value = EventState.Finish(false)
+        eventState.tryEmit(EventState.Finish(false))
         return@launch
       }
       uiState.update { it.copy(profile = profile, originalProfile = profile.copy()) }
     }
-  }
-
-  fun consumeEvent() {
-    eventState.value = EventState.Idle
   }
 
   override fun onStop(owner: LifecycleOwner) {
@@ -139,12 +137,12 @@ internal class PropertiesViewModel(
 
   fun onBrowseFiles() {
     val uuid = rootUuid ?: return
-    eventState.value = EventState.BrowseFiles(uuid)
+    eventState.tryEmit(EventState.BrowseFiles(uuid))
   }
 
   fun onRequestClose() {
     canceled = true
-    eventState.value = EventState.Finish(false)
+    eventState.tryEmit(EventState.Finish(false))
   }
 
   fun onCommit() {
@@ -152,12 +150,12 @@ internal class PropertiesViewModel(
 
     viewModelScope.launch {
       if (profile.name.isBlank()) {
-        eventState.value = EventState.ShowMessage(getString(Res.string.empty_name))
+        eventState.tryEmit(EventState.ShowMessage(getString(Res.string.empty_name)))
         return@launch
       }
 
       if (profile.type != File && profile.source.isBlank()) {
-        eventState.value = EventState.ShowMessage(getString(Res.string.invalid_url))
+        eventState.tryEmit(EventState.ShowMessage(getString(Res.string.invalid_url)))
         return@launch
       }
 
@@ -175,10 +173,10 @@ internal class PropertiesViewModel(
           }
         }
         canceled = true
-        eventState.value = EventState.Finish(true)
+        eventState.tryEmit(EventState.Finish(true))
       } catch (e: Exception) {
         Log.e("Commit profile failed: ${e.message}", e)
-        eventState.value = EventState.ShowMessage(e.message ?: getString(CommonRes.string.unknown))
+        eventState.tryEmit(EventState.ShowMessage(e.message ?: getString(CommonRes.string.unknown)))
       }
     }
   }
@@ -276,8 +274,6 @@ internal class PropertiesViewModel(
   )
 
   sealed interface EventState {
-    data object Idle : EventState
-
     data class Finish(val success: Boolean) : EventState
 
     data class BrowseFiles(val uuid: Uuid) : EventState

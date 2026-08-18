@@ -110,21 +110,20 @@ internal fun ProxyScreen(
 ) {
   val uiState by viewModel.uiState.collectAsStateWithLifecycle()
   val selectedProxies by viewModel.selectedProxies.collectAsStateWithLifecycle()
-  val eventState by viewModel.eventState.collectAsStateWithLifecycle()
   val snackbarHostState = remember { SnackbarHostState() }
   val modeSwitchTips = stringResource(Res.string.mode_switch_tips)
 
-  LaunchedEffect(eventState) {
-    when (eventState) {
-      Idle -> Unit
-      ReLaunch -> {
-        onReLaunch()
-      }
-      ShowModeSwitchTips -> {
-        snackbarHostState.showSnackbar(message = modeSwitchTips)
+  LaunchedEffect(viewModel) {
+    viewModel.eventState.collect { event ->
+      when (event) {
+        ReLaunch -> {
+          onReLaunch()
+        }
+        ShowModeSwitchTips -> {
+          snackbarHostState.showSnackbar(message = modeSwitchTips)
+        }
       }
     }
-    viewModel.consumeEvent()
   }
 
   ProxyContent(

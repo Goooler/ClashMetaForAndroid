@@ -97,7 +97,6 @@ internal fun FilesScreen(
   onFinish: () -> Unit,
 ) {
   val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-  val eventState by viewModel.eventState.collectAsStateWithLifecycle()
   val snackbarHostState = remember { SnackbarHostState() }
 
   var pendingImportTarget by remember { mutableStateOf<ConfigFile?>(null) }
@@ -119,30 +118,30 @@ internal fun FilesScreen(
 
   LaunchedEffect(uuid) { viewModel.init(uuid = uuid) }
 
-  LaunchedEffect(eventState) {
-    when (val event = eventState) {
-      Idle -> Unit
-      Finish -> {
-        onFinish()
-      }
-      is OpenFile -> {
-        openFileLauncher.launch(
-          Intent(Intent.ACTION_VIEW).setDataAndType(event.uri, "text/plain").grantPermissions()
-        )
-      }
-      is RequestImport -> {
-        pendingImportTarget = event.targetConfigFile
-        importLauncher.launch("*/*")
-      }
-      is RequestExport -> {
-        pendingExportSource = event.sourceConfigFile
-        exportLauncher.launch(event.sourceConfigFile.name)
-      }
-      is ShowMessage -> {
-        snackbarHostState.showSnackbar(message = event.message)
+  LaunchedEffect(viewModel) {
+    viewModel.eventState.collect { event ->
+      when (event) {
+        Finish -> {
+          onFinish()
+        }
+        is OpenFile -> {
+          openFileLauncher.launch(
+            Intent(Intent.ACTION_VIEW).setDataAndType(event.uri, "text/plain").grantPermissions()
+          )
+        }
+        is RequestImport -> {
+          pendingImportTarget = event.targetConfigFile
+          importLauncher.launch("*/*")
+        }
+        is RequestExport -> {
+          pendingExportSource = event.sourceConfigFile
+          exportLauncher.launch(event.sourceConfigFile.name)
+        }
+        is ShowMessage -> {
+          snackbarHostState.showSnackbar(message = event.message)
+        }
       }
     }
-    viewModel.consumeEvent()
   }
 
   FilesContent(

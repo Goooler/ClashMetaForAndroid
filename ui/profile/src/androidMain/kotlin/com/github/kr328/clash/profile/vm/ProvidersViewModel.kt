@@ -14,7 +14,9 @@ import com.github.kr328.clash.profile.format_update_provider_failure
 import kotlin.time.Duration.Companion.minutes
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.isActive
@@ -30,8 +32,8 @@ internal class ProvidersViewModel(private val application: Application) :
   val uiState: StateFlow<UiState>
     field = MutableStateFlow(UiState())
 
-  val eventState: StateFlow<EventState>
-    field = MutableStateFlow<EventState>(EventState.Idle)
+  val eventState: SharedFlow<EventState>
+    field = MutableSharedFlow(extraBufferCapacity = 64)
 
   override fun onStart(owner: LifecycleOwner) {
     broadcastEventsJob?.cancel()
@@ -55,10 +57,6 @@ internal class ProvidersViewModel(private val application: Application) :
     elapsedJob = null
   }
 
-  fun consumeEvent() {
-    eventState.value = EventState.Idle
-  }
-
   fun onUpdateAll() {
     uiState.value.providers.forEach { state ->
       if (state.updating || state.provider.vehicleType == Inline) return@forEach
@@ -79,7 +77,7 @@ internal class ProvidersViewModel(private val application: Application) :
         Log.e("Update provider ${provider.name} failed: ${e.message}", e)
         updateProviderState(provider) { it.copy(updating = false) }
         val errorMessage = e.localizedMessage ?: e.message ?: e.toString()
-        eventState.value =
+        eventState.tryEmit(
           EventState.ShowMessage(
             getString(
               Res.string.format_update_provider_failure,
@@ -87,6 +85,7 @@ internal class ProvidersViewModel(private val application: Application) :
               errorMessage,
             )
           )
+        )
       }
     }
   }
@@ -156,8 +155,6 @@ internal class ProvidersViewModel(private val application: Application) :
   }
 
   sealed interface EventState {
-    data object Idle : EventState
-
     data class ShowMessage(val message: String) : EventState
   }
 }

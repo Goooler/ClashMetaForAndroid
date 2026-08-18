@@ -65,31 +65,30 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 internal fun HelpScreen(modifier: Modifier = Modifier, viewModel: HelpViewModel = koinViewModel()) {
   val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-  val eventState by viewModel.eventState.collectAsStateWithLifecycle()
   val snackbarHostState = remember { SnackbarHostState() }
   val context = LocalContext.current
   val updateAvailableText = stringResource(Res.string.update_available)
   val openActionText = stringResource(Res.string.open)
 
-  LaunchedEffect(eventState) {
-    when (val event = eventState) {
-      HelpViewModel.EventState.Idle -> Unit
-      is HelpViewModel.EventState.ShowMessage -> {
-        snackbarHostState.showSnackbar(message = event.message)
-      }
-      is HelpViewModel.EventState.UpdateAvailable -> {
-        val result =
-          snackbarHostState.showSnackbar(
-            message = updateAvailableText,
-            actionLabel = openActionText,
-            duration = SnackbarDuration.Long,
-          )
-        if (result == SnackbarResult.ActionPerformed) {
-          context.openLink(event.releasesUrl)
+  LaunchedEffect(viewModel) {
+    viewModel.eventState.collect { event ->
+      when (event) {
+        is ShowMessage -> {
+          snackbarHostState.showSnackbar(message = event.message)
+        }
+        is UpdateAvailable -> {
+          val result =
+            snackbarHostState.showSnackbar(
+              message = updateAvailableText,
+              actionLabel = openActionText,
+              duration = SnackbarDuration.Long,
+            )
+          if (result == SnackbarResult.ActionPerformed) {
+            context.openLink(event.releasesUrl)
+          }
         }
       }
     }
-    viewModel.consumeEvent()
   }
 
   HelpContent(

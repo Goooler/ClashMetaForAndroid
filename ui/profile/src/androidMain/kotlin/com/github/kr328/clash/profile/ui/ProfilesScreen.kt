@@ -89,32 +89,31 @@ internal fun ProfilesScreen(
   onOpenEdit: (Uuid) -> Unit,
 ) {
   val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-  val eventState by viewModel.eventState.collectAsStateWithLifecycle()
   val snackbarHostState = remember { SnackbarHostState() }
   val editText = stringResource(Res.string.edit)
 
-  LaunchedEffect(eventState) {
-    when (val event = eventState) {
-      Idle -> Unit
-      OpenCreate -> onOpenCreate()
-      is OpenEdit -> onOpenEdit(event.uuid)
-      is ShowMessage -> {
-        snackbarHostState.showSnackbar(message = event.message)
-      }
-      is ShowEditableMessage -> {
-        val result =
-          snackbarHostState.showSnackbar(
-            message = event.message,
-            actionLabel = editText,
-            duration = SnackbarDuration.Long,
-          )
+  LaunchedEffect(viewModel) {
+    viewModel.eventState.collect { event ->
+      when (event) {
+        OpenCreate -> onOpenCreate()
+        is OpenEdit -> onOpenEdit(event.uuid)
+        is ShowMessage -> {
+          snackbarHostState.showSnackbar(message = event.message)
+        }
+        is ShowEditableMessage -> {
+          val result =
+            snackbarHostState.showSnackbar(
+              message = event.message,
+              actionLabel = editText,
+              duration = SnackbarDuration.Long,
+            )
 
-        if (result == SnackbarResult.ActionPerformed) {
-          onOpenEdit(event.uuid)
+          if (result == SnackbarResult.ActionPerformed) {
+            onOpenEdit(event.uuid)
+          }
         }
       }
     }
-    viewModel.consumeEvent()
   }
 
   ProfilesContent(

@@ -25,7 +25,9 @@ import kotlin.time.Duration.Companion.seconds
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.isActive
@@ -47,8 +49,8 @@ internal class HomeViewModel(private val dependencies: Dependencies) :
   val uiState: StateFlow<UiState>
     field = MutableStateFlow(UiState())
 
-  val eventState: StateFlow<EventState>
-    field = MutableStateFlow<EventState>(EventState.Idle)
+  val eventState: SharedFlow<EventState>
+    field = MutableSharedFlow(extraBufferCapacity = 64)
 
   override fun onStart(owner: LifecycleOwner) {
     clashRunningJob?.cancel()
@@ -67,14 +69,16 @@ internal class HomeViewModel(private val dependencies: Dependencies) :
     }
     broadcastEventsJob?.cancel()
     broadcastEventsJob = viewModelScope.launch {
-      dependencies.events.collect { event ->
-        when (event) {
+      dependencies.events.collect { broadcastEvent ->
+        when (broadcastEvent) {
           ServiceRecreated,
           Started,
           ProfileChanged -> fetch()
           ProfileLoaded -> fetch()
           is Stopped -> {
-            event.cause?.let { message -> eventState.update { EventState.ShowMessage(message) } }
+            broadcastEvent.cause?.let { message ->
+              eventState.tryEmit(EventState.ShowMessage(message))
+            }
             fetch()
           }
           is ProfileUpdateCompleted,
@@ -123,10 +127,6 @@ internal class HomeViewModel(private val dependencies: Dependencies) :
   fun onVpnPermissionDenied() {
     uiState.update { it.copy(isTransitioning = false) }
     cancelTransitionTimeout()
-  }
-
-  fun consumeEvent() {
-    eventState.value = EventState.Idle
   }
 
   private fun fetch() {
@@ -194,7 +194,7 @@ internal class HomeViewModel(private val dependencies: Dependencies) :
   private fun startClash() {
     viewModelScope.launch {
       if (!dependencies.hasImportedActiveProfile()) {
-        eventState.value = EventState.ShowNoProfileMessage
+        eventState.tryEmit(EventState.ShowNoProfileMessage)
         uiState.update { it.copy(isTransitioning = false) }
         cancelTransitionTimeout()
         return@launch
@@ -203,11 +203,11 @@ internal class HomeViewModel(private val dependencies: Dependencies) :
       try {
         val vpnRequest = dependencies.startClashService()
         if (vpnRequest != null) {
-          eventState.value = EventState.RequestVpnPermission(vpnRequest)
+          eventState.tryEmit(EventState.RequestVpnPermission(vpnRequest))
         }
       } catch (e: Exception) {
         Log.e("Start clash service failed: ${e.message}", e)
-        eventState.value = EventState.ShowMessage(dependencies.unableToStartVpnText())
+        eventState.tryEmit(EventState.ShowMessage(dependencies.unableToStartVpnText()))
         uiState.update { it.copy(isTransitioning = false) }
         cancelTransitionTimeout()
       }
@@ -236,8 +236,6 @@ internal class HomeViewModel(private val dependencies: Dependencies) :
   )
 
   sealed interface EventState {
-    data object Idle : EventState
-
     data class RequestVpnPermission(val intent: Intent) : EventState
 
     data object ShowNoProfileMessage : EventState

@@ -12,7 +12,9 @@ import com.github.kr328.clash.home.already_up_to_date
 import com.github.kr328.clash.home.api.HelpApi
 import com.github.kr328.clash.home.check_update_failed
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -29,8 +31,8 @@ internal class HelpViewModel(
   val uiState: StateFlow<UiState>
     field = MutableStateFlow(UiState())
 
-  val eventState: StateFlow<EventState>
-    field = MutableStateFlow<EventState>(EventState.Idle)
+  val eventState: SharedFlow<EventState>
+    field = MutableSharedFlow(extraBufferCapacity = 64)
 
   init {
     loadVersionInfo()
@@ -45,34 +47,24 @@ internal class HelpViewModel(
         val latestTag = api.getLatestRelease()
 
         if (latestTag == null) {
-          eventState.update {
-            EventState.ShowMessage(getString(Res.string.check_update_failed))
-          }
+          eventState.tryEmit(EventState.ShowMessage(getString(Res.string.check_update_failed)))
           return@launch
         }
 
         val localVersion =
           application.packageManager.getPackageInfo(application.packageName, 0).versionName ?: ""
         if (SemVer.parse(latestTag) > SemVer.parse(localVersion)) {
-          eventState.update { EventState.UpdateAvailable(TABBY_RELEASES_LATEST) }
+          eventState.tryEmit(EventState.UpdateAvailable(TABBY_RELEASES_LATEST))
         } else {
-          eventState.update {
-            EventState.ShowMessage(getString(Res.string.already_up_to_date))
-          }
+          eventState.tryEmit(EventState.ShowMessage(getString(Res.string.already_up_to_date)))
         }
       } catch (e: Exception) {
         Log.e("Check for updates failed: ${e.message}", e)
-        eventState.update {
-          EventState.ShowMessage(getString(Res.string.check_update_failed))
-        }
+        eventState.tryEmit(EventState.ShowMessage(getString(Res.string.check_update_failed)))
       } finally {
         uiState.update { it.copy(checkingForUpdates = false) }
       }
     }
-  }
-
-  fun consumeEvent() {
-    eventState.value = EventState.Idle
   }
 
   private fun loadVersionInfo() {
@@ -94,8 +86,6 @@ internal class HelpViewModel(
   )
 
   sealed interface EventState {
-    data object Idle : EventState
-
     data class ShowMessage(val message: String) : EventState
 
     data class UpdateAvailable(val releasesUrl: String) : EventState
