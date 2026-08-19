@@ -1,7 +1,5 @@
 package com.github.kr328.clash.settings.vm
 
-import androidx.lifecycle.DefaultLifecycleObserver
-import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.github.kr328.clash.core.Clash
@@ -17,7 +15,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 internal class OverrideSettingsViewModel(private val scope: CoroutineScope) :
-  ViewModel(), OverrideSettingsActions, DefaultLifecycleObserver {
+  ViewModel(), OverrideSettingsActions {
   @Volatile private var skipPersist = false
 
   val configuration: StateFlow<ConfigurationOverride>
@@ -29,7 +27,7 @@ internal class OverrideSettingsViewModel(private val scope: CoroutineScope) :
     }
   }
 
-  override fun onStop(owner: LifecycleOwner) {
+  fun persist() {
     // Intended to use non-viewModel scope as we need the action to be called on disposed.
     scope.launch {
       withClash {

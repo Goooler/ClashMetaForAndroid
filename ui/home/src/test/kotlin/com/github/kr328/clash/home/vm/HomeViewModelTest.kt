@@ -1,8 +1,6 @@
 package com.github.kr328.clash.home.vm
 
 import android.content.Intent
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.LifecycleRegistry
 import assertk.assertThat
 import assertk.assertions.isEqualTo
 import assertk.assertions.isNull
@@ -56,21 +54,16 @@ class HomeViewModelTest : KoinComponent {
       mode = TunnelState.Mode.Rule
     }
 
-    try {
-      viewModel.onStart(UnusedLifecycleOwner)
-      dependencies.eventsFlow.emit(Broadcasts.Event.Started)
+    dependencies.eventsFlow.emit(Broadcasts.Event.Started)
 
-      assertThat(viewModel.uiState.value.mode).isNull()
-      assertThat(dependencies.queryModeCalls).isEqualTo(0)
+    assertThat(viewModel.uiState.value.mode).isNull()
+    assertThat(dependencies.queryModeCalls).isEqualTo(0)
 
-      dependencies.mode = TunnelState.Mode.Global
-      dependencies.profileLoaded.value = true
+    dependencies.mode = TunnelState.Mode.Global
+    dependencies.profileLoaded.value = true
 
-      assertThat(viewModel.uiState.value.mode).isEqualTo("Global Mode")
-      assertThat(dependencies.queryModeCalls).isEqualTo(1)
-    } finally {
-      viewModel.onStop(UnusedLifecycleOwner)
-    }
+    assertThat(viewModel.uiState.value.mode).isEqualTo("Global Mode")
+    assertThat(dependencies.queryModeCalls).isEqualTo(1)
   }
 
   @Test
@@ -81,13 +74,9 @@ class HomeViewModelTest : KoinComponent {
       mode = TunnelState.Mode.Global
     }
 
-    try {
-      viewModel.onStart(UnusedLifecycleOwner)
+    viewModel.fetch()
 
-      assertThat(viewModel.uiState.value.mode).isEqualTo("Global Mode")
-    } finally {
-      viewModel.onStop(UnusedLifecycleOwner)
-    }
+    assertThat(viewModel.uiState.value.mode).isEqualTo("Global Mode")
   }
 
   @Test
@@ -98,88 +87,73 @@ class HomeViewModelTest : KoinComponent {
       mode = TunnelState.Mode.Rule
     }
 
-    try {
-      viewModel.onStart(UnusedLifecycleOwner)
-      assertThat(viewModel.uiState.value.mode).isEqualTo("Rule Mode")
+    viewModel.fetch()
+    assertThat(viewModel.uiState.value.mode).isEqualTo("Rule Mode")
 
-      dependencies.mode = TunnelState.Mode.Global
-      dependencies.eventsFlow.emit(Broadcasts.Event.ProfileLoaded)
+    dependencies.mode = TunnelState.Mode.Global
+    dependencies.eventsFlow.emit(Broadcasts.Event.ProfileLoaded)
 
-      assertThat(viewModel.uiState.value.mode).isEqualTo("Global Mode")
-    } finally {
-      viewModel.onStop(UnusedLifecycleOwner)
-    }
+    assertThat(viewModel.uiState.value.mode).isEqualTo("Global Mode")
   }
 
   @Test
   fun toggleStatus_whenToggled_thenTransitionStateIsCorrect() = runTest {
-    try {
-      viewModel.onStart(UnusedLifecycleOwner)
+    // Initial state: not running, not transitioning
+    assertThat(viewModel.clashRunning.value).isEqualTo(false)
+    assertThat(viewModel.uiState.value.isTransitioning).isEqualTo(false)
 
-      // Initial state: not running, not transitioning
-      assertThat(viewModel.clashRunning.value).isEqualTo(false)
-      assertThat(viewModel.uiState.value.isTransitioning).isEqualTo(false)
+    // Act: Click toggle to start
+    viewModel.toggleStatus()
 
-      // Act: Click toggle to start
-      viewModel.toggleStatus()
+    // Assert: transitions to true
+    assertThat(viewModel.uiState.value.isTransitioning).isEqualTo(true)
 
-      // Assert: transitions to true
-      assertThat(viewModel.uiState.value.isTransitioning).isEqualTo(true)
+    // Act: clash service starts
+    dependencies.clashRunning.value = true
 
-      // Act: clash service starts
-      dependencies.clashRunning.value = true
+    // Assert: transitions to false
+    assertThat(viewModel.uiState.value.isTransitioning).isEqualTo(false)
 
-      // Assert: transitions to false
-      assertThat(viewModel.uiState.value.isTransitioning).isEqualTo(false)
+    // Act: Click toggle to stop
+    viewModel.toggleStatus()
 
-      // Act: Click toggle to stop
-      viewModel.toggleStatus()
+    // Assert: transitions to true
+    assertThat(viewModel.uiState.value.isTransitioning).isEqualTo(true)
 
-      // Assert: transitions to true
-      assertThat(viewModel.uiState.value.isTransitioning).isEqualTo(true)
+    // Act: clash service stops
+    dependencies.clashRunning.value = false
 
-      // Act: clash service stops
-      dependencies.clashRunning.value = false
-
-      // Assert: transitions to false
-      assertThat(viewModel.uiState.value.isTransitioning).isEqualTo(false)
-    } finally {
-      viewModel.onStop(UnusedLifecycleOwner)
-    }
+    // Assert: transitions to false
+    assertThat(viewModel.uiState.value.isTransitioning).isEqualTo(false)
   }
 
   @Test
-  fun toggleStatus_whenToggledAndLifecycleRestarts_thenTransitionStateIsRetained() = runTest {
-    try {
-      viewModel.onStart(UnusedLifecycleOwner)
+  fun toggleStatus_whenToggledAndScreenRefreshes_thenTransitionStateIsRetained() = runTest {
+    // Act: Click toggle to start
+    viewModel.toggleStatus()
 
-      // Act: Click toggle to start
-      viewModel.toggleStatus()
+    // Assert: transitions to true
+    assertThat(viewModel.uiState.value.isTransitioning).isEqualTo(true)
 
-      // Assert: transitions to true
-      assertThat(viewModel.uiState.value.isTransitioning).isEqualTo(true)
+    // Act: fetch is triggered again (e.g. screen resumes)
+    viewModel.fetch()
 
-      // Act: lifecycle stops (e.g. going to permission activity or background)
-      viewModel.onStop(UnusedLifecycleOwner)
+    // Assert: transition state is retained, not cleared
+    assertThat(viewModel.uiState.value.isTransitioning).isEqualTo(true)
 
-      // Act: lifecycle starts again (resuming)
-      viewModel.onStart(UnusedLifecycleOwner)
+    // Act: clash service starts
+    dependencies.clashRunning.value = true
 
-      // Assert: transition state is retained, not cleared by initial emission
-      assertThat(viewModel.uiState.value.isTransitioning).isEqualTo(true)
-
-      // Act: clash service starts
-      dependencies.clashRunning.value = true
-
-      // Assert: transitions to false
-      assertThat(viewModel.uiState.value.isTransitioning).isEqualTo(false)
-    } finally {
-      viewModel.onStop(UnusedLifecycleOwner)
-    }
+    // Assert: transitions to false
+    assertThat(viewModel.uiState.value.isTransitioning).isEqualTo(false)
   }
 
-  private object UnusedLifecycleOwner : LifecycleOwner {
-    override val lifecycle = LifecycleRegistry(this)
+  @Test
+  fun trafficPolling_whenResumedAndPaused_startsAndStops() = runTest {
+    dependencies.clashRunning.value = true
+
+    viewModel.resume()
+    viewModel.pause()
   }
 
   private class TestHomeDependencies : HomeViewModel.Dependencies {

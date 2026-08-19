@@ -4,8 +4,6 @@ import android.app.Application
 import android.database.Cursor
 import android.net.Uri
 import android.provider.OpenableColumns
-import androidx.lifecycle.DefaultLifecycleObserver
-import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.github.kr328.clash.common.log.Log
@@ -24,7 +22,7 @@ import kotlinx.coroutines.launch
 internal class MetaFeatureSettingsViewModel(
   private val application: Application,
   private val scope: CoroutineScope,
-) : ViewModel(), MetaFeatureSettingsActions, DefaultLifecycleObserver {
+) : ViewModel(), MetaFeatureSettingsActions {
   private val validDatabaseExtensions = listOf(".metadb", ".db", ".dat", ".mmdb")
   @Volatile private var skipPersist = false
 
@@ -40,7 +38,7 @@ internal class MetaFeatureSettingsViewModel(
     }
   }
 
-  override fun onStop(owner: LifecycleOwner) {
+  fun persist() {
     // Intended to use non-viewModel scope as we need the action to be called on disposed.
     scope.launch {
       withClash {

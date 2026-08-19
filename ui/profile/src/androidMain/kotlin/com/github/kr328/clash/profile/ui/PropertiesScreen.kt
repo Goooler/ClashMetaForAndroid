@@ -23,6 +23,7 @@ import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.fromHtml
 import androidx.compose.ui.tooling.preview.PreviewWrapper
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.LifecycleStartEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.github.kr328.clash.common.Res as CommonRes
 import com.github.kr328.clash.common.cancel
@@ -60,7 +61,6 @@ import com.github.kr328.clash.ui.icon.OutlineInfo
 import com.github.kr328.clash.ui.icon.OutlineLabel
 import com.github.kr328.clash.ui.icon.OutlineUpdate
 import com.github.kr328.clash.ui.icon.TabbyIcons
-import com.github.kr328.clash.ui.lifecycle.withLifecycle
 import com.github.kr328.clash.ui.theme.PreviewTabby
 import com.github.kr328.clash.ui.theme.TabbyThemeWrapper
 import kotlin.time.Duration.Companion.milliseconds
@@ -76,7 +76,7 @@ import org.koin.compose.viewmodel.koinViewModel
 internal fun PropertiesScreen(
   uuid: Uuid,
   modifier: Modifier = Modifier,
-  viewModel: PropertiesViewModel = koinViewModel<PropertiesViewModel>().withLifecycle(),
+  viewModel: PropertiesViewModel = koinViewModel<PropertiesViewModel>(),
   onBrowseFiles: (Uuid) -> Unit,
   onFinish: (Boolean) -> Unit,
 ) {
@@ -94,6 +94,12 @@ internal fun PropertiesScreen(
           snackbarHostState.showSnackbar(message = event.message)
         }
       }
+    }
+  }
+
+  LifecycleStartEffect(viewModel) {
+    onStopOrDispose {
+      viewModel.persist()
     }
   }
 
