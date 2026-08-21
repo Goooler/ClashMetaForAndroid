@@ -1,12 +1,8 @@
 {
   $schema: 'https://docs.renovatebot.com/renovate-schema.json',
   extends: [
-    'config:recommended',
+    'github>goooler/renovate-config:default.json5',
   ],
-  labels: [
-    'Update',
-  ],
-  automerge: true,
   'git-submodules': {
     enabled: true,
   },
