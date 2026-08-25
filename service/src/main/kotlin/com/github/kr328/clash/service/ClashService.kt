@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Binder
 import android.os.IBinder
 import com.github.kr328.clash.common.log.Log
+import com.github.kr328.clash.service.clash.ClashRuntime
 import com.github.kr328.clash.service.clash.clashRuntime
 import com.github.kr328.clash.service.clash.module.AppListCacheModule
 import com.github.kr328.clash.service.clash.module.CloseModule
@@ -14,9 +15,8 @@ import com.github.kr328.clash.service.clash.module.StaticNotificationModule
 import com.github.kr328.clash.service.clash.module.SuspendModule
 import com.github.kr328.clash.service.clash.module.TimeZoneModule
 import com.github.kr328.clash.service.store.ServiceStore
+import com.github.kr328.clash.service.util.ClashServiceController
 import com.github.kr328.clash.service.util.cancelAndJoinBlocking
-import com.github.kr328.clash.service.util.sendClashStarted
-import com.github.kr328.clash.service.util.sendClashStopped
 import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.selects.select
@@ -27,8 +27,9 @@ class ClashService : BaseService() {
     get() = this
 
   private var reason: String? = null
+  private val controller = ClashServiceController(this) { runtime.launch() }
 
-  private val runtime = clashRuntime {
+  private val runtime: ClashRuntime = clashRuntime {
     val store = ServiceStore(self)
 
     val close = install(CloseModule(self))
@@ -61,26 +62,18 @@ class ClashService : BaseService() {
 
       reason = e.message
     } finally {
-      withContext(NonCancellable) { stopSelf() }
+      withContext(NonCancellable) { controller.onFinished(reason) }
     }
   }
 
   override fun onCreate() {
     super.onCreate()
 
-    if (StatusProvider.serviceRunning) return stopSelf()
-
-    StatusProvider.currentProfile = null
-    StatusProvider.serviceRunning = true
-
     StaticNotificationModule.createNotificationChannel(this)
-    StaticNotificationModule.notifyLoadingNotification(this)
-
-    runtime.launch()
   }
 
   override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-    sendClashStarted()
+    controller.onStart(startId)
 
     return START_STICKY
   }
@@ -90,10 +83,7 @@ class ClashService : BaseService() {
   }
 
   override fun onDestroy() {
-    StatusProvider.currentProfile = null
-    StatusProvider.serviceRunning = false
-
-    sendClashStopped(reason)
+    controller.onDestroy(reason)
 
     cancelAndJoinBlocking()
 

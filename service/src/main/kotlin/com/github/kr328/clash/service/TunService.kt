@@ -8,6 +8,7 @@ import android.os.Build
 import com.github.kr328.clash.common.compat.pendingIntentFlags
 import com.github.kr328.clash.common.log.Log
 import com.github.kr328.clash.common.util.mainIntent
+import com.github.kr328.clash.service.clash.ClashRuntime
 import com.github.kr328.clash.service.clash.clashRuntime
 import com.github.kr328.clash.service.clash.module.AppListCacheModule
 import com.github.kr328.clash.service.clash.module.CloseModule
@@ -19,10 +20,9 @@ import com.github.kr328.clash.service.clash.module.SuspendModule
 import com.github.kr328.clash.service.clash.module.TimeZoneModule
 import com.github.kr328.clash.service.clash.module.TunModule
 import com.github.kr328.clash.service.store.ServiceStore
+import com.github.kr328.clash.service.util.ClashServiceController
 import com.github.kr328.clash.service.util.IPNet
 import com.github.kr328.clash.service.util.cancelAndJoinBlocking
-import com.github.kr328.clash.service.util.sendClashStarted
-import com.github.kr328.clash.service.util.sendClashStopped
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.NonCancellable
@@ -35,8 +35,9 @@ class TunService : VpnService(), CoroutineScope by CoroutineScope(Dispatchers.De
     get() = this
 
   private var reason: String? = null
+  private val controller = ClashServiceController(this) { runtime.launch() }
 
-  private val runtime = clashRuntime {
+  private val runtime: ClashRuntime = clashRuntime {
     val store = ServiceStore(self)
 
     val close = install(CloseModule(self))
@@ -80,8 +81,7 @@ class TunService : VpnService(), CoroutineScope by CoroutineScope(Dispatchers.De
     } finally {
       withContext(NonCancellable) {
         tun.close()
-
-        stopSelf()
+        controller.onFinished(reason)
       }
     }
   }
@@ -89,19 +89,11 @@ class TunService : VpnService(), CoroutineScope by CoroutineScope(Dispatchers.De
   override fun onCreate() {
     super.onCreate()
 
-    if (StatusProvider.serviceRunning) return stopSelf()
-
-    StatusProvider.currentProfile = null
-    StatusProvider.serviceRunning = true
-
     StaticNotificationModule.createNotificationChannel(this)
-    StaticNotificationModule.notifyLoadingNotification(this)
-
-    runtime.launch()
   }
 
   override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-    sendClashStarted()
+    controller.onStart(startId)
 
     return super.onStartCommand(intent, flags, startId)
   }
@@ -109,10 +101,7 @@ class TunService : VpnService(), CoroutineScope by CoroutineScope(Dispatchers.De
   override fun onDestroy() {
     TunModule.requestStop()
 
-    StatusProvider.currentProfile = null
-    StatusProvider.serviceRunning = false
-
-    sendClashStopped(reason)
+    controller.onDestroy(reason)
 
     cancelAndJoinBlocking()
 
