@@ -29,13 +29,14 @@ fun CoroutineScope.clashRuntime(block: suspend ClashRuntimeScope.() -> Unit): Cl
     override fun launch() {
       launch(Dispatchers.IO) {
         globalLock.withLock {
-          Log.d("ClashRuntime: initialize")
+          Log.i("[Trace] ClashRuntime: initialize start")
 
           try {
             val modules = mutableListOf<Module<*>>()
 
             Clash.reset()
             Clash.clearOverride(Clash.OverrideSlot.Session)
+            Log.i("[Trace] ClashRuntime: initialize Clash.reset completed, running block")
 
             val scope =
               object : ClashRuntimeScope {
@@ -55,10 +56,11 @@ fun CoroutineScope.clashRuntime(block: suspend ClashRuntimeScope.() -> Unit): Cl
             cancel()
           } finally {
             withContext(NonCancellable) {
+              Log.i("[Trace] ClashRuntime: destroying, calling Clash.reset()...")
               Clash.reset()
               Clash.clearOverride(Clash.OverrideSlot.Session)
 
-              Log.d("ClashRuntime: destroyed")
+              Log.i("[Trace] ClashRuntime: destroyed")
             }
           }
         }

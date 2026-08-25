@@ -59,6 +59,7 @@ class Broadcasts(private val context: Application) {
       override fun onReceive(context: Context?, intent: Intent?) {
         if (intent?.`package` != context?.packageName) return
 
+        Log.i("[Trace] Broadcasts: onReceive action = ${intent?.action}")
         when (intent?.action) {
           Intents.ACTION_SERVICE_RECREATED -> {
             clashRunning = false
@@ -71,9 +72,11 @@ class Broadcasts(private val context: Application) {
             event.tryEmit(Event.Started)
           }
           Intents.ACTION_CLASH_STOPPED -> {
+            val stopReason = intent.getStringExtra(Intents.EXTRA_STOP_REASON)
+            Log.i("[Trace] Broadcasts: received ACTION_CLASH_STOPPED (reason=$stopReason)")
             clashRunning = false
             profileLoaded = false
-            event.tryEmit(Event.Stopped(intent.getStringExtra(Intents.EXTRA_STOP_REASON)))
+            event.tryEmit(Event.Stopped(stopReason))
           }
           Intents.ACTION_PROFILE_CHANGED -> {
             profileLoaded = false

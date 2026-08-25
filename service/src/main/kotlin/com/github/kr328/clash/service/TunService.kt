@@ -52,12 +52,18 @@ class TunService : VpnService(), CoroutineScope by CoroutineScope(Dispatchers.De
     install(SuspendModule(self))
 
     try {
+      Log.i("[Trace] TunService: opening tun device...")
       tun.open()
+      Log.i("[Trace] TunService: tun device opened")
 
       while (isActive) {
         val quit = select {
-          close.onEvent { true }
+          close.onEvent {
+            Log.i("[Trace] TunService: close module event received")
+            true
+          }
           config.onEvent {
+            Log.i("[Trace] TunService: config module event received (message=${it.message})")
             reason = it.message
 
             true
@@ -79,8 +85,9 @@ class TunService : VpnService(), CoroutineScope by CoroutineScope(Dispatchers.De
       reason = e.message
     } finally {
       withContext(NonCancellable) {
+        Log.i("[Trace] TunService: runtime finally block entered, closing tun...")
         tun.close()
-
+        Log.i("[Trace] TunService: tun closed, calling stopSelf()")
         stopSelf()
       }
     }
@@ -88,6 +95,7 @@ class TunService : VpnService(), CoroutineScope by CoroutineScope(Dispatchers.De
 
   override fun onCreate() {
     super.onCreate()
+    Log.i("[Trace] TunService onCreate")
 
     if (StatusProvider.serviceRunning) return stopSelf()
 
@@ -101,20 +109,26 @@ class TunService : VpnService(), CoroutineScope by CoroutineScope(Dispatchers.De
   }
 
   override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+    Log.i("[Trace] TunService onStartCommand, sending ACTION_CLASH_STARTED")
     sendClashStarted()
 
     return super.onStartCommand(intent, flags, startId)
   }
 
   override fun onDestroy() {
+    Log.i("[Trace] TunService onDestroy started")
     TunModule.requestStop()
+    Log.i("[Trace] TunService TunModule.requestStop finished")
 
     StatusProvider.currentProfile = null
     StatusProvider.serviceRunning = false
 
+    Log.i("[Trace] TunService sending ACTION_CLASH_STOPPED (reason=$reason)")
     sendClashStopped(reason)
 
+    Log.i("[Trace] TunService entering cancelAndJoinBlocking()...")
     cancelAndJoinBlocking()
+    Log.i("[Trace] TunService cancelAndJoinBlocking finished")
 
     Log.i("TunService destroyed: ${reason ?: "successfully"}")
 

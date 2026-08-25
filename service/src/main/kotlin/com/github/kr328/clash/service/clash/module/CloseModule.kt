@@ -12,7 +12,7 @@ class CloseModule(service: Service) : Module<CloseModule.RequestClose>(service) 
 
     broadcasts.receive()
 
-    Log.d("User request close")
+    Log.i("[Trace] CloseModule: received ACTION_CLASH_REQUEST_STOP from broadcast")
 
     return enqueueEvent(RequestClose)
   }
