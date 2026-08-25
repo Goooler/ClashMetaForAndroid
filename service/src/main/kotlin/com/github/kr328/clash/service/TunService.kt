@@ -35,7 +35,7 @@ class TunService : VpnService(), CoroutineScope by CoroutineScope(Dispatchers.De
     get() = this
 
   private var reason: String? = null
-  private val controller: ClashServiceController = ClashServiceController(this) { runtime.launch() }
+  private val controller = ClashServiceController(this) { runtime.launch() }
 
   private val runtime: ClashRuntime = clashRuntime {
     val store = ServiceStore(self)
@@ -81,7 +81,6 @@ class TunService : VpnService(), CoroutineScope by CoroutineScope(Dispatchers.De
     } finally {
       withContext(NonCancellable) {
         tun.close()
-
         controller.onFinished(reason)
       }
     }

@@ -27,7 +27,7 @@ class ClashService : BaseService() {
     get() = this
 
   private var reason: String? = null
-  private val controller: ClashServiceController = ClashServiceController(this) { runtime.launch() }
+  private val controller = ClashServiceController(this) { runtime.launch() }
 
   private val runtime: ClashRuntime = clashRuntime {
     val store = ServiceStore(self)
@@ -62,9 +62,7 @@ class ClashService : BaseService() {
 
       reason = e.message
     } finally {
-      withContext(NonCancellable) {
-        controller.onFinished(reason)
-      }
+      withContext(NonCancellable) { controller.onFinished(reason) }
     }
   }
 
