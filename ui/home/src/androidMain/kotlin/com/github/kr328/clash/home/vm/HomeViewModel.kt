@@ -51,9 +51,7 @@ internal class HomeViewModel(private val dependencies: Dependencies) : ViewModel
       dependencies.clashRunning.collect { running ->
         val last = lastClashRunning
         lastClashRunning = running
-        Log.i("[Trace] HomeViewModel: clashRunning updated -> $running (last=$last)")
         if (last != null && last != running) {
-          Log.i("[Trace] HomeViewModel: resetting isTransitioning to false")
           uiState.update { it.copy(isTransitioning = false) }
           cancelTransitionTimeout()
         }
@@ -61,7 +59,6 @@ internal class HomeViewModel(private val dependencies: Dependencies) : ViewModel
     }
     viewModelScope.launch {
       dependencies.events.collect { broadcastEvent ->
-        Log.i("[Trace] HomeViewModel: event received -> $broadcastEvent")
         when (broadcastEvent) {
           ServiceRecreated,
           Started,
@@ -80,7 +77,6 @@ internal class HomeViewModel(private val dependencies: Dependencies) : ViewModel
     }
     viewModelScope.launch {
       dependencies.profileLoaded.collect { loaded ->
-        Log.i("[Trace] HomeViewModel: profileLoaded updated -> $loaded")
         if (loaded) fetch() else clearRuntimeState()
       }
     }
@@ -99,30 +95,20 @@ internal class HomeViewModel(private val dependencies: Dependencies) : ViewModel
   fun toggleStatus() {
     if (uiState.value.isTransitioning) return
 
-    val currentRunning = clashRunning.value
-    Log.i("[Trace] HomeViewModel: toggleStatus clicked (current clashRunning=$currentRunning)")
     uiState.update { it.copy(isTransitioning = true) }
     startTransitionTimeout()
 
-    when (currentRunning) {
-      true -> {
-        Log.i("[Trace] HomeViewModel: calling stopClashService()")
-        dependencies.stopClashService()
-      }
-      false -> {
-        Log.i("[Trace] HomeViewModel: calling startClash()")
-        startClash()
-      }
+    when (clashRunning.value) {
+      true -> dependencies.stopClashService()
+      false -> startClash()
     }
   }
 
   fun onVpnPermissionGranted() {
-    Log.i("[Trace] HomeViewModel: VPN permission granted, calling startClashService()")
     dependencies.startClashService()
   }
 
   fun onVpnPermissionDenied() {
-    Log.i("[Trace] HomeViewModel: VPN permission denied")
     uiState.update { it.copy(isTransitioning = false) }
     cancelTransitionTimeout()
   }
@@ -192,7 +178,6 @@ internal class HomeViewModel(private val dependencies: Dependencies) : ViewModel
   private fun startClash() {
     viewModelScope.launch {
       if (!dependencies.hasImportedActiveProfile()) {
-        Log.i("[Trace] HomeViewModel: no active profile imported")
         eventState.tryEmit(EventState.ShowNoProfileMessage)
         uiState.update { it.copy(isTransitioning = false) }
         cancelTransitionTimeout()
@@ -200,15 +185,9 @@ internal class HomeViewModel(private val dependencies: Dependencies) : ViewModel
       }
 
       try {
-        Log.i("[Trace] HomeViewModel: calling dependencies.startClashService()")
         val vpnRequest = dependencies.startClashService()
         if (vpnRequest != null) {
-          Log.i("[Trace] HomeViewModel: VPN permission required, requesting permission")
           eventState.tryEmit(EventState.RequestVpnPermission(vpnRequest))
-        } else {
-          Log.i(
-            "[Trace] HomeViewModel: startClashService called successfully (no permission prompt needed)"
-          )
         }
       } catch (e: Exception) {
         Log.e("Start clash service failed: ${e.message}", e)

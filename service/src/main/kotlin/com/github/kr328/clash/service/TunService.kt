@@ -53,18 +53,12 @@ class TunService : VpnService(), CoroutineScope by CoroutineScope(Dispatchers.De
     install(SuspendModule(self))
 
     try {
-      Log.i("[Trace] TunService: opening tun device...")
       tun.open()
-      Log.i("[Trace] TunService: tun device opened")
 
       while (isActive) {
         val quit = select {
-          close.onEvent {
-            Log.i("[Trace] TunService: close module event received")
-            true
-          }
+          close.onEvent { true }
           config.onEvent {
-            Log.i("[Trace] TunService: config module event received (message=${it.message})")
             reason = it.message
 
             true
@@ -86,7 +80,6 @@ class TunService : VpnService(), CoroutineScope by CoroutineScope(Dispatchers.De
       reason = e.message
     } finally {
       withContext(NonCancellable) {
-        Log.i("[Trace] TunService: runtime finally block entered, closing tun...")
         tun.close()
 
         controller.onFinished(reason)
@@ -96,7 +89,6 @@ class TunService : VpnService(), CoroutineScope by CoroutineScope(Dispatchers.De
 
   override fun onCreate() {
     super.onCreate()
-    Log.i("[Trace] TunService onCreate")
 
     StaticNotificationModule.createNotificationChannel(this)
   }
@@ -108,15 +100,11 @@ class TunService : VpnService(), CoroutineScope by CoroutineScope(Dispatchers.De
   }
 
   override fun onDestroy() {
-    Log.i("[Trace] TunService onDestroy started")
     TunModule.requestStop()
-    Log.i("[Trace] TunService TunModule.requestStop finished")
 
     controller.onDestroy(reason)
 
-    Log.i("[Trace] TunService entering cancelAndJoinBlocking()...")
     cancelAndJoinBlocking()
-    Log.i("[Trace] TunService cancelAndJoinBlocking finished")
 
     Log.i("TunService destroyed: ${reason ?: "successfully"}")
 
