@@ -5,9 +5,9 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import co.touchlab.kermit.Logger
 import com.github.kr328.clash.common.compat.registerReceiverCompat
 import com.github.kr328.clash.common.di.AppInfoProvider.Companion.appInfoProvider
-import com.github.kr328.clash.common.log.Log
 import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.ReceiveChannel
@@ -65,7 +65,7 @@ sealed class Module<E>(val service: Service) {
     val moduleName = this.javaClass.simpleName
 
     try {
-      Log.d("$moduleName: initialize")
+      Logger.d("$moduleName: initialize")
 
       run()
     } finally {
@@ -76,7 +76,7 @@ sealed class Module<E>(val service: Service) {
           service.unregisterReceiver(it)
         }
 
-        Log.d("$moduleName: destroyed")
+        Logger.d("$moduleName: destroyed")
       }
     }
   }

@@ -4,10 +4,10 @@ import android.app.Application
 import android.content.Intent
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import co.touchlab.kermit.Logger
 import com.github.kr328.clash.common.Res as CommonRes
 import com.github.kr328.clash.common.direct_mode
 import com.github.kr328.clash.common.global_mode
-import com.github.kr328.clash.common.log.Log
 import com.github.kr328.clash.common.rule_mode
 import com.github.kr328.clash.common.unable_to_start_vpn
 import com.github.kr328.clash.core.model.Traffic
@@ -190,7 +190,7 @@ internal class HomeViewModel(private val dependencies: Dependencies) : ViewModel
           eventState.tryEmit(EventState.RequestVpnPermission(vpnRequest))
         }
       } catch (e: Exception) {
-        Log.e("Start clash service failed: ${e.message}", e)
+        Logger.e("Start clash service failed: ${e.message}", e)
         eventState.tryEmit(EventState.ShowMessage(dependencies.unableToStartVpnText()))
         uiState.update { it.copy(isTransitioning = false) }
         cancelTransitionTimeout()

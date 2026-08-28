@@ -3,7 +3,7 @@ package com.github.kr328.clash.core.bridge
 import android.os.Build
 import android.os.ParcelFileDescriptor
 import androidx.annotation.Keep
-import com.github.kr328.clash.common.log.Log
+import co.touchlab.kermit.Logger
 import com.github.kr328.clash.common.util.application
 import java.io.File
 import kotlinx.coroutines.CompletableDeferred
@@ -115,7 +115,7 @@ object Bridge {
     val versionName =
       application.packageManager.getPackageInfo(application.packageName, 0).versionName ?: "unknown"
 
-    Log.d("Home = $home")
+    Logger.d("Home = $home")
 
     nativeInit(home, versionName, Build.VERSION.SDK_INT)
   }

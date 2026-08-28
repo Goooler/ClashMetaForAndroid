@@ -3,8 +3,8 @@ package com.github.kr328.clash.glue.remote
 import android.app.Application
 import android.content.Context
 import android.content.Intent
+import co.touchlab.kermit.Logger
 import com.github.kr328.clash.common.constants.Intents
-import com.github.kr328.clash.common.log.Log
 import com.github.kr328.clash.common.util.mainIntent
 import com.github.kr328.clash.glue.store.AppStore
 import com.github.kr328.clash.glue.util.ApplicationObserver
@@ -35,10 +35,10 @@ object Remote : KoinComponent {
     ApplicationObserver.attach(application)
     ApplicationObserver.onVisibleChanged {
       if (it) {
-        Log.d("App becomes visible")
+        Logger.d("App becomes visible")
         service.bind()
       } else {
-        Log.d("App becomes invisible")
+        Logger.d("App becomes invisible")
         service.unbind()
       }
     }

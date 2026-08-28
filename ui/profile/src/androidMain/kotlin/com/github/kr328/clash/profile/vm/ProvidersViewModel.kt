@@ -3,7 +3,7 @@ package com.github.kr328.clash.profile.vm
 import android.app.Application
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.github.kr328.clash.common.log.Log
+import co.touchlab.kermit.Logger
 import com.github.kr328.clash.core.model.Provider
 import com.github.kr328.clash.glue.remote.Remote
 import com.github.kr328.clash.glue.util.withClash
@@ -69,7 +69,7 @@ internal class ProvidersViewModel(private val application: Application) : ViewMo
           it.copy(updating = false, updatedAt = System.currentTimeMillis())
         }
       } catch (e: Exception) {
-        Log.e("Update provider ${provider.name} failed: ${e.message}", e)
+        Logger.e("Update provider ${provider.name} failed: ${e.message}", e)
         updateProviderState(provider) { it.copy(updating = false) }
         val errorMessage = e.localizedMessage ?: e.message ?: e.toString()
         eventState.tryEmit(

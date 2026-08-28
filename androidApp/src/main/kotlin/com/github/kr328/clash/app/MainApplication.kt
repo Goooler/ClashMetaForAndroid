@@ -2,8 +2,8 @@ package com.github.kr328.clash.app
 
 import android.app.Application
 import android.content.Context
+import co.touchlab.kermit.Logger
 import com.github.kr328.clash.app.di.appModule
-import com.github.kr328.clash.common.log.Log
 import com.github.kr328.clash.crash.di.crashModule
 import com.github.kr328.clash.glue.remote.Remote
 import com.github.kr328.clash.glue.util.clashDir
@@ -27,12 +27,14 @@ class MainApplication : Application() {
   override fun onCreate() {
     super.onCreate()
 
+    Logger.setTag("Tabby")
+
     koin()
 
     val processName = getProcessName()
     extractGeoFiles()
 
-    Log.d("Process $processName started")
+    Logger.d("Process $processName started")
 
     if (processName == packageName) {
       Remote.launch()

@@ -7,8 +7,8 @@ import android.os.ParcelFileDescriptor
 import android.provider.DocumentsContract.Document as D
 import android.provider.DocumentsContract.Root
 import android.provider.DocumentsProvider
+import co.touchlab.kermit.Logger
 import com.github.kr328.clash.common.R as CommonR
-import com.github.kr328.clash.common.log.Log
 import com.github.kr328.clash.common.util.PatternFileName
 import com.github.kr328.clash.service.document.Document
 import com.github.kr328.clash.service.document.FileDocument
@@ -122,7 +122,7 @@ class FilesProvider : DocumentsProvider() {
           }
         }
       } catch (e: Exception) {
-        Log.e("Query child documents failed: ${e.message}", e)
+        Logger.e("Query child documents failed: ${e.message}", e)
         MatrixCursor(resolveDocumentProjection(projection))
       }
     }
@@ -139,7 +139,7 @@ class FilesProvider : DocumentsProvider() {
           newRow().applyDocument(document).add(D.COLUMN_DOCUMENT_ID, doc)
         }
       } catch (e: Exception) {
-        Log.e("Query document failed: ${e.message}", e)
+        Logger.e("Query document failed: ${e.message}", e)
         MatrixCursor(resolveDocumentProjection(projection))
       }
     }

@@ -5,7 +5,7 @@ import android.app.Application
 import android.content.Context
 import android.os.Build
 import android.os.Bundle
-import com.github.kr328.clash.common.log.Log
+import co.touchlab.kermit.Logger
 import java.io.File
 import java.util.zip.ZipFile
 
@@ -84,7 +84,7 @@ fun Context.verifyApk(): Boolean {
 
     availableAbi.intersect(apkAbi).isNotEmpty()
   } catch (e: Exception) {
-    Log.e("Verify apk failed: ${e.message}", e)
+    Logger.e("Verify apk failed: ${e.message}", e)
     false
   }
 }

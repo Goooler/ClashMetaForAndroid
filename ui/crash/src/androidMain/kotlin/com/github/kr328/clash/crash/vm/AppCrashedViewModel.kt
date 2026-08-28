@@ -3,7 +3,7 @@ package com.github.kr328.clash.crash.vm
 import android.app.Application
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.github.kr328.clash.common.log.Log
+import co.touchlab.kermit.Logger
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -15,13 +15,13 @@ internal class AppCrashedViewModel(private val application: Application) : ViewM
   val logs: StateFlow<String> = flow {
     val log = runCatching {
       val packageInfo = application.packageManager.getPackageInfo(application.packageName, 0)
-      Log.i(
+      Logger.i(
         "App version: versionName = ${packageInfo.versionName} versionCode = ${packageInfo.longVersionCode}"
       )
       dumpCrash()
     }
       .getOrElse { e ->
-        Log.e("Failed to load crash logs", e)
+        Logger.e("Failed to load crash logs", e)
         "Failed to load crash logs: ${e.stackTraceToString()}"
       }
     emit(log)

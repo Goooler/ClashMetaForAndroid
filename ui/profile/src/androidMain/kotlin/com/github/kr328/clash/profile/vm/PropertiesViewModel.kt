@@ -3,8 +3,8 @@ package com.github.kr328.clash.profile.vm
 import android.app.Application
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import co.touchlab.kermit.Logger
 import com.github.kr328.clash.common.Res as CommonRes
-import com.github.kr328.clash.common.log.Log
 import com.github.kr328.clash.common.unknown
 import com.github.kr328.clash.core.model.FetchStatus
 import com.github.kr328.clash.glue.util.withProfile
@@ -71,7 +71,7 @@ internal class PropertiesViewModel(
             )
           }
         }
-          .onFailure { e -> Log.e("Auto save profile failed: ${e.message}", e) }
+          .onFailure { e -> Logger.e("Auto save profile failed: ${e.message}", e) }
           .onSuccess {
             uiState.update { state ->
               state.copy(originalProfile = profile.copy(), hasUnsavedChanges = false)
@@ -87,7 +87,7 @@ internal class PropertiesViewModel(
         try {
           withProfile { release(uuid) }
         } catch (e: Exception) {
-          Log.e("Release profile failed: ${e.message}", e)
+          Logger.e("Release profile failed: ${e.message}", e)
         }
       }
     }
@@ -173,7 +173,7 @@ internal class PropertiesViewModel(
         canceled = true
         eventState.tryEmit(EventState.Finish(true))
       } catch (e: Exception) {
-        Log.e("Commit profile failed: ${e.message}", e)
+        Logger.e("Commit profile failed: ${e.message}", e)
         eventState.tryEmit(EventState.ShowMessage(e.message ?: getString(CommonRes.string.unknown)))
       }
     }
