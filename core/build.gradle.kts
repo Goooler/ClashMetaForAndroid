@@ -30,7 +30,7 @@ dependencies {
   implementation(projects.common)
 
   implementation(libs.androidx.core)
-  implementation(libs.kotlin.coroutine)
+  implementation(libs.kotlin.coroutine.android)
   implementation(libs.kotlin.serialization.json)
   implementation(libs.bytesize)
 }

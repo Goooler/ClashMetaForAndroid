@@ -7,7 +7,7 @@ kotlin {
     commonMain.dependencies {
       api(libs.koin.core)
 
-      implementation(libs.kotlin.coroutine)
+      implementation(libs.kotlin.coroutine.core)
     }
     androidMain.dependencies {
       implementation(libs.androidx.core)

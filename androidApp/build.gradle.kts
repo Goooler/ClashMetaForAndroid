@@ -82,7 +82,7 @@ dependencies {
   implementation(projects.ui.profile)
   implementation(projects.ui.settings)
 
-  implementation(libs.kotlin.coroutine)
+  implementation(libs.kotlin.coroutine.android)
 
   implementation(libs.androidx.core)
   implementation(libs.androidx.activity.compose)
