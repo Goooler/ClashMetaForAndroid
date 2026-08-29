@@ -8,8 +8,8 @@ import android.net.Uri
 import android.os.IBinder
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import co.touchlab.kermit.Logger
 import com.github.kr328.clash.common.Res as CommonRes
-import com.github.kr328.clash.common.log.Log
 import com.github.kr328.clash.common.unknown
 import com.github.kr328.clash.common.util.intent
 import com.github.kr328.clash.core.model.LogMessage
@@ -112,7 +112,7 @@ internal class LogcatViewModel(private val application: Application) : ViewModel
           writeLogTo(messages, file, uri)
           EventState.ShowMessage(getString(Res.string.file_exported))
         } catch (ex: Exception) {
-          Log.e("Export log file failed: ${ex.message}", ex)
+          Logger.e("Export log file failed: ${ex.message}", ex)
           EventState.ShowMessage(ex.message ?: getString(CommonRes.string.unknown))
         }
       eventState.tryEmit(e)
@@ -138,7 +138,7 @@ internal class LogcatViewModel(private val application: Application) : ViewModel
         try {
           LogcatReader(application, file).use { it.readAll() }
         } catch (e: Exception) {
-          Log.e("Fail to read log file ${file.fileName}: ${e.message}", e)
+          Logger.e("Fail to read log file ${file.fileName}: ${e.message}", e)
           eventState.tryEmit(EventState.InvalidFile)
           return@launch
         }
@@ -155,9 +155,9 @@ internal class LogcatViewModel(private val application: Application) : ViewModel
         logcat = bindLogcatService()
         startPolling()
       } catch (e: Exception) {
-        Log.e("Bind logcat service failed: ${e.message}", e)
+        Logger.e("Bind logcat service failed: ${e.message}", e)
         runCatching { application.stopService(LogcatService::class.intent) }
-          .onFailure { ex -> Log.e("Stop logcat service failed: ${ex.message}", ex) }
+          .onFailure { ex -> Logger.e("Stop logcat service failed: ${ex.message}", ex) }
         reset()
         eventState.tryEmit(EventState.OpenLogs)
       }
@@ -190,7 +190,7 @@ internal class LogcatViewModel(private val application: Application) : ViewModel
                 ?: run {
                   if (!continuation.isActive) {
                     runCatching { application.unbindService(this) }
-                      .onFailure { e -> Log.e("Unbind logcat service failed: ${e.message}", e) }
+                      .onFailure { e -> Logger.e("Unbind logcat service failed: ${e.message}", e) }
                     if (conn === this) {
                       conn = null
                     }
@@ -202,9 +202,11 @@ internal class LogcatViewModel(private val application: Application) : ViewModel
                     )
                   }
                     .onFailure {
-                      Log.e("Resume bind failure: ${it.message}", it)
+                      Logger.e("Resume bind failure: ${it.message}", it)
                       runCatching { application.unbindService(this) }
-                        .onFailure { e -> Log.e("Unbind logcat service failed: ${e.message}", e) }
+                        .onFailure { e ->
+                          Logger.e("Unbind logcat service failed: ${e.message}", e)
+                        }
                       if (conn === this) {
                         conn = null
                       }
@@ -215,7 +217,7 @@ internal class LogcatViewModel(private val application: Application) : ViewModel
 
             if (!continuation.isActive) {
               runCatching { application.unbindService(this) }
-                .onFailure { e -> Log.e("Unbind logcat service failed: ${e.message}", e) }
+                .onFailure { e -> Logger.e("Unbind logcat service failed: ${e.message}", e) }
               if (conn === this) {
                 conn = null
               }
@@ -224,9 +226,9 @@ internal class LogcatViewModel(private val application: Application) : ViewModel
 
             runCatching { continuation.resume(logcatService) }
               .onFailure {
-                Log.e("Resume logcat continuation failed: ${it.message}", it)
+                Logger.e("Resume logcat continuation failed: ${it.message}", it)
                 runCatching { application.unbindService(this) }
-                  .onFailure { e -> Log.e("Unbind logcat service failed: ${e.message}", e) }
+                  .onFailure { e -> Logger.e("Unbind logcat service failed: ${e.message}", e) }
                 if (conn === this) {
                   conn = null
                 }
@@ -254,7 +256,7 @@ internal class LogcatViewModel(private val application: Application) : ViewModel
 
       continuation.invokeOnCancellation {
         runCatching { application.unbindService(connection) }
-          .onFailure { e -> Log.e("Unbind canceled logcat service failed: ${e.message}", e) }
+          .onFailure { e -> Logger.e("Unbind canceled logcat service failed: ${e.message}", e) }
 
         if (conn === connection) {
           conn = null
@@ -304,7 +306,7 @@ internal class LogcatViewModel(private val application: Application) : ViewModel
   private fun reset() {
     conn?.let { connection ->
       runCatching { application.unbindService(connection) }
-        .onFailure { e -> Log.e("Unbind logcat service failed: ${e.message}", e) }
+        .onFailure { e -> Logger.e("Unbind logcat service failed: ${e.message}", e) }
     }
     conn = null
     logcat = null

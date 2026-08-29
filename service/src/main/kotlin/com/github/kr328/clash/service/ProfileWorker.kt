@@ -7,13 +7,13 @@ import android.os.IBinder
 import androidx.core.app.NotificationChannelCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import co.touchlab.kermit.Logger
 import com.github.kr328.clash.common.R as CommonR
 import com.github.kr328.clash.common.compat.getColorCompat
 import com.github.kr328.clash.common.compat.pendingIntentFlags
 import com.github.kr328.clash.common.compat.startForegroundCompat
 import com.github.kr328.clash.common.constants.Intents
 import com.github.kr328.clash.common.id.UndefinedIds
-import com.github.kr328.clash.common.log.Log
 import com.github.kr328.clash.common.util.mainIntent
 import com.github.kr328.clash.common.util.setUUID
 import com.github.kr328.clash.common.util.uuid
@@ -94,7 +94,7 @@ class ProfileWorker : BaseService() {
 
       ProfileReceiver.scheduleNext(this, imported)
     } catch (e: Exception) {
-      Log.e("Update profile ${imported.name} failed: ${e.message}", e)
+      Logger.e("Update profile ${imported.name} failed: ${e.message}", e)
       failed(imported.uuid, imported.name, e.message ?: "Unknown")
     }
   }

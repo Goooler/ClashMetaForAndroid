@@ -3,8 +3,8 @@ package com.github.kr328.clash.home.vm
 import android.app.Application
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import co.touchlab.kermit.Logger
 import com.github.kr328.clash.common.di.AppInfoProvider
-import com.github.kr328.clash.common.log.Log
 import com.github.kr328.clash.core.bridge.Bridge
 import com.github.kr328.clash.glue.util.TABBY_RELEASES_LATEST
 import com.github.kr328.clash.home.Res
@@ -59,7 +59,7 @@ internal class HelpViewModel(
           eventState.tryEmit(EventState.ShowMessage(getString(Res.string.already_up_to_date)))
         }
       } catch (e: Exception) {
-        Log.e("Check for updates failed: ${e.message}", e)
+        Logger.e("Check for updates failed: ${e.message}", e)
         eventState.tryEmit(EventState.ShowMessage(getString(Res.string.check_update_failed)))
       } finally {
         uiState.update { it.copy(checkingForUpdates = false) }

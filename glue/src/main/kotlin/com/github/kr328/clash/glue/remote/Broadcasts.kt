@@ -5,9 +5,9 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import co.touchlab.kermit.Logger
 import com.github.kr328.clash.common.compat.registerReceiverCompat
 import com.github.kr328.clash.common.constants.Intents
-import com.github.kr328.clash.common.log.Log
 import com.github.kr328.clash.common.util.getSerializableCompat
 import kotlin.uuid.Uuid
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -121,7 +121,7 @@ class Broadcasts(private val context: Application) {
       clashRunning = currentProfile != null
       profileLoaded = currentProfile != null
     } catch (e: Exception) {
-      Log.w("Register global receiver: $e", e)
+      Logger.w("Register global receiver: $e", e)
     }
   }
 }

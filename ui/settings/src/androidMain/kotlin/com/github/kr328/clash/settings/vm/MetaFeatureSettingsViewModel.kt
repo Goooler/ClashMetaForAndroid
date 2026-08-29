@@ -6,7 +6,7 @@ import android.net.Uri
 import android.provider.OpenableColumns
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.github.kr328.clash.common.log.Log
+import co.touchlab.kermit.Logger
 import com.github.kr328.clash.core.Clash
 import com.github.kr328.clash.core.model.ConfigurationOverride
 import com.github.kr328.clash.glue.util.clashDir
@@ -90,7 +90,7 @@ internal class MetaFeatureSettingsViewModel(
           return@use ImportResult.Success(displayName)
         }
       } catch (e: Exception) {
-        Log.e("Import geo database failed: ${e.message}", e)
+        Logger.e("Import geo database failed: ${e.message}", e)
         importResult.value = ImportResult.Failed
       }
     }

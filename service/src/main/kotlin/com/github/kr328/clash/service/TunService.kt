@@ -5,8 +5,8 @@ import android.content.Intent
 import android.net.ProxyInfo
 import android.net.VpnService
 import android.os.Build
+import co.touchlab.kermit.Logger
 import com.github.kr328.clash.common.compat.pendingIntentFlags
-import com.github.kr328.clash.common.log.Log
 import com.github.kr328.clash.common.util.mainIntent
 import com.github.kr328.clash.service.clash.ClashRuntime
 import com.github.kr328.clash.service.clash.clashRuntime
@@ -75,7 +75,7 @@ class TunService : VpnService(), CoroutineScope by CoroutineScope(Dispatchers.De
         if (quit) break
       }
     } catch (e: Exception) {
-      Log.e("Create clash runtime: ${e.message}", e)
+      Logger.e("Create clash runtime: ${e.message}", e)
 
       reason = e.message
     } finally {
@@ -105,7 +105,7 @@ class TunService : VpnService(), CoroutineScope by CoroutineScope(Dispatchers.De
 
     cancelAndJoinBlocking()
 
-    Log.i("TunService destroyed: ${reason ?: "successfully"}")
+    Logger.i("TunService destroyed: ${reason ?: "successfully"}")
 
     super.onDestroy()
   }
@@ -152,13 +152,15 @@ class TunService : VpnService(), CoroutineScope by CoroutineScope(Dispatchers.De
           AcceptSelected -> {
             (store.accessControlPackages + packageName).forEach {
               runCatching { addAllowedApplication(it) }
-                .onFailure { e -> Log.e("Add allowed application $it failed: ${e.message}", e) }
+                .onFailure { e -> Logger.e("Add allowed application $it failed: ${e.message}", e) }
             }
           }
           DenySelected -> {
             (store.accessControlPackages - packageName).forEach {
               runCatching { addDisallowedApplication(it) }
-                .onFailure { e -> Log.e("Add disallowed application $it failed: ${e.message}", e) }
+                .onFailure { e ->
+                  Logger.e("Add disallowed application $it failed: ${e.message}", e)
+                }
             }
           }
         }

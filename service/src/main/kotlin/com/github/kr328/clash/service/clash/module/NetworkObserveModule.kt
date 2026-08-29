@@ -8,7 +8,7 @@ import android.net.NetworkCapabilities
 import android.net.NetworkRequest
 import android.os.Build
 import androidx.core.content.getSystemService
-import com.github.kr328.clash.common.log.Log
+import co.touchlab.kermit.Logger
 import com.github.kr328.clash.core.Clash
 import com.github.kr328.clash.service.util.asSocketAddressText
 import java.net.InetAddress
@@ -45,12 +45,12 @@ class NetworkObserveModule(service: Service) : Module<Network>(service) {
   private val callback =
     object : ConnectivityManager.NetworkCallback() {
       override fun onAvailable(network: Network) {
-        Log.i("NetworkObserve onAvailable network=$network")
+        Logger.i("NetworkObserve onAvailable network=$network")
         networkInfos[network] = NetworkInfo()
       }
 
       override fun onLosing(network: Network, maxMsToLive: Int) {
-        Log.i("NetworkObserve onLosing network=$network")
+        Logger.i("NetworkObserve onLosing network=$network")
         networkInfos.computeIfPresent(network) { _, info ->
           info.copy(losingMs = System.currentTimeMillis() + maxMsToLive)
         }
@@ -60,7 +60,7 @@ class NetworkObserveModule(service: Service) : Module<Network>(service) {
       }
 
       override fun onLost(network: Network) {
-        Log.i("NetworkObserve onLost network=$network")
+        Logger.i("NetworkObserve onLost network=$network")
         networkInfos.remove(network)
         notifyDnsChange()
 
@@ -68,7 +68,7 @@ class NetworkObserveModule(service: Service) : Module<Network>(service) {
       }
 
       override fun onLinkPropertiesChanged(network: Network, linkProperties: LinkProperties) {
-        Log.i("NetworkObserve onLinkPropertiesChanged network=$network $linkProperties")
+        Logger.i("NetworkObserve onLinkPropertiesChanged network=$network $linkProperties")
         networkInfos.computeIfPresent(network) { _, info ->
           info.copy(dnsList = linkProperties.dnsServers)
         }
@@ -78,29 +78,29 @@ class NetworkObserveModule(service: Service) : Module<Network>(service) {
       }
 
       override fun onUnavailable() {
-        Log.i("NetworkObserve onUnavailable")
+        Logger.i("NetworkObserve onUnavailable")
       }
     }
 
   private fun register(): Boolean {
-    Log.i("NetworkObserve start register")
+    Logger.i("NetworkObserve start register")
     return try {
       connectivity.registerNetworkCallback(request, callback)
 
       true
     } catch (e: Exception) {
-      Log.w("NetworkObserve register failed", e)
+      Logger.w("NetworkObserve register failed", e)
 
       false
     }
   }
 
   private fun unregister(): Boolean {
-    Log.i("NetworkObserve start unregister")
+    Logger.i("NetworkObserve start unregister")
     try {
       connectivity.unregisterNetworkCallback(callback)
     } catch (e: Exception) {
-      Log.w("NetworkObserve unregister failed", e)
+      Logger.w("NetworkObserve unregister failed", e)
     }
 
     return false
@@ -139,7 +139,7 @@ class NetworkObserveModule(service: Service) : Module<Network>(service) {
         .map { x -> x.asSocketAddressText(53) }
     val prevDnsList = curDnsList
     if (dnsList.isNotEmpty() && prevDnsList != dnsList) {
-      Log.i("notifyDnsChange $prevDnsList -> $dnsList")
+      Logger.i("notifyDnsChange $prevDnsList -> $dnsList")
       curDnsList = dnsList
       Clash.notifyDnsChanged(dnsList)
     }
@@ -165,7 +165,7 @@ class NetworkObserveModule(service: Service) : Module<Network>(service) {
       withContext(NonCancellable) {
         unregister()
 
-        Log.i("NetworkObserve dns = []")
+        Logger.i("NetworkObserve dns = []")
         Clash.notifyDnsChanged(emptyList())
       }
     }

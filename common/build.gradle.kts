@@ -6,7 +6,7 @@ kotlin {
   sourceSets {
     commonMain.dependencies {
       api(libs.koin.core)
-
+      api(libs.kermit)
       implementation(libs.kotlin.coroutine)
     }
     androidMain.dependencies {

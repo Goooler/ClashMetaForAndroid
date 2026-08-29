@@ -6,9 +6,9 @@ import android.content.Intent
 import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import co.touchlab.kermit.Logger
 import com.github.kr328.clash.common.Res as CommonRes
 import com.github.kr328.clash.common.constants.Intents
-import com.github.kr328.clash.common.log.Log
 import com.github.kr328.clash.common.new_profile
 import com.github.kr328.clash.common.unknown
 import com.github.kr328.clash.glue.util.withProfile
@@ -62,7 +62,7 @@ internal class NewProfileViewModel(private val application: Application) : ViewM
         val uuid = withProfile { create(External, name ?: profileName, uri.toString()) }
         eventState.tryEmit(EventState.LaunchProperties(uuid))
       } catch (e: Exception) {
-        Log.e("Create external profile failed: ${e.message}", e)
+        Logger.e("Create external profile failed: ${e.message}", e)
         eventState.tryEmit(EventState.ShowMessage(e.message ?: getString(CommonRes.string.unknown)))
       }
     }
@@ -79,7 +79,7 @@ internal class NewProfileViewModel(private val application: Application) : ViewM
             }
             eventState.tryEmit(EventState.LaunchProperties(uuid))
           } catch (e: Exception) {
-            Log.e("Create QR profile failed: ${e.message}", e)
+            Logger.e("Create QR profile failed: ${e.message}", e)
             eventState.tryEmit(
               EventState.ShowMessage(e.message ?: getString(CommonRes.string.unknown))
             )
@@ -105,7 +105,7 @@ internal class NewProfileViewModel(private val application: Application) : ViewM
         val uuid = withProfile { create(type, name) }
         eventState.tryEmit(EventState.LaunchProperties(uuid))
       } catch (e: Exception) {
-        Log.e("Create profile failed: ${e.message}", e)
+        Logger.e("Create profile failed: ${e.message}", e)
         eventState.tryEmit(EventState.ShowMessage(e.message ?: getString(CommonRes.string.unknown)))
       }
     }

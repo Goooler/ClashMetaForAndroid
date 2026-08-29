@@ -1,6 +1,6 @@
 package com.github.kr328.clash.service.clash
 
-import com.github.kr328.clash.common.log.Log
+import co.touchlab.kermit.Logger
 import com.github.kr328.clash.core.Clash
 import com.github.kr328.clash.service.clash.module.Module
 import kotlinx.coroutines.CoroutineScope
@@ -29,7 +29,7 @@ fun CoroutineScope.clashRuntime(block: suspend ClashRuntimeScope.() -> Unit): Cl
     override fun launch() {
       launch(Dispatchers.IO) {
         globalLock.withLock {
-          Log.d("ClashRuntime: initialize")
+          Logger.d("ClashRuntime: initialize")
 
           try {
             val modules = mutableListOf<Module<*>>()
@@ -58,7 +58,7 @@ fun CoroutineScope.clashRuntime(block: suspend ClashRuntimeScope.() -> Unit): Cl
               Clash.reset()
               Clash.clearOverride(Clash.OverrideSlot.Session)
 
-              Log.d("ClashRuntime: destroyed")
+              Logger.d("ClashRuntime: destroyed")
             }
           }
         }
