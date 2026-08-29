@@ -3,8 +3,8 @@ package com.github.kr328.clash.service.clash.module
 import android.app.Service
 import android.content.Intent
 import android.content.pm.PackageInfo
+import co.touchlab.kermit.Logger
 import com.github.kr328.clash.common.compat.getInstalledPackagesCompat
-import com.github.kr328.clash.common.log.Log
 import com.github.kr328.clash.core.Clash
 import kotlin.time.Duration.Companion.seconds
 import kotlinx.coroutines.channels.Channel
@@ -35,7 +35,7 @@ class AppListCacheModule(service: Service) : Module<Unit>(service) {
 
     Clash.notifyInstalledAppsChanged(packages)
 
-    Log.d("Installed ${packages.size} packages cached")
+    Logger.d("Installed ${packages.size} packages cached")
   }
 
   override suspend fun run() {

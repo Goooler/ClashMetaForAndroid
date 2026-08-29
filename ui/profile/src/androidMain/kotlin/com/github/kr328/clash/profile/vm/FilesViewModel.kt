@@ -4,7 +4,7 @@ import android.app.Application
 import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.github.kr328.clash.common.log.Log
+import co.touchlab.kermit.Logger
 import com.github.kr328.clash.glue.model.ConfigFile
 import com.github.kr328.clash.glue.remote.FilesClient
 import com.github.kr328.clash.glue.util.fileName
@@ -75,7 +75,7 @@ internal class FilesViewModel(private val application: Application) : ViewModel(
       try {
         client.deleteDocument(configFile.id)
       } catch (e: Exception) {
-        Log.e("Delete file failed: ${e.message}", e)
+        Logger.e("Delete file failed: ${e.message}", e)
         eventState.tryEmit(EventState.ShowMessage(e.message ?: "Unknown error"))
       }
       fetch()
@@ -87,7 +87,7 @@ internal class FilesViewModel(private val application: Application) : ViewModel(
       try {
         client.renameDocument(configFile.id, newName)
       } catch (e: Exception) {
-        Log.e("Rename file failed: ${e.message}", e)
+        Logger.e("Rename file failed: ${e.message}", e)
         eventState.tryEmit(EventState.ShowMessage(e.message ?: "Unknown error"))
       }
       fetch()
@@ -109,7 +109,7 @@ internal class FilesViewModel(private val application: Application) : ViewModel(
           client.copyDocument(targetConfigFile.id, uri)
         }
       } catch (e: Exception) {
-        Log.e("Import file failed: ${e.message}", e)
+        Logger.e("Import file failed: ${e.message}", e)
         eventState.tryEmit(EventState.ShowMessage(e.message ?: "Unknown error"))
       }
       fetch()
@@ -126,7 +126,7 @@ internal class FilesViewModel(private val application: Application) : ViewModel(
       try {
         client.copyDocument(uri, sourceConfigFile.id)
       } catch (e: Exception) {
-        Log.e("Export file failed: ${e.message}", e)
+        Logger.e("Export file failed: ${e.message}", e)
         eventState.tryEmit(EventState.ShowMessage(e.message ?: "Unknown error"))
       }
       fetch()
@@ -151,7 +151,7 @@ internal class FilesViewModel(private val application: Application) : ViewModel(
 
         uiState.update { it.copy(configFiles = files, currentInBaseDir = inBaseDir) }
       } catch (e: Exception) {
-        Log.e("List files failed: ${e.message}", e)
+        Logger.e("List files failed: ${e.message}", e)
         eventState.tryEmit(EventState.ShowMessage(e.message ?: "Unknown error"))
       }
     }

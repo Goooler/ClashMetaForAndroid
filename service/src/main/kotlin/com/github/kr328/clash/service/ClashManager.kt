@@ -1,7 +1,7 @@
 package com.github.kr328.clash.service
 
 import android.content.Context
-import com.github.kr328.clash.common.log.Log
+import co.touchlab.kermit.Logger
 import com.github.kr328.clash.core.Clash
 import com.github.kr328.clash.core.model.ConfigurationOverride
 import com.github.kr328.clash.core.model.LogMessage
@@ -72,7 +72,7 @@ class ClashManager(private val context: Context) :
             SelectionDao().removeSelected(current, group)
           }
         } catch (e: Exception) {
-          Log.w("Persist selector failed", e)
+          Logger.w("Persist selector failed", e)
         }
       }
     }
@@ -120,7 +120,7 @@ class ClashManager(private val context: Context) :
                 // intended behavior
                 // ignore
               } catch (e: Exception) {
-                Log.w("UI crashed", e)
+                Logger.w("UI crashed", e)
               } finally {
                 withContext(NonCancellable) {
                   c.cancel()

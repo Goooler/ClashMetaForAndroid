@@ -1,8 +1,8 @@
 package com.github.kr328.clash.service.clash.module
 
 import android.app.Service
+import co.touchlab.kermit.Logger
 import com.github.kr328.clash.common.constants.Intents
-import com.github.kr328.clash.common.log.Log
 import com.github.kr328.clash.common.util.getSerializableCompat
 import com.github.kr328.clash.core.Clash
 import com.github.kr328.clash.service.StatusProvider
@@ -68,9 +68,9 @@ class ConfigurationModule(service: Service) : Module<ConfigurationModule.LoadExc
 
         service.sendProfileLoaded(current)
 
-        Log.d("Profile ${active.name} loaded")
+        Logger.d("Profile ${active.name} loaded")
       } catch (e: Exception) {
-        Log.e("Load profile failed: ${e.message}", e)
+        Logger.e("Load profile failed: ${e.message}", e)
         return enqueueEvent(LoadException(e.message ?: "Unknown"))
       }
     }

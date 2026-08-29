@@ -2,7 +2,7 @@ package com.github.kr328.clash.service
 
 import android.content.Context
 import androidx.core.net.toUri
-import com.github.kr328.clash.common.log.Log
+import co.touchlab.kermit.Logger
 import com.github.kr328.clash.core.Clash
 import com.github.kr328.clash.core.model.FetchStatus
 import com.github.kr328.clash.service.data.Imported
@@ -170,7 +170,7 @@ object ProfileProcessor {
       } catch (e: Exception) {
         cb = null
 
-        Log.w("Report fetch status: $e", e)
+        Logger.w("Report fetch status: $e", e)
       }
     }
 

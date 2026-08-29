@@ -4,7 +4,7 @@ import android.app.Service
 import android.content.Intent
 import android.os.PowerManager
 import androidx.core.content.getSystemService
-import com.github.kr328.clash.common.log.Log
+import co.touchlab.kermit.Logger
 import com.github.kr328.clash.core.Clash
 import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.channels.Channel
@@ -28,12 +28,12 @@ class SuspendModule(service: Service) : Module<Unit>(service) {
           Intent.ACTION_SCREEN_ON -> {
             Clash.suspendCore(false)
 
-            Log.d("Clash resumed")
+            Logger.d("Clash resumed")
           }
           Intent.ACTION_SCREEN_OFF -> {
             Clash.suspendCore(true)
 
-            Log.d("Clash suspended")
+            Logger.d("Clash suspended")
           }
           else -> {
             // unreachable

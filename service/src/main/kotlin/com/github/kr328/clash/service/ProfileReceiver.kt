@@ -6,9 +6,9 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import androidx.core.content.getSystemService
+import co.touchlab.kermit.Logger
 import com.github.kr328.clash.common.compat.pendingIntentFlags
 import com.github.kr328.clash.common.constants.Intents
-import com.github.kr328.clash.common.log.Log
 import com.github.kr328.clash.common.util.componentName
 import com.github.kr328.clash.common.util.setUUID
 import com.github.kr328.clash.service.data.Imported
@@ -59,7 +59,7 @@ class ProfileReceiver : BroadcastReceiver(), KoinComponent {
 
       initialized = true
 
-      Log.i("Reschedule all profiles update")
+      Logger.i("Reschedule all profiles update")
 
       ImportedDao()
         .queryAllUUIDs()

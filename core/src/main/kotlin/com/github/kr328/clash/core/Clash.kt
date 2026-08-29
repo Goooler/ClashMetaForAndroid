@@ -1,6 +1,6 @@
 package com.github.kr328.clash.core
 
-import com.github.kr328.clash.common.log.Log
+import co.touchlab.kermit.Logger
 import com.github.kr328.clash.core.bridge.Bridge
 import com.github.kr328.clash.core.bridge.ClashException
 import com.github.kr328.clash.core.bridge.FetchCallback
@@ -214,7 +214,7 @@ object Clash {
     return try {
       json.decodeFromString(Bridge.nativeReadOverride(slot.ordinal))
     } catch (e: Exception) {
-      Log.e("Read override failed: ${e.message}", e)
+      Logger.e("Read override failed: ${e.message}", e)
       ConfigurationOverride()
     }
   }

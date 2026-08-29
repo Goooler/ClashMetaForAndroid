@@ -55,7 +55,7 @@ reorderable = "sh.calvin.reorderable:reorderable:3.1.0"
 
 junit = "junit:junit:4.13.2"
 assertk = "com.willowtreeapps.assertk:assertk:0.28.1"
-
+kermit = "co.touchlab:kermit:2.1.0"
 # Dummy to get renovate updates, the version is used in rootProject build.gradle with spotless.
 ktfmt = "com.facebook:ktfmt:0.64"
 

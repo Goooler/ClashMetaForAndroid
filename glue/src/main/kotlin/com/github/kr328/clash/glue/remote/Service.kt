@@ -5,7 +5,7 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.ServiceConnection
 import android.os.IBinder
-import com.github.kr328.clash.common.log.Log
+import co.touchlab.kermit.Logger
 import com.github.kr328.clash.common.util.intent
 import com.github.kr328.clash.glue.util.unbindServiceSilent
 import com.github.kr328.clash.service.RemoteService
@@ -34,7 +34,7 @@ class Service(private val context: Application, val crashed: () -> Unit) {
         }
 
         lastCrashed = System.currentTimeMillis()
-        Log.w("RemoteService killed or crashed")
+        Logger.w("RemoteService killed or crashed")
       }
     }
 
@@ -42,7 +42,7 @@ class Service(private val context: Application, val crashed: () -> Unit) {
     try {
       context.bindService(RemoteService::class.intent, connection, Context.BIND_AUTO_CREATE)
     } catch (e: Exception) {
-      Log.e("Bind remote service failed: ${e.message}", e)
+      Logger.e("Bind remote service failed: ${e.message}", e)
       unbind()
 
       crashed()
