@@ -4,6 +4,6 @@ Agents MUST read and strictly follow all rules defined in [`CONTRIBUTING.md`](CO
 
 **Instructions for AI Agents:**
 
-1. Make an atomic commit after completing each task.
+1. Make an atomic commit after completing each task. Do NOT use Conventional Commits.
 2. Pass `--non-interactive` to Gradle commands to disable interactive console prompts.
 3. Prefer using the `gh` CLI for GitHub-related tasks.
