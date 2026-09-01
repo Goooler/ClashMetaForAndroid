@@ -3,12 +3,12 @@ package com.github.kr328.clash.common.util
 import android.content.Intent
 import android.net.Uri
 import android.os.Build
-import com.github.kr328.clash.common.di.AppInfoProvider.Companion.appInfoProvider
+import com.github.kr328.clash.common.di.AppInfoProvider
 import java.io.Serializable
 import kotlin.uuid.Uuid
 
 fun mainIntent(block: Intent.() -> Unit = {}): Intent {
-  return appInfoProvider.mainActivityClass.intent.apply(block = block)
+  return AppInfoProvider().mainActivityClass.intent.apply(block = block)
 }
 
 fun Intent.grantPermissions(read: Boolean = true, write: Boolean = true): Intent = apply {
