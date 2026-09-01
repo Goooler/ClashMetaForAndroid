@@ -14,6 +14,6 @@ interface AppInfoProvider {
   val mainActivityAlias: ComponentName
 
   companion object : KoinComponent {
-    val appInfoProvider: AppInfoProvider = get()
+    operator fun invoke(): AppInfoProvider = get()
   }
 }

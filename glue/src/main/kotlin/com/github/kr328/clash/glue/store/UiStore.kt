@@ -121,6 +121,6 @@ class UiStore(
   companion object : KoinComponent {
     private const val PREFERENCE_NAME = "ui"
 
-    val uiStore: UiStore = get()
+    operator fun invoke(): UiStore = get()
   }
 }
