@@ -54,6 +54,7 @@ include(
   ":core:model",
   ":service",
   ":service:database",
+  ":service:remote",
   ":common",
   ":glue",
   ":ui",
