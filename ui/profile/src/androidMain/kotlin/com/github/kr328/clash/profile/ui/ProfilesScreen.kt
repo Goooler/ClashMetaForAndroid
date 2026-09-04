@@ -52,6 +52,7 @@ import com.github.kr328.clash.common.more
 import com.github.kr328.clash.common.new_profile
 import com.github.kr328.clash.common.profiles
 import com.github.kr328.clash.common.url
+import com.github.kr328.clash.core.model.Profile
 import com.github.kr328.clash.glue.util.toDateStr
 import com.github.kr328.clash.profile.Res
 import com.github.kr328.clash.profile.duplicate
@@ -61,7 +62,6 @@ import com.github.kr328.clash.profile.update
 import com.github.kr328.clash.profile.update_all
 import com.github.kr328.clash.profile.util.elapsedIntervalString
 import com.github.kr328.clash.profile.vm.ProfilesViewModel
-import com.github.kr328.clash.service.model.Profile
 import com.github.kr328.clash.ui.component.Spacer
 import com.github.kr328.clash.ui.component.TabbyScaffold
 import com.github.kr328.clash.ui.icon.BaselineAdd

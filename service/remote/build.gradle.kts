@@ -1,17 +1,15 @@
 plugins {
   alias(libs.plugins.android.library)
+  alias(libs.plugins.kotlin.parcelize)
+  alias(libs.plugins.ksp)
 }
 
 dependencies {
-  api(projects.service.database)
-  api(projects.service.remote)
-
   implementation(projects.core.model)
-
   implementation(projects.core)
-  implementation(projects.common)
 
   implementation(libs.kotlin.coroutine.android)
-  implementation(libs.androidx.core)
-  implementation(libs.rikkax.multiprocess)
+  api(libs.kaidl.runtime)
+
+  ksp(libs.kaidl.compiler)
 }

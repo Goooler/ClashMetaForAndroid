@@ -19,8 +19,11 @@ The app is written in Kotlin with Jetpack Compose for the UI, and embeds a compi
 Tabby/
 ├── app/          # Application shell: MainActivity, MainApplication, AppModule (Koin), BroadcastReceivers, TileService
 ├── core/         # Mihomo bridge: Go/JNI bindings, data models, C++ CMake layer
-│                 #   └── src/foss/golang/clash/  (git submodule → MetaCubeX/mihomo)
-├── service/      # Background VPN service, Room database, IPC via kaidl, OkHttp profile fetching
+│   │             #   └── src/foss/golang/clash/  (git submodule → MetaCubeX/mihomo)
+│   └── model/    # Core data models (KMP)
+├── service/      # Background VPN service, OkHttp profile fetching
+│   ├── database/ # Room database, entities, and DAOs
+│   └── remote/   # IPC interfaces via kaidl
 ├── common/       # Shared constants, store providers, and utility extensions; includes Android-specific helpers
 ├── glue/         # Dependency-injection wiring via Koin; exposes api() of core, service, common
 └── ui/           # Shared UI components, theme, icons (also a library module)
@@ -36,8 +39,12 @@ Tabby/
 
 ```text
 app → glue → core → common
-               └── service → core
-                          └── common
+           │   └── model
+           ├── service → core
+           │         ├── database → common
+           │         ├── remote → core
+           │         └── common
+           └── common
 app → ui/*
 ```
 

@@ -31,6 +31,7 @@ import com.github.kr328.clash.common.disabled
 import com.github.kr328.clash.common.name
 import com.github.kr328.clash.common.ok
 import com.github.kr328.clash.common.url
+import com.github.kr328.clash.core.model.Profile
 import com.github.kr328.clash.glue.util.ValidatorAgeSecretKey
 import com.github.kr328.clash.glue.util.ValidatorAutoUpdateInterval
 import com.github.kr328.clash.glue.util.ValidatorHttpUrl
@@ -50,7 +51,6 @@ import com.github.kr328.clash.profile.properties
 import com.github.kr328.clash.profile.save
 import com.github.kr328.clash.profile.tips_properties
 import com.github.kr328.clash.profile.vm.PropertiesViewModel
-import com.github.kr328.clash.service.model.Profile
 import com.github.kr328.clash.ui.component.ModelProgressBarDialog
 import com.github.kr328.clash.ui.component.TabbyScaffold
 import com.github.kr328.clash.ui.icon.BaselineKey
