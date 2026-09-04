@@ -53,6 +53,7 @@ include(
   ":core",
   ":core:model",
   ":service",
+  ":service:database",
   ":common",
   ":glue",
   ":ui",

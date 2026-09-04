@@ -1,4 +1,4 @@
-package com.github.kr328.clash.service.model
+package com.github.kr328.clash.core.model
 
 import android.os.Parcelable
 import kotlin.uuid.Uuid

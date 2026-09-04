@@ -7,6 +7,7 @@ import co.touchlab.kermit.Logger
 import com.github.kr328.clash.common.Res as CommonRes
 import com.github.kr328.clash.common.unknown
 import com.github.kr328.clash.core.model.FetchStatus
+import com.github.kr328.clash.core.model.Profile
 import com.github.kr328.clash.glue.util.withProfile
 import com.github.kr328.clash.profile.Res
 import com.github.kr328.clash.profile.empty_name
@@ -15,7 +16,6 @@ import com.github.kr328.clash.profile.format_fetching_provider
 import com.github.kr328.clash.profile.initializing
 import com.github.kr328.clash.profile.invalid_url
 import com.github.kr328.clash.profile.verifying
-import com.github.kr328.clash.service.model.Profile
 import kotlin.uuid.Uuid
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

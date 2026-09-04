@@ -41,6 +41,7 @@ import com.github.kr328.clash.common.constants.Intents
 import com.github.kr328.clash.common.util.mainIntent
 import com.github.kr328.clash.common.util.uuid
 import com.github.kr328.clash.core.model.DarkMode
+import com.github.kr328.clash.core.model.Profile
 import com.github.kr328.clash.crash.CrashRoute
 import com.github.kr328.clash.crash.crashEntries
 import com.github.kr328.clash.glue.remote.Remote
@@ -56,7 +57,6 @@ import com.github.kr328.clash.profile.ProfilesRoute
 import com.github.kr328.clash.profile.profilesEntries
 import com.github.kr328.clash.proxy.ProxyRoute
 import com.github.kr328.clash.proxy.proxyEntries
-import com.github.kr328.clash.service.model.Profile
 import com.github.kr328.clash.settings.SettingsRoute
 import com.github.kr328.clash.settings.settingsEntries
 import com.github.kr328.clash.ui.nav.TabbyNavDisplay

@@ -1,6 +1,6 @@
 package com.github.kr328.clash.service.remote
 
-import com.github.kr328.clash.service.model.Profile
+import com.github.kr328.clash.core.model.Profile
 import com.github.kr328.kaidl.BinderInterface
 import kotlin.uuid.Uuid
 
