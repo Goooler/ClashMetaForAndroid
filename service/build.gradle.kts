@@ -1,7 +1,5 @@
 plugins {
   alias(libs.plugins.android.library)
-  alias(libs.plugins.kotlin.parcelize)
-  alias(libs.plugins.kotlin.serialization)
 }
 
 dependencies {
@@ -13,7 +11,6 @@ dependencies {
   implementation(projects.common)
 
   implementation(libs.kotlin.coroutine.android)
-  implementation(libs.kotlin.serialization.json)
   implementation(libs.androidx.core)
   implementation(libs.rikkax.multiprocess)
 }
