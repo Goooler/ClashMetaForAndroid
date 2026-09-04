@@ -6,8 +6,6 @@ dependencies {
   api(projects.core)
   api(projects.core.model)
   api(projects.service)
-  api(projects.service.database)
-  api(projects.service.remote)
   api(projects.common)
 
   implementation(libs.kotlin.coroutine.android)
