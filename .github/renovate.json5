@@ -6,6 +6,12 @@
   'git-submodules': {
     enabled: true,
   },
+  // Clone submodules so local Go replace directives to ./clash can be resolved during go mod tidy.
+  cloneSubmodules: true,
+  // Run go mod tidy on both main and foss modules in dependency order after Go dependency updates.
+  postUpdateOptions: [
+    'gomodTidyAll',
+  ],
   packageRules: [
     {
       groupName: 'Mihomo',
@@ -14,6 +20,13 @@
         'core/src/foss/golang/clash',
         'https://github.com/MetaCubeX/mihomo',
       ],
+    },
+    {
+      matchPackageNames: [
+        'cfa',
+      ],
+      // Ignore internal virtual module 'cfa' from remote package lookups.
+      enabled: false,
     },
   ],
 }
